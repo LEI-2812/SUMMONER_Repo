@@ -9,6 +9,14 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+/[Uu]ser[Ss]ettings/
+/[Aa]ssets/AssetStoreTools*
+/[Ll]ibrary/Bee/*
+/[Ll]ibrary/BurstCache/*
+/[Ll]ibrary/ScriptAssemblies/*
+/[Ll]ibrary/StateCache/*
+/[Ll]ibrary/ShaderCache/*
+/[Ll]ibrary/Artifacts/*
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
