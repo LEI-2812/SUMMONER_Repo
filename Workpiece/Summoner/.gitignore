@@ -58,3 +58,20 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Unity generated folders and files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]ee/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Uu]serSettings/
+[Bb]urstCache/
+*.dwlt
+*.pid
+*.traceevents
+*.json
+*.cm
+*.state
+*.map
