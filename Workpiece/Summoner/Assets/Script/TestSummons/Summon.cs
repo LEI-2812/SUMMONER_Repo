@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum SummonRank
 {
@@ -9,8 +10,10 @@ public enum SummonRank
 
 public class Summon : MonoBehaviour
 {
+    public Image image;
     public string summonName;
-    public int health;
+    public double maxHP;
+    public double nowHP;
     public double attackPower; //일반공격
     public double SpecialPower;  //특수공격
     public SummonRank summonRank;
@@ -22,9 +25,9 @@ public class Summon : MonoBehaviour
 
     public virtual void takeDamage(int damage) //데미지 입기
     {
-        health -= damage;
-        Debug.Log($"{summonName} takes {damage} damage. Remaining health: {health}");
-        if (health <= 0)
+        nowHP = nowHP - damage;
+        Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
+        if (nowHP <= 0)
         {
             die();
         }
