@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class Cat : Summon
 {
-    private void Start()
+    private void Awake()
     {
         summonName = "Cat";
-        health = 100;
+        maxHP = 100;
+        nowHP = maxHP;
         attackPower = 15; //일반공격
         SpecialPower = 20; //특수공격
         summonRank = SummonRank.Low; // 중급 소환수
+    }
+
+    private void Start()
+    {
+        nowHP = 80; //테스트용
     }
 
     public override void attack()

@@ -1,12 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class Plate : MonoBehaviour
+public class Plate : MonoBehaviour, 
+    IPointerEnterHandler, //플레이트에 마우스 올렸을때 이벤트 인터페이스
+    IPointerExitHandler,  //플레이트에 마우스가 벗어낫을때 이벤트 인터페이스
+    IPointerClickHandler //플레이트 클릭시 상태창 
 {
     //plate를 프리팹시켜서 넣을것.
     public bool isInSummon = false; // 현재 소환수가 있는지 여부
     public Summon CurrentSummon;   // 플레이트 위에 있는 소환수
+    public GameObject statePanel;  // 상태 패널 (On/Off)
+    public OnMousePlate onMousePlateScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
+
 
     // 소환수를 플레이트에 배치
     public void SummonPlaceOnPlate(Summon summon)
@@ -39,7 +47,34 @@ public class Plate : MonoBehaviour
     {
         if (CurrentSummon != null)
         {
-            Debug.Log($"소환수 {CurrentSummon.summonName} 의 체력: {CurrentSummon.health}");
+            Debug.Log($"소환수 {CurrentSummon.summonName} 의 체력: {CurrentSummon.nowHP}");
         }
     }
+
+    //마우스 올렸을때 이벤트
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (CurrentSummon != null && statePanel.activeSelf==false)
+        {
+            CheckHealth();
+            statePanel.SetActive(true);
+            onMousePlateScript.setStatePanel(CurrentSummon); // 패널에 소환수 정보 전달 
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (CurrentSummon != null && statePanel.activeSelf == true)
+        {
+            // 패널을 비활성화
+            statePanel.SetActive(false);
+        }
+    }
+
+    //해당 플레이트 클릭시 이벤트
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("플레이트 클릭됨");
+    }
+
 }
