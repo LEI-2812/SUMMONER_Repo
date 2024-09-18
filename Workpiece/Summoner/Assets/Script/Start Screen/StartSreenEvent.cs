@@ -7,6 +7,8 @@ public class StartSreenEvent : MonoBehaviour
 {
 
     public GameObject option;
+    public GameObject newAlert;
+    public GameObject loadAlert;
 
     //스테이지 저장 (매 스테이지 클리어마다 호출하면됨.)
     public void SaveStage(int stageNumber)
@@ -16,7 +18,7 @@ public class StartSreenEvent : MonoBehaviour
         PlayerPrefs.Save(); // 저장을 강제 실행합니다.
     }
 
-    //스테이지 로드
+    //스테이지 로드   추후 저장된 스테이지 불러오기 가능 시 알림창 yes 버튼에 적용
     public int LoadStage()
     {
         if (PlayerPrefs.HasKey("SaveStage"))
@@ -35,6 +37,7 @@ public class StartSreenEvent : MonoBehaviour
     {
         int savedStage = LoadStage();
         Debug.Log("저장된 스테이지 "+ savedStage+"로 이동");
+        loadAlert.SetActive(true); // 알림창 활성화
         // 예시: 저장된 스테이지로 씬 로드
         //SceneManager.LoadScene("Stage" + savedStage);
     }
@@ -44,10 +47,17 @@ public class StartSreenEvent : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
-        Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
+        Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");        
+        newAlert.SetActive(true); // 알림창 활성화
     }
 
-    //설정창 끄기 키기
+    //스테이지 선택 화면으로 이동
+    public void SelectStage()
+    {
+        SceneManager.LoadScene("Stage Select Screen");
+    }
+
+    //설정창 끄기 키기 -> 수정 : SettingMenuContoller.cs에서 끄게 만듦. Dontdestroyonload로 넘어가서는 이 cs에서의 함수가 사용 불가.
     public void openOption()
     {
         if(option.activeSelf==true)
