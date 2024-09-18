@@ -4,7 +4,9 @@ using UnityEngine.UI;
 
 public class SettingMenuController : MonoBehaviour
 {
-    private static SettingMenuController instance; //destroyOnload instance
+    public static SettingMenuController instance; //destroyOnload instance
+    // private에서 다른 cs에서도 사용 가능하도록 public으로 변경
+    public GameObject option;
 
     // 패널들을 저장할 리스트
     public List<GameObject> panels;
@@ -21,7 +23,7 @@ public class SettingMenuController : MonoBehaviour
     // 현재 활성화된 버튼 인덱스
     private int activeIndex = -1;
 
-    private void Awake()
+    private void Awake() // private에서 다른 cs에서도 사용 가능하도록 public으로 변경
     {
         // 싱글톤 인스턴스가 이미 존재하는지 확인
         if (instance == null)
@@ -84,5 +86,14 @@ public class SettingMenuController : MonoBehaviour
         Color darkenedColor = originalColor * darkenFactor;
         darkenedColor.a = originalColor.a; // 알파값 유지
         buttonImage.color = darkenedColor;
+    }
+
+    // 설정창 열기/닫기
+    public void openOption()
+    {
+        if (option.activeSelf == true)
+            option.SetActive(false);
+        else
+            option.SetActive(true);
     }
 }
