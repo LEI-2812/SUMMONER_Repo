@@ -10,6 +10,8 @@ public class StartSreenEvent : MonoBehaviour
     public GameObject newAlert;
     public GameObject loadAlert;
 
+    public AudioSource audioSource;
+
     //스테이지 저장 (매 스테이지 클리어마다 호출하면됨.)
     public void SaveStage(int stageNumber)
     {
@@ -35,6 +37,7 @@ public class StartSreenEvent : MonoBehaviour
     //이어하기
     public void StartSavedStage() 
     {
+        audioSource.Play();
         int savedStage = LoadStage();
         Debug.Log("저장된 스테이지 "+ savedStage+"로 이동");
         loadAlert.SetActive(true); // 알림창 활성화
@@ -49,6 +52,7 @@ public class StartSreenEvent : MonoBehaviour
         PlayerPrefs.Save();
         Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");        
         newAlert.SetActive(true); // 알림창 활성화
+        audioSource.Play();
     }
 
     //스테이지 선택 화면으로 이동
@@ -60,7 +64,8 @@ public class StartSreenEvent : MonoBehaviour
     //설정창 끄기 키기 -> 수정 : SettingMenuContoller.cs에서 끄게 만듦. Dontdestroyonload로 넘어가서는 이 cs에서의 함수가 사용 불가.
     public void openOption()
     {
-        if(option.activeSelf==true)
+        audioSource.Play();
+        if (option.activeSelf==true)
             option.SetActive(false);
         else
             option.SetActive(true);
@@ -69,6 +74,7 @@ public class StartSreenEvent : MonoBehaviour
     //게임 종료
     public void ExitGame()
     {
+        audioSource.Play();
         Application.Quit(); //빌드해야 작동함.
     }
 
