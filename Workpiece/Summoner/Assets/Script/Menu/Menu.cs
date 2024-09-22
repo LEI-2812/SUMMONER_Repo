@@ -9,12 +9,29 @@ public class Menu : MonoBehaviour
     public GameObject toMain;
     public GameObject toQuit;
 
+    private GameObject setting;
+    private SettingMenuController settingContorller;  // SettingMenuController의 인스턴스를 참조
+    private void Start()
+    {
+        getSettingMenuController(); //SettingMenuController인스턴스 가져오기
+    }
     // esc 키를 계속 감지하여 눌릴 때 메뉴창 열기/닫기
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            openMenu();
+            if (!settingContorller.option.activeSelf)
+                openMenu();
+        }
+    }
+
+    //SettingMenuController 인스턴스 받아오는 메소드
+    private void getSettingMenuController()
+    {
+        settingContorller = SettingMenuController.instance;
+        if (setting == null)
+        {
+            Debug.LogWarning("SettingMenuController 인스턴스를 찾을 수 없습니다.");
         }
     }
 

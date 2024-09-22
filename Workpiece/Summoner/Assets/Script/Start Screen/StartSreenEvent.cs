@@ -2,16 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class StartSreenEvent : MonoBehaviour
 {
-
-    public GameObject option;
+    private GameObject optionCanvasAudio;
     public GameObject newAlert;
     public GameObject loadAlert;
+    public Button settingBtn;
 
     public AudioSource audioSource;
 
+
+    void Start()
+    {
+        // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
+        optionCanvasAudio = GameObject.Find("OptionCanvas_Audio");
+
+        // 만약 씬에 오브젝트가 없을 경우 오류 방지
+        if (optionCanvasAudio == null)
+        {
+            Debug.LogError("OptionCanvas_Audio 오브젝트가 없음.");
+        }
+
+        // Setting 버튼 클릭 이벤트를 연결
+        if (settingBtn != null)
+        {
+            settingBtn.onClick.AddListener(openOption); // 버튼에 openOption 이벤트 연결
+        }
+        else
+        {
+            Debug.LogError("Setting 버튼이 연결되지 않았습니다.");
+        }
+
+    }
     //스테이지 저장 (매 스테이지 클리어마다 호출하면됨.)
     public void SaveStage(int stageNumber)
     {
@@ -64,11 +88,35 @@ public class StartSreenEvent : MonoBehaviour
     //설정창 끄기 키기 -> 수정 : SettingMenuContoller.cs에서 끄게 만듦. Dontdestroyonload로 넘어가서는 이 cs에서의 함수가 사용 불가.
     public void openOption()
     {
-        audioSource.Play();
-        if (option.activeSelf==true)
-            option.SetActive(false);
+        // OptionCanvas_Audio가 존재할 경우에만 로직 실행
+        if (optionCanvasAudio != null)
+        {
+            audioSource.Play();
+
+            // optionCanvasAudio의 자식 오브젝트로 있는 option을 찾아서 제어
+            GameObject option = optionCanvasAudio.transform.Find("Option").gameObject;
+
+            if (option != null)
+            {
+                // 패널이 활성화되어 있으면 비활성화, 비활성화되어 있으면 활성화
+                if (option.activeSelf)
+                {
+                    option.SetActive(false);
+                }
+                else
+                {
+                    option.SetActive(true);
+                }
+            }
+            else
+            {
+                Debug.LogError("Option 오브젝트를 찾을 수 없습니다.");
+            }
+        }
         else
-            option.SetActive(true);
+        {
+            Debug.LogError("optionCanvasAudio 오브젝트가 존재하지 않습니다.");
+        }
     }
 
     //게임 종료

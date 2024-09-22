@@ -27,7 +27,7 @@ public class VideoController : MonoBehaviour
         FullScreenMode.Windowed
     };
 
-    void Start()
+    void Awake()
     {
         // 해상도 토글 초기화
         for (int i = 0; i < resolutionToggles.Count; i++)
