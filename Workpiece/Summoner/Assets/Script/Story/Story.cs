@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Menu : MonoBehaviour
-{ 
+public class Story : MonoBehaviour
+{
+    /* 스토리 씬에서 필요한 코드
+      - skip 버튼 클릭 시 메뉴창 뜨게 하기
+      - 알림창에서 스토리 스킵 yes 시 바로 전투 화면 출력
+      - no 클릭 시 알림창 끄기
+      - 여기서도 esc 클릭 시 메뉴 창 띄우기 */
+
     public GameObject menu;
     public GameObject toMain;
     public GameObject toQuit;
+    public GameObject alertSkip;    // 스킵 창 띄울 오브젝트
 
     private GameObject setting;
     private SettingMenuController settingController;  // SettingMenuController의 인스턴스를 참조
@@ -35,6 +42,20 @@ public class Menu : MonoBehaviour
         }
     }
 
+    // 스킵 버튼 클릭시 스킵 알림창 띄우기
+    public void openSkip()
+    {
+        alertSkip.SetActive(true);
+    }
+
+    // 스토리 스킵 yes 클릭 시 전투 씬으로 보내기
+    public void gotoBattle()
+    {
+        Debug.Log("전투 씬으로 이동");
+        // 이거 일단 지금 있는 파이트 씬으로 이동을 해놔야 하나..?
+        SceneManager.LoadScene("Fight Screen");
+    }
+
     public void openMenu()
     {
         if (menu.activeSelf == true)
@@ -42,7 +63,7 @@ public class Menu : MonoBehaviour
         else
             menu.SetActive(true);
     }
-    
+
     // 메인 화면 가기 전 세이브 알림창
     public void checkSave()
     {
