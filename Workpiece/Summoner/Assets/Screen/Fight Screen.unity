@@ -1611,10 +1611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54f8e91b2b5c5854f954c13d647766ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Enermyplates:
-  - {fileID: 9184813848463463009}
-  - {fileID: 1856290376}
-  - {fileID: 792077597}
+  enermyPlates: []
 --- !u!1 &342250388
 GameObject:
   m_ObjectHideFlags: 0
@@ -4998,17 +4995,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7980598692303977879, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
   m_PrefabInstance: {fileID: 792077595}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &792077597 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-  m_PrefabInstance: {fileID: 792077595}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb93be9a7fc3e745a5d736690bdc844, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &821167848
 GameObject:
   m_ObjectHideFlags: 0
@@ -5570,6 +5556,7 @@ MonoBehaviour:
   player: {fileID: 1469478338}
   enermy: {fileID: 313031151}
   currentTurn: 0
+  turnCount: 0
 --- !u!1 &897444722
 GameObject:
   m_ObjectHideFlags: 0
@@ -6812,7 +6799,7 @@ GameObject:
   - component: {fileID: 1291976792}
   - component: {fileID: 1291976794}
   m_Layer: 5
-  m_Name: SummonStatePanel
+  m_Name: StatePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10226,17 +10213,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7980598692303977879, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
   m_PrefabInstance: {fileID: 1856290374}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1856290376 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-  m_PrefabInstance: {fileID: 1856290374}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb93be9a7fc3e745a5d736690bdc844, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1928788809
 GameObject:
   m_ObjectHideFlags: 0
@@ -11158,6 +11134,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1545898996}
     m_Modifications:
+    - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: statePanel
+      value: 
+      objectReference: {fileID: 1291976790}
+    - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: onMousePlateScript
+      value: 
+      objectReference: {fileID: 1291976794}
     - target: {fileID: 6901903308100531676, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: m_Name
       value: FirstPlate
@@ -11252,17 +11236,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7980598692303977879, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
   m_PrefabInstance: {fileID: 9184813848463463007}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9184813848463463009 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-  m_PrefabInstance: {fileID: 9184813848463463007}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb93be9a7fc3e745a5d736690bdc844, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

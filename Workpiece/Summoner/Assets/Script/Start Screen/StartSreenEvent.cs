@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mail;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,10 +9,14 @@ public class StartSreenEvent : MonoBehaviour
 {
     private GameObject optionCanvasAudio;
     public GameObject newAlert;
+    public Alert newAlertResult;
+
+
     public GameObject loadAlert;
     public Button settingBtn;
 
     public AudioSource audioSource;
+
 
     void Start()
     {
@@ -34,27 +39,34 @@ public class StartSreenEvent : MonoBehaviour
             Debug.LogError("Setting 버튼이 연결되지 않았습니다.");
         }
 
-    }
-    //스테이지 저장 (매 스테이지 클리어마다 호출하면됨.)
-    public void SaveStage(int stageNumber)
-    {
-        // "CurrentStage"라는 키로 스테이지 번호를 저장합니다.
-        PlayerPrefs.SetInt("SaveStage", stageNumber);
-        PlayerPrefs.Save(); // 저장을 강제 실행합니다.
+        newAlert.SetActive(false);
+        loadAlert.SetActive(false);
     }
 
-    //스테이지 로드   추후 저장된 스테이지 불러오기 가능 시 알림창 yes 버튼에 적용
-    public int LoadStage()
+    //새게임
+    public void NewStart()
     {
-        if (PlayerPrefs.HasKey("SaveStage"))
-        {
-            return PlayerPrefs.GetInt("SaveStage");
-        }
-        else
-        {
-            // 저장된 값이 없을 때 추가작업
-            return 1; // 또는 원하는 다른 값
-        }
+        audioSource.Play();
+        newAlert.SetActive(true); // 알림창 활성화
+
+        // 알림창 상태를 초기화
+        newAlertResult.ResetAlert();
+        // 코루틴 실행: newAlert에 대한 처리
+        StartCoroutine(WaitForAlertResult(newAlert, newAlertResult, (result) => {
+            if (result)
+            {
+                // Yes 버튼 클릭 시 로직
+                PlayerPrefs.DeleteAll();
+                PlayerPrefs.Save();
+                Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
+                SceneManager.LoadScene("Stage Select Screen");
+            }
+            else
+            {
+                // No 버튼 클릭 시 로직
+                newAlert.SetActive(false);
+            }
+        }));
     }
 
     //이어하기
@@ -66,16 +78,6 @@ public class StartSreenEvent : MonoBehaviour
         loadAlert.SetActive(true); // 알림창 활성화
         // 예시: 저장된 스테이지로 씬 로드
         //SceneManager.LoadScene("Stage" + savedStage);
-    }
-
-    //새게임
-    public void NewStart()
-    {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
-        Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");        
-        newAlert.SetActive(true); // 알림창 활성화
-        audioSource.Play();
     }
 
     //스테이지 선택 화면으로 이동
@@ -125,4 +127,49 @@ public class StartSreenEvent : MonoBehaviour
         Application.Quit(); //빌드해야 작동함.
     }
 
+
+
+    /// //////////////////////////////그 외 로직들
+
+    //스테이지 저장 (매 스테이지 클리어마다 호출하면됨.)
+    public void SaveStage(int stageNumber)
+    {
+        // "CurrentStage"라는 키로 스테이지 번호를 저장합니다.
+        PlayerPrefs.SetInt("SaveStage", stageNumber);
+        PlayerPrefs.Save(); // 저장을 강제 실행합니다.
+    }
+
+    //스테이지 로드   추후 저장된 스테이지 불러오기 가능 시 알림창 yes 버튼에 적용
+    public int LoadStage()
+    {
+        if (PlayerPrefs.HasKey("SaveStage"))
+        {
+            return PlayerPrefs.GetInt("SaveStage");
+        }
+        else
+        {
+            // 저장된 값이 없을 때 추가작업
+            return 1; // 또는 원하는 다른 값
+        }
+    }
+
+
+
+    private IEnumerator WaitForAlertResult(GameObject alertObject, Alert alertScript, System.Action<bool> callback)
+    {
+        // 알림창을 활성화
+        alertObject.SetActive(true);
+
+        // 사용자가 버튼을 클릭할 때까지 대기
+        while (!alertScript.getIsClicked())
+        {
+            yield return null;  // 한 프레임 대기
+        }
+
+        // 알림창 비활성화
+        alertObject.SetActive(false);
+
+        // 버튼 클릭 후 결과 콜백 호출 (true: Yes, false: No)
+        callback(alertScript.getResult());
+    }
 }

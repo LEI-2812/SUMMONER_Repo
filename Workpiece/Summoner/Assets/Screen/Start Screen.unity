@@ -1722,6 +1722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newAlert: {fileID: 626992372}
+  newAlertResult: {fileID: 626992377}
   loadAlert: {fileID: 1051069145}
   settingBtn: {fileID: 629438704}
   audioSource: {fileID: 214920139}
@@ -3532,6 +3533,7 @@ GameObject:
   m_Component:
   - component: {fileID: 626992376}
   - component: {fileID: 626992375}
+  - component: {fileID: 626992377}
   - component: {fileID: 626992374}
   - component: {fileID: 626992373}
   m_Layer: 5
@@ -3625,6 +3627,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &626992377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626992372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc49a4aa10f1bc42960d436313aa1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yesBtn: {fileID: 846833788}
+  noBtn: {fileID: 1643511466}
 --- !u!1 &629438702
 GameObject:
   m_ObjectHideFlags: 0
@@ -5593,9 +5609,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 214920138}
-        m_TargetAssemblyTypeName: StartSreenEvent, Assembly-CSharp
-        m_MethodName: SelectStage
+      - m_Target: {fileID: 626992377}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10502,10 +10518,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 626992372}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 626992377}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnNoButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
