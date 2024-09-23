@@ -1,20 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enermy : Character
 {
-    public List<Plate> Enermyplates; // 적이 사용할 플레이트 목록
+    public List<Plate> enermyPlates; // 적이 사용할 플레이트 목록
 
-    private void Start()
-    {
-        InitializeSummons(); //소환수 소환
-    }
-
-    private void InitializeSummons() //게임 시작시 소환수가 미리 생성되도록
-    {
-        Debug.Log("적 소환수 미리 소환");
-    }
     public override void startTurn()
     {
         base.startTurn();

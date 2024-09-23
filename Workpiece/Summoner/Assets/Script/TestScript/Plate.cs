@@ -11,7 +11,7 @@ public class Plate : MonoBehaviour,
 {
     //plate를 프리팹시켜서 넣을것.
     public bool isInSummon = false; // 현재 소환수가 있는지 여부
-    public Summon CurrentSummon;   // 플레이트 위에 있는 소환수
+    public Summon currentSummon;   // 플레이트 위에 있는 소환수
     public GameObject statePanel;  // 상태 패널 (On/Off)
     public OnMousePlate onMousePlateScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
     public Image SummonImg;
@@ -22,7 +22,7 @@ public class Plate : MonoBehaviour,
     {
         if (!isInSummon)
         {
-            CurrentSummon = summon;
+            currentSummon = summon;
             isInSummon = true;
             Debug.Log($"소환수 {summon.summonName} 을 플레이트에 소환");
         }
@@ -37,7 +37,7 @@ public class Plate : MonoBehaviour,
     {
         if (isInSummon)
         {
-            CurrentSummon = null;
+            currentSummon = null;
             isInSummon = false;
             Debug.Log("소환수 제거.");
         }
@@ -46,26 +46,26 @@ public class Plate : MonoBehaviour,
     // 체력 체크 (플레이트 위 소환수의 체력 확인)
     public void CheckHealth()
     {
-        if (CurrentSummon != null)
+        if (currentSummon != null)
         {
-            Debug.Log($"소환수 {CurrentSummon.summonName} 의 체력: {CurrentSummon.nowHP}");
+            Debug.Log($"소환수 {currentSummon.summonName} 의 체력: {currentSummon.nowHP}");
         }
     }
 
     //마우스 올렸을때 이벤트
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (CurrentSummon != null && statePanel.activeSelf==false)
+        if (currentSummon != null && statePanel.activeSelf==false)
         {
             CheckHealth();
             statePanel.SetActive(true);
-            onMousePlateScript.setStatePanel(CurrentSummon); // 패널에 소환수 정보 전달 
+            onMousePlateScript.setStatePanel(currentSummon); // 패널에 소환수 정보 전달 
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (CurrentSummon != null && statePanel.activeSelf == true)
+        if (currentSummon != null && statePanel.activeSelf == true)
         {
             // 패널을 비활성화
             statePanel.SetActive(false);
