@@ -13,7 +13,6 @@ public class StartSreenEvent : MonoBehaviour
 
     public AudioSource audioSource;
 
-
     void Start()
     {
         // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
