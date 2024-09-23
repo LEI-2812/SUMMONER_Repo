@@ -17,7 +17,6 @@ public class Battle : MonoBehaviour
     public GameObject alertClear;   // 전투 승리 시 띄울 오브젝트
     public GameObject alertFail;    // 전투 패배 시 띄울 오브젝트
 
-    private GameObject setting;
     private SettingMenuController settingController;  // SettingMenuController의 인스턴스를 참조
     private void Start()
     {
@@ -37,7 +36,7 @@ public class Battle : MonoBehaviour
     private void getSettingMenuController()
     {
         settingController = SettingMenuController.instance;
-        if (setting == null)
+        if (settingController == null)
         {
             Debug.LogWarning("SettingMenuController 인스턴스를 찾을 수 없습니다.");
         }

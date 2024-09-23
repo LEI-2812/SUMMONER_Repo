@@ -14,6 +14,7 @@ public class Plate : MonoBehaviour,
     public Summon CurrentSummon;   // 플레이트 위에 있는 소환수
     public GameObject statePanel;  // 상태 패널 (On/Off)
     public OnMousePlate onMousePlateScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
+    public Image SummonImg;
 
 
     // 소환수를 플레이트에 배치

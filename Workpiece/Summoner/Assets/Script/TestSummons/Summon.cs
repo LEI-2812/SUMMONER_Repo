@@ -5,18 +5,19 @@ using UnityEngine.UI;
 
 public enum SummonRank
 {
-    Low, Medium, High
+    Low, Medium, High, //아군 소환수
+    Normal, Special, Boss //적 소환수
 }
 
 public class Summon : MonoBehaviour
 {
-    public Image image;
-    public string summonName;
-    public double maxHP;
-    public double nowHP;
+    public Image image; //이미지
+    public string summonName; //이름
+    public double maxHP; //최대체력
+    public double nowHP; //현재 체력
     public double attackPower; //일반공격
     public double SpecialPower;  //특수공격
-    public SummonRank summonRank;
+    public SummonRank summonRank; //등급
 
     public virtual void attack()
     {

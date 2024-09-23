@@ -9,7 +9,6 @@ public class Menu : MonoBehaviour
     public GameObject toMain;
     public GameObject toQuit;
 
-    private GameObject setting;
     private SettingMenuController settingController;  // SettingMenuController의 인스턴스를 참조
     private void Start()
     {
@@ -29,7 +28,7 @@ public class Menu : MonoBehaviour
     private void getSettingMenuController()
     {
         settingController = SettingMenuController.instance;
-        if (setting == null)
+        if (settingController == null)
         {
             Debug.LogWarning("SettingMenuController 인스턴스를 찾을 수 없습니다.");
         }

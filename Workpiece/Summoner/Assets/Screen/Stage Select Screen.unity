@@ -209,9 +209,10 @@ GameObject:
   - component: {fileID: 22108463}
   - component: {fileID: 22108462}
   - component: {fileID: 22108461}
+  - component: {fileID: 22108466}
   - component: {fileID: 22108465}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: StageCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -322,6 +323,18 @@ MonoBehaviour:
   menu: {fileID: 1224005353}
   toMain: {fileID: 193391843}
   toQuit: {fileID: 393685405}
+--- !u!114 &22108466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22108460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf5065fc82bbe54ab0bdbf94fe0bf82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &35841052
 GameObject:
   m_ObjectHideFlags: 0
@@ -3910,7 +3923,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 585846479}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 22108466}
+        m_TargetAssemblyTypeName: StageController, Assembly-CSharp
+        m_MethodName: TestSceneLoad
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &585846479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4836,7 +4861,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 749053028}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 22108466}
+        m_TargetAssemblyTypeName: StageController, Assembly-CSharp
+        m_MethodName: stageLoader
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 6
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &749053028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5279,7 +5316,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 823239779}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 22108466}
+        m_TargetAssemblyTypeName: StageController, Assembly-CSharp
+        m_MethodName: stageLoader
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &823239779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7265,7 +7314,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1179366026}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 22108466}
+        m_TargetAssemblyTypeName: StageController, Assembly-CSharp
+        m_MethodName: stageLoader
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1179366026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8471,7 +8532,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1442518326}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 22108466}
+        m_TargetAssemblyTypeName: StageController, Assembly-CSharp
+        m_MethodName: stageLoader
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1442518326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12248,7 +12321,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2104339298}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 22108466}
+        m_TargetAssemblyTypeName: StageController, Assembly-CSharp
+        m_MethodName: stageLoader
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 7
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2104339298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12456,7 +12541,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2130055516}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 22108466}
+        m_TargetAssemblyTypeName: StageController, Assembly-CSharp
+        m_MethodName: stageLoader
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2130055516
 MonoBehaviour:
   m_ObjectHideFlags: 0
