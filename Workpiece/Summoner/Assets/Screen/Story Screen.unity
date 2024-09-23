@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 3549534}
   - component: {fileID: 3549533}
   - component: {fileID: 3549532}
+  - component: {fileID: 3549536}
   m_Layer: 5
   m_Name: Alert_Skip
   m_TagString: Untagged
@@ -225,6 +226,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &3549536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3549531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc49a4aa10f1bc42960d436313aa1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yesBtn: {fileID: 579929806}
+  noBtn: {fileID: 768150189}
 --- !u!1 &30360248
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,9 +384,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-        m_MethodName: checkSave
+      - m_Target: {fileID: 268141389}
+        m_TargetAssemblyTypeName: Story, Assembly-CSharp
+        m_MethodName: toMainAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -711,9 +726,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-        m_MethodName: gotoMain
+      - m_Target: {fileID: 1193988541}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1122,8 +1137,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menu: {fileID: 1784313860}
   toMain: {fileID: 1193988536}
+  toMainResult: {fileID: 1193988541}
   toQuit: {fileID: 419236239}
+  toQuitResult: {fileID: 419236244}
   alertSkip: {fileID: 3549531}
+  alertSkipResult: {fileID: 3549536}
 --- !u!1 &324835597
 GameObject:
   m_ObjectHideFlags: 0
@@ -1877,6 +1895,7 @@ GameObject:
   - component: {fileID: 419236242}
   - component: {fileID: 419236241}
   - component: {fileID: 419236240}
+  - component: {fileID: 419236244}
   m_Layer: 5
   m_Name: Alert_nosave_quit
   m_TagString: Untagged
@@ -1968,6 +1987,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &419236244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419236239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc49a4aa10f1bc42960d436313aa1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yesBtn: {fileID: 1721103417}
+  noBtn: {fileID: 1602426590}
 --- !u!1 &474460453
 GameObject:
   m_ObjectHideFlags: 0
@@ -2597,9 +2630,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 268141389}
-        m_TargetAssemblyTypeName: Story, Assembly-CSharp
-        m_MethodName: gotoBattle
+      - m_Target: {fileID: 3549536}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2992,10 +3025,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1193988536}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1193988541}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnNoButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3424,10 +3457,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3549531}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 3549536}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnNoButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4369,6 +4402,7 @@ GameObject:
   - component: {fileID: 1193988539}
   - component: {fileID: 1193988538}
   - component: {fileID: 1193988537}
+  - component: {fileID: 1193988541}
   m_Layer: 5
   m_Name: Alert_nosave_toMain
   m_TagString: Untagged
@@ -4460,6 +4494,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1193988541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193988536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc49a4aa10f1bc42960d436313aa1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yesBtn: {fileID: 234577867}
+  noBtn: {fileID: 688832499}
 --- !u!1 &1259724279
 GameObject:
   m_ObjectHideFlags: 0
@@ -4739,9 +4787,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-        m_MethodName: checkSave2
+      - m_Target: {fileID: 268141389}
+        m_TargetAssemblyTypeName: Story, Assembly-CSharp
+        m_MethodName: toQuitAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5009,7 +5057,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 268141389}
         m_TargetAssemblyTypeName: Story, Assembly-CSharp
-        m_MethodName: openSkip
+        m_MethodName: skipAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5856,10 +5904,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 419236239}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 419236244}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnNoButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6266,8 +6314,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+      - m_Target: {fileID: 268141389}
+        m_TargetAssemblyTypeName: Story, Assembly-CSharp
         m_MethodName: OpenOptionCanvas
         m_Mode: 1
         m_Arguments:
@@ -6399,9 +6447,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-        m_MethodName: ExitGame
+      - m_Target: {fileID: 419236244}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

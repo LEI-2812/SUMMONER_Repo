@@ -1724,6 +1724,7 @@ MonoBehaviour:
   newAlert: {fileID: 626992372}
   newAlertResult: {fileID: 626992377}
   loadAlert: {fileID: 1051069145}
+  loadAlertResult: {fileID: 1051069150}
   settingBtn: {fileID: 629438704}
   audioSource: {fileID: 214920139}
 --- !u!82 &214920139
@@ -2788,7 +2789,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &421499242
 RectTransform:
@@ -7157,6 +7158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1051069149}
   - component: {fileID: 1051069148}
+  - component: {fileID: 1051069150}
   - component: {fileID: 1051069147}
   - component: {fileID: 1051069146}
   m_Layer: 5
@@ -7250,6 +7252,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1051069150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051069145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc49a4aa10f1bc42960d436313aa1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yesBtn: {fileID: 1421294769}
+  noBtn: {fileID: 1322731452}
 --- !u!1 &1074226575
 GameObject:
   m_ObjectHideFlags: 0
@@ -8777,10 +8793,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1051069145}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1051069150}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnNoButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9132,7 +9148,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1421294770}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1051069150}
+        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_MethodName: OnYesButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1421294770
 MonoBehaviour:
   m_ObjectHideFlags: 0
