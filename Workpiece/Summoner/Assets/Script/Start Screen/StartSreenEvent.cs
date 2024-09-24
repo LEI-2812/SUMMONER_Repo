@@ -11,8 +11,9 @@ public class StartSreenEvent : MonoBehaviour
     public GameObject newAlert;
     public Alert newAlertResult;
 
-
     public GameObject loadAlert;
+    public Alert loadAlertResult;
+
     public Button settingBtn;
 
     public AudioSource audioSource;
@@ -73,20 +74,29 @@ public class StartSreenEvent : MonoBehaviour
     public void StartSavedStage() 
     {
         audioSource.Play();
-        int savedStage = LoadStage();
-        Debug.Log("저장된 스테이지 "+ savedStage+"로 이동");
         loadAlert.SetActive(true); // 알림창 활성화
-        // 예시: 저장된 스테이지로 씬 로드
-        //SceneManager.LoadScene("Stage" + savedStage);
+
+        int savedStage = LoadStage();
+        loadAlertResult.ResetAlert();
+
+        StartCoroutine(WaitForAlertResult(loadAlert, loadAlertResult, (result) => {
+            if (result)
+            {
+                // Yes 버튼 클릭 시 로직
+                // Debug.Log("저장된 스테이지 " + savedStage + "로 이동");
+                Debug.Log("저장된 스테이지로 이동");
+                // 예시: 저장된 스테이지로 씬 로드
+                //SceneManager.LoadScene("Stage" + savedStage);
+            }
+            else
+            {
+                // No 버튼 클릭 시 로직
+                loadAlert.SetActive(false);
+            }
+        }));
     }
 
-    //스테이지 선택 화면으로 이동
-    public void SelectStage()
-    {
-        SceneManager.LoadScene("Stage Select Screen");
-    }
-
-    //설정창 끄기 키기 -> 수정 : SettingMenuContoller.cs에서 끄게 만듦. Dontdestroyonload로 넘어가서는 이 cs에서의 함수가 사용 불가.
+    //설정창 끄기 키기
     public void openOption()
     {
         // OptionCanvas_Audio가 존재할 경우에만 로직 실행

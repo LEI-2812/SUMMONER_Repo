@@ -13,10 +13,14 @@ public class Story : MonoBehaviour
 
     public GameObject menu;
     public GameObject toMain;
-    public GameObject toQuit;
-    public GameObject alertSkip;    // 스킵 창 띄울 오브젝트
+    public Alert toMainResult;
 
-    private GameObject setting;
+    public GameObject toQuit;
+    public Alert toQuitResult;
+
+    public GameObject alertSkip;    // 스킵 창 띄울 오브젝트
+    public Alert alertSkipResult;
+
     private SettingMenuController settingController;  // SettingMenuController의 인스턴스를 참조
     private void Start()
     {
@@ -36,12 +40,75 @@ public class Story : MonoBehaviour
     private void getSettingMenuController()
     {
         settingController = SettingMenuController.instance;
-        if (setting == null)
+        if (settingController == null)
         {
             Debug.LogWarning("SettingMenuController 인스턴스를 찾을 수 없습니다.");
         }
     }
 
+    public void openMenu()
+    {
+        if (menu.activeSelf == true)
+            menu.SetActive(false);
+        else
+            menu.SetActive(true);
+    }
+
+    public void toMainAlert()
+    {
+        toMain.SetActive(true);
+
+        toMainResult.ResetAlert();
+        StartCoroutine(WaitForAlertResult(toMain, toMainResult, (result) => {
+            if (result)
+            {
+                SceneManager.LoadScene("Start Screen");
+            }
+            else
+            {
+                // No 버튼 클릭 시 로직
+                toMain.SetActive(false);
+            }
+        }));
+    }
+
+    public void toQuitAlert()
+    {
+        toQuit.SetActive(true);
+
+        toQuitResult.ResetAlert();
+        StartCoroutine(WaitForAlertResult(toQuit, toQuitResult, (result) => {
+            if (result)
+            {
+                Debug.Log("게임을 종료합니다.");
+                Application.Quit();
+            }
+            else
+            {
+                // No 버튼 클릭 시 로직
+                toQuit.SetActive(false);
+            }
+        }));
+    }
+
+    public void skipAlert()
+    {
+        alertSkip.SetActive(true);
+
+        alertSkipResult.ResetAlert();
+        StartCoroutine(WaitForAlertResult(alertSkip, alertSkipResult, (result) => {
+            if (result)
+            {
+                Debug.Log("전투 씬으로 이동");
+                SceneManager.LoadScene("Fight Screen");
+            }
+            else
+            {
+                toMain.SetActive(false);
+            }
+        }));
+    }
+    /*
     // 스킵 버튼 클릭시 스킵 알림창 띄우기
     public void openSkip()
     {
@@ -55,15 +122,7 @@ public class Story : MonoBehaviour
         // 이거 일단 지금 있는 파이트 씬으로 이동을 해놔야 하나..?
         SceneManager.LoadScene("Fight Screen");
     }
-
-    public void openMenu()
-    {
-        if (menu.activeSelf == true)
-            menu.SetActive(false);
-        else
-            menu.SetActive(true);
-    }
-
+    
     // 메인 화면 가기 전 세이브 알림창
     public void checkSave()
     {
@@ -75,15 +134,7 @@ public class Story : MonoBehaviour
     {
         toQuit.SetActive(true);
     }
-
-    // 메인 화면으로 이동
-    public void gotoMain()
-    {
-        SceneManager.LoadScene("Start Screen");
-        menu.SetActive(false); // 스테이지 선택 화면으로 이동과 동시에 알림창 비활성화
-        toMain.SetActive(false);
-    }
-
+    */
     // 설정창 가져오기 - 다만 현재는 메인화면에서 한번 설정창을 켜야 가져올 수 있음
     public void OpenOptionCanvas()
     {
@@ -97,10 +148,21 @@ public class Story : MonoBehaviour
         }
     }
 
-    //게임 종료
-    public void ExitGame()
+    private IEnumerator WaitForAlertResult(GameObject alertObject, Alert alertScript, System.Action<bool> callback)
     {
-        Debug.Log("게임을 종료합니다.");
-        Application.Quit();
+        // 알림창을 활성화
+        alertObject.SetActive(true);
+
+        // 사용자가 버튼을 클릭할 때까지 대기
+        while (!alertScript.getIsClicked())
+        {
+            yield return null;  // 한 프레임 대기
+        }
+
+        // 알림창 비활성화
+        alertObject.SetActive(false);
+
+        // 버튼 클릭 후 결과 콜백 호출 (true: Yes, false: No)
+        callback(alertScript.getResult());
     }
 }

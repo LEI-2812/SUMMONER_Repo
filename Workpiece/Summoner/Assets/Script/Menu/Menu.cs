@@ -7,7 +7,10 @@ public class Menu : MonoBehaviour
 { 
     public GameObject menu;
     public GameObject toMain;
+    public Alert toMainResult;
+
     public GameObject toQuit;
+    public Alert toQuitResult;
 
     private SettingMenuController settingController;  // SettingMenuController의 인스턴스를 참조
     private void Start()
@@ -41,7 +44,49 @@ public class Menu : MonoBehaviour
         else
             menu.SetActive(true);
     }
-    
+
+    public void toMainAlert()
+    {
+        // audioSource.Play(); 일단 빼놨읍니다
+        toMain.SetActive(true); // 알림창 활성화
+
+        // 알림창 상태를 초기화
+        toMainResult.ResetAlert();
+        // 코루틴 실행: newAlert에 대한 처리
+        StartCoroutine(WaitForAlertResult(toMain, toMainResult, (result) => {
+            if (result)
+            {
+                SceneManager.LoadScene("Start Screen");
+            }
+            else
+            {
+                // No 버튼 클릭 시 로직
+                toMain.SetActive(false);
+            }
+        }));
+    }
+
+    public void toQuitAlert()
+    {
+        toQuit.SetActive(true); // 알림창 활성화
+
+        // 알림창 상태를 초기화
+        toQuitResult.ResetAlert();
+        // 코루틴 실행: newAlert에 대한 처리
+        StartCoroutine(WaitForAlertResult(toQuit, toQuitResult, (result) => {
+            if (result)
+            {
+                Debug.Log("게임을 종료합니다.");
+                Application.Quit();
+            }
+            else
+            {
+                // No 버튼 클릭 시 로직
+                toQuit.SetActive(false);
+            }
+        }));
+    }
+    /*
     // 메인 화면 가기 전 세이브 알림창
     public void checkSave()
     {
@@ -62,6 +107,13 @@ public class Menu : MonoBehaviour
         toMain.SetActive(false);
     }
 
+    //게임 종료
+    public void ExitGame()
+    {
+        Debug.Log("게임을 종료합니다.");
+        Application.Quit();
+    }
+    */
     // 설정창 가져오기 - 다만 현재는 메인화면에서 한번 설정창을 켜야 가져올 수 있음
     public void OpenOptionCanvas()
     {
@@ -74,11 +126,22 @@ public class Menu : MonoBehaviour
             Debug.LogWarning("SettingMenuController 인스턴스가 존재하지 않습니다.");
         }
     }
-
-    //게임 종료
-    public void ExitGame()
+    
+    private IEnumerator WaitForAlertResult(GameObject alertObject, Alert alertScript, System.Action<bool> callback)
     {
-        Debug.Log("게임을 종료합니다.");
-        Application.Quit();
+        // 알림창을 활성화
+        alertObject.SetActive(true);
+
+        // 사용자가 버튼을 클릭할 때까지 대기
+        while (!alertScript.getIsClicked())
+        {
+            yield return null;  // 한 프레임 대기
+        }
+
+        // 알림창 비활성화
+        alertObject.SetActive(false);
+
+        // 버튼 클릭 후 결과 콜백 호출 (true: Yes, false: No)
+        callback(alertScript.getResult());
     }
 }
