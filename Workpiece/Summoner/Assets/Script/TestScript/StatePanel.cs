@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OnMousePlate : MonoBehaviour
+public class StatePanel: MonoBehaviour
 {
     public Summon StateSummon; //Summon
     public Image summonImage; //image

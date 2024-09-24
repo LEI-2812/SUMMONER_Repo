@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cat : Summon
+public class Wolf : Summon
 {
     private void Awake()
     {
-        summonName = "Cat";
-        maxHP = 100;
+        summonName = "Wolf";
+        maxHP = 300;
         nowHP = maxHP;
-        attackPower = 15; //일반공격
-        SpecialPower = 20; //특수공격
-        summonRank = SummonRank.Low; // 하급 소환수
+        attackPower =50; //일반공격
+        summonRank = SummonRank.High; // 중급 소환수
     }
 
     private void Start()
