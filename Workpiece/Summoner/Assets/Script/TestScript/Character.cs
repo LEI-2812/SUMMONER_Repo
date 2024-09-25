@@ -21,14 +21,6 @@ public class Character : MonoBehaviour
     public virtual void EndTurn()
     {
         Debug.Log($"{gameObject.name}의 턴 종료");
-        // 턴 종료 후 BattleController에서 다음 턴으로 넘어가게 해야 함
-    }
-
-
-    //소환로직 플레이어에게만 오버라이딩 enermy는 미리 소환
-    public virtual void takeSummon()
-    {
-
     }
 
 }

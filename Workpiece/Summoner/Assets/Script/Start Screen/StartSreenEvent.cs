@@ -35,10 +35,7 @@ public class StartSreenEvent : MonoBehaviour
         {
             settingBtn.onClick.AddListener(openOption); // 버튼에 openOption 이벤트 연결
         }
-        else
-        {
-            Debug.LogError("Setting 버튼이 연결되지 않았습니다.");
-        }
+        else{ Debug.LogError("Setting 버튼이 연결되지 않았습니다."); }
 
         newAlert.SetActive(false);
         loadAlert.SetActive(false);

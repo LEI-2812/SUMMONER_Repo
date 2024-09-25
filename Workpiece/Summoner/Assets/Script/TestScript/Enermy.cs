@@ -6,6 +6,7 @@ using UnityEngine;
 public class Enermy : Character
 {
     public List<Plate> enermyPlates; // 적이 사용할 플레이트 목록
+    public TurnController turnController;
 
     public override void startTurn()
     {
@@ -24,9 +25,7 @@ public class Enermy : Character
 
     public override void EndTurn()
     {
-        base.EndTurn();
-        // 턴 종료 후 TurnController에서 플레이어의 턴으로 넘어가게 함
-        TurnController turnController = FindObjectOfType<TurnController>();
+        Debug.Log("적 턴 종료");
         turnController.EndTurn();
     }
 }

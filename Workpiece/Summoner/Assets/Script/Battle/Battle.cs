@@ -12,14 +12,16 @@ public class Battle : MonoBehaviour
      */
 
     public GameObject menu;
+
     public GameObject toMain;
     public Alert toMainResult;
 
-    public GameObject toQuit;
+    public GameObject toQuit; //나가기
     public Alert toQuitResult;
 
     public GameObject alertClear;   // 전투 승리 시 띄울 오브젝트
     public Alert ClearResult;
+
     public GameObject alertFail;    // 전투 패배 시 띄울 오브젝트
     public Alert FailResult;
 
