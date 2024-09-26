@@ -18,7 +18,6 @@ public class StartSreenEvent : MonoBehaviour
 
     public AudioSource audioSource;
 
-
     void Start()
     {
         // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
@@ -39,6 +38,8 @@ public class StartSreenEvent : MonoBehaviour
 
         newAlert.SetActive(false);
         loadAlert.SetActive(false);
+        int savedStageValue = PlayerPrefs.GetInt("savedStage");
+        Debug.Log("savedStage 값 : " + savedStageValue);
     }
 
     //새게임
@@ -53,8 +54,10 @@ public class StartSreenEvent : MonoBehaviour
         StartCoroutine(WaitForAlertResult(newAlert, newAlertResult, (result) => {
             if (result)
             {
+                
                 // Yes 버튼 클릭 시 로직
                 PlayerPrefs.DeleteAll();
+                PlayerPrefs.SetInt("savedStage", 1); // 스테이지 진행 상황 초기화
                 PlayerPrefs.Save();
                 Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
                 SceneManager.LoadScene("Stage Select Screen");
@@ -82,6 +85,7 @@ public class StartSreenEvent : MonoBehaviour
                 // Yes 버튼 클릭 시 로직
                 // Debug.Log("저장된 스테이지 " + savedStage + "로 이동");
                 Debug.Log("저장된 스테이지로 이동");
+                PlayerPrefs.GetInt("savedStage"); // 현재 진행 상황 받아오기
                 // 예시: 저장된 스테이지로 씬 로드
                 //SceneManager.LoadScene("Stage" + savedStage);
             }
@@ -136,22 +140,16 @@ public class StartSreenEvent : MonoBehaviour
 
 
 
-    /// //////////////////////////////그 외 로직들
+    //그 외 로직들
 
-    //스테이지 저장 (매 스테이지 클리어마다 호출하면됨.)
-    public void SaveStage(int stageNumber)
-    {
-        // "CurrentStage"라는 키로 스테이지 번호를 저장합니다.
-        PlayerPrefs.SetInt("SaveStage", stageNumber);
-        PlayerPrefs.Save(); // 저장을 강제 실행합니다.
-    }
+    //여기 있었던 SaveStage() StageController.cs로 옮김
 
     //스테이지 로드   추후 저장된 스테이지 불러오기 가능 시 알림창 yes 버튼에 적용
     public int LoadStage()
     {
-        if (PlayerPrefs.HasKey("SaveStage"))
+        if (PlayerPrefs.HasKey("savedStage"))
         {
-            return PlayerPrefs.GetInt("SaveStage");
+            return PlayerPrefs.GetInt("savedStage");
         }
         else
         {
@@ -159,8 +157,6 @@ public class StartSreenEvent : MonoBehaviour
             return 1; // 또는 원하는 다른 값
         }
     }
-
-
 
     private IEnumerator WaitForAlertResult(GameObject alertObject, Alert alertScript, System.Action<bool> callback)
     {
