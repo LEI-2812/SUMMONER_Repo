@@ -1,8 +1,9 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class InteractionController : MonoBehaviour
+public class InteractionController : MonoBehaviour, IPointerClickHandler
 {
     [Header("캐릭터이름 텍스트")]
     public TextMeshProUGUI characterName;
@@ -90,5 +91,10 @@ public class InteractionController : MonoBehaviour
         {
             ShowNextLine();
         }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        ShowNextLine();
     }
 }
