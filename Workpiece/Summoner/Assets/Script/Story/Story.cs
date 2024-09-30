@@ -5,12 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class Story : MonoBehaviour
 {
-    /* 스토리 씬에서 필요한 코드
-      - skip 버튼 클릭 시 메뉴창 뜨게 하기
-      - 알림창에서 스토리 스킵 yes 시 바로 전투 화면 출력
-      - no 클릭 시 알림창 끄기
-      - 여기서도 esc 클릭 시 메뉴 창 띄우기 */
-
     [Header("메뉴 창")]
     public GameObject menu;
 
@@ -27,8 +21,6 @@ public class Story : MonoBehaviour
     public Alert alertSkipResult;
 
     private Setting setting;  // SettingMenuController의 인스턴스를 참조
-
-
 
     public void toMainAlert()
     {
@@ -84,6 +76,8 @@ public class Story : MonoBehaviour
             }
         }));
     }
+
+    
     /*
     // 스킵 버튼 클릭시 스킵 알림창 띄우기
     public void openSkip()

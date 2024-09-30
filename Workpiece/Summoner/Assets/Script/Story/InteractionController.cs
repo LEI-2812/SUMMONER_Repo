@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InteractionController : MonoBehaviour
 {
@@ -75,10 +76,11 @@ public class InteractionController : MonoBehaviour
     // 대화 종료 메서드
     public void EndDialogue()
     {
-        characterName.text = "";
-        dialogueContext.text = "";
+        //characterName.text = "";  공백 대화창이 하나 나와서 없애고 바로 전투 씬으로 보냄
+        //dialogueContext.text = "";
         isDialogueActive = false;
         Debug.Log("대화가 종료되었습니다.");
+        SceneManager.LoadScene("Fight Screen"); // 대화가 끝나면 전투 씬으로 변경
     }
 
     void Update()
