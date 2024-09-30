@@ -6,10 +6,14 @@ using UnityEngine.UI;
 
 public class AudioController : MonoBehaviour
 {
+    [Header("마스터 볼륨 슬라이더")]
     public Slider masterVolumeSlider;
+    [Header("BGM 볼륨 슬라이더")]
     public Slider bgmVolumeSlider;
+    [Header("SFX 볼륨 슬라이더")]
     public Slider sfxVolumeSlider;
 
+    [Header("오디오 믹서")]
     public AudioMixer audioMixer;
 
     private float masterVolume = 1f;

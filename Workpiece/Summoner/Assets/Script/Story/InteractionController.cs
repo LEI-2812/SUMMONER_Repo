@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class InteractionController : MonoBehaviour
 {
+    [Header("캐릭터이름 텍스트")]
     public TextMeshProUGUI characterName;
     public TextMeshProUGUI dialogueContext;
 

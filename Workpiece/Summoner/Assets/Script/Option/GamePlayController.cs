@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class GamePlayController : MonoBehaviour
 {
+    [Header("스토리 스킵툴팁")]
     public Toggle isStorySkip;
+
+    [Header("마우스만 사용가능 툴팁")]
     public Toggle isOnlyMouse;
 
     private void Update()

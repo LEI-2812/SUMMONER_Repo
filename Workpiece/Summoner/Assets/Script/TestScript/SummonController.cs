@@ -8,12 +8,18 @@ using Unity.Burst.Intrinsics;
 public class SummonController : MonoBehaviour
 {
     public static SummonController Instance; //싱글톤
+
+    [Header("소환수 오브젝트")]
     public List<Summon> summons; //인스펙터에 넣을 소환수 오브젝트들
+
+    [Header("소환 이벤트 판넬")]
     public GameObject TakeSummonPanel;
 
     private Summon selectedSummon; // 선택된 소환수
 
-    public List<PickSummonPanel> SelectSummonPanels; //판넬에 띄울 소환수
+    [Header("소환수 선택 판넬 (+버튼으로 늘릴 수 있음)")]
+    [SerializeField] private List<PickSummonPanel> SelectSummonPanels; //판넬에 띄울 소환수
+
     private void Awake()
     {
         // 싱글톤 패턴 구현
@@ -37,8 +43,8 @@ public class SummonController : MonoBehaviour
         for (int i = 0; i < SelectSummonPanels.Count && i < randomSelectedSummons.Count; i++)
         {
             Summon summon = randomSelectedSummons[i];
-            SelectSummonPanels[i].assignedSummon = summon; // 소환수를 패널에 할당
-                                                           // 이미지가 null인지 체크
+            SelectSummonPanels[i].setAssignedSummon(summon); // 소환수를 패널에 할당
+            // 이미지가 null인지 체크
             if (summon.image != null && summon.image.sprite != null)
             {
                 SelectSummonPanels[i].SetSummonImage(summon.image); // 소환수의 스프라이트를 패널에 할당

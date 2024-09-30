@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class StageController : MonoBehaviour
 {
+
+    [Header("스테이지 버튼들(순서대로)")]
     public Button[] buttons;    // 활성화/비활성화할 버튼들
 
     void Start()
@@ -17,7 +19,9 @@ public class StageController : MonoBehaviour
     }
 
     // 현재 스테이지 진행 정도
-    public int savedStage = 0;
+    [SerializeField]
+    [Header("스테이지 진행도")]
+    private int savedStage = 0;
     
     // PlayerPrefs로 스테이지 진행 정도 저장
     void SaveStage()

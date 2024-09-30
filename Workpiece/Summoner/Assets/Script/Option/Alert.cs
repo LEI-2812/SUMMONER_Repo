@@ -3,7 +3,10 @@ using UnityEngine.UI;
 
 public class Alert : MonoBehaviour
 {
+    [Header("Yes 버튼")]
     public Button yesBtn;
+
+    [Header("No 버튼")]
     public Button noBtn;
 
     private bool isClicked = false;
