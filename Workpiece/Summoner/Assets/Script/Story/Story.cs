@@ -11,48 +11,24 @@ public class Story : MonoBehaviour
       - no 클릭 시 알림창 끄기
       - 여기서도 esc 클릭 시 메뉴 창 띄우기 */
 
+    [Header("메뉴 창")]
     public GameObject menu;
+
+    [Header("메인으로 버튼")]
     public GameObject toMain;
     public Alert toMainResult;
 
+    [Header("나가기 버튼")]
     public GameObject toQuit;
     public Alert toQuitResult;
 
+    [Header("스킵 버튼")]
     public GameObject alertSkip;    // 스킵 창 띄울 오브젝트
     public Alert alertSkipResult;
 
-    private SettingMenuController settingController;  // SettingMenuController의 인스턴스를 참조
-    private void Start()
-    {
-        getSettingMenuController(); //SettingMenuController인스턴스 가져오기
-    }
-    // esc 키를 계속 감지하여 눌릴 때 메뉴창 열기/닫기
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (!settingController.option.activeSelf)
-                openMenu();
-        }
-    }
+    private Setting setting;  // SettingMenuController의 인스턴스를 참조
 
-    //SettingMenuController 인스턴스 받아오는 메소드
-    private void getSettingMenuController()
-    {
-        settingController = SettingMenuController.instance;
-        if (settingController == null)
-        {
-            Debug.LogWarning("SettingMenuController 인스턴스를 찾을 수 없습니다.");
-        }
-    }
 
-    public void openMenu()
-    {
-        if (menu.activeSelf == true)
-            menu.SetActive(false);
-        else
-            menu.SetActive(true);
-    }
 
     public void toMainAlert()
     {
@@ -138,9 +114,9 @@ public class Story : MonoBehaviour
     // 설정창 가져오기 - 다만 현재는 메인화면에서 한번 설정창을 켜야 가져올 수 있음
     public void OpenOptionCanvas()
     {
-        if (SettingMenuController.instance != null)
+        if (Setting.instance != null)
         {
-            SettingMenuController.instance.openOption();
+            Setting.instance.openOption();
         }
         else
         {

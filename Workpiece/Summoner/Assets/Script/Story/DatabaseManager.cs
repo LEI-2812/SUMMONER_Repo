@@ -7,7 +7,9 @@ public class DatabaseManager : MonoBehaviour
 {
     public static DatabaseManager instance; //싱글톤으로 어디서든 하나의 오브젝트로 관리하기 위함
 
-    [SerializeField] string csv_FileName; //csv파일이름
+    [SerializeField]
+    [Header("CSV 파일 이름 .csv 없이")] 
+    string csv_FileName; //csv파일이름
 
     Dictionary<int, Dialogue> dialogueDic = new Dictionary<int, Dialogue>(); //딕셔너리로 관리
 
@@ -29,7 +31,7 @@ public class DatabaseManager : MonoBehaviour
     }
 
 
-    public Dialogue[] getDialogue(int startNum, int endNum) //이걸로 꺼내오나봄
+    public Dialogue[] getDialogue(int startNum, int endNum) //대사 꺼내오기
     {
         List<Dialogue> dialogueList = new List<Dialogue>();
 

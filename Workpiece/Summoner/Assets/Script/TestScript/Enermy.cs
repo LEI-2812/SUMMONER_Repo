@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class Enermy : Character
 {
-    public List<Plate> enermyPlates; // 적이 사용할 플레이트 목록
-    public TurnController turnController;
+    [Header("적 플레이트")]
+    [SerializeField] private List<Plate> enermyPlates; // 적이 사용할 플레이트 목록
+
+    [Header("턴 컨트롤러")]
+    [SerializeField] private TurnController turnController;
 
     public override void startTurn()
     {

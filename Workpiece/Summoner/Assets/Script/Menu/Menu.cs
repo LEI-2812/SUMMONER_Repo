@@ -4,47 +4,73 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
-{ 
-    public GameObject menu;
-    public GameObject toMain;
-    public Alert toMainResult;
+{
+    // 싱글톤 인스턴스
+    public static Menu instance;
 
-    public GameObject toQuit;
-    public Alert toQuitResult;
+    [Header("메뉴 판넬")]
+    [SerializeField] private GameObject menuPanel;
 
-    private SettingMenuController settingController;  // SettingMenuController의 인스턴스를 참조
-    private void Start()
+    [Space]
+
+    [Header("메인화면이동")]
+    [SerializeField] private GameObject toMain; //메인으로 Alert
+    [SerializeField] private Alert toMainResult; //메인 Alert 로직
+
+    [Space]
+
+    [Header("설정창")]
+    [SerializeField] private GameObject settingPanel;
+    [SerializeField] private Setting setting;
+
+    [Space]
+
+    [Header("게임종료")]
+    [SerializeField] private GameObject toQuit; //나가기 알림창
+    [SerializeField] private Alert toQuitResult; //나가기 Alert 로직
+
+    [Header("백그라운드 배경")]
+    [SerializeField ]private GameObject backGroundPanel;
+
+    private void Awake()
     {
-        getSettingMenuController(); //SettingMenuController인스턴스 가져오기
+        // 싱글톤 인스턴스 설정
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // 이 오브젝트를 씬 전환 시 파괴하지 않도록 설정
+        }
+        else
+        {
+            Destroy(gameObject); // 이미 인스턴스가 존재하면, 새로 생성된 오브젝트 파괴
+        }
     }
+
     // esc 키를 계속 감지하여 눌릴 때 메뉴창 열기/닫기
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        //ESC입력은 StartScreen에선 안먹히게 적용
+        if (Input.GetKeyDown(KeyCode.Escape) && ! (SceneManager.GetActiveScene().name == "Start Screen"))
         {
-            if (!settingController.option.activeSelf)
-                openMenu();
+            if (!setting.settingPanel.activeSelf)
+                openCloseMenu();
         }
     }
 
-    //SettingMenuController 인스턴스 받아오는 메소드
-    private void getSettingMenuController()
-    {
-        settingController = SettingMenuController.instance;
-        if (settingController == null)
-        {
-            Debug.LogWarning("SettingMenuController 인스턴스를 찾을 수 없습니다.");
-        }
-    }
 
-    public void openMenu()
+    public void openCloseMenu()
     {
-        if (menu.activeSelf == true)
-            menu.SetActive(false);
+        if (menuPanel.activeSelf == true)
+        {
+            backGroundPanel.SetActive(false);
+            menuPanel.SetActive(false);
+        }
         else
-            menu.SetActive(true);
+        {
+            menuPanel.SetActive(true);
+            backGroundPanel.SetActive(true);
+        }
     }
-
     public void toMainAlert()
     {
         // audioSource.Play(); 일단 빼놨읍니다
@@ -57,11 +83,13 @@ public class Menu : MonoBehaviour
             if (result)
             {
                 SceneManager.LoadScene("Start Screen");
+                openCloseMenu();
             }
             else
             {
                 // No 버튼 클릭 시 로직
                 toMain.SetActive(false);
+                openCloseMenu();
             }
         }));
     }
@@ -86,6 +114,7 @@ public class Menu : MonoBehaviour
             }
         }));
     }
+
     /*
     // 메인 화면 가기 전 세이브 알림창
     public void checkSave()
@@ -115,16 +144,9 @@ public class Menu : MonoBehaviour
     }
     */
     // 설정창 가져오기 - 다만 현재는 메인화면에서 한번 설정창을 켜야 가져올 수 있음
-    public void OpenOptionCanvas()
+    public void openSettingCanvas()
     {
-        if (SettingMenuController.instance != null)
-        {
-            SettingMenuController.instance.openOption();
-        }
-        else
-        {
-            Debug.LogWarning("SettingMenuController 인스턴스가 존재하지 않습니다.");
-        }
+       setting.openOption();
     }
     
     private IEnumerator WaitForAlertResult(GameObject alertObject, Alert alertScript, System.Action<bool> callback)

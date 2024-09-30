@@ -11,40 +11,27 @@ public class Battle : MonoBehaviour
       전투 승리, 패배 시 띄울 알림창
      */
 
-    public GameObject menu;
+    [Header("전투 결과 알림창")]
+    public GameObject alertClear; // 전투 승리 알림창
+    public Alert ClearResult; // 전투 승리 알림 결과
+    public GameObject alertFail; // 전투 패배 알림창
+    public Alert FailResult; // 전투 패배 알림 결과
 
-    public GameObject toMain;
-    public Alert toMainResult;
+    // === Private References ===
+    private Setting setting; // SettingMenuController 인스턴스 참조
 
-    public GameObject toQuit; //나가기
-    public Alert toQuitResult;
 
-    public GameObject alertClear;   // 전투 승리 시 띄울 오브젝트
-    public Alert ClearResult;
-
-    public GameObject alertFail;    // 전투 패배 시 띄울 오브젝트
-    public Alert FailResult;
-
-    private SettingMenuController settingController;  // SettingMenuController의 인스턴스를 참조
     private void Start()
     {
         getSettingMenuController(); //SettingMenuController인스턴스 가져오기
     }
-    // esc 키를 계속 감지하여 눌릴 때 메뉴창 열기/닫기
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (!settingController.option.activeSelf)
-                openMenu();
-        }
-    }
+
 
     //SettingMenuController 인스턴스 받아오는 메소드
     private void getSettingMenuController()
     {
-        settingController = SettingMenuController.instance;
-        if (settingController == null)
+        setting = Setting.instance;
+        if (setting == null)
         {
             Debug.LogWarning("SettingMenuController 인스턴스를 찾을 수 없습니다.");
         }
@@ -123,57 +110,14 @@ public class Battle : MonoBehaviour
         SceneManager.LoadScene("Stage Select Screen");  // 스테이지 선택 화면으로 씬 이동
     }
     */
-    public void openMenu()
-    {
-        if (menu.activeSelf == true)
-            menu.SetActive(false);
-        else
-            menu.SetActive(true);
-    }
-
-    public void toMainAlert()
-    {
-        toMain.SetActive(true);
-
-        toMainResult.ResetAlert();
-        StartCoroutine(WaitForAlertResult(toMain, toMainResult, (result) => {
-            if (result)
-            {
-                SceneManager.LoadScene("Start Screen");
-            }
-            else
-            {
-                // No 버튼 클릭 시 로직
-                toMain.SetActive(false);
-            }
-        }));
-    }
-
-    public void toQuitAlert()
-    {
-        toQuit.SetActive(true);
-
-        toQuitResult.ResetAlert();
-        StartCoroutine(WaitForAlertResult(toQuit, toQuitResult, (result) => {
-            if (result)
-            {
-                Debug.Log("게임을 종료합니다.");
-                Application.Quit();
-            }
-            else
-            {
-                // No 버튼 클릭 시 로직
-                toQuit.SetActive(false);
-            }
-        }));
-    }
+  
 
     // 설정창 가져오기 - 다만 현재는 메인화면에서 한번 설정창을 켜야 가져올 수 있음
     public void OpenOptionCanvas()
     {
-        if (SettingMenuController.instance != null)
+        if (Setting.instance != null)
         {
-            SettingMenuController.instance.openOption();
+            Setting.instance.openOption();
         }
         else
         {

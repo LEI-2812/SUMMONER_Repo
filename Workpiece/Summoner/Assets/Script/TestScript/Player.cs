@@ -6,24 +6,29 @@ using UnityEngine.UI;
 
 public class Player : Character
 {
-    public List<Plate> playerPlates; // 플레이어가 사용할 플레이트 목록
-    private bool hasSummonedThisTurn; // 턴당 소환 여부 확인
+    [Header("플레이어 플레이트")]
+    [SerializeField] private List<Plate> playerPlates; // 플레이어가 사용할 플레이트 목록
 
     //마나
     private int mana; // 플레이어의 기본마나
     private int usedMana; //재소환시 필요한 마나
-    public List<RawImage> manaList; //마나UI
-    public Texture notHaveTexture;
-    public Texture haveTexture;
+    [Header("마나UI")]
+    [SerializeField] private List<RawImage> manaList; //마나UI
+    [Header("마나텍스쳐")]
+    [SerializeField] private Texture notHaveTexture;
+    [SerializeField] private Texture haveTexture;
 
 
     //컨트롤러들
-    public TurnController turnController; // TurnController 참조
-    public SummonController summonController; //소환버튼으로 소환수를 가져오기 위해 필요
+    [Header("컨트롤러")]
+    [SerializeField] private TurnController turnController; // TurnController 참조
+    [SerializeField] private SummonController summonController; //소환버튼으로 소환수를 가져오기 위해 필요
 
-    // 마지막으로 소환했던 플레이트 번호 저장 (리스트 대신 int 사용)
+    // 마지막으로 소환했던 플레이트 번호 저장
     private int lastSummonedPlateIndex = -1; // 소환했던 플레이트의 인덱스를 저장 (-1은 초기값)
 
+    // 턴당 소환 여부 확인
+    private bool hasSummonedThisTurn;
 
     private void Start()
     {
@@ -36,7 +41,7 @@ public class Player : Character
     {
         base.startTurn();
         Debug.Log($"{gameObject.name} 의 마나: {mana}");
-        hasSummonedThisTurn = false; // 매 턴 소환 초기화
+        hasSummonedThisTurn = false; // 매 턴 소환여부 초기화
     }
 
 
@@ -154,8 +159,15 @@ public class Player : Character
         }
     }
 
+    //재소환 버튼 클릭 이벤트
     public void OnReSummonBtnClick()
     {
+        if (!hasSummonedThisTurn)
+        {
+            Debug.Log("이 턴에 소환을 하지 않았습니다.");
+            return; // 소환은 턴당 1회만 가능
+        }
+
         Debug.Log($"{gameObject.name} 의 마나: {mana}");
         if (mana > usedMana) // 재소환에 필요한 마나보다 현재 보유 마나가 더 많은지 확인
         {
@@ -178,8 +190,8 @@ public class Player : Character
         }
     }
 
-
-    public void ResetPlayerSetting()
+    //플레이어 설정 초기화
+    private void ResetPlayerSetting()
     {
         mana = 10; //첫 게임 시작시 마나 10으로 시작
         usedMana = 1; //사용될 마나

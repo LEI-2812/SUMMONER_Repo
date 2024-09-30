@@ -2,19 +2,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingMenuController : MonoBehaviour
+public class Setting : MonoBehaviour
 {
-    public static SettingMenuController instance; // 싱글톤 인스턴스 어느 씬에서든 이 스크립트는 하나만 사용되어야함.
-    public GameObject option;
+    [Header("옵션(설정)창")]
+    public GameObject settingPanel;
 
     // 패널들을 저장할 리스트
+    [Header("설정창(비디오,오디오,게임플레이) 판넬")]
     public List<GameObject> panels;
 
     // 버튼들을 저장할 리스트
+    [Header("설정창(비디오,오디오,게임플레이) 버튼")]
     public List<Button> buttons;
 
     // 색상을 진하게 할 정도
-    public float darkenFactor = 0.8f; // 진하게 할 비율 (1.0보다 작으면 더 진해짐)
+    private float darkenFactor = 0.8f; // 진하게 할 비율 (1.0보다 작으면 더 진해짐)
 
     // 각 버튼의 원래 색상을 저장할 딕셔너리
     private Dictionary<Button, Color> originalColors = new Dictionary<Button, Color>();
@@ -22,22 +24,25 @@ public class SettingMenuController : MonoBehaviour
     // 현재 활성화된 버튼 인덱스
     private int activeIndex = -1;
 
+    // 싱글톤 인스턴스
+    public static Setting instance;
+
+    // 싱글톤 인스턴스 초기화
     private void Awake()
     {
-        // 싱글톤 인스턴스가 이미 존재하는지 확인
         if (instance == null)
         {
-            //Debug.Log("새 오브젝트 생성");
-            instance = this; // 현재 오브젝트를 인스턴스로 설정
-            DontDestroyOnLoad(gameObject); // 씬 전환 시 오브젝트가 파괴되지 않도록 설정
-            InitializeMenu(); // 메뉴 초기화
+            instance = this;
         }
         else
         {
-            //Debug.Log("오브젝트 파괴");
-            Destroy(gameObject); // 중복된 오브젝트는 파괴
-            return; // 파괴 후 이후 로직 실행을 방지
+            Destroy(gameObject); // 이미 인스턴스가 존재한다면 새로운 인스턴스를 파괴
         }
+    }
+
+    void Start()
+    {
+        InitializeMenu();
     }
 
     // 메뉴 초기화 작업
@@ -94,9 +99,9 @@ public class SettingMenuController : MonoBehaviour
     // 설정창 열기/닫기
     public void openOption()
     {
-        if (option.activeSelf)
-            option.SetActive(false);
+        if (settingPanel.activeSelf)
+            settingPanel.SetActive(false);
         else
-            option.SetActive(true);
+            settingPanel.SetActive(true);
     }
 }

@@ -6,9 +6,11 @@ using UnityEngine.UI;
 public class VideoController : MonoBehaviour
 {
     // 해상도 토글 리스트
+    [Header("해상도 토글")]
     public List<Toggle> resolutionToggles;
 
     // 화면 설정 토글 리스트
+    [Header("화면크기 토글")]
     public List<Toggle> screenModeToggles;
 
     // 해상도 설정 값들

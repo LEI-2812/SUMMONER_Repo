@@ -9,8 +9,10 @@ public class PickSummonPanel : MonoBehaviour,
     IPointerExitHandler,  //플레이트에 마우스가 벗어낫을때 이벤트 인터페이스
     IPointerClickHandler //플레이트 클릭시 상태창 
 {
-    public Summon assignedSummon; // 패널에 할당된 소환수
-    public Image summonImage;
+    [Header("소환이벤트 소환수")] 
+    [SerializeField] private Summon assignedSummon; // 패널에 할당된 소환수
+    [Header("소환이벤트 소환수 이미지")] 
+    [SerializeField] private Image summonImage;
 
 
     // 패널의 이미지를 설정하는 메소드
@@ -56,5 +58,18 @@ public class PickSummonPanel : MonoBehaviour,
 
         // 소환수 할당도 초기화
         assignedSummon = null;
+    }
+
+
+
+
+    public Summon getAssignedSummon()
+    {
+        return assignedSummon;
+    }
+
+    public void setAssignedSummon(Summon summon)
+    {
+        assignedSummon = summon;
     }
 }

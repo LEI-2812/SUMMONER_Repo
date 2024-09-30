@@ -7,26 +7,33 @@ using UnityEngine.UI;
 
 public class StartSreenEvent : MonoBehaviour
 {
-    private GameObject optionCanvasAudio;
+    private GameObject menuCanvas; //비파괴로 해놔서 public으로 할시 다른씬 다녀오면 missing나기때문에 직접 참조
+
+    [Header("메인씬 처음부터 버튼")]
     public GameObject newAlert;
     public Alert newAlertResult;
 
+    [Header("메인씬 이어서 버튼")]
     public GameObject loadAlert;
     public Alert loadAlertResult;
 
+    [Header("메인씬 설정버튼")]
     public Button settingBtn;
 
+    [Header("효과음 사운드")]
     public AudioSource audioSource;
+
+    private Setting setting;
 
     void Start()
     {
         // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
-        optionCanvasAudio = GameObject.Find("OptionCanvas_Audio");
+        menuCanvas = GameObject.Find("MenuCanvas");
 
         // 만약 씬에 오브젝트가 없을 경우 오류 방지
-        if (optionCanvasAudio == null)
+        if (menuCanvas == null)
         {
-            Debug.LogError("OptionCanvas_Audio 오브젝트가 없음.");
+            Debug.LogError("MenuCanvas 오브젝트가 없음.");
         }
 
         // Setting 버튼 클릭 이벤트를 연결
@@ -101,12 +108,11 @@ public class StartSreenEvent : MonoBehaviour
     public void openOption()
     {
         // OptionCanvas_Audio가 존재할 경우에만 로직 실행
-        if (optionCanvasAudio != null)
+        if (menuCanvas != null)
         {
             audioSource.Play();
 
-            // optionCanvasAudio의 자식 오브젝트로 있는 option을 찾아서 제어
-            GameObject option = optionCanvasAudio.transform.Find("Option").gameObject;
+            GameObject option = menuCanvas.transform.Find("Setting/SettingPanel").gameObject;
 
             if (option != null)
             {
@@ -122,12 +128,12 @@ public class StartSreenEvent : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Option 오브젝트를 찾을 수 없습니다.");
+                Debug.LogError("SettingPanel 오브젝트를 찾을 수 없습니다.");
             }
         }
         else
         {
-            Debug.LogError("optionCanvasAudio 오브젝트가 존재하지 않습니다.");
+            Debug.LogError("MenuCanvas 오브젝트가 존재하지 않습니다.");
         }
     }
 
