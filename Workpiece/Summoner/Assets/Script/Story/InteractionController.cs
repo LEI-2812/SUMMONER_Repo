@@ -65,7 +65,19 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
             // 현재 캐릭터의 대사 출력
             characterName.text = currentDialogue.name;
-            dialogueContext.text = currentDialogue.context[currentDialogueLineIndex];
+
+            // 현재 대사에 이어붙이기 기능 추가
+            string combinedDialogue = "";
+            for (int i = 0; i <= currentDialogueLineIndex; i++)
+            {
+                combinedDialogue += currentDialogue.context[i];
+                if (i < currentDialogueLineIndex)
+                {
+                    combinedDialogue += "\n"; // 대사를 합칠 때 들여쓰기로 추가
+                }
+            }
+
+            dialogueContext.text = combinedDialogue; // 합쳐진 대사 출력
             currentDialogueLineIndex++; // 다음 대사로 이동
         }
         else
