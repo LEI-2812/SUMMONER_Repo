@@ -2730,7 +2730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue:
     name: 
-    line: {x: 7, y: 15}
+    line: {x: 1, y: 15}
     dialogues: []
 --- !u!114 &1102135335
 MonoBehaviour:

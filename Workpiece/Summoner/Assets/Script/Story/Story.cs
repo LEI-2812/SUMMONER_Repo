@@ -67,7 +67,7 @@ public class Story : MonoBehaviour
         StartCoroutine(WaitForAlertResult(alertSkip, alertSkipResult, (result) => {
             if (result)
             {
-                Debug.Log("전투 씬으로 이동");
+                Debug.Log("스킵하여 전투 씬으로 이동");
                 SceneManager.LoadScene("Fight Screen");
             }
             else
