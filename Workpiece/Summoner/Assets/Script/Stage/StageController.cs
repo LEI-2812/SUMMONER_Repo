@@ -40,13 +40,16 @@ public class StageController : MonoBehaviour
 
     public void stageLoader(int stage)
     {
+        CheckStage.stageNum = stage;
         SceneManager.LoadScene("Stage" + stage.ToString());   
     }
 
     //임시코드
     public void TestSceneLoad()
     {
-        SceneManager.LoadScene("Fight Screen");
+        CheckStage.stageNum = 1;
+        SceneManager.LoadScene("Story Screen");
+        //SceneManager.LoadScene("Fight Screen");
     }
 
     void ButtonInteractivity(int stageNumber)

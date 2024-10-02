@@ -1,13 +1,14 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class InteractionController : MonoBehaviour, IPointerClickHandler
 {
     [Header("캐릭터이름 텍스트")]
-    public TextMeshProUGUI characterName;
-    public TextMeshProUGUI dialogueContext;
+    public Text characterName;
+    public Text dialogueContext;
 
     [SerializeField] private InteractionEvent interactionEvent; // InteractionEvent 연결
 
@@ -30,7 +31,6 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public void StartDialogue()
     {
         if (isDialogueActive) return; // 이미 대화 중이면 중복 실행 방지
-
         currentDialogues = interactionEvent.getDialogue(); // 대사를 가져온다.
         if (currentDialogues == null || currentDialogues.Length == 0) // 대사가 없으면 종료
         {
@@ -93,7 +93,22 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         //dialogueContext.text = "";
         isDialogueActive = false;
         Debug.Log("대화가 종료되었습니다.");
-        SceneManager.LoadScene("Fight Screen"); // 대화가 끝나면 전투 씬으로 변경
+
+        if (CheckStage.stageNum == 0)
+        {
+            Debug.Log("프롤로그");
+            SceneManager.LoadScene("Stage Select Screen"); //프롤로그 이후 출력
+        }
+        else if (CheckStage.stageNum == 8)
+        {
+            Debug.Log("에필로그");
+            SceneManager.LoadScene("Thank Screen"); //에필로그 이후 출력
+        }
+        else
+        {
+            Debug.Log("이도저도 아닌");
+            SceneManager.LoadScene("Fight Screen"); // 대화가 끝나면 전투 씬으로 변경 
+        }
     }
 
     void Update()
