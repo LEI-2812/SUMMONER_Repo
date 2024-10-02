@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class StartSreenEvent : MonoBehaviour
+public class StartScreenEvent : MonoBehaviour
 {
     private GameObject menuCanvas; //비파괴로 해놔서 public으로 할시 다른씬 다녀오면 missing나기때문에 직접 참조
 
@@ -42,7 +42,6 @@ public class StartSreenEvent : MonoBehaviour
             settingBtn.onClick.AddListener(openOption); // 버튼에 openOption 이벤트 연결
         }
         else{ Debug.LogError("Setting 버튼이 연결되지 않았습니다."); }
-
         newAlert.SetActive(false);
         loadAlert.SetActive(false);
         int savedStageValue = PlayerPrefs.GetInt("savedStage");
@@ -66,8 +65,9 @@ public class StartSreenEvent : MonoBehaviour
                 PlayerPrefs.DeleteAll();
                 PlayerPrefs.SetInt("savedStage", 1); // 스테이지 진행 상황 초기화
                 PlayerPrefs.Save();
+                CheckStage.stageNum = 0;
                 Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
-                SceneManager.LoadScene("Stage Select Screen");
+                SceneManager.LoadScene("Pro_Epi Screen");
             }
             else
             {

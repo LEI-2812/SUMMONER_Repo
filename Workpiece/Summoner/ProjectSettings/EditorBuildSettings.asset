@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Screen/Fight Screen.unity
     guid: f800f9410f3fa9b42943e39766e12e1e
+  - enabled: 1
+    path: Assets/Screen/Pro_Epi Screen.unity
+    guid: f227cb25dbfe520438df7e89e670e5de
+  - enabled: 1
+    path: Assets/Screen/Thank Screen.unity
+    guid: 3321e9f1d1d657741a41b0cc337890e1
   m_configObjects: {}
