@@ -11,7 +11,6 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public Text dialogueContext;
 
     [SerializeField] private InteractionEvent interactionEvent; // InteractionEvent 연결
-    [SerializeField] private ChangeImage changeImage; // ChangeImage 연결
 
     private Dialogue[] currentDialogues; // 현재 진행 중인 대화
     private int currentDialogueIndex = 0; // 현재 진행 중인 Dialogue 인덱스(CSV의 ID순서)
@@ -54,7 +53,6 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         if (currentDialogueIndex < currentDialogues.Length)
         {
             Dialogue currentDialogue = currentDialogues[currentDialogueIndex]; //읽어들일 Dialogue를 가져온다.
-            changeImage.ShowImage(currentDialogueIndex); // 대사 인덱스 (CSV의 ID)에 따라 이미지를 변경
 
             // 현재 캐릭터의 모든 대사를 출력했다면 다음 캐릭터(CSV의 ID)로 넘어감
             if (currentDialogueLineIndex >= currentDialogue.context.Length)
@@ -126,4 +124,15 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     {
         ShowNextLine();
     }
+
+    public int getCurrentDialogueIndex()
+    {
+        return currentDialogueIndex;
+    }
+
+    public int getCurrentDialogueLineIndex()
+    {
+        return currentDialogueLineIndex;
+    }
+
 }

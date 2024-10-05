@@ -11,9 +11,21 @@ public class ChangeImage : MonoBehaviour
     [Header("받은 Sprite를 넣을 Image오브젝트")]
     [SerializeField] private Image targetImage;
 
-    public void ShowImage(int number)
+    [Header("Interaction Controller 참조")]
+    [SerializeField] private InteractionController interactionController; // InteractionController 참조
+
+    public void ShowImage()
     {
-        Debug.Log(number);
-        targetImage.sprite = spriteArray[number];
+        int currentDialogueIndex = interactionController.getCurrentDialogueIndex(); // currentDialogueIndex 가져오기
+        Debug.Log(currentDialogueIndex);
+
+        if (currentDialogueIndex >= 0 && currentDialogueIndex < spriteArray.Length)
+        {
+            targetImage.sprite = spriteArray[currentDialogueIndex];
+        }
+        else
+        {
+            Debug.LogWarning("유효하지 않은 인덱스입니다.");
+        }
     }
 }

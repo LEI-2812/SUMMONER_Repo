@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class Story : MonoBehaviour
 {
-
     [Header("스킵하시겠습니까? 창")]
     public GameObject alertSkip;    // 스킵 창 띄울 오브젝트
     public Alert alertSkipResult; 
