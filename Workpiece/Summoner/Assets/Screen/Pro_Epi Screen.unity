@@ -221,6 +221,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 508d81cf1f0d026429f9bb5833e07502, type: 3}
   - {fileID: 21300000, guid: 6da78eacc12b2394092b352fd777e80a, type: 3}
   targetImage: {fileID: 430804887}
+  interactionController: {fileID: 900800007}
 --- !u!1 &487251043
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,7 +356,6 @@ MonoBehaviour:
   characterName: {fileID: 487251044}
   dialogueContext: {fileID: 1610194284}
   interactionEvent: {fileID: 900800006}
-  changeImage: {fileID: 430804889}
 --- !u!114 &900800008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,6 +479,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c2f36ff770254c94581206701ae66d2a, type: 3}
   - {fileID: 21300000, guid: 7c8c1ad20bce5a545a469f62bcbb424b, type: 3}
   targetImage: {fileID: 430804887}
+  interactionController: {fileID: 0}
 --- !u!1 &962638434
 GameObject:
   m_ObjectHideFlags: 0
