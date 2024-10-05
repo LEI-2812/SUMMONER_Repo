@@ -662,13 +662,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce73e9dab229134d95d4cd0cddb67ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menu: {fileID: 0}
-  toMain: {fileID: 0}
-  toMainResult: {fileID: 0}
-  toQuit: {fileID: 0}
-  toQuitResult: {fileID: 0}
   alertSkip: {fileID: 3549531}
   alertSkipResult: {fileID: 3549536}
+  SkipBtn: {fileID: 1391477646}
 --- !u!1 &324835597
 GameObject:
   m_ObjectHideFlags: 0

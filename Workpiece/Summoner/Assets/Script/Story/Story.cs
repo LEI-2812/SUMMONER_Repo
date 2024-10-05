@@ -2,64 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Story : MonoBehaviour
 {
-    [Header("메뉴 창")]
-    public GameObject menu;
 
-    [Header("메인으로 버튼")]
-    public GameObject toMain;
-    public Alert toMainResult;
-
-    [Header("나가기 버튼")]
-    public GameObject toQuit;
-    public Alert toQuitResult;
-
-    [Header("스킵 버튼")]
+    [Header("스킵하시겠습니까? 창")]
     public GameObject alertSkip;    // 스킵 창 띄울 오브젝트
-    public Alert alertSkipResult;
+    public Alert alertSkipResult; 
+    public GameObject SkipBtn; //Button 으로 하면 비활성화가 안됨
 
     private Setting setting;  // SettingMenuController의 인스턴스를 참조
 
-    public void toMainAlert()
+    private void Start()
     {
-        toMain.SetActive(true);
+        // Setting 싱글톤 인스턴스를 참조
+        setting = Setting.instance;
 
-        toMainResult.ResetAlert();
-        StartCoroutine(WaitForAlertResult(toMain, toMainResult, (result) => {
-            if (result)
-            {
-                SceneManager.LoadScene("Start Screen");
-            }
-            else
-            {
-                // No 버튼 클릭 시 로직
-                toMain.SetActive(false);
-            }
-        }));
+        if (setting == null)
+        {
+            Debug.LogWarning("SettingMenuController 인스턴스가 존재하지 않습니다.");
+        }
+
+        isSkipActive(); //스킵버튼 활성화 여부 판별
     }
 
-    public void toQuitAlert()
+    public void isSkipActive() //Setting에 스킵토글에 따라 스킵버튼 활성화 여부 동작 메소드
     {
-        toQuit.SetActive(true);
-
-        toQuitResult.ResetAlert();
-        StartCoroutine(WaitForAlertResult(toQuit, toQuitResult, (result) => {
-            if (result)
+        if(setting != null) //null인지 검사
+        {
+            //setting의 게임 컨트롤러를 가져와서 스토리스킵 토글이 활성화 상태인지 검사
+            if ( setting.GetGamePlayController().getIsStorySkip() == true)
             {
-                Debug.Log("게임을 종료합니다.");
-                Application.Quit();
+                SkipBtn.SetActive(true);
             }
-            else
-            {
-                // No 버튼 클릭 시 로직
-                toQuit.SetActive(false);
-            }
-        }));
+            else { SkipBtn.SetActive(false); } //아니라면 비활성화
+        }
     }
 
-    public void skipAlert()
+    public void skipAlert() //스킵 Alert 동작 메소드
     {
         alertSkip.SetActive(true);
 
@@ -72,7 +53,8 @@ public class Story : MonoBehaviour
             }
             else
             {
-                toMain.SetActive(false);
+                alertSkip.SetActive(false);
+
             }
         }));
     }

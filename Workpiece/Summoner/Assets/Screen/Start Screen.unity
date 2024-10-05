@@ -9388,6 +9388,9 @@ MonoBehaviour:
   - {fileID: 1969612065}
   - {fileID: 1449957351}
   - {fileID: 1327410645}
+  audioController: {fileID: 812351937}
+  videoController: {fileID: 1629018011}
+  gamePlayController: {fileID: 2039751755}
 --- !u!1 &1227138542
 GameObject:
   m_ObjectHideFlags: 0
@@ -16244,6 +16247,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStorySkip: {fileID: 2072432963}
   isOnlyMouse: {fileID: 271832475}
+  audioController: {fileID: 0}
+  videoController: {fileID: 0}
+  gamePlayController: {fileID: 0}
 --- !u!1 &2063719887
 GameObject:
   m_ObjectHideFlags: 0

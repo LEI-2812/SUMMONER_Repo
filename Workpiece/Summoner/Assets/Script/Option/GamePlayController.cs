@@ -6,10 +6,11 @@ using UnityEngine.UI;
 public class GamePlayController : MonoBehaviour
 {
     [Header("스토리 스킵툴팁")]
-    public Toggle isStorySkip;
+    [SerializeField] private Toggle isStorySkip;
 
     [Header("마우스만 사용가능 툴팁")]
-    public Toggle isOnlyMouse;
+    [SerializeField] private Toggle isOnlyMouse;
+
 
     private void Update()
     {
@@ -42,4 +43,12 @@ public class GamePlayController : MonoBehaviour
         else
             Debug.Log("키보드 & 마우스 사용가능");
     }
+
+    public bool getIsStorySkip(){ return isStorySkip.isOn; }
+
+    public void setIsStorySkip(bool isSkip) { this.isStorySkip.isOn = isSkip; }
+
+    public bool getIsOnlyMouse() { return isOnlyMouse.isOn; }
+
+    public void setIsOnlyMouse(bool isMouse) { this.isOnlyMouse.isOn = isMouse; }
 }
