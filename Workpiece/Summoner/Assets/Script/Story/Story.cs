@@ -27,6 +27,15 @@ public class Story : MonoBehaviour
         isSkipActive(); //스킵버튼 활성화 여부 판별
     }
 
+    private void Update()
+    {
+        //버튼이 활성화 되어있고 그상태에서 엔터를 누르면 스킵창 출력
+        if (Input.GetKeyDown(KeyCode.Return) && SkipBtn.activeSelf==true)
+        {
+            skipAlert();
+        }
+    }
+
     public void isSkipActive() //Setting에 스킵토글에 따라 스킵버튼 활성화 여부 동작 메소드
     {
         if(setting != null) //null인지 검사
