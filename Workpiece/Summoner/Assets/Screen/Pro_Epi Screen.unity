@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 430804886}
   - component: {fileID: 430804888}
   - component: {fileID: 430804887}
+  - component: {fileID: 430804889}
   m_Layer: 5
   m_Name: Story Image
   m_TagString: Untagged
@@ -197,6 +198,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 430804885}
   m_CullTransparentMesh: 1
+--- !u!114 &430804889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 430804885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaa2bfb37e86da24ba13ec777526997a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteArray:
+  - {fileID: 21300000, guid: 7ffc89f5ec4b9ef4ba8e3a9631fa7821, type: 3}
+  - {fileID: 21300000, guid: d73be95897875ae429eeb22ecd7fd0da, type: 3}
+  - {fileID: 21300000, guid: 3a3223d11d58eb14d9d236d439145186, type: 3}
+  - {fileID: 21300000, guid: 2265f0f240f6b824bb2f414350859a4d, type: 3}
+  - {fileID: 21300000, guid: 760e1605bf830a143b48fa7d8dac9516, type: 3}
+  - {fileID: 21300000, guid: b93b3a05308f9764d9514e4597d7bb3b, type: 3}
+  - {fileID: 21300000, guid: 8eade286c75b4ae49839add0ea2d5f09, type: 3}
+  - {fileID: 21300000, guid: 508d81cf1f0d026429f9bb5833e07502, type: 3}
+  - {fileID: 21300000, guid: 6da78eacc12b2394092b352fd777e80a, type: 3}
+  targetImage: {fileID: 430804887}
 --- !u!1 &487251043
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,7 +272,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &487251045
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -331,7 +355,7 @@ MonoBehaviour:
   characterName: {fileID: 487251044}
   dialogueContext: {fileID: 1610194284}
   interactionEvent: {fileID: 900800006}
-  ChangeImage: {fileID: 0}
+  changeImage: {fileID: 430804889}
 --- !u!114 &900800008
 MonoBehaviour:
   m_ObjectHideFlags: 0

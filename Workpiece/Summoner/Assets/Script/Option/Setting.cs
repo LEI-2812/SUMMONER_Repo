@@ -15,6 +15,11 @@ public class Setting : MonoBehaviour
     [Header("설정창(비디오,오디오,게임플레이) 버튼")]
     public List<Button> buttons;
 
+    [Header("설정 컨트롤러")]
+    [SerializeField ]private AudioController audioController;
+    [SerializeField] private VideoController videoController;
+    [SerializeField] private GamePlayController gamePlayController;
+
     // 색상을 진하게 할 정도
     private float darkenFactor = 0.8f; // 진하게 할 비율 (1.0보다 작으면 더 진해짐)
 
@@ -104,4 +109,14 @@ public class Setting : MonoBehaviour
         else
             settingPanel.SetActive(true);
     }
+
+
+    // AudioController를 가져오는 메소드
+    public AudioController GetAudioController() {return audioController; }
+
+    // VideoController를 가져오는 메소드
+    public VideoController GetVideoController(){ return videoController; }
+
+    // GamePlayController를 가져오는 메소드
+    public GamePlayController GetGamePlayController(){ return gamePlayController; }
 }
