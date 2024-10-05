@@ -16247,9 +16247,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStorySkip: {fileID: 2072432963}
   isOnlyMouse: {fileID: 271832475}
-  audioController: {fileID: 0}
-  videoController: {fileID: 0}
-  gamePlayController: {fileID: 0}
 --- !u!1 &2063719887
 GameObject:
   m_ObjectHideFlags: 0
