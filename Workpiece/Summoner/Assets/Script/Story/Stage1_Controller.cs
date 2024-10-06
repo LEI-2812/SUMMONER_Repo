@@ -5,37 +5,32 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Stage1_Controller : MonoBehaviour, IPointerClickHandler
+public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandler
 {
-    [Header("캐릭터 이름 텍스트")]
-    public Text nameText; //대사 출력 캐릭터이름 텍스트
-
-    [Header("캐릭터 대사 텍스트")]
-    public Text dialogueText; //대사 텍스트
-
     [Header("표현할 오브젝트들")]
-    public GameObject characterPlayer; //주인공 캐릭터 오브젝트
     public GameObject confusebubbleImage;
+    public GameObject dotbubbleImage;
 
-    private int scenarioFlow = 0; //대사 카운트
+    private int scenarioFlowCount = 0; //대사 카운트
 
     //플레이어 애니메이션
     [SerializeField]private Animator playerAni;
 
+    [Header("컨트롤러")]
     [SerializeField]private InteractionController interactionController;
+    [SerializeField] private PlayerMove playerMove;
 
-    private Vector3 targetPosition; // 이동할 목표 위치
-    private bool isMoving; // 이동 여부 확인
     private int isSameDialgueIndex = -1;
 
     void Awake() //여기에서 오브젝트들의 초기 설정을 해준다.
     {
         confusebubbleImage.SetActive(false);
+        dotbubbleImage.SetActive(false);
     }
 
     void Start() //Start에서 처음 실행할 메소드나 오브젝트를 지정해주도록 한다.
     {
-        stage_1_Flow();
+        scenarioFlow();
     }
 
     void Update()
@@ -43,74 +38,67 @@ public class Stage1_Controller : MonoBehaviour, IPointerClickHandler
         // 유저의 입력으로 대사 넘기기 (예: 스페이스바)
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            stage_1_Flow();
-        }
-
-        if (isMoving)
-        {
-            MoveToTarget(200f); // 이동 속도를 인자로 전달
+            scenarioFlow();
         }
     }
 
-    public void stage_1_Flow()
+    public void scenarioFlow()
     {
-
         if (checkCSVDialogueID()) //다음 대사의 ID가 이전 ID와 같으면 그냥 대사만 출력시킴.
         {
             return;
         }
 
-        switch (scenarioFlow)
+        switch (scenarioFlowCount)
         {
             case 1:
-                Debug.Log(scenarioFlow);
+                Debug.Log(scenarioFlowCount);
                 /*
                  * (오른쪽으로 걸어간다.)[1]
                  *  ..그래서 일단 걷고 있긴 한데, 어느 쪽으로 가야 하는 거지?
                  *  *어깨를 으쓱하며* 아무 쪽이든 상관 없나.
                  * 
                  */
-                CharacterMove(700f); // x좌표로 +700(오른쪽)으로 이동
+                playerMove.CharacterMove(700f, 200f); // x좌표로 +700 이동, 속도 200
                 break;
             case 2:
-                Debug.Log(scenarioFlow);
+                Debug.Log(scenarioFlowCount);
                 /*
                  *    (오른쪽으로 몇 발자국 더 나아간다.) [2]
                  *    잠깐. 이 방향이 정말 맞아? 아닌 것 같은데.
                  */
-                CharacterMove(50f); // x좌표로 +50(오른쪽)으로 이동
+                playerMove.CharacterMove(50f, 150f); // x좌표로 +50 이동, 속도 150
                 break;
             case 3:
-                Debug.Log(scenarioFlow);
+                Debug.Log(scenarioFlowCount);
                 /*
                  * (왼쪽으로 발걸음을 돌려 조금 더 걷는다.) [3]
                  * *부스럭 부스럭* 지도는 반대 방향인데, 그럼 아까 갔던 방향이 맞는 건가?
                  * 
                  */
-                CharacterMove(-50f); // x좌표로 +50(오른쪽)으로 이동
+                playerMove.CharacterMove(-50f, 250f); // x좌표로 +50 이동, 속도 250
                 break;
             case 4: 
-                Debug.Log(scenarioFlow);
+                Debug.Log(scenarioFlowCount);
                 /*
                  * (다시 오른쪽으로 돌아 앞으로 걸어간다.) [4]
                  * *한숨* 왜 하필이면 나야.
                  * 
                  */
-                CharacterMove(50f); // x좌표로 +50(오른쪽)으로 이동
+                playerMove.CharacterMove(50f, 150f); // x좌표로 +50 이동, 속도 150
                 break;
             case 5:
-                Debug.Log(scenarioFlow);
+                Debug.Log(scenarioFlowCount);
                 /*
                  * (이마를 짚는다.) [5]
                  *  스승님만 아니었어도 난 조용히 살 수 있는 건데!
                  *  쓸데없이 마력이 존재하는 나같은 인간이 뭐가 된다고 드래곤을 잡는다는 거야.
                  *  마나 보석 없이는 작은 마법 하나도 못 쓰는데.
                  */
-                ShowConfuseEffect();
-
+                showConfuseEffect(); //Confuse 메소드 실행
                 break;
             case 6:
-                Debug.Log(scenarioFlow);
+                Debug.Log(scenarioFlowCount);
                 /*
                  * (잠시 시간이 흐르고, 천천히 일어선다.) [6]
                  *  …
@@ -119,6 +107,7 @@ public class Stage1_Controller : MonoBehaviour, IPointerClickHandler
                  * 
                  * 
                  */
+                showDotbubbleEffect();
                 break;
         }
     }
@@ -144,90 +133,46 @@ public class Stage1_Controller : MonoBehaviour, IPointerClickHandler
         return false;
     }
 
-    // 목표 위치를 설정하는 메소드
-    private void CharacterMove(float distance)
+
+    public void showConfuseEffect() //Confuse효과
     {
-        targetPosition = characterPlayer.transform.position + new Vector3(distance, 0f, 0f);
-
-        // 이동 방향에 따라 캐릭터의 방향 전환
-        if (distance < 0)
-        {
-            // 왼쪽이동시 캐릭터를 뒤집음
-            characterPlayer.transform.localScale = new Vector3(-1, 1, 1);
-        }
-        else if (distance > 0)
-        {
-            // 오른쪽이동시 캐릭터를 원래 방향으로 돌림
-            characterPlayer.transform.localScale = new Vector3(1, 1, 1);
-        }
-
-        //이동 시작하면서 다음대사를 못하도록 막고 애니메이션 재생시작
-        isMoving = true;
-        interactionController.setIsStory(isMoving);
-        playerAni.Play("PlayerWalk");
-    }
-
-
-    // 캐릭터를 목표 위치로 이동시키는 메소드
-    private void MoveToTarget(float speed)
-    {
-        // 현재 위치에서 목표 위치까지 일정한 속도로 이동
-        characterPlayer.transform.position = Vector3.MoveTowards(characterPlayer.transform.position, targetPosition, speed * Time.deltaTime);
-
-        // 목표 위치에 도달하면 이동 중지
-        if (Vector3.Distance(characterPlayer.transform.position, targetPosition) < 0.01f)
-        {
-            StopMoving();
-        }
-    }
-
-    private void StopMoving()
-    {
-        playerAni.Play("Idle");
-        isMoving = false; // 이동 중지
-        interactionController.setIsStory(isMoving); //다음 대사로 넘길 수 있게 설정
-    }
-
-    private bool isConfuseEffectActive = false;
-
-    public void ShowConfuseEffect() //Confuse효과
-    {
-        //Debug.Log("Showconfuse발동");
-        // 다음 대사를 못하도록 막기
-        isMoving = true;
-        interactionController.setIsStory(isMoving);
-        isConfuseEffectActive = true;
-
         // 혼란 이미지 활성화 및 애니메이션 실행
         confusebubbleImage.SetActive(true);
-        playerAni.Play("Confuse");
+        playerMove.playConfuseAni(); //여기서 알아서 대사를 멈추게함
 
-        // 2초 후에 `EndConfuseEffect` 메서드 호출
-        Invoke("EndConfuseEffect", 2f);
+        // 2초 후에 `endConfuseEffect` 메서드 호출
+        Invoke("endConfuseEffect", 2f);
     }
-    private void EndConfuseEffect()
+    private void endConfuseEffect()
     {
-        if (!isConfuseEffectActive)
-        {
-            // 혼란 이미지 비활성화 및 캐릭터 상태 초기화
-            confusebubbleImage.SetActive(false);
-            StopMoving(); // 이곳에서 isStory가 false로 바뀜
-        }
+        // 혼란 이미지 비활성화 및 캐릭터 상태 초기화
+        confusebubbleImage.SetActive(false);
+        playerMove.stopConfuseAni(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
+    }
+
+    public void showDotbubbleEffect()
+    {
+        dotbubbleImage.SetActive(true);
+        playerMove.stopNextDialogue();
+
+        Invoke("endDotbubbleEffect", 2f);
+    }
+    private void endDotbubbleEffect()
+    {
+        dotbubbleImage.SetActive(false);
+        playerMove.startNextDialogue();
     }
 
     private void nextScenarioFlow()
     {
-        scenarioFlow++; //다음 대사 및 시나리오 진행을 위해 값 올리기
+        scenarioFlowCount++; //다음 대사 및 시나리오 진행을 위해 값 올리기
     }
 
-    public bool getIsMoving()
-    {
-        return isMoving;
-    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if( !isMoving )
-            stage_1_Flow();
+        //플레이어가 움직이지 않는 상황일때만 클릭 허용
+        if(!playerMove.getIsMoving())
+            scenarioFlow();
     }
 }

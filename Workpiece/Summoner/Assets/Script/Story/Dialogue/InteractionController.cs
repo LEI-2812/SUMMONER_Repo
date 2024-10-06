@@ -128,9 +128,9 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("인터렉 컨트롤러 다음대사 / isStory: " + isStory);
         if (isDialogueActive && !isStory)
-        {           
+        {
+            Debug.Log("인터렉 컨트롤러 다음대사 / isStory: "+isStory);
             ShowNextLine();
         }
     }
