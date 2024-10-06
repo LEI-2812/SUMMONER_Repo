@@ -479,7 +479,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c2f36ff770254c94581206701ae66d2a, type: 3}
   - {fileID: 21300000, guid: 7c8c1ad20bce5a545a469f62bcbb424b, type: 3}
   targetImage: {fileID: 430804887}
-  interactionController: {fileID: 0}
+  interactionController: {fileID: 900800007}
 --- !u!1 &962638434
 GameObject:
   m_ObjectHideFlags: 0
