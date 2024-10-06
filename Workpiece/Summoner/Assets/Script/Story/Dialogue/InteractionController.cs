@@ -17,8 +17,13 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     private int currentDialogueLineIndex = 0; // 현재 진행 중인 Dialogue의 대사 인덱스
     private bool isDialogueActive = false; // 대화 진행 상태 체크
 
+    private bool isStory; //스토리가 진행중인지 확인
+    private CheckStage checkStage;
+
     void Start()
     {
+        checkStage = GetComponent<CheckStage>();
+
         // 초기화
         characterName.text = "";
         dialogueContext.text = "";
@@ -47,6 +52,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     // 다음 대사를 보여주는 메서드
     public void ShowNextLine()
     {
+
         if (!isDialogueActive) return; // 대화가 진행 중이 아니면 실행 안 함
 
         // 현재 캐릭터의 대사 출력
@@ -94,12 +100,12 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         isDialogueActive = false;
         Debug.Log("대화가 종료되었습니다.");
 
-        if (CheckStage.stageNum == 0)
+        if (checkStage.stageNum == 0)
         {
             Debug.Log("프롤로그");
             SceneManager.LoadScene("Stage Select Screen"); //프롤로그 이후 출력
         }
-        else if (CheckStage.stageNum == 8)
+        else if (checkStage.stageNum == 8)
         {
             Debug.Log("에필로그");
             SceneManager.LoadScene("Thank Screen"); //에필로그 이후 출력
@@ -114,15 +120,19 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     void Update()
     {
         // 유저의 입력으로 대사 넘기기 (예: 스페이스바)
-        if (isDialogueActive && Input.GetKeyDown(KeyCode.Space))
-        {
-            ShowNextLine();
-        }
+       // if (isDialogueActive && Input.GetKeyDown(KeyCode.Space) && !isStory)
+       // {
+        //    ShowNextLine();
+       // }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        ShowNextLine();
+        if (isDialogueActive && !isStory)
+        {
+            Debug.Log("인터렉 컨트롤러 다음대사 / isStory: "+isStory);
+            ShowNextLine();
+        }
     }
 
     public int getCurrentDialogueIndex()
@@ -133,6 +143,16 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public int getCurrentDialogueLineIndex()
     {
         return currentDialogueLineIndex;
+    }
+
+    public void setIsStory(bool story)
+    {
+        this.isStory = story;
+        Debug.Log("setIsStory 호출됨. 새로운 isStory 값: " + this.isStory);
+    }
+    public bool getIsStory()
+    {
+        return isStory;
     }
 
 }

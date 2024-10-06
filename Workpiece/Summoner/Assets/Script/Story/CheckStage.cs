@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class CheckStage : MonoBehaviour
 {
-    public static int stageNum = 0;  //스테이지 번호 받기
+    public int stageNum;  //스테이지 번호 받기
     public static int x = 0;
     public static int y = 0;
 
-    public static void checkStage() // 스테이지 번호별로 출력할 스토리 다르게 설정
+    public void checkStage() // 스테이지 번호별로 출력할 스토리 다르게 설정
     {
         switch (stageNum)
         {

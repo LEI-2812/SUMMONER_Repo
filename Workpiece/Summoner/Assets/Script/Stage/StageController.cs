@@ -11,6 +11,8 @@ public class StageController : MonoBehaviour
     [Header("스테이지 버튼들(순서대로)")]
     public Button[] buttons;    // 활성화/비활성화할 버튼들
 
+    private CheckStage checkStage;
+
     void Start()
     {
         int stageNumber = PlayerPrefs.GetInt("savedStage");
@@ -40,14 +42,14 @@ public class StageController : MonoBehaviour
 
     public void stageLoader(int stage)
     {
-        CheckStage.stageNum = stage;
+        checkStage.stageNum = stage;
         SceneManager.LoadScene("Stage" + stage.ToString());   
     }
 
     //임시코드
     public void TestSceneLoad()
     {
-        CheckStage.stageNum = 1;
+        checkStage.stageNum = 1;
         SceneManager.LoadScene("Story Screen");
         //SceneManager.LoadScene("Fight Screen");
     }
