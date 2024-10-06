@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class StartScreenEvent : MonoBehaviour
 {
     private GameObject menuCanvas; //비파괴로 해놔서 public으로 할시 다른씬 다녀오면 missing나기때문에 직접 참조
+    private CheckStage checkStage;
 
     [Header("메인씬 처음부터 버튼")]
     public GameObject newAlert;
@@ -27,6 +28,7 @@ public class StartScreenEvent : MonoBehaviour
 
     void Start()
     {
+
         // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
         menuCanvas = GameObject.Find("MenuCanvas");
 
@@ -65,7 +67,7 @@ public class StartScreenEvent : MonoBehaviour
                 PlayerPrefs.DeleteAll();
                 PlayerPrefs.SetInt("savedStage", 1); // 스테이지 진행 상황 초기화
                 PlayerPrefs.Save();
-                CheckStage.stageNum = 0;
+                checkStage.stageNum = 0;
                 Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
                 SceneManager.LoadScene("Pro_Epi Screen");
             }
