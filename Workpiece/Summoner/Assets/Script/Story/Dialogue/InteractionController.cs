@@ -145,14 +145,18 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         return currentDialogueLineIndex;
     }
 
-    public void setIsStory(bool story)
-    {
-        this.isStory = story;
-        Debug.Log("setIsStory 호출됨. 새로운 isStory 값: " + this.isStory);
-    }
     public bool getIsStory()
     {
         return isStory;
     }
 
+    public void startNextDialogue()
+    {
+        isStory = false; // 이동이 끝나면 InteractionController에서 대사 진행을 허용
+    }
+
+    public void stopNextDialogue()
+    {
+        isStory = true; // 이동이 끝나면 InteractionController에서 대사 진행을 허용
+    }
 }

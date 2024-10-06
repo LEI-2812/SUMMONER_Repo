@@ -601,10 +601,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29d1edd306de0c4d8a17aebcd2c72db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: {fileID: 1729739219}
-  dialogueText: {fileID: 1211233011}
-  MainCharacter: {fileID: 637407121}
+  confusebubbleImage: {fileID: 0}
+  dotbubbleImage: {fileID: 0}
   playerAni: {fileID: 637407126}
+  interactionController: {fileID: 0}
+  playerMove: {fileID: 0}
 --- !u!1 &324835597
 GameObject:
   m_ObjectHideFlags: 0
@@ -1321,6 +1322,7 @@ GameObject:
   - component: {fileID: 637407127}
   - component: {fileID: 637407128}
   - component: {fileID: 637407129}
+  - component: {fileID: 637407130}
   m_Layer: 6
   m_Name: Character_Player
   m_TagString: Untagged
@@ -1344,7 +1346,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -500, y: -40}
+  m_AnchoredPosition: {x: -1200, y: -40}
   m_SizeDelta: {x: 300, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &637407124
@@ -1488,6 +1490,21 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &637407130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637407121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e5e7efd23269d44b934e7121f01445, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 637407121}
+  playerAni: {fileID: 637407126}
+  interactionController: {fileID: 1102135335}
 --- !u!1 &644011321
 GameObject:
   m_ObjectHideFlags: 0
@@ -1955,6 +1972,7 @@ GameObject:
   - component: {fileID: 1102135335}
   - component: {fileID: 1102135334}
   - component: {fileID: 1102135340}
+  - component: {fileID: 1102135341}
   m_Layer: 5
   m_Name: TalkManager
   m_TagString: Untagged
@@ -2087,6 +2105,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a77d96a038c01040ae4fb06376dab31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNum: 7
+--- !u!114 &1102135341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102135332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e0639090485e2444912fa0eec61af8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAni: {fileID: 637407126}
+  interactionController: {fileID: 1102135335}
+  playerMove: {fileID: 637407130}
 --- !u!1 &1118826677
 GameObject:
   m_ObjectHideFlags: 0
