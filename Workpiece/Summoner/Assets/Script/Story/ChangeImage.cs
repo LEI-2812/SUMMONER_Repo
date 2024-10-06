@@ -14,11 +14,16 @@ public class ChangeImage : MonoBehaviour
     [Header("Interaction Controller 참조")]
     [SerializeField] private InteractionController interactionController; // InteractionController 참조
 
+    private void Update()
+    {
+        ShowImage();
+    }
+
     public void ShowImage()
     {
         int currentDialogueIndex = interactionController.getCurrentDialogueIndex(); // currentDialogueIndex 가져오기
         Debug.Log(currentDialogueIndex);
-
+        
         if (currentDialogueIndex >= 0 && currentDialogueIndex < spriteArray.Length)
         {
             targetImage.sprite = spriteArray[currentDialogueIndex];

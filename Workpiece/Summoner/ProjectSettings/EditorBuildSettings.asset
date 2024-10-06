@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Screen/Stage Select Screen.unity
     guid: b2acf324d2cd65d4a95031c7808f024c
   - enabled: 1
-    path: Assets/Screen/Story Screen_1Stage.unity
+    path: Assets/Screen/StoryScene/Story Screen_1Stage.unity
     guid: 77b6b911b82d6dc47bd331fe492c185b
   - enabled: 1
     path: Assets/Screen/Fight Screen.unity
