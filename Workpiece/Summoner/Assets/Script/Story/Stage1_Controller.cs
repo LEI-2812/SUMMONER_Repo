@@ -119,8 +119,6 @@ public class Stage1_Controller : MonoBehaviour, IPointerClickHandler
                  * 
                  * 
                  */
-
-
                 break;
         }
     }
@@ -145,10 +143,6 @@ public class Stage1_Controller : MonoBehaviour, IPointerClickHandler
 
         return false;
     }
-
-
-
-
 
     // 목표 위치를 설정하는 메소드
     private void CharacterMove(float distance)
@@ -195,12 +189,13 @@ public class Stage1_Controller : MonoBehaviour, IPointerClickHandler
     }
 
     private bool isConfuseEffectActive = false;
+
     public void ShowConfuseEffect() //Confuse효과
     {
         //Debug.Log("Showconfuse발동");
         // 다음 대사를 못하도록 막기
         isMoving = true;
-        interactionController.setIsStory(true);
+        interactionController.setIsStory(isMoving);
         isConfuseEffectActive = true;
 
         // 혼란 이미지 활성화 및 애니메이션 실행
