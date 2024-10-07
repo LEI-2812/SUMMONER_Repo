@@ -1375,6 +1375,10 @@ MonoBehaviour:
   darkenBackground: {fileID: 557547359}
   selectSummonPanels:
   - {fileID: 1178627254}
+  ReselectSummonPanels:
+  - {fileID: 1434509436}
+  - {fileID: 1152497999}
+  - {fileID: 21840651}
 --- !u!114 &299313757 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7001086004006574865, guid: 425618ad78d48fc47930e89c04062585, type: 3}

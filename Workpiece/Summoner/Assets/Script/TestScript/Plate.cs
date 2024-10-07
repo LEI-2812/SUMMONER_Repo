@@ -63,15 +63,6 @@ public class Plate : MonoBehaviour,
         }
     }
 
-    // 체력 체크 (플레이트 위 소환수의 체력 확인)
-    public void CheckHealth()
-    {
-        if (currentSummon != null)
-        {
-            Debug.Log($"소환수 {currentSummon.summonName} 의 체력: {currentSummon.nowHP}");
-        }
-    }
-
     // 플레이트 강조 (색상 변경)
     public void Highlight()
     {
@@ -92,7 +83,7 @@ public class Plate : MonoBehaviour,
         {
             SetSummonImageTransparency(1.0f); // 투명도를 높여 더 진하게 보이게
         }
-        if (isInSummon && summonController.IsResummoning()) // 재소환 중이고 소환수가 있는 경우
+        if (isInSummon && summonController.IsReSummoning()) // 재소환 중이고 소환수가 있는 경우
         {
             Highlight(); // 플레이트 강조
             SetSummonImageTransparency(1.0f); // 투명도 높이기
@@ -103,7 +94,7 @@ public class Plate : MonoBehaviour,
     //마우스가 벗어날때
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (currentSummon != null && summonController.IsResummoning()) //재소환중일때 더 진하게
+        if (currentSummon != null && summonController.IsReSummoning()) //재소환중일때 더 진하게
         {
             Unhighlight(); // 강조 해제
             SetSummonImageTransparency(0.5f); // 다시 흐리게
@@ -115,16 +106,17 @@ public class Plate : MonoBehaviour,
     public void OnPointerClick(PointerEventData eventData)
     {
         // 플레이어가 재소환 중이라면 상태 패널을 뜨지 않도록 함
-        if (summonController.IsResummoning() && isInSummon)
+        if (summonController.IsReSummoning() && isInSummon)
         {
                 summonController.SelectPlate(this);
+                Unhighlight(); // 강조 해제
+                SetSummonImageTransparency(1.0f); //투명도 되돌리기
         }
 
-        if (currentSummon != null && !summonController.IsResummoning())
+        else if (currentSummon != null && !summonController.IsReSummoning())
         {
             Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.name);
-            CheckHealth();
-            statePanel.SetActive(true);
+            statePanel.SetActive(true); //상태 패널 활성화
             onMousePlateScript.setStatePanel(currentSummon); // 패널에 소환수 정보 전달 
         }
     }

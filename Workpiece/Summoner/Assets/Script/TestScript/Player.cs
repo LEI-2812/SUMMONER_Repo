@@ -79,13 +79,17 @@ public class Player : Character
     public void OnReSummonBtnClick() //재소환 버튼 클릭
     {
         if (mana >= usedMana) {
-            summonController.StartResummon();
-            if (summonController.getIsSuccessSummon())
-            {
+            if (summonController.StartResummon())
+            { //재소환 시작
+              //마나 차감
                 mana -= usedMana;
                 usedMana += 1;
                 UpdateManaUI();
             }
+        }
+        else
+        {
+            Debug.Log("재소환시 필요한 마나가 모자랍니다.");
         }
     }
 
