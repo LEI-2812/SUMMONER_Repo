@@ -74,9 +74,14 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
             // 현재 대사에 이어붙이기 기능 추가
             string combinedDialogue = "";
+            
             for (int i = 0; i <= currentDialogueLineIndex; i++)
             {
+                if (i % 2 == 0) //3번째 대사마다 이어붙일 대사를 초기화시킨다.
+                    combinedDialogue = "";
+
                 combinedDialogue += currentDialogue.context[i];
+               
                 if (i < currentDialogueLineIndex)
                 {
                     combinedDialogue += "\n"; // 대사를 합칠 때 들여쓰기로 추가
@@ -130,7 +135,6 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     {
         if (isDialogueActive && !isStory)
         {
-            Debug.Log("인터렉 컨트롤러 다음대사 / isStory: "+isStory);
             ShowNextLine();
         }
     }
