@@ -27,6 +27,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
     {
         confusebubbleImage.SetActive(false);
         dotbubbleImage.SetActive(false);
+        
     }
 
     void Start() //Start에서 처음 실행할 메소드나 오브젝트를 지정해주도록 한다.
@@ -42,7 +43,6 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
             scenarioFlow();
         }
     }
-
     public void scenarioFlow()
     {
         if (checkCSVDialogueID()) //다음 대사의 ID가 이전 ID와 같으면 그냥 대사만 출력시킴.
@@ -70,50 +70,57 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
+                /* <<대사출력>>
+                 **어깨를 으쓱하며* 아무 쪽이든 상관 없나.
+                 */
+                break;
+            case 4:
+                Debug.Log(scenarioFlowCount);
                 /*
                  * (오른쪽으로 몇 발자국 더 나아간다.) [2]
                  */
                 offDialgueBox();
                 playerMove.CharacterMove(150f, 400f); // x좌표로 +150 이동, 속도 400
                 break;
-            case 4:
+            case 5:
                 Debug.Log(scenarioFlowCount);
                 /* <<대사출력>>
                  *    잠깐. 이 방향이 정말 맞아? 아닌 것 같은데.
                  */
                 onDialgueBox();
+                playerMove.CharacterMove(-150f, 400f); // x좌표로 -150 이동, 속도 400
                 break;
-            case 5:
+            case 6:
                 Debug.Log(scenarioFlowCount);
                 /*
                  * (왼쪽으로 발걸음을 돌려 조금 더 걷는다.) [3]
                  * *부스럭 부스럭* 지도는 반대 방향인데, 그럼 아까 갔던 방향이 맞는 건가?
                  * 
                  */
-                offDialgueBox();
-                playerMove.CharacterMove(-150f, 400f); // x좌표로 -150 이동, 속도 400
+                
+                playerMove.CharacterMove(150f, 300f); // x좌표로 +150 이동, 속도 300
                 break;
-            case 6: 
+            case 7: 
                 Debug.Log(scenarioFlowCount);
                 /*
                  * (다시 오른쪽으로 돌아 앞으로 걸어간다.) [4]
                  * *한숨* 왜 하필이면 나야.
                  * 
                  */
-                playerMove.CharacterMove(150f, 300f); // x좌표로 +150 이동, 속도 300
+                offDialgueBox();
                 break;
-            case 7:
+            case 8:
                 Debug.Log(scenarioFlowCount);
                 //*한숨* 왜 하필이면 나야.
                 onDialgueBox();
                 break;
-            case 8:
+            case 9:
                 Debug.Log(scenarioFlowCount);
                 //이마를 짚는다.
                 offDialgueBox();
                 showConfuseEffect(); //꼬인 이미지 출력
                 break;
-            case 9:
+            case 10:
                 Debug.Log(scenarioFlowCount);
                 /*
                  * 스승님만 아니었어도 난 조용히 살 수 있는 건데!
@@ -122,7 +129,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
                  */
                 onDialgueBox();
                 break;
-            case 10:
+            case 11:
                 Debug.Log(scenarioFlowCount);
                 /*
                  * (잠시 시간이 흐르고, 천천히 일어선다.)
@@ -131,7 +138,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
                 offDialgueBox();
                 showDotbubbleEffect(); //... 이미지 출력
                 break;
-            case 11:
+            case 12:
                 Debug.Log(scenarioFlowCount);
                 /*
                  * 보상은 준다니 가야지, 어쩌겠어.
@@ -162,7 +169,6 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
 
         return false;
     }
-
 
     public void showConfuseEffect() //Confuse효과 시작
     {
@@ -218,7 +224,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
     public void OnPointerClick(PointerEventData eventData)
     {
         //플레이어가 움직이지 않는 상황일때만 클릭 허용
-        if(!playerMove.getIsMoving())
+        if (!playerMove.getIsMoving())
             scenarioFlow();
     }
 }
