@@ -19,6 +19,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
     private bool isStory; //스토리가 진행중인지 확인
     private CheckStage checkStage;
+    public FadeController fadeController;
 
     void Start()
     {
@@ -118,7 +119,8 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         else
         {
             Debug.Log("이도저도 아닌");
-            SceneManager.LoadScene("Fight Screen"); // 대화가 끝나면 전투 씬으로 변경 
+            fadeController.FadeOut();
+            Invoke("GotoFightScreen", 1.5f); // 페이드 아웃을 걸고 전투 씬으로 이동           
         }
     }
 
@@ -162,5 +164,10 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public void stopNextDialogue()
     {
         isStory = true; // 이동이 끝나면 InteractionController에서 대사 진행을 허용
+    }
+
+    public void GotoFightScreen()
+    {
+        SceneManager.LoadScene("Fight Screen"); // 대화가 끝나면 전투 씬으로 변경 
     }
 }

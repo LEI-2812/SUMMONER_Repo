@@ -16,6 +16,7 @@ public class Alert : MonoBehaviour
     {
         result = true;
         isClicked = true;
+        Debug.Log("yes 버튼 클릭");
     }
 
     public void OnNoButtonClick()
