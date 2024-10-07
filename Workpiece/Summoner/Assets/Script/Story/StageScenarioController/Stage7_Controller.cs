@@ -44,7 +44,7 @@ public class Stage7_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
             case 1://41~48
                 Debug.Log(scenarioFlowCount);
                 //오른쪽으로 걸어오는 주인공
-                playerMove.CharacterMove(700f, 200f);
+                playerMove.CharacterMove(700f, 400f);
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);

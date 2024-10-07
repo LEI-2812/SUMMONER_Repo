@@ -8,8 +8,9 @@ using UnityEngine.UI;
 public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandler
 {
     [Header("표현할 오브젝트들")]
-    public GameObject confusebubbleImage;
-    public GameObject dotbubbleImage;
+    public GameObject confusebubbleImage; // 끙앓는 이미지
+    public GameObject dotbubbleImage; // ... 이미지
+    public GameObject dialogueBox;
 
     private int scenarioFlowCount = 0; //대사 카운트
 
@@ -50,64 +51,93 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
         }
 
         switch (scenarioFlowCount)
-        {
+        { //시나리오 참고해서 코드 보면 이해하기 쉽습니다.
             case 1:
                 Debug.Log(scenarioFlowCount);
                 /*
                  * (오른쪽으로 걸어간다.)[1]
-                 *  ..그래서 일단 걷고 있긴 한데, 어느 쪽으로 가야 하는 거지?
-                 *  *어깨를 으쓱하며* 아무 쪽이든 상관 없나.
-                 * 
                  */
-                playerMove.CharacterMove(700f, 200f); // x좌표로 +700 이동, 속도 200
+                offDialgueBox(); //텍스트를 임시로 꺼둔다.
+                playerMove.CharacterMove(700f, 400f); // x좌표로 +700 이동, 속도 200 움직이는 동안 다음대사로 못넘어감
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
-                /*
-                 *    (오른쪽으로 몇 발자국 더 나아간다.) [2]
-                 *    잠깐. 이 방향이 정말 맞아? 아닌 것 같은데.
+                /* <<대사출력>>
+                *..그래서 일단 걷고 있긴 한데, 어느 쪽으로 가야 하는 거지?
+                 **어깨를 으쓱하며* 아무 쪽이든 상관 없나.
                  */
-                playerMove.CharacterMove(50f, 150f); // x좌표로 +50 이동, 속도 150
+                onDialgueBox();
                 break;
             case 3:
+                Debug.Log(scenarioFlowCount);
+                /*
+                 * (오른쪽으로 몇 발자국 더 나아간다.) [2]
+                 */
+                offDialgueBox();
+                playerMove.CharacterMove(150f, 400f); // x좌표로 +150 이동, 속도 400
+                break;
+            case 4:
+                Debug.Log(scenarioFlowCount);
+                /* <<대사출력>>
+                 *    잠깐. 이 방향이 정말 맞아? 아닌 것 같은데.
+                 */
+                onDialgueBox();
+                break;
+            case 5:
                 Debug.Log(scenarioFlowCount);
                 /*
                  * (왼쪽으로 발걸음을 돌려 조금 더 걷는다.) [3]
                  * *부스럭 부스럭* 지도는 반대 방향인데, 그럼 아까 갔던 방향이 맞는 건가?
                  * 
                  */
-                playerMove.CharacterMove(-50f, 250f); // x좌표로 -50 이동, 속도 250
+                offDialgueBox();
+                playerMove.CharacterMove(-150f, 400f); // x좌표로 -150 이동, 속도 400
                 break;
-            case 4: 
+            case 6: 
                 Debug.Log(scenarioFlowCount);
                 /*
                  * (다시 오른쪽으로 돌아 앞으로 걸어간다.) [4]
                  * *한숨* 왜 하필이면 나야.
                  * 
                  */
-                playerMove.CharacterMove(50f, 150f); // x좌표로 +50 이동, 속도 150
+                playerMove.CharacterMove(150f, 300f); // x좌표로 +150 이동, 속도 300
                 break;
-            case 5:
+            case 7:
+                Debug.Log(scenarioFlowCount);
+                //*한숨* 왜 하필이면 나야.
+                onDialgueBox();
+                break;
+            case 8:
+                Debug.Log(scenarioFlowCount);
+                //이마를 짚는다.
+                offDialgueBox();
+                showConfuseEffect(); //꼬인 이미지 출력
+                break;
+            case 9:
                 Debug.Log(scenarioFlowCount);
                 /*
-                 * (이마를 짚는다.) [5]
-                 *  스승님만 아니었어도 난 조용히 살 수 있는 건데!
-                 *  쓸데없이 마력이 존재하는 나같은 인간이 뭐가 된다고 드래곤을 잡는다는 거야.
-                 *  마나 보석 없이는 작은 마법 하나도 못 쓰는데.
+                 * 스승님만 아니었어도 난 조용히 살 수 있는 건데!
+                 * 쓸데없이 마력이 존재하는 나같은 인간이 뭐가 된다고 드래곤을 잡는다는 거야.
+                 * 마나 보석 없이는 작은 마법 하나도 못 쓰는데
                  */
-                showConfuseEffect(); //Confuse 메소드 실행
+                onDialgueBox();
                 break;
-            case 6:
+            case 10:
                 Debug.Log(scenarioFlowCount);
                 /*
-                 * (잠시 시간이 흐르고, 천천히 일어선다.) [6]
-                 *  …
-                 *  보상은 준다니 가야지, 어쩌겠어.
-                 *  마침 쪼들리던 참이니 목숨 값 한 번 두둑이 받아보지, 뭐.
-                 * 
-                 * 
+                 * (잠시 시간이 흐르고, 천천히 일어선다.)
+                 * ...
                  */
-                showDotbubbleEffect();
+                offDialgueBox();
+                showDotbubbleEffect(); //... 이미지 출력
+                break;
+            case 11:
+                Debug.Log(scenarioFlowCount);
+                /*
+                 * 보상은 준다니 가야지, 어쩌겠어.
+                 * 마침 쪼들리던 참이니 목숨 값 한 번 두둑이 받아보지, 뭐.
+                 */
+                onDialgueBox();
                 break;
         }
     }
@@ -134,21 +164,27 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
     }
 
 
-    public void showConfuseEffect() //Confuse효과
+    public void showConfuseEffect() //Confuse효과 시작
     {
-        // 혼란 이미지 활성화 및 애니메이션 실행
-        confusebubbleImage.SetActive(true);
-        playerMove.playConfuseAni(); //여기서 알아서 대사를 멈추게함
-
-        // 2초 후에 `endConfuseEffect` 메서드 호출
-        Invoke("endConfuseEffect", 2f);
+        Invoke("onConfuseImage", 0.4f); // 0.4초 후 혼란 이미지 활성화
+        playerMove.playConfuseAni(); //애니메이션은 바로 실행
     }
-    private void endConfuseEffect()
+    private void onConfuseImage() //0.4초후에 이미지 활성화시키고
     {
-        // 혼란 이미지 비활성화 및 캐릭터 상태 초기화
+        confusebubbleImage.SetActive(true);
+        //1초위 이미지가 꺼지게
+        Invoke("offConfuseImage", 1f);
+    }
+    private void offConfuseImage() //1.4초때 이미지는 비활성화 후
+    {
         confusebubbleImage.SetActive(false);
+        Invoke("endConfuseEffect", 0.4f);
+    }
+    private void endConfuseEffect() //1.8초 뒤에는 끝내게
+    {
         playerMove.stopConfuseAni(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
     }
+   
 
     public void showDotbubbleEffect()
     {
@@ -161,6 +197,16 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
     {
         dotbubbleImage.SetActive(false);
         interactionController.startNextDialogue();
+    }
+
+    private void onDialgueBox()
+    {
+        dialogueBox.SetActive(true);
+    }
+
+    private void offDialgueBox()
+    {
+        dialogueBox.SetActive(false);
     }
 
     private void nextScenarioFlow()

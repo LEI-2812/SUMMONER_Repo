@@ -16,9 +16,16 @@ public class Plate : MonoBehaviour,
     public StatePanel onMousePlateScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
     public Image summonImg;
 
+    private Image plateImage; // 자기 자신의 Image 컴포넌트
+    private Color originalColor;
+
+    [SerializeField] private SummonController summonController;
+
     void Start()
     {
         statePanel.SetActive(false);
+        plateImage = GetComponent<Image>(); // 자신의 Image 컴포넌트 가져오기
+        originalColor = plateImage.color; // 원래 색상 저장
     }
 
     // 소환수를 플레이트에 배치
@@ -65,30 +72,71 @@ public class Plate : MonoBehaviour,
         }
     }
 
+    // 플레이트 강조 (색상 변경)
+    public void Highlight()
+    {
+        plateImage.color = Color.yellow; // 이미지의 색상을 노란색으로 변경
+    }
+
+    // 강조 해제
+    public void Unhighlight()
+    {
+        plateImage.color = originalColor; // 이미지의 색상을 원래대로 복원
+    }
+
+
     //마우스 올렸을때 이벤트
     public void OnPointerEnter(PointerEventData eventData)
     {
-       // Debug.Log("플레이트에 마우스 올라옴");
+        if (currentSummon != null) //소환수가 있으면
+        {
+            SetSummonImageTransparency(1.0f); // 투명도를 높여 더 진하게 보이게
+        }
+        if (isInSummon && summonController.IsResummoning()) // 재소환 중이고 소환수가 있는 경우
+        {
+            Highlight(); // 플레이트 강조
+            SetSummonImageTransparency(1.0f); // 투명도 높이기
+        }
     }
 
+
+    //마우스가 벗어날때
     public void OnPointerExit(PointerEventData eventData)
     {
-        /*if (currentSummon != null && statePanel.activeSelf == true)
+        if (currentSummon != null && summonController.IsResummoning()) //재소환중일때 더 진하게
         {
-            // 패널을 비활성화
-            statePanel.SetActive(false);
-        }*/
+            Unhighlight(); // 강조 해제
+            SetSummonImageTransparency(0.5f); // 다시 흐리게
+        }
+
     }
 
     //해당 플레이트 클릭시 이벤트
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (currentSummon != null)
+        // 플레이어가 재소환 중이라면 상태 패널을 뜨지 않도록 함
+        if (summonController.IsResummoning() && isInSummon)
+        {
+                summonController.SelectPlate(this);
+        }
+
+        if (currentSummon != null && !summonController.IsResummoning())
         {
             Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.name);
             CheckHealth();
             statePanel.SetActive(true);
             onMousePlateScript.setStatePanel(currentSummon); // 패널에 소환수 정보 전달 
+        }
+    }
+
+    // 소환수 이미지 투명도 설정
+    public void SetSummonImageTransparency(float alpha)
+    {
+        if (summonImg != null)
+        {
+            Color color = summonImg.color;
+            color.a = alpha; // 투명도 설정
+            summonImg.color = color;
         }
     }
 
