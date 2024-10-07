@@ -29,7 +29,7 @@ public class CheckStage : MonoBehaviour
                 x = 36; y = 40;
                 break;
             case 7:  // 7스테이지 대사 시작, 끝값 지정
-                x = 41; y = 48;
+                x = 41; y = 50;
                 break;
             case 8:  // 에필로그 대사 시작, 끝값 지정
                 x = 10; y = 15;

@@ -53,7 +53,7 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
             case 1://36~40
                 Debug.Log(scenarioFlowCount);
                 //오른쪽으로 걸어오는 주인공
-                playerMove.CharacterMove(980f, 200f);
+                playerMove.CharacterMove(980f, 400f);
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
@@ -65,7 +65,7 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
             case 4:
                 Debug.Log(scenarioFlowCount);
                 //적이 왼쪽으로 걸어옴
-                enemyMove.CharacterMove(-600f, 200f);
+                enemyMove.CharacterMove(-600f, 550f);
                 break;
             case 5:
                 Debug.Log(scenarioFlowCount);
