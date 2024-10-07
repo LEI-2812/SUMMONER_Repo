@@ -60,9 +60,6 @@ public class PickSummonPanel : MonoBehaviour,
         assignedSummon = null;
     }
 
-
-
-
     public Summon getAssignedSummon()
     {
         return assignedSummon;
