@@ -10,6 +10,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     [Header("표현할 오브젝트들")]
     public GameObject angryImage;
     public GameObject characterFox;
+    public GameObject dialogueBox;
 
     private int scenarioFlowCount = 0; //대사 카운트
 
@@ -53,32 +54,57 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
         switch (scenarioFlowCount)
         {
-            case 1://32 33 34 35
+            case 1: //33 ~ 40
                 Debug.Log(scenarioFlowCount);
+                //  (오른쪽으로 걸어 나간다.)
+                offDialgueBox();
                 playerMove.CharacterMove(860f, 200f); // x좌표로 +860 이동, 속도 200
+                break;
+            case 2:
+                Debug.Log(scenarioFlowCount);
+                //  숲의 안쪽으로 들어왔네. 지도 상에서는 이 숲을 지나야 한다던데.
+                onDialgueBox();
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
-                //푸른 빛이 반짝 후 여우 소환
-                //푸른 빛이 반짝
-                characterFox.SetActive(true);
+                //  슬슬 먹을 것도 떨어져가서 좀 위태로운걸.
                 break;
             case 4:
                 Debug.Log(scenarioFlowCount);
-                //여우가 화냄
-                showAngryEffect();
+                //  (소환술을 진행하고, 여우가 나타난다.)
+                //  여우 소환하는 푸른 빛이 반짝이는 이펙트 필요
+                offDialgueBox();
+                characterFox.SetActive(true);
+                foxAni.Play("Fox_Idle");
                 break;
-            /*
-            case 5: 가 안되넹?
+            case 5:
                 Debug.Log(scenarioFlowCount);
-                //이 대사를 치고 여우가 가야댐
+                /*  *쯧* 늑대였으면 더 좋았을텐데.
+                 *  너, 가서 고기 좀 사냥해와. 이왕이면 큰 놈으로.
+                 */
+                onDialgueBox();
+                break;
+            case 6:
+                Debug.Log(scenarioFlowCount);
+                //  (소환수 '여우'가 화를 낸다.)
+                foxMove.playAngryAni();
+                showAngryEffect();
+                offDialgueBox();
+                break;
+            case 7:
+                Debug.Log(scenarioFlowCount);
+                //  어쩔 수 없잖아. 내가 먹고 살아야지 너희도 나올 수 있다고.
+                onDialgueBox();
+                break;
+            case 8:
+                Debug.Log(scenarioFlowCount);
+                // (소환수 '여우'가 오른쪽으로 걸어가 사라진다.)
+                offDialgueBox();
                 endAngryEffect();
                 foxMove.CharacterMove(1000f, 200f);
-                break;  
-            */
+                break;          
         }
     }
-
 
     // 대사 ID를 비교하는 메소드
     private bool checkCSVDialogueID()
@@ -100,18 +126,17 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         return false;
     }
 
-
-    
-
     public void showAngryEffect()
     {
         angryImage.SetActive(true);
-        interactionController.stopNextDialogue();
+        foxMove.playAngryAni();
+        //interactionController.stopNextDialogue();
     }
     private void endAngryEffect()
     {
         angryImage.SetActive(false);
-        interactionController.startNextDialogue();
+        foxMove.stopAngryAni();
+        //interactionController.startNextDialogue();
     }
 
     private void nextScenarioFlow()
@@ -119,12 +144,19 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         scenarioFlowCount++; //다음 대사 및 시나리오 진행을 위해 값 올리기
     }
 
+    private void onDialgueBox()
+    {
+        dialogueBox.SetActive(true);
+    }
 
+    private void offDialgueBox()
+    {
+        dialogueBox.SetActive(false);
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         //플레이어가 움직이지 않는 상황일때만 클릭 허용
         if (!playerMove.getIsMoving())
-            scenarioFlow();
-        
+            scenarioFlow();       
     }
 }

@@ -27,7 +27,6 @@ public class FoxMove : MonoBehaviour
         }
     }
 
-
     // 목표 위치와 이동 속도를 설정하는 메서드
     public void CharacterMove(float distance, float speed)
     {
@@ -39,12 +38,14 @@ public class FoxMove : MonoBehaviour
         if (distance < 0)
         {
             // 왼쪽 이동 시 캐릭터를 뒤집음
-            fox.transform.localScale = new Vector3(-1, 1, 1);
+            fox.transform.localScale = new Vector3(1, 1, 1);
+            //fox.transform.localScale = new Vector3(-1, 1, 1); 원래 이상태였는데 왜이러지
         }
         else if (distance > 0)
         {
             // 오른쪽 이동 시 캐릭터를 원래 방향으로 돌림
-            fox.transform.localScale = new Vector3(1, 1, 1);
+            fox.transform.localScale = new Vector3(-1, 1, 1);
+            //fox.transform.localScale = new Vector3(1, 1, 1); 원래 이거였는데 애가 반대로 돌아가요 뭐지?
         }
 
         // 이동 시작하면서 애니메이션 재생
@@ -65,9 +66,19 @@ public class FoxMove : MonoBehaviour
         if (Vector3.Distance(fox.transform.position, targetPosition) < 0.01f)
         {
             isMoving = false;
-            foxAni.Play("Idle");
+            foxAni.Play("Fox_Idle");
             interactionController.startNextDialogue();
         }
+    }
+
+    public void playAngryAni()
+    {
+        foxAni.Play("AngryFox");
+    }
+
+    public void stopAngryAni()
+    {
+        foxAni.Play("Fox_Idle");
     }
 
     //getter setter
