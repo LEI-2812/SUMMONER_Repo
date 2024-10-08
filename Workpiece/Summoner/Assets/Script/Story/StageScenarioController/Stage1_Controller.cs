@@ -26,8 +26,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
     void Awake() //여기에서 오브젝트들의 초기 설정을 해준다.
     {
         confusebubbleImage.SetActive(false);
-        dotbubbleImage.SetActive(false);
-        
+        dotbubbleImage.SetActive(false);       
     }
 
     void Start() //Start에서 처음 실행할 메소드나 오브젝트를 지정해주도록 한다.
@@ -64,7 +63,6 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
                 Debug.Log(scenarioFlowCount);
                 /* <<대사출력>>
                 *..그래서 일단 걷고 있긴 한데, 어느 쪽으로 가야 하는 거지?
-                 **어깨를 으쓱하며* 아무 쪽이든 상관 없나.
                  */
                 onDialgueBox();
                 break;
@@ -96,15 +94,13 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
                  * (왼쪽으로 발걸음을 돌려 조금 더 걷는다.) [3]
                  * *부스럭 부스럭* 지도는 반대 방향인데, 그럼 아까 갔던 방향이 맞는 건가?
                  * 
-                 */
-                
+                 */               
                 playerMove.CharacterMove(150f, 300f); // x좌표로 +150 이동, 속도 300
                 break;
             case 7: 
                 Debug.Log(scenarioFlowCount);
                 /*
                  * (다시 오른쪽으로 돌아 앞으로 걸어간다.) [4]
-                 * *한숨* 왜 하필이면 나야.
                  * 
                  */
                 offDialgueBox();

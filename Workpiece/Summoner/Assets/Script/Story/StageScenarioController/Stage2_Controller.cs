@@ -13,7 +13,6 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     [SerializeField] private InteractionController interactionController;
 
     private int isSameDialgueIndex = -1;
-
     void Awake() //여기에서 오브젝트들의 초기 설정을 해준다.
     {
         // 느낌표 들어갈 곳, 미리 비활성화
@@ -43,32 +42,43 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
         switch (scenarioFlowCount)
         {
-            case 1:
+            case 1: // 28 ~ 32
                 Debug.Log(scenarioFlowCount);
                 /*
-                 * 
-                 *  
-                 *  
-                 * 
+                 *      (옷을 툭툭 털며)
+                 *      생각보다 소환수가 약하잖아?
                  */
                 showConfuseEffect();
+                break;
+            case 2:
+                Debug.Log(scenarioFlowCount);
+                /*
+                 *      이렇게 힘을 못 추는데 드래곤을 어떻게 잡아, 말도 안 되는 소리를 하고 있어! 
+                 */
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
                 /*
-                 *    (오른쪽으로 몇 발자국 더 나아간다.) [2]
-                 *    잠깐. 이 방향이 정말 맞아? 아닌 것 같은데.
+                 *      (바닥에 떨어진 보석을 줍는다.)
+                 *      이건 정수 보석?
+                 *      몬스터들이 만들어낸 건가?
                  */
                 showBangEffect();
                 break;
             case 4:
                 Debug.Log(scenarioFlowCount);
                 /*
-                 * (왼쪽으로 발걸음을 돌려 조금 더 걷는다.) [3]
-                 * *부스럭 부스럭* 지도는 반대 방향인데, 그럼 아까 갔던 방향이 맞는 건가?
-                 * 
+                 *      흠, 이걸로 마력을 좀 더 강력하게 만들 수 있겠는데. 
                  */      
-                // 여기는 빛 번짐 효과가 나와야 해요!
+                break;
+            case 5:
+                Debug.Log(scenarioFlowCount);
+                /*
+                 *      (잠시 빛이 번쩍이고 몸에 스며든다.)
+                 *      이 정도면 다음 적을 상대할 수는 있겠어.
+                 *      드래곤을 잡을 정도는 안되지만.
+                 */
+                //  빛이 번쩍이고 몸에 스며드는 이미지 필요
                 break;
             
         }
@@ -132,6 +142,6 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-            scenarioFlow();
+        scenarioFlow();
     }
 }
