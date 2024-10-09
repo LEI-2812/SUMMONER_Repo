@@ -2012,6 +2012,7 @@ MonoBehaviour:
   characterName: {fileID: 1729739219}
   dialogueContext: {fileID: 1211233011}
   interactionEvent: {fileID: 1102135334}
+  fadeController: {fileID: 0}
 --- !u!114 &1102135336
 MonoBehaviour:
   m_ObjectHideFlags: 0
