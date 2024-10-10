@@ -12,12 +12,12 @@ public enum SummonRank
 public class Summon : MonoBehaviour
 {
     public Image image; //이미지
-    public string summonName; //이름
-    public double maxHP; //최대체력
-    public double nowHP; //현재 체력
-    public double attackPower; //일반공격
-    public double SpecialPower;  //특수공격
-    public SummonRank summonRank; //등급
+    protected string summonName; //이름
+    protected double maxHP; //최대체력
+    protected double nowHP; //현재 체력
+    protected double attackPower; //일반공격
+    protected double specialPower;  //특수공격
+    protected SummonRank summonRank; //등급
 
     public virtual void attack()
     {
@@ -44,6 +44,42 @@ public class Summon : MonoBehaviour
     {
         Debug.Log($"{summonName} has died.");
         Destroy(gameObject); // 소환수 오브젝트 삭제
+    }
+
+    public string SummonName
+    {
+        get { return summonName; }
+        set { summonName = value; }
+    }
+
+    public double MaxHP
+    {
+        get { return maxHP; }
+        set { maxHP = value; }
+    }
+
+    public double NowHP
+    {
+        get { return nowHP; }
+        set { nowHP = value; }
+    }
+
+    public double AttackPower
+    {
+        get { return attackPower; }
+        set { attackPower = value; }
+    }
+
+    public double SpecialPower
+    {
+        get { return specialPower; }
+        set { specialPower = value; }
+    }
+
+    public SummonRank SummonRank
+    {
+        get { return summonRank; }
+        set { summonRank = value; }
     }
 
 }

@@ -15,6 +15,7 @@ public class Player : Character
     [Header("컨트롤러")]
     [SerializeField] private SummonController summonController;
     [SerializeField] private TurnController turnController;
+    [SerializeField] private BattleController battleController;
     
     private bool hasSummonedThisTurn;
 
@@ -92,6 +93,15 @@ public class Player : Character
             Debug.Log("재소환시 필요한 마나가 모자랍니다.");
         }
     }
+
+
+    public void OnAttackBtnClick()
+    {
+        Summon attackSummon = battleController.attackStart(); //공격할 소환수를 받아온다.
+        attackSummon.attack(); //해당 소환수의 공격로직 수행
+    }
+
+
 
     public void SetHasSummonedThisTurn(bool value) //이번턴에 소환했는지 여부
     {

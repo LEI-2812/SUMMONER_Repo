@@ -19,7 +19,9 @@ public class Plate : MonoBehaviour,
     private Image plateImage; // 자기 자신의 Image 컴포넌트
     private Color originalColor;
 
+    [Header("컨트롤러들")]
     [SerializeField] private SummonController summonController;
+    [SerializeField] private BattleController battleController;
 
     void Start()
     {
@@ -44,7 +46,7 @@ public class Plate : MonoBehaviour,
             color.a = 1.0f; // 알파 값을 1로 설정 (255/255)
             summonImg.color = color;
 
-            Debug.Log($"소환수 {summon.summonName} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
+            Debug.Log($"소환수 {summon.SummonName} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
         }
         else
         {
@@ -113,6 +115,7 @@ public class Plate : MonoBehaviour,
                 SetSummonImageTransparency(1.0f); //투명도 되돌리기
         }
 
+        //상태창 활성화
         else if (currentSummon != null && !summonController.IsReSummoning())
         {
             Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.name);
