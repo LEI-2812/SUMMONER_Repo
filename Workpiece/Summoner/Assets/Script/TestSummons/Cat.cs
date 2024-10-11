@@ -12,6 +12,11 @@ public class Cat : Summon
         attackPower = 15; //일반공격
         SpecialPower = 20; //특수공격
         summonRank = SummonRank.Low; // 하급 소환수
+
+        // 일반 공격: 가장 가까운 적 공격
+        AttackStrategy = new ClosestEnemyAttackStrategy();
+        // 특수 공격: 전체 적 공격
+        SpecialAttackStrategy = new AttackAllEnemiesStrategy();
     }
 
     private void Start()
@@ -21,7 +26,7 @@ public class Cat : Summon
 
     public override void attack()
     {
-        base.attack();
+        
     }
 
     public override void die()
@@ -29,7 +34,7 @@ public class Cat : Summon
         base.die();
     }
 
-    public override void takeDamage(int damage)
+    public override void takeDamage(double damage)
     {
         base.takeDamage(damage);
     }

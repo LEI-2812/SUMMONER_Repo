@@ -32,7 +32,7 @@ public class Slime : Summon
         base.die();
     }
 
-    public override void takeDamage(int damage)
+    public override void takeDamage(double damage)
     {
         base.takeDamage(damage);
     }

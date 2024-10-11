@@ -16,7 +16,10 @@ public class Player : Character
     [SerializeField] private SummonController summonController;
     [SerializeField] private TurnController turnController;
     [SerializeField] private BattleController battleController;
-    
+
+    private int selectedPlateIndex = -1;
+
+
     private bool hasSummonedThisTurn;
 
     private void Start()
@@ -98,7 +101,30 @@ public class Player : Character
     public void OnAttackBtnClick()
     {
         Summon attackSummon = battleController.attackStart(); //공격할 소환수를 받아온다.
-        attackSummon.attack(); //해당 소환수의 공격로직 수행
+        if (attackSummon != null)
+        {
+            // 일반 공격 수행
+            attackSummon.normalAttack(battleController.getEnermyPlate(),selectedPlateIndex);
+        }
+        else
+        {
+            Debug.Log("선택된 plate에 소환수가 없습니다.");
+        }
+    }
+
+    public void OnSpecialAttackBtnClick()
+    {
+        Summon attackSummon = battleController.attackStart(); //공격할 소환수를 받아온다.
+
+        if (attackSummon != null)
+        {
+            // 특수 공격 수행
+            attackSummon.SpecialAttack(battleController.getEnermyPlate(), selectedPlateIndex);
+        }
+        else
+        {
+            Debug.Log("선택된 plate에 소환수가 없습니다.");
+        }
     }
 
 
@@ -126,5 +152,11 @@ public class Player : Character
         {
             manaList[i].texture = (i < mana) ? haveTexture : notHaveTexture;
         }
+    }
+
+
+    public void setSelectedPlateIndex(int sel)
+    {
+        this.selectedPlateIndex = sel;
     }
 }

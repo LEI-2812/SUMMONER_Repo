@@ -288,5 +288,15 @@ public class SummonController : MonoBehaviour
         return playerPlates;
     }
 
- 
+    // 클릭된 plate의 인덱스를 반환하는 메소드
+    public int GetPlateIndex(Plate selectedPlate)
+    {
+        return playerPlates.IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
+    }
+
+    public void setPlayerSelectedIndex(int index)
+    {
+        player.setSelectedPlateIndex(index);
+    }
+
 }

@@ -20,9 +20,6 @@ public class BattleController : MonoBehaviour
         return statePanel.getStatePanelSummon(); //상태창에 있는 소환수를 반환
     }
 
-
-
-
     public bool getIsAttaking()
     {
         return isAttacking;
@@ -32,5 +29,9 @@ public class BattleController : MonoBehaviour
         this.isAttacking= isAttacking;
     }
 
+    public List<Plate> getEnermyPlate()
+    {
+        return enermyPlates;
+    }
 
 }

@@ -19,12 +19,24 @@ public class Summon : MonoBehaviour
     protected double specialPower;  //특수공격
     protected SummonRank summonRank; //등급
 
+    protected IAttackStrategy AttackStrategy { get; set; } // 일반 공격 전략
+    protected IAttackStrategy SpecialAttackStrategy { get; set; } // 특수 공격 전략
+
+    public void normalAttack(List<Plate> enemyPlates, int selectedPlateIndex)
+    {
+        AttackStrategy?.Attack(this, enemyPlates, selectedPlateIndex);
+    }
+    public void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex)
+    {
+        SpecialAttackStrategy?.Attack(this, enemyPlates, selectedPlateIndex);
+    }
+
     public virtual void attack()
     {
         Debug.Log($"{summonName} attacks with {attackPower} power!");
     }
 
-    public virtual void takeDamage(int damage) //데미지 입기
+    public virtual void takeDamage(double damage) //데미지 입기
     {
         nowHP = nowHP - damage;
         Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");

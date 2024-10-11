@@ -120,6 +120,12 @@ public class Plate : MonoBehaviour,
         {
             Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.name);
             statePanel.SetActive(true); //상태 패널 활성화
+
+            // 현재 plate의 인덱스를 설정 (플레이트 리스트에서 자신을 찾음)
+            int plateIndex = summonController.GetPlateIndex(this);  // GetPlateIndex 메소드를 통해 자신이 몇 번째인지 확인
+            // BattleController에 선택된 플레이트 인덱스 전달
+            summonController.setPlayerSelectedIndex(plateIndex);
+
             onMousePlateScript.setStatePanel(currentSummon); // 패널에 소환수 정보 전달 
         }
     }
@@ -135,4 +141,9 @@ public class Plate : MonoBehaviour,
         }
     }
 
+
+    public Summon getSummon() //플레이트의 소환수를 반환
+    {
+        return currentSummon;
+    }
 }
