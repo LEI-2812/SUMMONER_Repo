@@ -34,4 +34,34 @@ public class BattleController : MonoBehaviour
         return enermyPlates;
     }
 
+    // 플레이어의 플레이트에 있는 모든 소환수들을 반환하는 메소드
+    public List<Summon> getPlayerSummons()
+    {
+        List<Summon> playerSummons = new List<Summon>();
+        foreach (Plate plate in playerPlates)
+        {
+            Summon summon = plate.getSummon();
+            if (summon != null)
+            {
+                playerSummons.Add(summon);
+            }
+        }
+        return playerSummons;
+    }
+
+    // 적의 플레이트에 있는 모든 소환수들을 반환하는 메소드
+    public List<Summon> getEnermySummons()
+    {
+        List<Summon> enermySummons = new List<Summon>();
+        foreach (Plate plate in enermyPlates)
+        {
+            Summon summon = plate.getSummon();
+            if (summon != null)
+            {
+                enermySummons.Add(summon);
+            }
+        }
+        return enermySummons;
+    }
+
 }

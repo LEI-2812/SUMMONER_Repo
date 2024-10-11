@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slime : Summon
+public class Rabbit : Summon
 {
     private void Awake()
     {
-        summonName = "Slime"; //이름 슬라임
-        maxHP = 200; //최대체력 200
-        nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
-        attackPower = 25; //일반공격
-        SpecialPower = 40; //강공격
-        summonRank = SummonRank.Normal; // 일반 소환수
+        summonName = "Rabbit";
+        maxHP = 250;
+        nowHP = maxHP;
+        attackPower = 20; //일반공격
+        summonRank = SummonRank.Medium; // 중급 소환수
+
+        AttackStrategy = new ClosestEnemyAttackStrategy(); //근접공격
+        SpecialAttackStrategy = new StatusAttackStrategy(StatusType.Heal, 0);//상태 이상
     }
 
     private void Start()
@@ -21,9 +23,6 @@ public class Slime : Summon
 
     public override void attack()
     {
-        /*
-         * 일반공격과 강공격을 컨트롤시켜야할듯.
-         */
         base.attack();
     }
 
@@ -40,8 +39,5 @@ public class Slime : Summon
     public override void takeSkill()
     {
         base.takeSkill();
-        /*
-         * 전체공격, 저격공격, 상태이상공격
-         */
     }
 }

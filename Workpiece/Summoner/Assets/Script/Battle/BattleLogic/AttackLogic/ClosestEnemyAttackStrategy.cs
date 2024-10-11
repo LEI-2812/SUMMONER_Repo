@@ -21,23 +21,15 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
 
     private Summon GetClosestEnemySummon(int playerPlateIndex, List<Plate> enemyPlates)
     {
-        Summon closestSummon = null;
-        float closestDistance = float.MaxValue;
-
         for (int i = 0; i < enemyPlates.Count; i++)
         {
             Summon enemySummon = enemyPlates[i].getSummon();
             if (enemySummon != null)
             {
-                float distance = Mathf.Abs(playerPlateIndex - i);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestSummon = enemySummon;
-                }
+                return enemySummon; // 첫 번째로 존재하는 소환수를 바로 반환
             }
         }
 
-        return closestSummon;
+        return null; // 적 소환수가 없으면 null 반환
     }
 }

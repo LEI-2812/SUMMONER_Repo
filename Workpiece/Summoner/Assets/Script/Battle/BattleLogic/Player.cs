@@ -114,10 +114,17 @@ public class Player : Character
 
     public void OnSpecialAttackBtnClick()
     {
-        Summon attackSummon = battleController.attackStart(); //공격할 소환수를 받아온다.
+        Summon attackSummon = battleController.attackStart(); // 공격할 소환수를 가져옴
 
         if (attackSummon != null)
         {
+            // 스킬이 쿨타임 중인지 확인
+            if (attackSummon.IsSkillOnCooldown("SpecialAttack"))
+            {
+                Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
+                return;
+            }
+
             // 특수 공격 수행
             attackSummon.SpecialAttack(battleController.getEnermyPlate(), selectedPlateIndex);
         }

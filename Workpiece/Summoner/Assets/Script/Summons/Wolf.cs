@@ -2,21 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cat : Summon
+public class Wolf : Summon
 {
     private void Awake()
     {
-        summonName = "Cat";
-        maxHP = 100;
+        summonName = "Wolf";
+        maxHP = 300;
         nowHP = maxHP;
-        attackPower = 15; //일반공격
-        SpecialPower = 20; //특수공격
-        summonRank = SummonRank.Low; // 하급 소환수
+        attackPower = 50; //일반공격
+        specialPower = 25;
+        summonRank = SummonRank.High; // 중급 소환수
 
-        // 일반 공격: 가장 가까운 적 공격
-        AttackStrategy = new ClosestEnemyAttackStrategy();
-        // 특수 공격: 전체 적 공격
-        SpecialAttackStrategy = new AttackAllEnemiesStrategy();
+        AttackStrategy = new ClosestEnemyAttackStrategy(); //근접공격
+        SpecialAttackStrategy = new AttackAllEnemiesStrategy();//전체공격
     }
 
     private void Start()
@@ -26,7 +24,7 @@ public class Cat : Summon
 
     public override void attack()
     {
-        
+        base.attack();
     }
 
     public override void die()

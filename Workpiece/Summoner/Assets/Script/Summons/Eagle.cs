@@ -2,28 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rabbit : Summon
+public class Eagle : Summon
 {
     private void Awake()
     {
-        summonName = "Rabbit";
-        maxHP = 250;
+        summonName = "Eagle";
+        maxHP = 400;
         nowHP = maxHP;
-        attackPower = 20; //일반공격
-        summonRank = SummonRank.Medium; // 중급 소환수
+        attackPower = 45; //일반공격
+        SpecialPower = 30; //특수공격
+        summonRank = SummonRank.High; // 상급 소환수
 
-        AttackStrategy = new ClosestEnemyAttackStrategy(); //근접공격
-        SpecialAttackStrategy = new StatusAttackStrategy();//상태 이상
+        // 일반 공격: 가장 가까운 적 공격
+        AttackStrategy = new ClosestEnemyAttackStrategy();
+        // 특수 공격: 타겟 지정 공격
+        SpecialAttackStrategy = new TargetedAttackStrategy();
     }
 
     private void Start()
     {
-        nowHP = 80; //테스트용
+      
     }
 
     public override void attack()
     {
-        base.attack();
+
     }
 
     public override void die()
