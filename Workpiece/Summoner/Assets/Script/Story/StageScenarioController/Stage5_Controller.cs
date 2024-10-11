@@ -9,6 +9,7 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 {
     [Header("표현할 오브젝트들")]
     public GameObject bangImage;
+    public GameObject dialogueBox;
 
     private int scenarioFlowCount = 0; //대사 카운트
 
@@ -19,6 +20,10 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     [SerializeField] private InteractionController interactionController;
     [SerializeField] private PlayerMove playerMove;
     [SerializeField] private EnemyMove enemyMove;
+
+    [Header("사운드")]
+    [SerializeField] private AudioClip bangSound;
+    [SerializeField] private AudioSource audioSource;
 
     private int isSameDialgueIndex = -1;
 
@@ -50,25 +55,47 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
         switch (scenarioFlowCount)
         {
-            case 1://36~40
+            case 1: // 42 ~ 49
                 Debug.Log(scenarioFlowCount);
-                //오른쪽으로 걸어오는 주인공
+                //  (오른쪽으로 걸어간다.)
+                offDialgueBox();
                 playerMove.CharacterMove(980f, 400f);
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
-                //떨어지는 소리
+                //  슬슬 길이 험해지네. 이쯤이 중간계 시작지점이라고 하던데.
+                onDialgueBox();
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
+                //  (무언가 떨어지는 소리가 난다.)
+                playBangSound();
+                showBangEffect();
+                offDialgueBox();
                 break;
             case 4:
                 Debug.Log(scenarioFlowCount);
-                //적이 왼쪽으로 걸어옴
-                enemyMove.CharacterMove(-600f, 550f);
+                //  뭐야, 누구야!
+                onDialgueBox();               
                 break;
             case 5:
                 Debug.Log(scenarioFlowCount);
+                //  ...
+                break;
+            case 6:
+                Debug.Log(scenarioFlowCount);
+                //  아무도 없는 건가..?
+                break;
+            case 7:
+                Debug.Log(scenarioFlowCount);
+                //  (오른쪽에서 갑자기 적 한 명이 튀어나온다.)
+                enemyMove.CharacterMove(-600f, 550f);
+                offDialgueBox();
+                break;
+            case 8:
+                Debug.Log(scenarioFlowCount);
+                //  우왓! 하급 악마인가? 만만치 않겠는데..
+                onDialgueBox();
                 break;
         }
     }
@@ -99,7 +126,7 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         bangImage.SetActive(true);
         interactionController.stopNextDialogue(); //여기서 알아서 대사를 멈추게함
 
-        Invoke("endBangEffect", 2f);
+        Invoke("endBangEffect", 1f);
     }
     private void endBangEffect()
     {
@@ -107,13 +134,27 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         bangImage.SetActive(false);
         interactionController.startNextDialogue(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
     }
+    private void playBangSound()
+    {
+        if (audioSource != null && bangSound != null)
+        {
+            audioSource.PlayOneShot(bangSound); // 효과음을 한 번 재생
+        }
+    }
 
     private void nextScenarioFlow()
     {
         scenarioFlowCount++; //다음 대사 및 시나리오 진행을 위해 값 올리기
     }
+    private void onDialgueBox()
+    {
+        dialogueBox.SetActive(true);
+    }
 
-
+    private void offDialgueBox()
+    {
+        dialogueBox.SetActive(false);
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         //플레이어가 움직이지 않는 상황일때만 클릭 허용

@@ -54,11 +54,11 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
         switch (scenarioFlowCount)
         {
-            case 1: //33 ~ 40
+            case 1: //  34 ~ 41
                 Debug.Log(scenarioFlowCount);
                 //  (오른쪽으로 걸어 나간다.)
                 offDialgueBox();
-                playerMove.CharacterMove(860f, 200f); // x좌표로 +860 이동, 속도 200
+                playerMove.CharacterMove(860f, 400f); // x좌표로 +860 이동, 속도 200
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
@@ -72,10 +72,8 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
             case 4:
                 Debug.Log(scenarioFlowCount);
                 //  (소환술을 진행하고, 여우가 나타난다.)
-                //  여우 소환하는 푸른 빛이 반짝이는 이펙트 필요
+                showBlueEffect();
                 offDialgueBox();
-                characterFox.SetActive(true);
-                foxAni.Play("Fox_Idle");
                 break;
             case 5:
                 Debug.Log(scenarioFlowCount);
@@ -139,6 +137,17 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         //interactionController.startNextDialogue();
     }
 
+    public void showBlueEffect()
+    {
+        playerMove.playBlueAni();
+        Invoke("showFox", 1.5f);
+    }
+
+    private void showFox()
+    {
+        characterFox.SetActive(true);
+        foxAni.Play("Fox_Idle");
+    }
     private void nextScenarioFlow()
     {
         scenarioFlowCount++; //다음 대사 및 시나리오 진행을 위해 값 올리기

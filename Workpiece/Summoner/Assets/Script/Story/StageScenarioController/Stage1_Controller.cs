@@ -57,7 +57,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
                  * (오른쪽으로 걸어간다.)[1]
                  */
                 offDialgueBox(); //텍스트를 임시로 꺼둔다.
-                playerMove.CharacterMove(700f, 400f); // x좌표로 +700 이동, 속도 200 움직이는 동안 다음대사로 못넘어감
+                playerMove.CharacterMove(700f, 400f); // x좌표로 +700 이동, 속도 400 움직이는 동안 다음대사로 못넘어감
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
