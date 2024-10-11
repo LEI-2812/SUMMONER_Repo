@@ -19,7 +19,9 @@ public class Plate : MonoBehaviour,
     private Image plateImage; // 자기 자신의 Image 컴포넌트
     private Color originalColor;
 
+    [Header("컨트롤러들")]
     [SerializeField] private SummonController summonController;
+    [SerializeField] private BattleController battleController;
 
     void Start()
     {
@@ -44,7 +46,7 @@ public class Plate : MonoBehaviour,
             color.a = 1.0f; // 알파 값을 1로 설정 (255/255)
             summonImg.color = color;
 
-            Debug.Log($"소환수 {summon.summonName} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
+            Debug.Log($"소환수 {summon.SummonName} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
         }
         else
         {
@@ -113,10 +115,17 @@ public class Plate : MonoBehaviour,
                 SetSummonImageTransparency(1.0f); //투명도 되돌리기
         }
 
+        //상태창 활성화
         else if (currentSummon != null && !summonController.IsReSummoning())
         {
             Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.name);
             statePanel.SetActive(true); //상태 패널 활성화
+
+            // 현재 plate의 인덱스를 설정 (플레이트 리스트에서 자신을 찾음)
+            int plateIndex = summonController.GetPlateIndex(this);  // GetPlateIndex 메소드를 통해 자신이 몇 번째인지 확인
+            // BattleController에 선택된 플레이트 인덱스 전달
+            summonController.setPlayerSelectedIndex(plateIndex);
+
             onMousePlateScript.setStatePanel(currentSummon); // 패널에 소환수 정보 전달 
         }
     }
@@ -132,4 +141,9 @@ public class Plate : MonoBehaviour,
         }
     }
 
+
+    public Summon getSummon() //플레이트의 소환수를 반환
+    {
+        return currentSummon;
+    }
 }

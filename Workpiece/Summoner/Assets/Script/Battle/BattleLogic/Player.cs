@@ -15,7 +15,11 @@ public class Player : Character
     [Header("컨트롤러")]
     [SerializeField] private SummonController summonController;
     [SerializeField] private TurnController turnController;
-    
+    [SerializeField] private BattleController battleController;
+
+    private int selectedPlateIndex = -1;
+
+
     private bool hasSummonedThisTurn;
 
     private void Start()
@@ -93,6 +97,45 @@ public class Player : Character
         }
     }
 
+
+    public void OnAttackBtnClick()
+    {
+        Summon attackSummon = battleController.attackStart(); //공격할 소환수를 받아온다.
+        if (attackSummon != null)
+        {
+            // 일반 공격 수행
+            attackSummon.normalAttack(battleController.getEnermyPlate(),selectedPlateIndex);
+        }
+        else
+        {
+            Debug.Log("선택된 plate에 소환수가 없습니다.");
+        }
+    }
+
+    public void OnSpecialAttackBtnClick()
+    {
+        Summon attackSummon = battleController.attackStart(); // 공격할 소환수를 가져옴
+
+        if (attackSummon != null)
+        {
+            // 스킬이 쿨타임 중인지 확인
+            if (attackSummon.IsSkillOnCooldown("SpecialAttack"))
+            {
+                Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
+                return;
+            }
+
+            // 특수 공격 수행
+            attackSummon.SpecialAttack(battleController.getEnermyPlate(), selectedPlateIndex);
+        }
+        else
+        {
+            Debug.Log("선택된 plate에 소환수가 없습니다.");
+        }
+    }
+
+
+
     public void SetHasSummonedThisTurn(bool value) //이번턴에 소환했는지 여부
     {
         hasSummonedThisTurn = value;
@@ -116,5 +159,11 @@ public class Player : Character
         {
             manaList[i].texture = (i < mana) ? haveTexture : notHaveTexture;
         }
+    }
+
+
+    public void setSelectedPlateIndex(int sel)
+    {
+        this.selectedPlateIndex = sel;
     }
 }

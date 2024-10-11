@@ -230,7 +230,7 @@ public class SummonController : MonoBehaviour
         // 소환수 리스트에서 해당 등급의 소환수들만 필터링
         foreach (Summon summon in summons)
         {
-            if (summon.summonRank == rank)
+            if (summon.SummonRank == rank)
             {
                 availableSummons.Add(summon);
             }
@@ -257,7 +257,7 @@ public class SummonController : MonoBehaviour
     public void OnSelectSummon(Summon summon)
     {
         selectedSummon = summon;
-        Debug.Log($"{selectedSummon.summonName} 소환수를 선택했습니다.");
+        Debug.Log($"{selectedSummon.SummonName} 소환수를 선택했습니다.");
         // 소환수가 있는 플레이트만 강조 및 투명도 되돌리기
         for (int i = 0; i < playerPlates.Count; i++)
         {
@@ -288,5 +288,15 @@ public class SummonController : MonoBehaviour
         return playerPlates;
     }
 
- 
+    // 클릭된 plate의 인덱스를 반환하는 메소드
+    public int GetPlateIndex(Plate selectedPlate)
+    {
+        return playerPlates.IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
+    }
+
+    public void setPlayerSelectedIndex(int index)
+    {
+        player.setSelectedPlateIndex(index);
+    }
+
 }

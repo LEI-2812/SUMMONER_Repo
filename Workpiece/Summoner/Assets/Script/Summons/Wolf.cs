@@ -9,8 +9,12 @@ public class Wolf : Summon
         summonName = "Wolf";
         maxHP = 300;
         nowHP = maxHP;
-        attackPower =50; //일반공격
+        attackPower = 50; //일반공격
+        specialPower = 25;
         summonRank = SummonRank.High; // 중급 소환수
+
+        AttackStrategy = new ClosestEnemyAttackStrategy(); //근접공격
+        SpecialAttackStrategy = new AttackAllEnemiesStrategy();//전체공격
     }
 
     private void Start()
@@ -28,7 +32,7 @@ public class Wolf : Summon
         base.die();
     }
 
-    public override void takeDamage(int damage)
+    public override void takeDamage(double damage)
     {
         base.takeDamage(damage);
     }

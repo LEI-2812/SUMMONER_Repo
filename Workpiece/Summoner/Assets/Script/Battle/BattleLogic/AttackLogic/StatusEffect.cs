@@ -1,0 +1,66 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+
+public enum StatusType
+{
+    Stun,
+    Poison,
+    Heal,
+    Curse,
+    LifeDrain,
+    Burn
+}
+
+public class StatusEffect
+{
+    public StatusType statusType { get; private set; }
+    public int effectTime { get; set; } // 지속 시간
+    public double damagePerTurn { get; set; } // 매 턴마다 줄 데미지
+
+    private Summon attacker; // 공격자
+
+    public StatusEffect(StatusType type, int time, double damage=0, Summon attacker = null)
+    {
+        statusType = type;
+        effectTime = time;
+        damagePerTurn = damage;
+        this.attacker = attacker;
+    }
+
+    public void ApplyStatus(Summon target)
+    {
+        switch (statusType)
+        {
+            case StatusType.Stun: //공격을 막음
+                target.CanAttack = false;
+                break;
+
+            case StatusType.Poison: // 중독
+                target.ApplyDamage(damagePerTurn); // 즉시 데미지 적용
+                Debug.Log($"{target.SummonName}이(가) 중독되었습니다. 매 턴 {damagePerTurn}의 피해를 입을 것입니다.");
+                break;
+
+            case StatusType.Burn: //화상
+                target.ApplyDamage(damagePerTurn); // 즉시 데미지 적용
+                break;
+
+            case StatusType.LifeDrain: //흡혈
+                if (attacker != null) //즉시 사용
+                {
+                    target.ApplyDamage(damagePerTurn);
+                    attacker.Heal(damagePerTurn);
+                }
+                break;
+
+            case StatusType.Heal: //힐
+                target.Heal(damagePerTurn); //즉시 사용
+                break;
+
+            default:
+                Debug.Log("정의되지 않은 상태이상입니다.");
+                break;
+        }
+    }
+}

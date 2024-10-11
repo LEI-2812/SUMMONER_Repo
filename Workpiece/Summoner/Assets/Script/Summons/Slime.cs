@@ -16,7 +16,7 @@ public class Slime : Summon
 
     private void Start()
     {
-        nowHP = 80; //테스트용
+        nowHP = 100;
     }
 
     public override void attack()
@@ -32,7 +32,7 @@ public class Slime : Summon
         base.die();
     }
 
-    public override void takeDamage(int damage)
+    public override void takeDamage(double damage)
     {
         base.takeDamage(damage);
     }

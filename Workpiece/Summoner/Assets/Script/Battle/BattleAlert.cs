@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Battle : MonoBehaviour
+public class BattleAlert : MonoBehaviour
 {
     /*
       배틀 씬에서 필요한 코드... 대충 생각해도 겁나 많겠지만 일단 알림창을 띄워보자
@@ -16,26 +16,6 @@ public class Battle : MonoBehaviour
     public Alert ClearResult; // 전투 승리 알림 결과
     public GameObject alertFail; // 전투 패배 알림창
     public Alert FailResult; // 전투 패배 알림 결과
-
-    // === Private References ===
-    private Setting setting; // SettingMenuController 인스턴스 참조
-
-
-    private void Start()
-    {
-        getSettingMenuController(); //SettingMenuController인스턴스 가져오기
-    }
-
-
-    //SettingMenuController 인스턴스 받아오는 메소드
-    private void getSettingMenuController()
-    {
-        setting = Setting.instance;
-        if (setting == null)
-        {
-            Debug.LogWarning("SettingMenuController 인스턴스를 찾을 수 없습니다.");
-        }
-    }
 
     // 승리 시 호출할 함수 (지금 안되는 이유가 얘를 호출하는 곳이 없어서 그런듯.. 밑의 failAlert도 마찬가지)
     public void clearAlert()
@@ -111,20 +91,6 @@ public class Battle : MonoBehaviour
     }
     */
   
-
-    // 설정창 가져오기 - 다만 현재는 메인화면에서 한번 설정창을 켜야 가져올 수 있음
-    public void OpenOptionCanvas()
-    {
-        if (Setting.instance != null)
-        {
-            Setting.instance.openOption();
-        }
-        else
-        {
-            Debug.LogWarning("SettingMenuController 인스턴스가 존재하지 않습니다.");
-        }
-    }
-
     private IEnumerator WaitForAlertResult(GameObject alertObject, Alert alertScript, System.Action<bool> callback)
     {
         // 알림창을 활성화

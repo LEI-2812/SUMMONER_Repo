@@ -2,20 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rabbit : Summon
+public class Snake : Summon
 {
     private void Awake()
     {
-        summonName = "Rabbit";
-        maxHP = 250;
+        summonName = "Snake";
+        maxHP = 200;
         nowHP = maxHP;
-        attackPower = 20; //일반공격
+        attackPower = 30; //일반공격
+        specialPower = 25;
         summonRank = SummonRank.Medium; // 중급 소환수
+
+        AttackStrategy = new ClosestEnemyAttackStrategy(); //근접 공격
+        SpecialAttackStrategy = new StatusAttackStrategy(StatusType.Poison, 3);//상태이상 (중독)공격
     }
 
-    private void Start()
+    public override int SpecialAttackCooldown() //중독은 쿨타임 3턴
     {
-        nowHP = 80; //테스트용
+        return 3;
     }
 
     public override void attack()
@@ -28,7 +32,7 @@ public class Rabbit : Summon
         base.die();
     }
 
-    public override void takeDamage(int damage)
+    public override void takeDamage(double damage)
     {
         base.takeDamage(damage);
     }
