@@ -62,7 +62,6 @@ public class Story : MonoBehaviour
             else
             {
                 alertSkip.SetActive(false);
-
             }
         }));
     }
