@@ -1,16 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandler
 {
     [Header("표현할 오브젝트들")]
     public GameObject bangImage;
     public GameObject confusebubbleImage;
+    public GameObject dialogueBox;
 
     private int scenarioFlowCount = 0; //대사 카운트
 
+    //플레이어 애니메이션
+    [SerializeField] private Animator playerAni;
+
     [Header("컨트롤러")]
     [SerializeField] private InteractionController interactionController;
+    [SerializeField] private PlayerMove playerMove;
 
     private int isSameDialgueIndex = -1;
     void Awake() //여기에서 오브젝트들의 초기 설정을 해준다.
@@ -42,45 +51,42 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
         switch (scenarioFlowCount)
         {
-            case 1: // 28 ~ 32
+            case 1: // 28 ~ 33
                 Debug.Log(scenarioFlowCount);
-                /*
-                 *      (옷을 툭툭 털며)
-                 *      생각보다 소환수가 약하잖아?
+                /*  (옷을 툭툭 털며)
+                 *  생각보다 소환수가 약하잖아?
                  */
                 showConfuseEffect();
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
-                /*
-                 *      이렇게 힘을 못 추는데 드래곤을 어떻게 잡아, 말도 안 되는 소리를 하고 있어! 
-                 */
+                //  이렇게 힘을 못 추는데 드래곤을 어떻게 잡아, 말도 안 되는 소리를 하고 있어!                
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
-                /*
-                 *      (바닥에 떨어진 보석을 줍는다.)
-                 *      이건 정수 보석?
-                 *      몬스터들이 만들어낸 건가?
+                /*  (바닥에 떨어진 보석을 줍는다.)
+                 *  이건 정수 보석?
+                 *  몬스터들이 만들어낸 건가?
                  */
                 showBangEffect();
                 break;
             case 4:
                 Debug.Log(scenarioFlowCount);
-                /*
-                 *      흠, 이걸로 마력을 좀 더 강력하게 만들 수 있겠는데. 
-                 */      
+                //흠, 이걸로 마력을 좀 더 강력하게 만들 수 있겠는데.
                 break;
             case 5:
                 Debug.Log(scenarioFlowCount);
-                /*
-                 *      (잠시 빛이 번쩍이고 몸에 스며든다.)
-                 *      이 정도면 다음 적을 상대할 수는 있겠어.
-                 *      드래곤을 잡을 정도는 안되지만.
-                 */
-                //  빛이 번쩍이고 몸에 스며드는 이미지 필요
+                //  여기서 PlayerYellow() ani 한번만 실행하고 다시 idle 상태로 복귀
+                offDialgueBox();
+                showYellowEffect();
                 break;
-            
+            case 6:
+                Debug.Log(scenarioFlowCount);
+                /*  이 정도면 다음 적을 상대할 수는 있겠어.
+                 *  드래곤을 잡을 정도는 안되지만.
+                 */
+                onDialgueBox();
+                break;
         }
     }
 
@@ -111,7 +117,7 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         interactionController.stopNextDialogue(); //여기서 알아서 대사를 멈추게함
 
         // 2초 후에 `endConfuseEffect` 메서드 호출
-        Invoke("endConfuseEffect", 2f);
+        Invoke("endConfuseEffect", 1.5f);
     }
     private void endConfuseEffect()
     {
@@ -126,7 +132,7 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         bangImage.SetActive(true);
         interactionController.stopNextDialogue(); //여기서 알아서 대사를 멈추게함
 
-        Invoke("endBangEffect", 2f);
+        Invoke("endBangEffect", 1f);
     }
     private void endBangEffect()
     {
@@ -135,9 +141,24 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         interactionController.startNextDialogue(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
     }
 
+    public void showYellowEffect()
+    {
+        playerMove.playYellowAni();
+    }
+
     private void nextScenarioFlow()
     {
         scenarioFlowCount++; //다음 대사 및 시나리오 진행을 위해 값 올리기
+    }
+    private void onDialgueBox()
+    {
+        dialogueBox.SetActive(true);
+    }
+
+    private void offDialgueBox()
+    {
+        Debug.Log("대사창 끄기");
+        dialogueBox.SetActive(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)

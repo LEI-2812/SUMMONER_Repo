@@ -30,8 +30,7 @@ public class PlayerMove : MonoBehaviour
 
     // 목표 위치와 이동 속도를 설정하는 메서드
     public void CharacterMove(float distance, float speed)
-    {
-        
+    {       
         targetPosition = player.transform.position + new Vector3(distance, 0f, 0f);
         moveSpeed = speed;
 
@@ -77,6 +76,31 @@ public class PlayerMove : MonoBehaviour
     }
 
     public void stopConfuseAni()
+    {
+        playerAni.Play("Idle");
+        interactionController.startNextDialogue();
+    }
+
+    public void playBlueAni()
+    {
+        playerAni.Play("PlayerBlue");
+        interactionController.stopNextDialogue();
+        Invoke("stopBlueAni", 1.2f);
+    }
+    
+    public void stopBlueAni()
+    {
+        playerAni.Play("Idle");
+        interactionController.startNextDialogue();
+    }
+
+    public void playYellowAni()
+    {
+        playerAni.Play("PlayerYellow");
+        interactionController.stopNextDialogue();
+        Invoke("stopYellowAni", 1.2f);
+    }
+    public void stopYellowAni()
     {
         playerAni.Play("Idle");
         interactionController.startNextDialogue();

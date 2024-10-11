@@ -120,7 +120,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         {
             Debug.Log("이도저도 아닌");
             fadeController.FadeOut();
-            Invoke("GotoFightScreen", 1.5f); // 페이드 아웃을 걸고 전투 씬으로 이동           
+            Invoke("GotoFightScreen", 1f); // 페이드 아웃을 걸고 전투 씬으로 이동           
         }
     }
 
