@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandler
+public class Stage1_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandler
 {
     [Header("표현할 오브젝트들")]
     public GameObject confusebubbleImage; // 끙앓는 이미지
@@ -26,7 +26,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
     void Awake() //여기에서 오브젝트들의 초기 설정을 해준다.
     {
         confusebubbleImage.SetActive(false);
-        dotbubbleImage.SetActive(false);       
+        dotbubbleImage.SetActive(false);
     }
 
     void Start() //Start에서 처음 실행할 메소드나 오브젝트를 지정해주도록 한다.
@@ -39,7 +39,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
         // 유저의 입력으로 대사 넘기기 (예: 스페이스바)
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            scenarioFlow();
+            OnClickDialogue();
         }
     }
     public void scenarioFlow()
@@ -216,11 +216,17 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase,IPointerClickHandle
         scenarioFlowCount++; //다음 대사 및 시나리오 진행을 위해 값 올리기
     }
 
-
+    public void OnClickDialogue()
+    {   //플레이어가 움직이지 않는 상황일때만 클릭 허용
+        if (!playerMove.getIsMoving())
+        {
+            interactionController.ShowNextLine();
+            scenarioFlow();
+        }
+    }
+    
     public void OnPointerClick(PointerEventData eventData)
     {
-        //플레이어가 움직이지 않는 상황일때만 클릭 허용
-        if (!playerMove.getIsMoving())
-            scenarioFlow();
+        OnClickDialogue();
     }
 }

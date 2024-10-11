@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class InteractionController : MonoBehaviour, IPointerClickHandler
+public class InteractionController : MonoBehaviour
 {
     [Header("캐릭터이름 텍스트")]
     public Text characterName;
@@ -54,7 +54,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public void ShowNextLine()
     {
 
-        if (!isDialogueActive) return; // 대화가 진행 중이 아니면 실행 안 함
+        if (!isDialogueActive || isStory) return; // 대화가 진행 중이 아니면 실행 안 함
 
         // 현재 캐릭터의 대사 출력
         if (currentDialogueIndex < currentDialogues.Length)
@@ -132,7 +132,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         //    ShowNextLine();
        // }
     }
-
+    /*
     public void OnPointerClick(PointerEventData eventData)
     {
         if (isDialogueActive && !isStory)
@@ -140,6 +140,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
             ShowNextLine();
         }
     }
+    */
 
     public int getCurrentDialogueIndex()
     {

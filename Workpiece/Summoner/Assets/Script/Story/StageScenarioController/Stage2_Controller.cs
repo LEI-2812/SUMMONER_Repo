@@ -38,7 +38,7 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            scenarioFlow();
+            OnClickDialogue();
         }
     }
 
@@ -161,8 +161,16 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         dialogueBox.SetActive(false);
     }
 
+    public void OnClickDialogue()
+    {   //플레이어가 움직이지 않는 상황일때만 클릭 허용
+        if (!playerMove.getIsMoving())
+        {
+            interactionController.ShowNextLine();
+            scenarioFlow();
+        }
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
-        scenarioFlow();
+        OnClickDialogue();
     }
 }
