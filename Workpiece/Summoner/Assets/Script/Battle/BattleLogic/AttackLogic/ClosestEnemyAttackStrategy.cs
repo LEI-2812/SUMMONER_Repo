@@ -10,7 +10,7 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
 
         if (closestEnemySummon != null)
         {
-            Debug.Log($"{attacker.SummonName}이(가) {closestEnemySummon.SummonName}을(를) 공격합니다.");
+            Debug.Log($"{attacker.getSummonName()}이(가) {closestEnemySummon.getSummonName()}을(를) 공격합니다.");
             closestEnemySummon.takeDamage(attacker.AttackPower);
         }
         else

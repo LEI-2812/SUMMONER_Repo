@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class StatusAttackStrategy : IAttackStrategy
 {
-    private StatusType statusType;
-    private int statusTime;
+    private StatusType statusType; //상태이상 종류
+    private int statusTime; //적용시간(턴)
 
     public StatusAttackStrategy(StatusType statusType, int time)
     {
@@ -26,26 +26,26 @@ public class StatusAttackStrategy : IAttackStrategy
                         double poisonDamage = target.MaxHP * 0.1; // 최대 체력의 10% 데미지
                         StatusEffect poisonEffect = new StatusEffect(StatusType.Poison, statusTime, poisonDamage);
                         target.ApplyStatusEffect(poisonEffect);
-                        Debug.Log($"{attacker.SummonName}이(가) {target.SummonName}에게 중독 상태를 부여하여 매 턴 {poisonDamage} 데미지를 입힙니다.");
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 중독 상태를 부여하여 매 턴 {poisonDamage} 데미지를 입힙니다.");
                         break;
 
                     case StatusType.Stun:
                         StatusEffect stunEffect = new StatusEffect(StatusType.Stun , statusTime);
                         target.ApplyStatusEffect(stunEffect);
-                        Debug.Log($"{attacker.SummonName}이(가) {target.SummonName}에게 스턴 상태를 부여했습니다.");
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 스턴 상태를 부여했습니다.");
                         break;
 
                     case StatusType.Curse:
                         StatusEffect curseEffect = new StatusEffect(StatusType.Curse , statusTime);
                         target.ApplyStatusEffect(curseEffect);
-                        Debug.Log($"{attacker.SummonName}이(가) {target.SummonName}에게 저주 상태를 부여하여 공격력을 감소시킵니다.");
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 저주 상태를 부여하여 공격력을 감소시킵니다.");
                         break;
 
                     case StatusType.Burn:
                         double burnDamage = target.MaxHP * 0.2; // 최대 체력의 20% 데미지
                         StatusEffect burnEffect = new StatusEffect(StatusType.Burn, statusTime, burnDamage);
                         target.ApplyStatusEffect(burnEffect);
-                        Debug.Log($"{attacker.SummonName}이(가) {target.SummonName}에게 화상을 입혀 매 턴 {burnDamage} 데미지를 입힙니다.");
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 화상을 입혀 매 턴 {burnDamage} 데미지를 입힙니다.");
                         break;
 
                     case StatusType.LifeDrain:
@@ -53,13 +53,13 @@ public class StatusAttackStrategy : IAttackStrategy
                         StatusEffect lifeDrainEffect = new StatusEffect(StatusType.LifeDrain, statusTime, lifeDrainDamage);
                         target.ApplyStatusEffect(lifeDrainEffect);
                         attacker.Heal(lifeDrainDamage); // 흡혈한 만큼 체력 회복
-                        Debug.Log($"{attacker.SummonName}이(가) {target.SummonName}에게 흡혈을 사용하여 {lifeDrainDamage} 데미지를 입히고 회복합니다.");
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 흡혈을 사용하여 {lifeDrainDamage} 데미지를 입히고 회복합니다.");
                         break;
 
                     case StatusType.Heal:
                         StatusEffect healEffect = new StatusEffect(StatusType.Heal, statusTime);
                         target.Heal(20); // 체력 회복
-                        Debug.Log($"{attacker.SummonName}이(가) {target.SummonName}의 체력을 회복합니다.");
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}의 체력을 회복합니다.");
                         break;
 
                     default:

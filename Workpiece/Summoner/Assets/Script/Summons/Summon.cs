@@ -31,6 +31,7 @@ public class Summon : MonoBehaviour
 
     private void Start()
     {
+        image = GetComponent<Image>();
         nowHP = maxHP;
     }
 
@@ -69,7 +70,7 @@ public class Summon : MonoBehaviour
             // 기존 상태이상이 있을 경우, 지속시간을 갱신 (즉시 효과는 제외)
             existingEffect.effectTime = statusEffect.effectTime - 1;  // 즉시 효과를 반영했으므로 지속시간을 1 감소
             existingEffect.damagePerTurn = statusEffect.damagePerTurn;
-            Debug.Log($"{SummonName}에게 중복된 {statusEffect.statusType} 상태이상이 갱신되었습니다.");
+            Debug.Log($"{summonName}에게 중복된 {statusEffect.statusType} 상태이상이 갱신되었습니다.");
         }
         else
         {
@@ -77,7 +78,7 @@ public class Summon : MonoBehaviour
             activeStatusEffects.Add(statusEffect);
             statusEffect.ApplyStatus(this);  // 즉시 효과 적용
             statusEffect.effectTime--;       // 즉시 효과 반영 후 지속시간을 1 감소시킴
-            Debug.Log($"{SummonName}에게 {statusEffect.statusType} 상태이상이 적용되었습니다.");
+            Debug.Log($"{summonName}에게 {statusEffect.statusType} 상태이상이 적용되었습니다.");
         }
     }
 
@@ -94,7 +95,7 @@ public class Summon : MonoBehaviour
             if (effect.damagePerTurn > 0)
             {
                 ApplyDamage(effect.damagePerTurn); // 데미지 적용
-                Debug.Log($"{SummonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다.");
+                Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다.");
             }
 
             if (effect.effectTime <= 0)
@@ -107,7 +108,7 @@ public class Summon : MonoBehaviour
         foreach (var expired in expiredEffects)
         {
             activeStatusEffects.Remove(expired);
-            Debug.Log($"{SummonName}의 {expired.statusType} 상태이상이 종료되었습니다.");
+            Debug.Log($"{summonName}의 {expired.statusType} 상태이상이 종료되었습니다.");
         }
 
         // 스킬 쿨타임 처리 (기존 방식)
@@ -116,12 +117,12 @@ public class Summon : MonoBehaviour
             skillCooldowns[skill]--;
             if (skillCooldowns[skill] > 0)
             {
-                Debug.Log($"{SummonName}의 {skill} 스킬의 남은 쿨타임: {skillCooldowns[skill]} 턴");
+                Debug.Log($"{summonName}의 {skill} 스킬의 남은 쿨타임: {skillCooldowns[skill]} 턴");
             }
 
             if (skillCooldowns[skill] <= 0)
             {
-                Debug.Log($"{SummonName}의 {skill} 스킬 쿨타임이 종료되었습니다.");
+                Debug.Log($"{summonName}의 {skill} 스킬 쿨타임이 종료되었습니다.");
             }
         }
     }
@@ -130,28 +131,28 @@ public class Summon : MonoBehaviour
     public void ApplySkillCooldown(string skillName, int cooldown)
     {
         skillCooldowns[skillName] = cooldown;
-        Debug.Log($"{SummonName}의 {skillName} 스킬이 {cooldown}턴 동안 쿨타임에 들어갑니다.");
+        Debug.Log($"{summonName}의 {skillName} 스킬이 {cooldown}턴 동안 쿨타임에 들어갑니다.");
     }
 
     public void CheckCanAttack()
     {
         if (!CanAttack)
         {
-            Debug.Log($"{SummonName}은(는) 현재 공격할 수 없습니다.");
+            Debug.Log($"{summonName}은(는) 현재 공격할 수 없습니다.");
         }
     }
 
     public void ModifyAttackPower(double multiplier)
     {
         AttackPower *= (1 + multiplier);
-        Debug.Log($"{SummonName}의 공격력이 {multiplier * 100}% 변경되었습니다. 현재 공격력: {AttackPower}");
+        Debug.Log($"{summonName}의 공격력이 {multiplier * 100}% 변경되었습니다. 현재 공격력: {AttackPower}");
 
     }
 
     public void ApplyDamage(double damage)
     {
-        NowHP -= damage;
-        Debug.Log($"{SummonName}이(가) {damage} 피해를 입었습니다. 남은 체력: {NowHP}");
+        nowHP -= damage;  // 잘못된 연산 수정
+        Debug.Log($"{summonName}이(가) {damage} 피해를 입었습니다. 남은 체력: {NowHP}");
 
         if (NowHP <= 0)
         {
@@ -164,7 +165,7 @@ public class Summon : MonoBehaviour
     public void Heal(double healAmount)
     {
         nowHP += healAmount;
-        Debug.Log($"{SummonName}이(가) {healAmount}만큼 체력을 회복했습니다.");
+        Debug.Log($"{summonName}이(가) {healAmount}만큼 체력을 회복했습니다.");
     }
 
 
@@ -175,11 +176,17 @@ public class Summon : MonoBehaviour
 
     public virtual void takeDamage(double damage) //데미지 입기
     {
-        nowHP = nowHP - damage;
-        Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
+        nowHP -= damage;
+
         if (nowHP <= 0)
         {
-            die();
+            nowHP = 0;  // 체력을 0 이하로 내리지 않음
+            Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
+            die();  // 사망 처리
+        }
+        else
+        {
+            Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
         }
     }
 
@@ -192,6 +199,11 @@ public class Summon : MonoBehaviour
         return false;
     }
 
+    // 소환수 초기화 메서드
+    public virtual void summonInitialize()
+    {
+ 
+    }
 
 
     public virtual void takeSkill() //스킬사용
@@ -202,14 +214,21 @@ public class Summon : MonoBehaviour
     public virtual void die()
     {
         Debug.Log($"{summonName} 가 체력이 소모되어 사라집니다.");
-        Destroy(gameObject); // 소환수 오브젝트 삭제
+        // Plate에서 소환수를 제거하기 위해 소환수를 배치한 Plate를 가져옴
+        Plate plate = GetComponentInParent<Plate>(); // 소환수가 속한 부모 Plate 가져오기
+        if (plate != null)
+        {
+            plate.RemoveSummon(); // 소환수 제거
+        }
+
+        // 소환수 오브젝트 삭제
+        Destroy(gameObject); // 소환수 오브젝트를 씬에서 제거
     }
 
-    public string SummonName
-    {
-        get { return summonName; }
-        set { summonName = value; }
+    public string getSummonName(){ 
+        return summonName; 
     }
+ 
 
     public double MaxHP
     {
@@ -235,10 +254,13 @@ public class Summon : MonoBehaviour
         set { specialPower = value; }
     }
 
-    public SummonRank SummonRank
+    public SummonRank getSummonRank()
     {
-        get { return summonRank; }
-        set { summonRank = value; }
+        return summonRank;
+    }
+    public void setSummonRank(SummonRank rank)
+    {
+        this.summonRank = rank;
     }
 
 }

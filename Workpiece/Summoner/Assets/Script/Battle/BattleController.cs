@@ -34,6 +34,22 @@ public class BattleController : MonoBehaviour
         return enermyPlates;
     }
 
+
+    //적 플레이트에 소환수가 존재하는지
+    public bool IsEnermyPlateClear()
+    {
+        foreach(Plate plate in enermyPlates) //플레이트를 순환
+        {
+            Summon summon = plate.getSummon(); //플레이트마다 소환수를 가져온다
+            if(summon != null) //만약 소환수가 하나라도 있다면 true를 반환
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     // 플레이어의 플레이트에 있는 모든 소환수들을 반환하는 메소드
     public List<Summon> getPlayerSummons()
     {

@@ -11,7 +11,7 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
             Summon enemySummon = plate.getSummon();
             if (enemySummon != null)
             {
-                Debug.Log($"{attacker.SummonName}이(가) {enemySummon.SummonName}을(를) 전체 공격합니다.");
+                Debug.Log($"{attacker.getSummonName()}이(가) {enemySummon.getSummonName()}을(를) 전체 공격합니다.");
                 enemySummon.takeDamage(attacker.SpecialPower);
             }
         }

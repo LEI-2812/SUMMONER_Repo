@@ -6,6 +6,11 @@ public class Slime : Summon
 {
     private void Awake()
     {
+        summonInitialize();
+    }
+
+    public override void summonInitialize()
+    {
         summonName = "Slime"; //이름 슬라임
         maxHP = 200; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
@@ -16,8 +21,9 @@ public class Slime : Summon
 
     private void Start()
     {
-        nowHP = 100;
+        Debug.Log("남은 체력: " + nowHP);
     }
+
 
     public override void attack()
     {

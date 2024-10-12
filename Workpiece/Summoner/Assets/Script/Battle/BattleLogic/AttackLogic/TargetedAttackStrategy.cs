@@ -10,7 +10,7 @@ public class TargetedAttackStrategy : IAttackStrategy
 
         if (selectedEnemySummon != null)
         {
-            Debug.Log($"{attacker.SummonName}이(가) {selectedEnemySummon.SummonName}을(를) 강력하게 공격합니다.");
+            Debug.Log($"{attacker.getSummonName()}이(가) {selectedEnemySummon.getSummonName()}을(를) 강력하게 공격합니다.");
             selectedEnemySummon.takeDamage(attacker.SpecialPower); // 강력한 공격
         }
         else

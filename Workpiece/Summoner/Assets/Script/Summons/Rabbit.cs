@@ -1,10 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Rabbit : Summon
 {
     private void Awake()
+    {
+        summonInitialize();
+    }
+
+    public override void summonInitialize()
     {
         summonName = "Rabbit";
         maxHP = 250;
@@ -14,11 +20,6 @@ public class Rabbit : Summon
 
         AttackStrategy = new ClosestEnemyAttackStrategy(); //근접공격
         SpecialAttackStrategy = new StatusAttackStrategy(StatusType.Heal, 0);//상태 이상
-    }
-
-    private void Start()
-    {
-        nowHP = 80; //테스트용
     }
 
     public override void attack()

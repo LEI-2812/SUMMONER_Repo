@@ -36,17 +36,47 @@ public class Plate : MonoBehaviour,
         // 이미 소환수가 있어도 재소환이면 진행
         if (!isInSummon || isResummon)
         {
-            currentSummon = summon;
+            // 기존 소환수가 있으면 파괴 (재소환 시)
+            if (currentSummon != null && isResummon)
+            {
+                Destroy(currentSummon.gameObject);
+                Debug.Log("기존 소환수가 파괴되었습니다.");
+            }
+
+            // 소환수 프리팹을 클론하여 생성
+            Summon summonClone = Instantiate(summon);
+
+            // 클론을 현재 플레이트의 자식으로 배치
+            summonClone.transform.SetParent(this.transform, false);
+            summonClone.transform.localPosition = Vector3.zero;  // 필요한 경우 위치 초기화
+
+            // 클론의 이미지 투명도 설정 (완전히 투명하게)
+            if (summonClone.image != null)
+            {
+                Color cloneColor = summonClone.image.color;
+                cloneColor.a = 0.0f;  // 클론의 알파 값을 0으로 설정하여 투명하게 만듦
+                summonClone.image.color = cloneColor;
+            }
+
+            // 플레이트의 summonImg에 소환수의 이미지 설정
+            if (summonImg != null && summonClone.image != null && summonClone.image.sprite != null)
+            {
+                summonImg.sprite = summonClone.image.sprite; // summonImg에 소환수 이미지 설정
+
+                // summonImg의 투명도를 1로 설정하여 완전히 보이게
+                Color plateColor = summonImg.color;
+                plateColor.a = 1.0f;  // 알파 값을 1로 설정 (완전 불투명)
+                summonImg.color = plateColor;
+            }
+
+            // 클론된 소환수를 currentSummon으로 설정
+            currentSummon = summonClone;
             isInSummon = true;
 
-            // 소환수 이미지 셋팅
-            summonImg.sprite = summon.image.sprite;
-            // 투명도를 255로 설정하여 완전히 불투명하게 만들기
-            Color color = summonImg.color;
-            color.a = 1.0f; // 알파 값을 1로 설정 (255/255)
-            summonImg.color = color;
+            // 소환수 초기화 로직 호출 (초기 능력치나 스킬 설정)
+            summonClone.summonInitialize();
 
-            Debug.Log($"소환수 {summon.SummonName} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
+            Debug.Log($"소환수 {summonClone.getSummonName()} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
         }
         else
         {
@@ -59,6 +89,18 @@ public class Plate : MonoBehaviour,
     {
         if (isInSummon)
         {
+            // 소환수 이미지를 초기 설정으로 되돌리기
+            if (summonImg != null)
+            {
+                summonImg.sprite = null; // 이미지를 비움 (또는 기본 이미지로 변경)
+
+                // 투명도를 0으로 설정 (완전히 투명하게)
+                Color color = summonImg.color;
+                color.a = 0f;
+                summonImg.color = color;
+            }
+
+            // 소환수 제거
             currentSummon = null;
             isInSummon = false;
             Debug.Log("소환수 제거.");
@@ -118,7 +160,7 @@ public class Plate : MonoBehaviour,
         //상태창 활성화
         else if (currentSummon != null && !summonController.IsReSummoning())
         {
-            Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.name);
+            Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.getSummonName());
             statePanel.SetActive(true); //상태 패널 활성화
 
             // 현재 plate의 인덱스를 설정 (플레이트 리스트에서 자신을 찾음)
