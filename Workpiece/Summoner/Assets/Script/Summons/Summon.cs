@@ -200,16 +200,7 @@ public class Summon : MonoBehaviour
     }
 
     // 소환수 초기화 메서드
-    public virtual void summonInitialize()
-    {
- 
-    }
-
-
-    public virtual void takeSkill() //스킬사용
-    {
-        Debug.Log($"{summonName} takes skill.");
-    }
+    public virtual void summonInitialize(){ }
 
     public virtual void die()
     {
@@ -225,10 +216,21 @@ public class Summon : MonoBehaviour
         Destroy(gameObject); // 소환수 오브젝트를 씬에서 제거
     }
 
+    public virtual void takeSkill() { }
+
     public string getSummonName(){ 
         return summonName; 
     }
- 
+    public void setSummonName(string name)
+    {
+        this.summonName = name;
+    }
+
+    public IAttackStrategy getSpecialAttackStrategy()
+    {
+        return this.SpecialAttackStrategy;
+    }
+
 
     public double MaxHP
     {

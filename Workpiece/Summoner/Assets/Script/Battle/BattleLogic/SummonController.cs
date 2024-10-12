@@ -6,26 +6,29 @@ public class SummonController : MonoBehaviour
 {
     public static SummonController Instance; // 싱글톤
 
-    [Header("플레이어 관련 오브젝트")]
+    [SerializeField] private GameObject darkBackground; // 재소환 배경 처리할 판넬 (반투명)
+
+    private bool isSummoning = false; // 재소환 중인지 확인하는 변수
+
+    [Header("플레이어")]
     [SerializeField] private Player player;
-    [SerializeField] private List<Plate> playerPlates; // 플레이어가 사용할 플레이트 목록
+   //[SerializeField] private List<Plate> playerPlates; // 플레이어가 사용할 플레이트 목록
 
     [Header("일반 소환 관련 오브젝트")]
     public List<Summon> summons; // 인스펙터에 넣을 소환수 오브젝트들
     public GameObject takeSummonPanel;
+    [SerializeField] private List<PickSummonPanel> selectSummonPanels; // 패널에 띄울 소환수
 
     [Header("재소환 관련 오브젝트")]
     public GameObject reTakeSummonPanel;
-    [SerializeField] private GameObject darkenBackground; // 재소환 배경 처리할 판넬 (반투명)
-    private bool isResummoning = false; // 재소환 중인지 확인하는 변수
+    [SerializeField] private List<PickSummonPanel> ReselectSummonPanels; // 패널에 띄울 소환수
     private int selectedPlateIndex = -1; // 소환시킬 플레이트 번호
+
+    [Header("(외부 오브젝트)컨트롤러")]
+    [SerializeField] private PlateController plateController;
 
     [Header("소환수 프리팹 목록")]
     private Summon selectedSummon; // 선택된 소환수
-
-    [Header("소환수 선택 패널 (+버튼으로 늘릴 수 있음)")]
-    [SerializeField] private List<PickSummonPanel> selectSummonPanels; // 패널에 띄울 소환수
-    [SerializeField] private List<PickSummonPanel> ReselectSummonPanels; // 패널에 띄울 소환수
 
     private void Awake()
     {
@@ -43,6 +46,7 @@ public class SummonController : MonoBehaviour
     // 일반 및 재소환을 처리하는 메서드
     public void StartSummon(int plateIndex, bool isResummon)
     {
+
         if (isResummon)
         {
             randomReTakeSummon();
@@ -50,6 +54,7 @@ public class SummonController : MonoBehaviour
         }
         else
         {
+            darkBackground.SetActive(true);
             randomTakeSummon();
             StartCoroutine(TakeSummonSelection(plateIndex));
         }
@@ -63,12 +68,17 @@ public class SummonController : MonoBehaviour
             yield return null;
         }
 
-        if (selectedSummon != null)
+        if (selectedSummon != null) //3개중에 고른것
         {
-            playerPlates[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: false);
+            plateController.getPlayerPlates()[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: false);
             player.SetHasSummonedThisTurn(true); // 플레이어가 소환했음을 알림
             Debug.Log($"플레이트 {plateIndex}에 소환 완료.");
         }
+
+        // 재소환 진행 중 표시와 백그라운드 종료
+        isSummoning = false;
+        darkBackground.SetActive(false);
+        plateController.ResetPlayerPlateHighlight();
     }
 
     // 재소환 코루틴 (재소환 로직)
@@ -81,52 +91,51 @@ public class SummonController : MonoBehaviour
 
         if (selectedSummon != null)
         {
-            playerPlates[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: true);
+            plateController.getPlayerPlates()[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: true);
             player.SetHasSummonedThisTurn(true); // 플레이어가 소환했음을 알림
             Debug.Log($"플레이트 {plateIndex}에 재소환 완료.");
         }
+
+        // 재소환 완료 후 모든 플레이트를 다시 보이게 함
+        plateController.ShowAllPlates();
+
         // 재소환 진행 중 표시와 백그라운드 종료
-        isResummoning = false;
-        darkenBackground.SetActive(false);
+        isSummoning = false;
+        darkBackground.SetActive(false);
+
+        plateController.ResetPlayerPlateHighlight();
     }
 
     //차례로 재소환 로직
     public bool StartResummon()
     {
-        if (playerPlates[0].currentSummon == null && playerPlates[1].currentSummon == null && playerPlates[2].currentSummon == null)
+        if (plateController.getPlayerPlates()[0].currentSummon == null && plateController.getPlayerPlates()[1].currentSummon == null && plateController.getPlayerPlates()[2].currentSummon == null)
         {
             Debug.Log("플레이트에 소환수가 없습니다.");
             return false;
         }
 
-        SelectPlateAndResummon();
+        ReSummonPanelOpenAndHighlight();
         return true;
     }
 
     //소환수가 있는 플레이트만 강조
-    private void SelectPlateAndResummon()
+    private void ReSummonPanelOpenAndHighlight()
     {
         // 재소환 진행 중 표시와 백그라운드 활성화
-        isResummoning = true;
-        darkenBackground.SetActive(true);
+        isSummoning = true;
+        darkBackground.SetActive(true);
 
-        // 소환수가 있는 플레이트만 강조 및 투명도 변경
-        for (int i = 0; i < playerPlates.Count; i++)
-        {
-            if (playerPlates[i].isInSummon)
-            {
-                playerPlates[i].Highlight(); //색상을 노랗게
-                playerPlates[i].SetSummonImageTransparency(0.5f); //소환수는 조금 투명하게
-            }
-        }
+        // PlateController에서 소환수가 있는 플레이트만 강조
+        plateController.HighlightPlayerPlates();
     }
 
     //재소환 중일때 플레이트 클릭시 이 메소드가 호출됨. 선택한 플레이트의 번호를 가져옴
     public void SelectPlate(Plate plate)
     {
-        for (int i = 0; i < playerPlates.Count; i++)
+        for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
         {
-            if (playerPlates[i] == plate)
+            if (plateController.getPlayerPlates()[i] == plate)
             {
                 selectedPlateIndex = i; //선택한 플레이트의 번호를 넣는다.
                 ResummonSelectStart();
@@ -167,6 +176,7 @@ public class SummonController : MonoBehaviour
     //재소환시 소환시킬 소환수 선택
     private void randomReTakeSummon()
     {
+        plateController.HideAllPlates();
         reTakeSummonPanel.SetActive(true);
         List<Summon> randomSelectedSummons = SummonRandomly();
 
@@ -249,9 +259,9 @@ public class SummonController : MonoBehaviour
 
 
     // 소환 중인지 확인
-    public bool IsReSummoning()
+    public bool IsSummoning()
     {
-        return isResummoning;
+        return isSummoning;
     }
 
     // 소환수 선택
@@ -260,12 +270,12 @@ public class SummonController : MonoBehaviour
         selectedSummon = summon;
         Debug.Log($"{selectedSummon.getSummonName()} 소환수를 선택했습니다.");
         // 소환수가 있는 플레이트만 강조 및 투명도 되돌리기
-        for (int i = 0; i < playerPlates.Count; i++)
+        for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
         {
-            if (playerPlates[i].isInSummon)
+            if (plateController.getPlayerPlates()[i].isInSummon)
             {
-                playerPlates[i].Unhighlight(); //색상 되돌리기
-                playerPlates[i].SetSummonImageTransparency(1.0f); //투명도 되돌리기
+                plateController.getPlayerPlates()[i].Unhighlight(); //색상 되돌리기
+                plateController.getPlayerPlates()[i].SetSummonImageTransparency(1.0f); //투명도 되돌리기
             }
         }
         takeSummonPanel.SetActive(false);
@@ -279,20 +289,24 @@ public class SummonController : MonoBehaviour
     }
 
     // 어둡게 배경 활성화
-    public void OnResummonBackground()
+    public void OnDarkBackground(bool onOff)
     {
-        darkenBackground.SetActive(true);
+        darkBackground.SetActive(onOff);
     }
 
-    public List<Plate> getPlayerPlate()
+    public bool getIsSummoningBackGroundActive()
     {
-        return playerPlates;
+        return darkBackground.activeSelf;
     }
 
-    // 클릭된 plate의 인덱스를 반환하는 메소드
-    public int GetPlateIndex(Plate selectedPlate)
+    public int GetPlayerPlateIndex(Plate selectedPlate)
     {
-        return playerPlates.IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
+        return plateController.getPlayerPlates().IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
+    }
+
+    public int GetEnermyPlateIndex(Plate selectedPlate)
+    {
+        return plateController.getEnermyPlates().IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
     }
 
     public void setPlayerSelectedIndex(int index)
