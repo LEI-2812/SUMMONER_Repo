@@ -6,6 +6,11 @@ public class Cat : Summon
 {
     private void Awake()
     {
+        summonInitialize();
+    }
+
+    public override void summonInitialize()
+    {
         summonName = "Cat";
         maxHP = 100;
         nowHP = maxHP;

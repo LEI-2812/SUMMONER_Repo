@@ -6,6 +6,11 @@ public class Eagle : Summon
 {
     private void Awake()
     {
+        summonInitialize();
+    }
+
+    public override void summonInitialize()
+    {
         summonName = "Eagle";
         maxHP = 400;
         nowHP = maxHP;
@@ -19,10 +24,11 @@ public class Eagle : Summon
         SpecialAttackStrategy = new TargetedAttackStrategy();
     }
 
-    private void Start()
+    void Start()
     {
-      
+        Debug.Log("°ø°Ý·Â" + attackPower);
     }
+
 
     public override void attack()
     {

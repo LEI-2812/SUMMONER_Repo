@@ -20,6 +20,7 @@ public class SummonController : MonoBehaviour
     private bool isResummoning = false; // 재소환 중인지 확인하는 변수
     private int selectedPlateIndex = -1; // 소환시킬 플레이트 번호
 
+    [Header("소환수 프리팹 목록")]
     private Summon selectedSummon; // 선택된 소환수
 
     [Header("소환수 선택 패널 (+버튼으로 늘릴 수 있음)")]
@@ -64,7 +65,7 @@ public class SummonController : MonoBehaviour
 
         if (selectedSummon != null)
         {
-            playerPlates[plateIndex].SummonPlaceOnPlate(selectedSummon);
+            playerPlates[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: false);
             player.SetHasSummonedThisTurn(true); // 플레이어가 소환했음을 알림
             Debug.Log($"플레이트 {plateIndex}에 소환 완료.");
         }
@@ -92,7 +93,7 @@ public class SummonController : MonoBehaviour
     //차례로 재소환 로직
     public bool StartResummon()
     {
-        if (playerPlates[0].currentSummon==null && playerPlates[1].currentSummon == null && playerPlates[2].currentSummon == null)
+        if (playerPlates[0].currentSummon == null && playerPlates[1].currentSummon == null && playerPlates[2].currentSummon == null)
         {
             Debug.Log("플레이트에 소환수가 없습니다.");
             return false;
@@ -230,7 +231,7 @@ public class SummonController : MonoBehaviour
         // 소환수 리스트에서 해당 등급의 소환수들만 필터링
         foreach (Summon summon in summons)
         {
-            if (summon.SummonRank == rank)
+            if (summon.getSummonRank() == rank)
             {
                 availableSummons.Add(summon);
             }
@@ -257,7 +258,7 @@ public class SummonController : MonoBehaviour
     public void OnSelectSummon(Summon summon)
     {
         selectedSummon = summon;
-        Debug.Log($"{selectedSummon.SummonName} 소환수를 선택했습니다.");
+        Debug.Log($"{selectedSummon.getSummonName()} 소환수를 선택했습니다.");
         // 소환수가 있는 플레이트만 강조 및 투명도 되돌리기
         for (int i = 0; i < playerPlates.Count; i++)
         {
@@ -298,5 +299,4 @@ public class SummonController : MonoBehaviour
     {
         player.setSelectedPlateIndex(index);
     }
-
 }

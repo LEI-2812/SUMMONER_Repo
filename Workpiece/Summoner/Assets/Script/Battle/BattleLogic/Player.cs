@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using Unity.VisualScripting;
 
 public class Player : Character
 {
@@ -17,6 +18,8 @@ public class Player : Character
     [SerializeField] private TurnController turnController;
     [SerializeField] private BattleController battleController;
 
+     BattleAlert battleAlert;
+
     private int selectedPlateIndex = -1;
 
 
@@ -24,6 +27,7 @@ public class Player : Character
 
     private void Start()
     {
+        battleAlert = GetComponent<BattleAlert>();
         ResetPlayerSetting();
     }
 
@@ -110,6 +114,12 @@ public class Player : Character
         {
             Debug.Log("선택된 plate에 소환수가 없습니다.");
         }
+
+        if (battleController.IsEnermyPlateClear())
+        {
+            Debug.Log("승리!");
+            battleAlert.clearAlert();
+        }
     }
 
     public void OnSpecialAttackBtnClick()
@@ -131,6 +141,12 @@ public class Player : Character
         else
         {
             Debug.Log("선택된 plate에 소환수가 없습니다.");
+        }
+
+        if (battleController.IsEnermyPlateClear())
+        {
+            Debug.Log("승리!");
+            battleAlert.clearAlert();
         }
     }
 
