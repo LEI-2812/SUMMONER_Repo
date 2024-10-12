@@ -22,13 +22,20 @@ public class Player : Character
 
     private int selectedPlateIndex = -1;
 
-
     private bool hasSummonedThisTurn;
 
     private void Start()
     {
         battleAlert = GetComponent<BattleAlert>();
         ResetPlayerSetting();
+    }
+
+    private void Update()
+    {
+        if(battleController.IsPlayerPlateClear() && mana <= 0)
+        {
+            battleAlert.failAlert();
+        }
     }
 
     public override void startTurn()
@@ -135,9 +142,29 @@ public class Player : Character
                 return;
             }
 
-            // 특수 공격 수행
+            // TargetedAttackStrategy를 사용하는지 확인
+            if (attackSummon.getSpecialAttackStrategy() is TargetedAttackStrategy)
+            {
+                Debug.Log("TargetedAttackStrategy를 사용합니다. 적의 플레이트를 선택하세요.");
+
+                // 사용자가 선택한 플레이트 인덱스를 가져옵니다 (선택 대기 중)
+                Plate selectedEnemyPlate = summonController.GetSelectedEnemyPlate(); // 적의 플레이트를 선택하는 로직 필요
+                if (selectedEnemyPlate != null)
+                {
+                    selectedPlateIndex = battleController.getEnermyPlate().IndexOf(selectedEnemyPlate); // 선택한 플레이트의 인덱스 저장
+                    Debug.Log($"플레이트 {selectedPlateIndex} 선택됨.");
+                }
+                else
+                {
+                    Debug.Log("플레이트가 선택되지 않았습니다.");
+                    return; // 선택된 플레이트가 없으면 공격을 중단
+                }
+            }
+
+
             attackSummon.SpecialAttack(battleController.getEnermyPlate(), selectedPlateIndex);
         }
+
         else
         {
             Debug.Log("선택된 plate에 소환수가 없습니다.");
