@@ -5,12 +5,13 @@ using UnityEngine;
 
 public enum StatusType
 {
-    Stun,
-    Poison,
-    Heal,
-    Curse,
-    LifeDrain,
-    Burn
+    None, //´Ü¼ø °ø°İ
+    Stun, //È¥¶õ
+    Poison, //Áßµ¶
+    Heal, //Èú
+    Curse, //ÀúÁÖ
+    LifeDrain, //ÈíÇ÷
+    Burn //È­»ó
 }
 
 public class StatusEffect

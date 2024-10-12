@@ -21,7 +21,7 @@ public class Eagle : Summon
         // 일반 공격: 가장 가까운 적 공격
         AttackStrategy = new ClosestEnemyAttackStrategy();
         // 특수 공격: 타겟 지정 공격
-        SpecialAttackStrategy = new TargetedAttackStrategy();
+        SpecialAttackStrategy = new TargetedAttackStrategy(StatusType.None);
     }
 
     void Start()

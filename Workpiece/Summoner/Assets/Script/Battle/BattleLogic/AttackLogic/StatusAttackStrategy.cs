@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,8 +58,8 @@ public class StatusAttackStrategy : IAttackStrategy
                         break;
 
                     case StatusType.Heal:
-                        StatusEffect healEffect = new StatusEffect(StatusType.Heal, statusTime);
-                        target.Heal(20); // 체력 회복
+                        double heal = target.MaxHP * 0.3;
+                        target.Heal(heal); // 체력 회복
                         Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}의 체력을 회복합니다.");
                         break;
 
@@ -68,5 +69,10 @@ public class StatusAttackStrategy : IAttackStrategy
                 }
             }
         }
+    }
+
+    internal StatusType getStatusType()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -216,6 +216,8 @@ public class Summon : MonoBehaviour
         Destroy(gameObject); // 소환수 오브젝트를 씬에서 제거
     }
 
+    public virtual void takeSkill() { }
+
     public string getSummonName(){ 
         return summonName; 
     }

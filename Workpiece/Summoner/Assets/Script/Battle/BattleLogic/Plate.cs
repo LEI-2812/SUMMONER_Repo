@@ -127,21 +127,44 @@ public class Plate : MonoBehaviour,
         {
             SetSummonImageTransparency(1.0f); // 투명도를 높여 더 진하게 보이게
         }
-        if (isInSummon && summonController.IsReSummoning()) // 재소환 중이고 소환수가 있는 경우
+        if (isInSummon && summonController.IsSummoning()) //소환수가 플레이트에 있고 소환중
         {
             Highlight(); // 플레이트 강조
             SetSummonImageTransparency(1.0f); // 투명도 높이기
         }
+       
+        if (isInSummon && battleController.getIsAttaking()){ //공격중일때
+            if (battleController.getIsHeal() && IsPlayerPlate())//힐이면서 아군플레이트만 강조
+            {
+                Highlight(); // 플레이트 강조
+            }
+            else if (!battleController.getIsHeal() && IsEnemyPlate()) //힐이 아닌 상태이상중 적 플레이트만 강조
+            {
+                Highlight();
+            }
+        }
+
     }
 
 
     //마우스가 벗어날때
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (currentSummon != null && summonController.IsReSummoning()) //재소환중일때 더 진하게
+        if (currentSummon != null && summonController.IsSummoning()) //소환수가 플레이트에 있고 소환중
         {
             Unhighlight(); // 강조 해제
             SetSummonImageTransparency(0.5f); // 다시 흐리게
+        }
+        if (isInSummon && battleController.getIsAttaking())
+        { //공격중일때
+            if (battleController.getIsHeal() && IsPlayerPlate())//힐이고 아군플레이트면
+            {
+                Unhighlight(); // 플레이트 강조
+            }
+            else if(!battleController.getIsHeal() && IsEnemyPlate()) //힐이아니면 공격으로 간주
+            {
+                Unhighlight();
+            }
         }
 
     }
@@ -150,26 +173,65 @@ public class Plate : MonoBehaviour,
     public void OnPointerClick(PointerEventData eventData)
     {
         // 플레이어가 재소환 중이라면 상태 패널을 뜨지 않도록 함
-        if (summonController.IsReSummoning() && isInSummon)
+        if (summonController.IsSummoning() && isInSummon)
         {
-                summonController.SelectPlate(this);
-                Unhighlight(); // 강조 해제
-                SetSummonImageTransparency(1.0f); //투명도 되돌리기
+            summonController.SelectPlate(this);
+            Unhighlight(); // 강조 해제
+            SetSummonImageTransparency(1.0f); //투명도 되돌리기
         }
 
         //상태창 활성화
-        else if (currentSummon != null && !summonController.IsReSummoning())
+        else if (currentSummon != null && !summonController.IsSummoning() && !battleController.getIsAttaking())
         {
             Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.getSummonName());
             statePanel.SetActive(true); //상태 패널 활성화
 
             // 현재 plate의 인덱스를 설정 (플레이트 리스트에서 자신을 찾음)
-            int plateIndex = summonController.GetPlateIndex(this);  // GetPlateIndex 메소드를 통해 자신이 몇 번째인지 확인
+            int plateIndex = summonController.GetPlayerPlateIndex(this);  // GetPlateIndex 메소드를 통해 자신이 몇 번째인지 확인
             // BattleController에 선택된 플레이트 인덱스 전달
             summonController.setPlayerSelectedIndex(plateIndex);
 
             onMousePlateScript.setStatePanel(currentSummon); // 패널에 소환수 정보 전달 
         }
+        // 공격 중에 클릭할 경우
+        if (battleController.getIsAttaking() && isInSummon && battleController)
+        {
+            if (!battleController.getIsHeal()) //힐이 아니면 적 플레이트
+            {
+                // 적의 플레이트 인덱스를 가져옴
+                int plateIndex = summonController.GetEnermyPlateIndex(this);
+
+                if (plateIndex >= 0)
+                {
+                    // BattleController에 선택된 플레이트 인덱스 전달
+                    summonController.setPlayerSelectedIndex(plateIndex);
+                    Debug.Log($"적의 플레이트 {plateIndex}가 선택되었습니다.");
+                    Unhighlight(); // 강조 해제
+                }
+                else
+                {
+                    Debug.Log("유효한 적의 플레이트가 선택되지 않았습니다.");
+                }
+            }
+            else
+            {
+                // 적의 플레이트 인덱스를 가져옴
+                int plateIndex = summonController.GetPlayerPlateIndex(this);
+
+                if (plateIndex >= 0)
+                {
+                    // BattleController에 선택된 플레이트 인덱스 전달
+                    summonController.setPlayerSelectedIndex(plateIndex);
+                    Debug.Log($"아군의 플레이트 {plateIndex}가 선택되었습니다.");
+                    Unhighlight(); // 강조 해제
+                }
+                else
+                {
+                    Debug.Log("유효한 아군의 플레이트가 선택되지 않았습니다.");
+                }
+            }
+        }
+
     }
 
     // 소환수 이미지 투명도 설정
@@ -181,6 +243,20 @@ public class Plate : MonoBehaviour,
             color.a = alpha; // 투명도 설정
             summonImg.color = color;
         }
+    }
+
+    // 현재 플레이트가 적의 플레이트인지 검사하는 메소드
+    public bool IsEnemyPlate()
+    {
+        PlateController plateController = battleController.GetPlateController(); // summonController를 통해 PlateController에 접근
+        return plateController.getEnermyPlates().Contains(this);
+    }
+
+    // 현재 플레이트가 플레이어의 플레이트인지 검사하는 메소드
+    public bool IsPlayerPlate()
+    {
+        PlateController plateController = battleController.GetPlateController(); // summonController를 통해 PlateController에 접근
+        return plateController.getPlayerPlates().Contains(this);
     }
 
 
