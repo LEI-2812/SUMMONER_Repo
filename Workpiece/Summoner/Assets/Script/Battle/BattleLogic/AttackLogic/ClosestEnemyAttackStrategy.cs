@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ClosestEnemyAttackStrategy : IAttackStrategy
 {
+    private StatusType StatusType;
+    public ClosestEnemyAttackStrategy(StatusType statusType) {  this.StatusType = statusType; }
     public void Attack(Summon attacker, List<Plate> enemyPlates, int selectedPlateIndex)
     {
         Summon closestEnemySummon = GetClosestEnemySummon(selectedPlateIndex, enemyPlates);
@@ -32,4 +34,7 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
 
         return null; // 적 소환수가 없으면 null 반환
     }
+
+    public StatusType getStatusType() { return StatusType; }
+    public void setStatusType(StatusType type) { StatusType = type; }
 }

@@ -137,12 +137,19 @@ public class Player : Character
 
         if (attackSummon != null)
         {
+            // 스킬이 쿨타임 중인지 확인
+            if (attackSummon.IsSkillOnCooldown("SpecialAttack"))
+            {
+                Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
+                return;
+            }
+
             IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy();
             //여기가 전코드
             // TargetedAttackStrategy를 사용하는지 확인
             if (attackStrategy is TargetedAttackStrategy targetedAttack)
             {
-                StatusType attackStatusType = targetedAttack.getTargetAttackStatusType();
+                StatusType attackStatusType = targetedAttack.getStatusType();
                 if (attackStatusType == StatusType.Heal) //타겟중에 힐일경우
                 {
                     Debug.Log("TargetedAttackStrategy의 Heal을 사용합니다. 아군의 플레이트를 선택하세요.");
@@ -219,7 +226,6 @@ public class Player : Character
     private IEnumerator WaitForPlayerPlateSelection(Summon attackSummon)
     {
         battleController.setIsAttaking(true); // 공격 시작
-        battleController.setIsHeal(true);
         summonController.OnDarkBackground(true); // 배경 어둡게 처리
         plateController.DownTransparencyForWhoPlate(false); //적 소환수 투명화
         selectedPlateIndex = -1; //선택한 플레이트 초기화

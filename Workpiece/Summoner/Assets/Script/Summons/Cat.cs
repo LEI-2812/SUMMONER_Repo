@@ -19,9 +19,9 @@ public class Cat : Summon
         summonRank = SummonRank.Low; // 하급 소환수
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategy = new ClosestEnemyAttackStrategy();
+        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None);
         // 특수 공격: 전체 적 공격
-        SpecialAttackStrategy = new ClosestEnemyAttackStrategy();
+        specialAttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None);
     }
 
     public override void attack()

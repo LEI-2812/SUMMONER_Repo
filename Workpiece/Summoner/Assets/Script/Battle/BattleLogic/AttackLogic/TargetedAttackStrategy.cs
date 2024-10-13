@@ -34,9 +34,9 @@ public class TargetedAttackStrategy : IAttackStrategy
         }
     }
 
-
-    public StatusType getTargetAttackStatusType()
+    public StatusType getStatusType()
     {
         return statusType;
     }
+
 }

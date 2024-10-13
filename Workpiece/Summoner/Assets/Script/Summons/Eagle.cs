@@ -19,9 +19,9 @@ public class Eagle : Summon
         summonRank = SummonRank.High; // 상급 소환수
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategy = new ClosestEnemyAttackStrategy();
+        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None);
         // 특수 공격: 타겟 지정 공격
-        SpecialAttackStrategy = new TargetedAttackStrategy(StatusType.None);
+        specialAttackStrategy = new TargetedAttackStrategy(StatusType.None);
     }
 
     void Start()

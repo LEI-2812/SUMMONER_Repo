@@ -13,8 +13,8 @@ public class Wolf : Summon
         specialPower = 25;
         summonRank = SummonRank.High; // 중급 소환수
 
-        AttackStrategy = new ClosestEnemyAttackStrategy(); //근접공격
-        SpecialAttackStrategy = new AttackAllEnemiesStrategy();//전체공격
+        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None); //근접공격
+        specialAttackStrategy = new AttackAllEnemiesStrategy(StatusType.None);//전체공격
     }
 
     private void Start()

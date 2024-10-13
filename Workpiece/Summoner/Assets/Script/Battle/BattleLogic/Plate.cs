@@ -133,14 +133,29 @@ public class Plate : MonoBehaviour,
             SetSummonImageTransparency(1.0f); // 투명도 높이기
         }
        
+        //타겟공격을 위한 마우스 효과
         if (isInSummon && battleController.getIsAttaking()){ //공격중일때
-            if (battleController.getIsHeal() && IsPlayerPlate())//힐이면서 아군플레이트만 강조
-            {
-                Highlight(); // 플레이트 강조
+            if (battleController.getAttakingSummon().getSpecialAttackStrategy().getStatusType() == StatusType.Heal)//힐이면서 아군플레이트만 강조
+            { //힐일때
+                if (IsPlayerPlate())
+                {
+                    Highlight(); // 플레이트 강조
+                }
+                else
+                {
+                    SetSummonImageTransparency(0.5f); //적 플레이트 투명도 높이기
+                }
             }
-            else if (!battleController.getIsHeal() && IsEnemyPlate()) //힐이 아닌 상태이상중 적 플레이트만 강조
+            else //타겟공격일때
             {
-                Highlight();
+                if (IsEnermyPlate())
+                {
+                    Highlight();
+                }
+                else
+                {
+                    SetSummonImageTransparency(0.5f); // 투명도 높이기
+                }
             }
         }
 
@@ -155,16 +170,11 @@ public class Plate : MonoBehaviour,
             Unhighlight(); // 강조 해제
             SetSummonImageTransparency(0.5f); // 다시 흐리게
         }
+
+        //타겟공격을 위한 마우스 효과
         if (isInSummon && battleController.getIsAttaking())
-        { //공격중일때
-            if (battleController.getIsHeal() && IsPlayerPlate())//힐이고 아군플레이트면
-            {
-                Unhighlight(); // 플레이트 강조
-            }
-            else if(!battleController.getIsHeal() && IsEnemyPlate()) //힐이아니면 공격으로 간주
-            {
-                Unhighlight();
-            }
+        {
+            Unhighlight();// 플레이트 강조해제
         }
 
     }
@@ -193,41 +203,52 @@ public class Plate : MonoBehaviour,
 
             onMousePlateScript.setStatePanel(currentSummon); // 패널에 소환수 정보 전달 
         }
+
+
+
         // 공격 중에 클릭할 경우
         if (battleController.getIsAttaking() && isInSummon && battleController)
         {
-            if (!battleController.getIsHeal()) //힐이 아니면 적 플레이트
+            //힐일때
+            if (battleController.getAttakingSummon().getSpecialAttackStrategy().getStatusType() == StatusType.Heal) //힐이 아니면 적 플레이트
             {
-                // 적의 플레이트 인덱스를 가져옴
-                int plateIndex = summonController.GetEnermyPlateIndex(this);
+                if (IsPlayerPlate())
+                {
+                    // 아군의 플레이트 인덱스를 가져옴
+                    int plateIndex = summonController.GetPlayerPlateIndex(this);
 
-                if (plateIndex >= 0)
-                {
-                    // BattleController에 선택된 플레이트 인덱스 전달
-                    summonController.setPlayerSelectedIndex(plateIndex);
-                    Debug.Log($"적의 플레이트 {plateIndex}가 선택되었습니다.");
-                    Unhighlight(); // 강조 해제
+                    if (plateIndex >= 0)
+                    {
+                        // BattleController에 선택된 플레이트 인덱스 전달
+                        summonController.setPlayerSelectedIndex(plateIndex);
+                        Debug.Log($"아군의 플레이트 {plateIndex}가 선택되었습니다.");
+                        Unhighlight(); // 강조 해제
+                    }
+                    else
+                    {
+                        Debug.Log("유효한 아군의 플레이트가 선택되지 않았습니다.");
+                    }
                 }
-                else
-                {
-                    Debug.Log("유효한 적의 플레이트가 선택되지 않았습니다.");
-                }
+
             }
-            else
+            else //데미지 공격일때
             {
-                // 적의 플레이트 인덱스를 가져옴
-                int plateIndex = summonController.GetPlayerPlateIndex(this);
+                if (IsEnermyPlate()) //적 플레이트인지 검사
+                {
+                    // 적의 플레이트 인덱스를 가져옴
+                    int plateIndex = summonController.GetEnermyPlateIndex(this);
 
-                if (plateIndex >= 0)
-                {
-                    // BattleController에 선택된 플레이트 인덱스 전달
-                    summonController.setPlayerSelectedIndex(plateIndex);
-                    Debug.Log($"아군의 플레이트 {plateIndex}가 선택되었습니다.");
-                    Unhighlight(); // 강조 해제
-                }
-                else
-                {
-                    Debug.Log("유효한 아군의 플레이트가 선택되지 않았습니다.");
+                    if (plateIndex >= 0)
+                    {
+                        // BattleController에 선택된 플레이트 인덱스 전달
+                        summonController.setPlayerSelectedIndex(plateIndex);
+                        Debug.Log($"적의 플레이트 {plateIndex}가 선택되었습니다.");
+                        Unhighlight(); // 강조 해제
+                    }
+                    else
+                    {
+                        Debug.Log("유효한 적의 플레이트가 선택되지 않았습니다.");
+                    }
                 }
             }
         }
@@ -246,7 +267,7 @@ public class Plate : MonoBehaviour,
     }
 
     // 현재 플레이트가 적의 플레이트인지 검사하는 메소드
-    public bool IsEnemyPlate()
+    public bool IsEnermyPlate()
     {
         PlateController plateController = battleController.GetPlateController(); // summonController를 통해 PlateController에 접근
         return plateController.getEnermyPlates().Contains(this);
@@ -263,5 +284,28 @@ public class Plate : MonoBehaviour,
     public Summon getSummon() //플레이트의 소환수를 반환
     {
         return currentSummon;
+    }
+
+    private void ResetAllPlatesState()
+    {
+        // 아군 플레이트의 상태 복원
+        foreach (var plate in battleController.GetPlateController().getPlayerPlates())
+        {
+            if (plate.currentSummon != null)
+            {
+                plate.SetSummonImageTransparency(1.0f); // 투명도 복원
+                plate.Unhighlight(); // 강조 해제
+            }
+        }
+
+        // 적 플레이트의 상태 복원
+        foreach (var plate in battleController.GetPlateController().getEnermyPlates())
+        {
+            if (plate.currentSummon != null)
+            {
+                plate.SetSummonImageTransparency(1.0f); // 투명도 복원
+                plate.Unhighlight(); // 강조 해제
+            }
+        }
     }
 }

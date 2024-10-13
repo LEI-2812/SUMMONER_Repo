@@ -71,8 +71,13 @@ public class StatusAttackStrategy : IAttackStrategy
         }
     }
 
-    internal StatusType getStatusType()
+    public StatusType getStatusType()
     {
-        throw new NotImplementedException();
+        return statusType;
+    }
+
+    public void setStatusType(StatusType type)
+    {
+        this.statusType = type;
     }
 }

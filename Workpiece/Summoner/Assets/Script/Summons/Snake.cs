@@ -13,8 +13,8 @@ public class Snake : Summon
         specialPower = 25;
         summonRank = SummonRank.Medium; // 중급 소환수
 
-        AttackStrategy = new ClosestEnemyAttackStrategy(); //근접 공격
-        SpecialAttackStrategy = new StatusAttackStrategy(StatusType.Poison, 3);//상태이상 (중독)공격
+        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None); //근접 공격
+        specialAttackStrategy = new StatusAttackStrategy(StatusType.Poison, 3);//상태이상 (중독)공격
     }
 
     public override int SpecialAttackCooldown() //중독은 쿨타임 3턴
