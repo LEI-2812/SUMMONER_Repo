@@ -23,7 +23,7 @@ public class StatePanel: MonoBehaviour
         // 소환수의 HP를 패널에 표시
         if (HPSlider != null && stateSummon != null)
         {
-            float sliderHP = (float) (stateSummon.NowHP / stateSummon.MaxHP);  // 체력 비율 계산
+            float sliderHP = (float) (stateSummon.getNowHP() / stateSummon.getMaxHP());  // 체력 비율 계산
             HPSlider.value = sliderHP;  // 체력 비율에 따른 슬라이더 값 설정
         }
     }

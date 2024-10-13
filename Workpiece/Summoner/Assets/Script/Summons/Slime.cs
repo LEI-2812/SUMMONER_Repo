@@ -15,23 +15,13 @@ public class Slime : Summon
         maxHP = 200; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
         attackPower = 25; //일반공격
-        SpecialPower = 40; //강공격
+        specialPower = 40; //강공격
         summonRank = SummonRank.Normal; // 일반 소환수
+
+        // 일반 공격: 가장 가까운 적 공격
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1);
     }
 
-    private void Start()
-    {
-        Debug.Log("남은 체력: " + nowHP);
-    }
-
-
-    public override void attack()
-    {
-        /*
-         * 일반공격과 강공격을 컨트롤시켜야할듯.
-         */
-        base.attack();
-    }
 
     public override void die()
     {
@@ -43,11 +33,4 @@ public class Slime : Summon
         base.takeDamage(damage);
     }
 
-    public override void takeSkill()
-    {
-        base.takeSkill();
-        /*
-         * 전체공격, 저격공격, 상태이상공격
-         */
-    }
 }

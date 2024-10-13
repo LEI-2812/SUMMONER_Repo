@@ -13,19 +13,11 @@ public class Wolf : Summon
         specialPower = 25;
         summonRank = SummonRank.High; // 중급 소환수
 
-        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower); //근접공격
-        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.None, specialPower) };//전체공격
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접공격
+        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.None, specialPower,3) };//전체공격
     }
 
-    private void Start()
-    {
-        nowHP = 80; //테스트용
-    }
 
-    public override void attack()
-    {
-        base.attack();
-    }
 
     public override void die()
     {
@@ -37,8 +29,4 @@ public class Wolf : Summon
         base.takeDamage(damage);
     }
 
-    public override void takeSkill()
-    {
-        base.takeSkill();
-    }
 }

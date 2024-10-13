@@ -18,14 +18,11 @@ public class Rabbit : Summon
         attackPower = 20; //일반공격
         summonRank = SummonRank.Medium; // 중급 소환수
 
-        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower); //근접공격
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Heal, 0) };
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접공격
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Heal, 0, 3) };
     }
 
-    public override void attack()
-    {
-        base.attack();
-    }
+
 
     public override void die()
     {
@@ -37,8 +34,4 @@ public class Rabbit : Summon
         base.takeDamage(damage);
     }
 
-    public override void takeSkill()
-    {
-        base.takeSkill();
-    }
 }

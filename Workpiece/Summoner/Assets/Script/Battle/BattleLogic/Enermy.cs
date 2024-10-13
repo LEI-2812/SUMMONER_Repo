@@ -8,8 +8,9 @@ public class Enermy : Character
     [Header("적 플레이트")]
     [SerializeField] private List<Plate> enermyPlates; // 적이 사용할 플레이트 목록
 
-    [Header("턴 컨트롤러")]
+    [Header("컨트롤러")]
     [SerializeField] private TurnController turnController;
+    [SerializeField] private EnermyAttackController enermyAttackController;
 
     public override void startTurn()
     {
@@ -20,8 +21,15 @@ public class Enermy : Character
 
     public override void takeAction() //여기에 AI로직 작성
     {
-        // 적의 행동을 정의 (간단한 공격 행동)
-        Debug.Log($"{gameObject.name} 공격!");
+        //for (int i = 0; i < enermyPlates.Count; i++)
+        //{
+        //    if(enermyPlates[i].getSummon() != null && !enermyPlates[i].getSummon().IsCursed())
+        //    {
+        //        enermyAttackController.EnermyAttackLogic(enermyPlates[i].getSummon());
+        //    }
+        //}
+
+
         
         EndTurn();
     }

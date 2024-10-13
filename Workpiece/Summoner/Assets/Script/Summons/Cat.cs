@@ -15,19 +15,43 @@ public class Cat : Summon
         maxHP = 100;
         nowHP = maxHP;
         attackPower = 15; //일반공격
-        SpecialPower = 20; //특수공격
+        specialPower = 20; //특수공격
         summonRank = SummonRank.Low; // 하급 소환수
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower);
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower ,1);
         // 특수 공격: 전체 적 공격
-        specialAttackStrategies = new IAttackStrategy[] { new ClosestEnemyAttackStrategy(StatusType.None, SpecialPower)};
+        specialAttackStrategies = new IAttackStrategy[] { new ClosestEnemyAttackStrategy(StatusType.None, specialPower, 3)};
     }
 
-    public override void attack()
+    //일반 공격과 특수공격이 같은 방식의 경우 데미지가 attackPower로 들어가는 로직이기 때문에 잠깐 SpecialPower로 하고 되돌리게
+    public override void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
+        if (SpecialAttackArrayIndex < 0 || SpecialAttackArrayIndex >= specialAttackStrategies.Length)
+        {
+            Debug.Log("유효하지 않은 특수 공격 인덱스입니다.");
+            return;
+        }
+
+        var specialAttack = specialAttackStrategies[SpecialAttackArrayIndex];
+
+        if (specialAttack == null || specialAttack.getCurrentCooldown() > 0)
+        {
+            Debug.Log("특수 스킬이 쿨타임 중입니다.");
+            return;
+        }
+
         
+        double originAttackPower = attackPower;
+        attackPower = specialPower;
+        // 공격 수행
+        specialAttack.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
+
+        // 해당 공격에 쿨타임 적용
+        specialAttack.ApplyCooldown();
+        attackPower = originAttackPower;
     }
+
 
     public override void die()
     {
@@ -39,8 +63,4 @@ public class Cat : Summon
         base.takeDamage(damage);
     }
 
-    public override void takeSkill()
-    {
-        base.takeSkill();
-    }
 }
