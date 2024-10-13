@@ -24,10 +24,9 @@ public class Summon : MonoBehaviour
 
     private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //상태이상
     protected IAttackStrategy AttackStrategy { get; set; } // 일반 공격
-    protected IAttackStrategy SpecialAttackStrategy { get; set; } // 특수 공격
+    protected IAttackStrategy[] specialAttackStrategies;
 
     private Dictionary<string, int> skillCooldowns = new Dictionary<string, int>();
-
 
     private void Start()
     {
@@ -41,12 +40,12 @@ public class Summon : MonoBehaviour
         return 3; // 기본적으로 3턴 쿨타임
     }
 
-    public void normalAttack(List<Plate> enemyPlates, int selectedPlateIndex)
+    public void normalAttack(List<Plate> enemyPlates, int selectedPlateIndex,  int SpecialAttackArrayIndex)
     {
-        AttackStrategy?.Attack(this, enemyPlates, selectedPlateIndex);
+        AttackStrategy?.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
     }
 
-    public void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex)
+    public void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
         if (IsSkillOnCooldown("SpecialAttack"))
         {
@@ -54,7 +53,7 @@ public class Summon : MonoBehaviour
             return;
         }
 
-        SpecialAttackStrategy?.Attack(this, enemyPlates, selectedPlateIndex);
+        getSpecialAttackStrategy()[SpecialAttackArrayIndex]?.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
 
         // 스킬 사용 후 쿨타임 적용
         ApplySkillCooldown("SpecialAttack", SpecialAttackCooldown());
@@ -226,9 +225,9 @@ public class Summon : MonoBehaviour
         this.summonName = name;
     }
 
-    public IAttackStrategy getSpecialAttackStrategy()
+    public IAttackStrategy[] getSpecialAttackStrategy()
     {
-        return this.SpecialAttackStrategy;
+        return specialAttackStrategies;
     }
 
 

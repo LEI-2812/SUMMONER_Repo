@@ -11,49 +11,49 @@ public class BattleController : MonoBehaviour
     [SerializeField] private StatePanel statePanel;
 
     private bool isAttacking = false; //공격중인이 판별
-    private bool isHeal = false;
 
     [Header("(외부 오브젝트)컨트롤러")]
     [SerializeField] private SummonController summonController;
     private PlateController plateController;
 
-    //공격당할 플레이트
-    private Plate AttackedPlate;
+    Summon attakingSummon;
+    SpecialAttackInfo SpecialAttackInfo;
+
+    public Summon getAttakingSummon()
+    {
+        return attakingSummon;
+    }
 
     void Awake()
     {
         plateController = GetComponent<PlateController>();
     }
 
-    public Summon attackStart()
+    public Summon attackStart(int buttonIndex)
     {
-        return statePanel.getStatePanelSummon(); //상태창에 있는 소환수를 반환
+        attakingSummon = statePanel.getStatePanelSummon();
+        SpecialAttackInfo = new SpecialAttackInfo(attakingSummon.getSpecialAttackStrategy()[buttonIndex], buttonIndex);
+        return attakingSummon; //상태창에 있는 소환수를 반환
     }
 
     // 특수 공격 처리 메서드
-    public void SpecialAttackLogic(Summon attackSummon, int selectedPlateIndex, bool isPlayer = false)
+    public void SpecialAttackLogic(Summon attackSummon, int selectSpecialAttackIndex, int selectedPlateIndex, bool isPlayer = false)
     {
         if (attackSummon != null)
         {
-            // 스킬이 쿨타임 중인지 확인
-            if (attackSummon.IsSkillOnCooldown("SpecialAttack"))
-            {
-                Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
-                return;
-            }
-
             // TargetedAttackStrategy를 사용하는지 확인
-            if (attackSummon.getSpecialAttackStrategy() is TargetedAttackStrategy)
+            if (attackSummon.getSpecialAttackStrategy() is TargetedAttackStrategy[] targetedAttack)
             {
                 Debug.Log("TargetedAttackStrategy를 사용하여 공격을 수행합니다.");
-
+                StatusType attackStatusType = targetedAttack[selectSpecialAttackIndex].getStatusType();
                 if (isPlayer) // 플레이어가 호출하는 경우
                 {
                     if (selectedPlateIndex >= 0 && selectedPlateIndex < plateController.getEnermyPlates().Count)
                     {
-                        if (isHeal)
+                        if (attackStatusType == StatusType.Heal) //힐사용 검사
                         {
-                            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex); // 아군의 플레이트와 인덱스 전달
+                            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectSpecialAttackIndex, selectedPlateIndex); // 아군의 플레이트와 인덱스 전달
+                            ResetBattleSummonAndAttackInfo();
                             return;
                         }
                         Debug.Log($"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 공격 대상입니다.");
@@ -82,11 +82,11 @@ public class BattleController : MonoBehaviour
             // 특수 공격 수행 (플레이어는 적의 플레이트, 적은 플레이어의 플레이트)
             if (isPlayer) //플레이어 입장
             {
-                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex); // 적의 플레이트와 인덱스 전달
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectSpecialAttackIndex, selectedPlateIndex); // 적의 플레이트와 인덱스 전달
             }
             else //적의 입장
             {
-                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex); // 플레이어의 플레이트와 인덱스 전달
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectSpecialAttackIndex, selectedPlateIndex); // 플레이어의 플레이트와 인덱스 전달
             }
 
             Debug.Log("특수 공격이 성공적으로 수행되었습니다.");
@@ -96,52 +96,17 @@ public class BattleController : MonoBehaviour
             Debug.Log("선택된 plate에 소환수가 없습니다.");
         }
 
-        isHeal = false;
-        isAttacking = false; // 공격 종료
+        ResetBattleSummonAndAttackInfo();
     }
 
 
-
-    public void selectAttackPlate(Plate plate)
+    public void ResetBattleSummonAndAttackInfo()
     {
-        for (int i = 0; i < plateController.getEnermyPlates().Count; i++)
-        {
-            if (plateController.getEnermyPlates()[i] == plate)
-            {
-                AttackedPlate = plateController.getEnermyPlates()[i]; // 선택된 플레이트 설정
-                Debug.Log($"공격할 플레이트 {i} 선택됨.");
-                return;
-            }
-        }
-
-        Debug.Log("적의 플레이트가 선택되지 않았습니다.");
-
+        isAttacking = false;
+        attakingSummon = null;
+        SpecialAttackInfo = null;
+        plateController.ResetAllPlateHighlight();
     }
-
-
-    public bool getIsAttaking()
-    {
-        return isAttacking;
-    }
-    public void setIsAttaking(bool isAttacking)
-    {
-        this.isAttacking= isAttacking;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     //적 플레이트에 소환수가 존재하는지
@@ -204,23 +169,23 @@ public class BattleController : MonoBehaviour
     }
 
 
-    public Plate getAttackedPlate()
-    {
-        return AttackedPlate;
-    }
-
     // SummonController에 PlateController 접근 메서드 추가
     public PlateController GetPlateController()
     {
         return plateController; // 이미 SummonController에서 PlateController를 참조하고 있다고 가정
     }
 
-    public void setIsHeal(bool heal)
+    public SpecialAttackInfo getNowSpecialAttackInfo()
     {
-        this.isHeal = heal;
+        return SpecialAttackInfo;
     }
-    public bool getIsHeal()
+
+    public bool getIsAttaking()
     {
-        return isHeal;
+        return isAttacking;
+    }
+    public void setIsAttaking(bool isAttacking)
+    {
+        this.isAttacking = isAttacking;
     }
 }
