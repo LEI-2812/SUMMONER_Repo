@@ -5,12 +5,13 @@ using UnityEngine;
 public class TargetedAttackStrategy : IAttackStrategy
 {
     private StatusType statusType; // 상태 타입 (공격인지 힐인지)
-
-    public TargetedAttackStrategy(StatusType statusType)
+    private double damage;
+    public TargetedAttackStrategy(StatusType statusType, double damage)
     {
         this.statusType = statusType;
+        this.damage = damage;
     }
-    public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex)
+    public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int Arrayindex)
     {
         Summon targetSummon = targetPlates[selectedPlateIndex].getSummon();
 
@@ -25,7 +26,7 @@ public class TargetedAttackStrategy : IAttackStrategy
             else // 공격인 경우
             {
                 Debug.Log($"{attacker.getSummonName()}이(가) {targetSummon.getSummonName()}을(를) 강력하게 공격합니다.");
-                targetSummon.takeDamage(attacker.SpecialPower); // 강력한 공격
+                targetSummon.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // 강력한 공격
             }
         }
         else
@@ -34,6 +35,10 @@ public class TargetedAttackStrategy : IAttackStrategy
         }
     }
 
+    public double getSpecialDamage()
+    {
+        return damage;
+    }
     public StatusType getStatusType()
     {
         return statusType;

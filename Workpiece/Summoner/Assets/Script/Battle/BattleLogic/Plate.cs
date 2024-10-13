@@ -135,7 +135,7 @@ public class Plate : MonoBehaviour,
        
         //타겟공격을 위한 마우스 효과
         if (isInSummon && battleController.getIsAttaking()){ //공격중일때
-            if (battleController.getAttakingSummon().getSpecialAttackStrategy().getStatusType() == StatusType.Heal)//힐이면서 아군플레이트만 강조
+            if (battleController.getNowSpecialAttackInfo().getAttackInfoStrategy().getStatusType() == StatusType.Heal)//힐이면서 아군플레이트만 강조
             { //힐일때
                 if (IsPlayerPlate())
                 {
@@ -210,7 +210,7 @@ public class Plate : MonoBehaviour,
         if (battleController.getIsAttaking() && isInSummon && battleController)
         {
             //힐일때
-            if (battleController.getAttakingSummon().getSpecialAttackStrategy().getStatusType() == StatusType.Heal) //힐이 아니면 적 플레이트
+            if (battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Heal) //힐이 아니면 적 플레이트
             {
                 if (IsPlayerPlate())
                 {
@@ -252,7 +252,6 @@ public class Plate : MonoBehaviour,
                 }
             }
         }
-
     }
 
     // 소환수 이미지 투명도 설정
@@ -286,7 +285,7 @@ public class Plate : MonoBehaviour,
         return currentSummon;
     }
 
-    private void ResetAllPlatesState()
+    public void ResetAllPlatesState()
     {
         // 아군 플레이트의 상태 복원
         foreach (var plate in battleController.GetPlateController().getPlayerPlates())

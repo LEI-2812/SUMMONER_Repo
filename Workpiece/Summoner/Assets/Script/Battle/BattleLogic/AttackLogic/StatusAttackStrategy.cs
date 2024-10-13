@@ -7,6 +7,7 @@ public class StatusAttackStrategy : IAttackStrategy
 {
     private StatusType statusType; //상태이상 종류
     private int statusTime; //적용시간(턴)
+    private double damage;
 
     public StatusAttackStrategy(StatusType statusType, int time)
     {
@@ -14,7 +15,7 @@ public class StatusAttackStrategy : IAttackStrategy
         this.statusTime = time;
     }
 
-    public void Attack(Summon attacker, List<Plate> enemyPlates, int selectedPlateIndex)
+    public void Attack(Summon attacker, List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)
     {
         foreach (var plate in enemyPlates)
         {
@@ -71,6 +72,10 @@ public class StatusAttackStrategy : IAttackStrategy
         }
     }
 
+    public double getSpecialDamage()
+    {
+        return damage;
+    }
     public StatusType getStatusType()
     {
         return statusType;

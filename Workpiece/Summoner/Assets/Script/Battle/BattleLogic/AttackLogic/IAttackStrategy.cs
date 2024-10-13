@@ -4,7 +4,8 @@ using UnityEngine;
 
 public interface IAttackStrategy
 {
-   void Attack(Summon attacker, List<Plate> enemyPlates, int selectedPlateIndex);
+   void Attack(Summon attacker, List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackarrayIndex);
 
     StatusType getStatusType(); // 상태 타입 반환 메서드 추가
+    double getSpecialDamage();
 }

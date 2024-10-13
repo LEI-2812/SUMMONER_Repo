@@ -46,11 +46,6 @@ public class PlateController : MonoBehaviour
    
    }
 
-   private void SelectLightPlayer()
-    {
-
-    }
-
 
 
     // 플레이어의 소환수가 있는 플레이트만 강조 및 투명도 설정
