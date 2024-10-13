@@ -15,25 +15,16 @@ public class Eagle : Summon
         maxHP = 400;
         nowHP = maxHP;
         attackPower = 45; //일반공격
-        SpecialPower = 30; //특수공격
+        specialPower = 30; //특수공격
         summonRank = SummonRank.High; // 상급 소환수
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower);
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1);
         // 특수 공격: 타겟 지정 공격
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.None, SpecialPower) };
-    }
-
-    void Start()
-    {
-        Debug.Log("공격력" + attackPower);
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.None, specialPower,3) };
     }
 
 
-    public override void attack()
-    {
-
-    }
 
     public override void die()
     {
@@ -45,8 +36,4 @@ public class Eagle : Summon
         base.takeDamage(damage);
     }
 
-    public override void takeSkill()
-    {
-        base.takeSkill();
-    }
 }

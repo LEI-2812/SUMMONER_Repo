@@ -37,67 +37,154 @@ public class BattleController : MonoBehaviour
     }
 
     // 특수 공격 처리 메서드
-    public void SpecialAttackLogic(Summon attackSummon, int selectSpecialAttackIndex, int selectedPlateIndex, bool isPlayer = false)
+    public void SpecialAttackLogic(Summon attackSummon, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer = false)
     {
-        if (attackSummon != null)
+        if (attackSummon == null)
         {
-            // TargetedAttackStrategy를 사용하는지 확인
-            if (attackSummon.getSpecialAttackStrategy() is TargetedAttackStrategy[] targetedAttack)
-            {
-                Debug.Log("TargetedAttackStrategy를 사용하여 공격을 수행합니다.");
-                StatusType attackStatusType = targetedAttack[selectSpecialAttackIndex].getStatusType();
-                if (isPlayer) // 플레이어가 호출하는 경우
-                {
-                    if (selectedPlateIndex >= 0 && selectedPlateIndex < plateController.getEnermyPlates().Count)
-                    {
-                        if (attackStatusType == StatusType.Heal) //힐사용 검사
-                        {
-                            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectSpecialAttackIndex, selectedPlateIndex); // 아군의 플레이트와 인덱스 전달
-                            ResetBattleSummonAndAttackInfo();
-                            return;
-                        }
-                        Debug.Log($"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 공격 대상입니다.");
-                    }
-                    else
-                    {
-                        Debug.Log("유효한 적의 플레이트 인덱스가 선택되지 않았습니다.");
-                        return; // 선택된 플레이트가 없으면 공격을 중단
-                    }
-                }
-                else // 적이 호출하는 경우, 플레이어의 플레이트 인덱스를 사용
-                {
-                    if (selectedPlateIndex >= 0 && selectedPlateIndex < plateController.getPlayerPlates().Count)
-                    {
-                        Debug.Log($"적이 플레이어의 플레이트 {selectedPlateIndex}를 공격합니다.");
-                    }
-                    else
-                    {
-                        Debug.Log("유효한 플레이어의 플레이트 인덱스가 선택되지 않았습니다.");
-                        return; // 선택된 인덱스가 유효하지 않으면 공격을 중단
-                    }
-                }
-            }
+            Debug.Log("선택된 plate에 소환수가 없습니다.");
+            return;
+        }
 
-            //타겟 공격이 아닐경우
-            // 특수 공격 수행 (플레이어는 적의 플레이트, 적은 플레이어의 플레이트)
-            if (isPlayer) //플레이어 입장
-            {
-                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectSpecialAttackIndex, selectedPlateIndex); // 적의 플레이트와 인덱스 전달
-            }
-            else //적의 입장
-            {
-                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectSpecialAttackIndex, selectedPlateIndex); // 플레이어의 플레이트와 인덱스 전달
-            }
+        // 특수 공격 배열의 범위를 확인하여 인덱스가 유효한지 검증
+        if (!IsValidSpecialAttackIndex(attackSummon, selectSpecialAttackIndex))
+        {
+            Debug.LogError("유효하지 않은 특수 공격 인덱스입니다. 인덱스: " + selectSpecialAttackIndex);
+            return;
+        }
 
-            Debug.Log("특수 공격이 성공적으로 수행되었습니다.");
+        // 특수 공격을 배열 인덱스로 가져옴
+        IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy()[selectSpecialAttackIndex];
+
+        // 공격 타입별로 로직 수행
+        if (attackStrategy is TargetedAttackStrategy targetedAttack)
+        {
+            HandleTargetedAttack(attackSummon, targetedAttack, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
+        }
+        else if (attackStrategy is StatusAttackStrategy statusAttack)
+        {
+            HandleStatusAttack(attackSummon, statusAttack, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
+        }
+        else if (attackStrategy is AttackAllEnemiesStrategy attackAll)
+        {
+            HandleAttackAll(attackSummon, attackAll, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
+        }
+        else if (attackStrategy is ClosestEnemyAttackStrategy closestAttack)
+        {
+            HandleClosestEnemyAttack(attackSummon, closestAttack, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
         }
         else
         {
-            Debug.Log("선택된 plate에 소환수가 없습니다.");
+            Debug.LogWarning("알 수 없는 공격 전략입니다.");
         }
 
         ResetBattleSummonAndAttackInfo();
     }
+
+    private bool IsValidSpecialAttackIndex(Summon attackSummon, int selectSpecialAttackIndex)
+    {
+        return selectSpecialAttackIndex >= 0 && selectSpecialAttackIndex < attackSummon.getSpecialAttackStrategy().Length;
+    }
+
+    //타겟지정 로직
+    private void HandleTargetedAttack(Summon attackSummon, TargetedAttackStrategy targetedAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
+    {
+        StatusType attackStatusType = targetedAttack.getStatusType();
+
+        if (isPlayer)
+        {
+            if (!IsValidPlateIndex(selectedPlateIndex, plateController.getEnermyPlates().Count))
+            {
+                Debug.Log("유효한 적의 플레이트 인덱스가 선택되지 않았습니다.");
+                return;
+            }
+
+            if (attackStatusType == StatusType.Heal)
+            {
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 아군 플레이트에 힐
+                Debug.Log($"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 치유 대상입니다.");
+            }
+            else
+            {
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 공격
+                Debug.Log($"플레이어가 선택한 적의 플레이트 {selectedPlateIndex}가 공격 대상입니다.");
+            }
+        }
+        else
+        {
+            if (!IsValidPlateIndex(selectedPlateIndex, plateController.getPlayerPlates().Count))
+            {
+                Debug.Log("유효한 플레이어의 플레이트 인덱스가 선택되지 않았습니다.");
+                return;
+            }
+
+            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적이 플레이어 플레이트에 공격
+            Debug.Log($"적이 플레이어의 플레이트 {selectedPlateIndex}를 공격합니다.");
+        }
+    }
+
+    //상태이상 공격 로직
+    private void HandleStatusAttack(Summon attackSummon, StatusAttackStrategy statusAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
+    {
+        StatusType attackStatusType = statusAttack.getStatusType();
+
+        if (isPlayer)
+        {
+            attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적의 플레이트에 공격
+            Debug.Log("아군의 상태이상 공격이 성공적으로 수행되었습니다.");
+        }
+        else
+        {
+            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적이 플레이어 플레이트에 공격
+            Debug.Log("적의 상태이상 공격이 성공적으로 수행되었습니다.");
+        }
+    }
+
+    //전체공격 로직
+    private void HandleAttackAll(Summon attackSummon, AttackAllEnemiesStrategy AllusAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
+    {
+
+        if (isPlayer)
+        {
+            attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적의 플레이트에 공격
+            Debug.Log("아군의 특수 전체 공격이 성공적으로 수행되었습니다.");
+        }
+        else
+        {
+            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적이 플레이어 플레이트에 공격
+            Debug.Log("적의 특수 전체 공격이 성공적으로 수행되었습니다.");
+        }
+    }
+
+    //근접공격 로직
+    private void HandleClosestEnemyAttack(Summon attackSummon, ClosestEnemyAttackStrategy closestAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
+    {
+
+        if (isPlayer)
+        {
+            attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적의 플레이트에 공격
+            Debug.Log("아군의 특수 근접 공격이 성공적으로 수행되었습니다.");
+        }
+        else
+        {
+            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적이 플레이어 플레이트에 공격
+            Debug.Log("적의 특수 근접 공격이 성공적으로 수행되었습니다.");
+        }
+    }
+
+
+    private bool IsValidPlateIndex(int selectedPlateIndex, int plateCount)
+    {
+        return selectedPlateIndex >= 0 && selectedPlateIndex < plateCount;
+    }
+
+
+
+
+
+
+
+
+
 
 
     public void ResetBattleSummonAndAttackInfo()

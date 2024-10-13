@@ -137,15 +137,17 @@ public class Player : Character
 
         if (attackSummon != null)
         {
+
+            IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy()[0];
+
             // 스킬이 쿨타임 중인지 확인
-            if (attackSummon.IsSkillOnCooldown("SpecialAttack"))
+            if (attackStrategy.getCurrentCooldown() > 0)
             {
                 Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
                 return;
             }
 
-            IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy()[0];
-            //여기가 전코드
+            
             // TargetedAttackStrategy를 사용하는지 확인
             if (attackStrategy is TargetedAttackStrategy targetedAttack)
             {
@@ -248,7 +250,7 @@ public class Player : Character
             yield return null; // 한 프레임 대기
         }
 
-        // 적의 플레이트가 선택된 후 공격 수행
+        // 아군의 플레이트가 선택된 후 로직 수행
         if (selectedPlateIndex >= 0)
         {
             Debug.Log($"힐을 준비 중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");

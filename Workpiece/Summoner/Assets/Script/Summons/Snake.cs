@@ -13,19 +13,12 @@ public class Snake : Summon
         specialPower = 25;
         summonRank = SummonRank.Medium; // 중급 소환수
 
-        AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower); //근접 공격
-        specialAttackStrategies = new IAttackStrategy[] { new StatusAttackStrategy(StatusType.Poison, 3) };//상태이상 (중독)공격
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접 공격
+        specialAttackStrategies = new IAttackStrategy[] { new StatusAttackStrategy(StatusType.Poison, 3,3) };//상태이상 (중독)공격
     }
 
-    public override int SpecialAttackCooldown() //중독은 쿨타임 3턴
-    {
-        return 3;
-    }
 
-    public override void attack()
-    {
-        base.attack();
-    }
+
 
     public override void die()
     {
@@ -37,8 +30,4 @@ public class Snake : Summon
         base.takeDamage(damage);
     }
 
-    public override void takeSkill()
-    {
-        base.takeSkill();
-    }
 }
