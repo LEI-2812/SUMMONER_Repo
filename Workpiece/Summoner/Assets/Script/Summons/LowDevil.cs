@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Eagle : Summon
+public class LowDevil : Summon
 {
+
     private void Awake()
     {
         summonInitialize();
@@ -11,28 +12,30 @@ public class Eagle : Summon
 
     public override void summonInitialize()
     {
-        summonName = "Eagle";
-        maxHP = 400;
-        nowHP = maxHP;
-        attackPower = 45; //일반공격
-        SpecialPower = 30; //특수공격
-        summonRank = SummonRank.High; // 상급 소환수
+        summonName = "LowDevil"; //이름 하급악마
+        maxHP = 700; //최대체력 200
+        nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
+        attackPower = 170; //일반공격
+        summonRank = SummonRank.Normal; // 일반 소환수
 
         // 일반 공격: 가장 가까운 적 공격
         AttackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower);
         // 특수 공격: 타겟 지정 공격
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.None, SpecialPower) };
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.None, 180), new AttackAllEnemiesStrategy(StatusType.None, 140) };
     }
 
-    void Start()
+    private void Start()
     {
-        Debug.Log("공격력" + attackPower);
+        Debug.Log("남은 체력: " + nowHP);
     }
 
 
     public override void attack()
     {
-
+        /*
+         * 일반공격과 강공격을 컨트롤시켜야할듯.
+         */
+        base.attack();
     }
 
     public override void die()
@@ -48,5 +51,8 @@ public class Eagle : Summon
     public override void takeSkill()
     {
         base.takeSkill();
+        /*
+         * 전체공격, 저격공격, 상태이상공격
+         */
     }
 }

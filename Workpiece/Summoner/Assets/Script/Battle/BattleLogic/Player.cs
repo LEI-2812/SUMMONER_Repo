@@ -111,13 +111,13 @@ public class Player : Character
     }
 
 
-    public void OnAttackBtnClick()
+    public void OnAttackBtnClick() //일반공격
     {
-        Summon attackSummon = battleController.attackStart(); //공격할 소환수를 받아온다.
+        Summon attackSummon = battleController.attackStart(0); //공격할 소환수를 받아온다.
         if (attackSummon != null)
         {
-            // 일반 공격 수행
-            attackSummon.normalAttack(plateController.getEnermyPlates(),selectedPlateIndex);
+            // 일반 공격 수행(플레이트, 특수스킬 배열인덱스, 공격할 인덱스)
+            attackSummon.normalAttack(plateController.getEnermyPlates() ,selectedPlateIndex, 0);
         }
         else
         {
@@ -131,35 +131,43 @@ public class Player : Character
         }
     }
 
-    public void OnSpecialAttackBtnClick()
+    public void OnSpecialAttackBtnClick() //특수공격
     {
-        Summon attackSummon = battleController.attackStart(); // 공격할 소환수를 가져옴
+        Summon attackSummon = battleController.attackStart(0); // 공격할 소환수를 가져옴
 
         if (attackSummon != null)
         {
-            IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy();
+            // 스킬이 쿨타임 중인지 확인
+            if (attackSummon.IsSkillOnCooldown("SpecialAttack"))
+            {
+                Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
+                return;
+            }
+
+            IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy()[0];
             //여기가 전코드
             // TargetedAttackStrategy를 사용하는지 확인
             if (attackStrategy is TargetedAttackStrategy targetedAttack)
             {
-                StatusType attackStatusType = targetedAttack.getTargetAttackStatusType();
+                StatusType attackStatusType = targetedAttack.getStatusType();
                 if (attackStatusType == StatusType.Heal) //타겟중에 힐일경우
                 {
                     Debug.Log("TargetedAttackStrategy의 Heal을 사용합니다. 아군의 플레이트를 선택하세요.");
                     // 아군의 플레이트를 선택하는 코루틴 실행
-                    StartCoroutine(WaitForPlayerPlateSelection(attackSummon));
+                    StartCoroutine(WaitForPlayerPlateSelection(attackSummon, battleController.getNowSpecialAttackInfo().getAttackInfoIndex()));
                 }
                 else
                 {
                     Debug.Log("TargetedAttackStrategy를 사용합니다. 적의 플레이트를 선택하세요.");
                     // 적의 플레이트를 선택하는 코루틴 실행
-                    StartCoroutine(WaitForEnermyPlateSelection(attackSummon));
+                    StartCoroutine(WaitForEnermyPlateSelection(attackSummon, battleController.getNowSpecialAttackInfo().getAttackInfoIndex()));
                 }
             }
             else
             {
                 // TargetedAttackStrategy가 아닌 경우 바로 공격 실행
-                battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, true); // true: 플레이어 공격
+                //공격할 소환수, 공격할 플레이트 인덱스, 특수스킬 배열인덱스, 플레이어 공격
+                battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, 0,true);
             }
         }
         else
@@ -176,7 +184,7 @@ public class Player : Character
 
     }
 
-    private IEnumerator WaitForEnermyPlateSelection(Summon attackSummon)
+    private IEnumerator WaitForEnermyPlateSelection(Summon attackSummon, int SpecialAttackArrayIndex)
     {
         battleController.setIsAttaking(true); // 공격 시작
         summonController.OnDarkBackground(true); // 배경 어둡게 처리
@@ -204,7 +212,7 @@ public class Player : Character
         if (selectedPlateIndex >= 0)
         {
             Debug.Log($"공격을 준비 중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");
-            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, true); // true: 플레이어 공격
+            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true); // true: 플레이어 공격
             summonController.OnDarkBackground(false); // 공격 후 배경 복원
             selectedPlateIndex = -1; //선택했던 플레이트 되돌리기
         }
@@ -216,10 +224,9 @@ public class Player : Character
     }
 
     //아군 플레이트 선택
-    private IEnumerator WaitForPlayerPlateSelection(Summon attackSummon)
+    private IEnumerator WaitForPlayerPlateSelection(Summon attackSummon, int SpecialAttackArrayIndex)
     {
         battleController.setIsAttaking(true); // 공격 시작
-        battleController.setIsHeal(true);
         summonController.OnDarkBackground(true); // 배경 어둡게 처리
         plateController.DownTransparencyForWhoPlate(false); //적 소환수 투명화
         selectedPlateIndex = -1; //선택한 플레이트 초기화
@@ -245,7 +252,7 @@ public class Player : Character
         if (selectedPlateIndex >= 0)
         {
             Debug.Log($"힐을 준비 중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");
-            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, true); // true: 플레이어 공격
+            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true); // true: 플레이어 공격
             summonController.OnDarkBackground(false); // 공격 후 배경 복원
             selectedPlateIndex = -1; //선택했던 플레이트 되돌리기
         }

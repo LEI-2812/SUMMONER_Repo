@@ -27,7 +27,7 @@ public class PlateController : MonoBehaviour
             {
                 if (playerPlates[i].currentSummon != null)
                 {
-                    playerPlates[i].SetSummonImageTransparency(1.0f); //
+                    playerPlates[i].SetSummonImageTransparency(0.5f);
                 }
             }
         }
@@ -37,7 +37,7 @@ public class PlateController : MonoBehaviour
             {
                 if (enermyPlates[i].currentSummon != null)
                 {
-                    enermyPlates[i].SetSummonImageTransparency(1.0f); // 노란색으로 강조
+                    enermyPlates[i].SetSummonImageTransparency(0.5f);
                 }
             }
         }
@@ -45,11 +45,6 @@ public class PlateController : MonoBehaviour
 
    
    }
-
-   private void SelectLightPlayer()
-    {
-
-    }
 
 
 
@@ -135,6 +130,12 @@ public class PlateController : MonoBehaviour
 
         // 적 플레이트를 다시 보이게 하기
         ShowPlayerPlates();
+    }
+
+    public void ResetAllPlateHighlight()
+    {
+        ResetPlayerPlateHighlight();
+        ResetEnermyPlateHighlight();
     }
 
     // 적의 플레이트를 숨기는 메서드
