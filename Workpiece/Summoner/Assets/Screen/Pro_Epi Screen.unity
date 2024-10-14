@@ -356,6 +356,7 @@ MonoBehaviour:
   characterName: {fileID: 487251044}
   dialogueContext: {fileID: 1610194284}
   interactionEvent: {fileID: 900800006}
+  fadeController: {fileID: 0}
 --- !u!114 &900800008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,6 +451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a77d96a038c01040ae4fb06376dab31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageNum: 0
 --- !u!114 &900800014
 MonoBehaviour:
   m_ObjectHideFlags: 0

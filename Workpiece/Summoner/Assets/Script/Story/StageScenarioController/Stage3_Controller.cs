@@ -99,7 +99,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
                 // (소환수 '여우'가 오른쪽으로 걸어가 사라진다.)
                 offDialgueBox();
                 endAngryEffect();
-                foxMove.CharacterMove(1000f, 200f);
+                foxMove.CharacterMove(1200f, 400f);
                 break;          
         }
     }
