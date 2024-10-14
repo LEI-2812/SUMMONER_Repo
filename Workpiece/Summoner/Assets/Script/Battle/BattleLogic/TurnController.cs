@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class TurnController : MonoBehaviour
 {
-    public Player player;
-    public Enermy enermy;
+    
+    [SerializeField]private Player player;
+    [SerializeField] private Enermy enermy;
     public enum Turn { PlayerTurn, EnermyTurn }
-    public Turn currentTurn; // 현재 턴을 나타내는 변수
-    public int turnCount;
+    private Turn currentTurn; // 현재 턴을 나타내는 변수
+    private int turnCount;
 
     private BattleController battleController;
                             
@@ -37,25 +38,39 @@ public class TurnController : MonoBehaviour
     {
         if (currentTurn == Turn.PlayerTurn)
         {
-            // 플레이어 턴 종료 시, 상태이상 및 쿨타임 업데이트
+            // 플레이어 턴 종료 시, 플레이어 소환수의 상태이상 및 쿨타임 업데이트
             foreach (var summon in battleController.getPlayerSummons())
             {
-                summon.UpdateStatusEffectsAndCooldowns();
+                summon.UpdateStatusEffectsAndCooldowns(); // 상태이상 업데이트
+                summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
             }
+
+            // 다음 턴을 적의 턴으로 설정
             currentTurn = Turn.EnermyTurn;
+
+            // 플레이어 턴이 끝나면 턴 카운트를 증가시키지 않고 바로 적 턴 시작
             StartTurn();
         }
-        else
+        else if (currentTurn == Turn.EnermyTurn)
         {
-            // 적 턴 종료 시, 상태이상 및 쿨타임 업데이트
+            // 적 턴 종료 시, 적 소환수의 상태이상 및 쿨타임 업데이트
             foreach (var summon in battleController.getEnermySummons())
             {
-                summon.UpdateStatusEffectsAndCooldowns();
+                summon.UpdateStatusEffectsAndCooldowns(); // 상태이상 업데이트
+                summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
             }
+
+            // 적 턴이 끝난 후 턴 카운트를 증가시키고 플레이어 턴 시작
             currentTurn = Turn.PlayerTurn;
-            turnCount++; // 적의 턴이 끝났을 때 턴 카운트를 증가
+            turnCount++; // 적 턴이 끝나면 턴 카운트를 증가시킴
             Debug.Log("현재 턴: " + turnCount);
+
             StartTurn();
         }
+    }
+
+    public Turn getCurrentTurn()
+    {
+        return currentTurn;
     }
 } 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class AttackAllEnemiesStrategy : IAttackStrategy
 {
@@ -9,23 +10,50 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
     private double Damage;
     private int cooltime;
     private int currentCooldown;
-    public AttackAllEnemiesStrategy(StatusType statusType, double damage, int cooltime)
+    private int statusTime; //지속시간
+    public AttackAllEnemiesStrategy(StatusType statusType, double damage, int cooltime, int statusTime=0)
     {
         this.statusType = statusType;
         Damage = damage;
         this.cooltime = cooltime;
         this.currentCooldown = 0;
+        this.statusTime = statusTime;
     }
 
     public void Attack(Summon attacker, List<Plate> enemyPlates,int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
         foreach (var plate in enemyPlates)
         {
-            Summon enemySummon = plate.getSummon();
-            if (enemySummon != null)
+            Summon target = plate.getSummon();
+            if (target != null)
             {
-                Debug.Log($"{attacker.getSummonName()}이(가) {enemySummon.getSummonName()}을(를) 전체 공격합니다.");
-                enemySummon.takeDamage(attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage());
+                switch (statusType)
+                {
+                    case StatusType.None:
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) 전체 공격합니다.");
+                        target.takeDamage(attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage());
+                        break;
+                    case StatusType.Poison:
+                        double poisonDamage = target.getMaxHP() * 0.1; // 최대 체력의 10% 데미지
+                        StatusEffect poisonEffect = new StatusEffect(StatusType.Poison, statusTime, poisonDamage);
+                        target.ApplyStatusEffect(poisonEffect);
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 중독 상태를 부여하여 매 턴 {poisonDamage} 데미지를 입힙니다.");
+                        break;
+                    case StatusType.Burn:
+                        double burnDamage = target.getMaxHP() * 0.2; // 최대 체력의 20% 데미지
+                        StatusEffect burnEffect = new StatusEffect(StatusType.Burn, statusTime, burnDamage);
+                        target.ApplyStatusEffect(burnEffect);
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 화상을 입혀 매 턴 {burnDamage} 데미지를 입힙니다.");
+                        break;
+                    case StatusType.Upgrade:
+                        double upgradeAttackPower = target.getAttackPower() * 0.1;
+                        StatusEffect upgradeEffect = new StatusEffect(StatusType.Upgrade, statusTime, upgradeAttackPower);
+                        target.ApplyStatusEffect(upgradeEffect);
+                        target.UpgradeAttackPower(upgradeAttackPower);
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {upgradeAttackPower} 만큼 상승 시켰습니다.");
+                        break;
+                }
+
             }
         }
     }

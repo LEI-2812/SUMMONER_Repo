@@ -8,12 +8,14 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
     private double damage;
     private int cooltime;
     private int currentCooldown;
-    public ClosestEnemyAttackStrategy(StatusType statusType,double damage, int cooltime)
+    private int statusTime;
+    public ClosestEnemyAttackStrategy(StatusType statusType,double damage, int cooltime, int statusTime=0)
     {
         this.StatusType = statusType;
         this.damage = damage;
         this.cooltime = cooltime;
         this.currentCooldown = 0;
+        this.statusTime = statusTime;
     }
     public void Attack(Summon attacker, List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)
     {

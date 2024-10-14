@@ -4519,8 +4519,8 @@ GameObject:
   - component: {fileID: 893681169}
   - component: {fileID: 893681168}
   - component: {fileID: 893681172}
-  - component: {fileID: 893681170}
   - component: {fileID: 893681171}
+  - component: {fileID: 893681170}
   - component: {fileID: 893681173}
   m_Layer: 5
   m_Name: Player_Enermy
@@ -4602,8 +4602,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1469478338}
   enermy: {fileID: 313031151}
-  currentTurn: 0
-  turnCount: 0
 --- !u!114 &893681171
 MonoBehaviour:
   m_ObjectHideFlags: 0

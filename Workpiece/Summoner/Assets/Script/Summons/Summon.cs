@@ -14,18 +14,21 @@ public class Summon : MonoBehaviour
 {
     public Image image; //이미지
     protected string summonName; //이름
-    protected double maxHP; //최대체력
-    protected double nowHP; //현재 체력
     protected double attackPower; //일반공격
     protected double specialPower;  //특수공격
     protected SummonRank summonRank; //등급
+    protected double maxHP; //최대체력
+    protected double nowHP; //현재 체력
+    protected double shield = 0; //쉴드량
+    protected bool invincibilityOnce = false;
 
     public bool CanAttack { get; set; } = true; // 상태이상중 공격가능 여부
 
     private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //상태이상
-    protected IAttackStrategy attackStrategy { get; set; } // 일반 공격
+    protected IAttackStrategy attackStrategy;
     protected IAttackStrategy[] specialAttackStrategies;
 
+    
 
     private void Start()
     {
@@ -36,9 +39,15 @@ public class Summon : MonoBehaviour
 
     public void normalAttack(List<Plate> enemyPlates, int selectedPlateIndex,  int SpecialAttackArrayIndex)
     {
-        if (attackStrategy == null) return;
-
+        if (attackStrategy == null || attackStrategy.getCurrentCooldown() > 0)
+        {
+            Debug.Log("일반 공격을 해당턴에 사용했습니다.");
+            return;
+        }
         attackStrategy.Attack(this, enemyPlates, selectedPlateIndex, 0); // 일반 공격 수행
+
+        // 해당 공격에 쿨타임 적용
+        attackStrategy.ApplyCooldown();
     }
 
     public virtual void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
@@ -69,22 +78,97 @@ public class Summon : MonoBehaviour
     {
         var existingEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == statusEffect.statusType);
 
-        if (existingEffect != null)
+        // 상태이상 타입에 따라 로직을 다르게 처리
+        switch (statusEffect.statusType)
         {
-            // 기존 상태이상이 있을 경우, 지속시간을 갱신 (즉시 효과는 제외)
-            existingEffect.effectTime = statusEffect.effectTime -1;  // 다음턴에 풀려야하므로 -1을 하지않는다.
-            existingEffect.damagePerTurn = statusEffect.damagePerTurn;
-            Debug.Log($"{summonName}에게 중복된 {statusEffect.statusType} 상태이상이 갱신되었습니다.");
-        }
-        else
-        {
-            // 새로운 상태이상 추가
-            activeStatusEffects.Add(statusEffect);
-            statusEffect.ApplyStatus(this);  // 즉시 효과 적용
-            statusEffect.effectTime--;       // 즉시 효과 반영 후 지속시간을 1 감소시킴
-            Debug.Log($"{summonName}에게 {statusEffect.statusType} 상태이상이 적용되었습니다.");
+            case StatusType.Poison:
+                if (existingEffect != null)
+                {
+                    // 중독 상태가 이미 있으면 지속시간과 피해량을 갱신
+                    existingEffect.effectTime = statusEffect.effectTime;
+                    existingEffect.damagePerTurn = statusEffect.damagePerTurn;
+                    Debug.Log($"{summonName}에게 중복된 중독 상태이상이 갱신되었습니다.");
+                }
+                else
+                {
+                    // 새로운 중독 상태이상 추가
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}에게 중독 상태이상이 적용되었습니다.");
+                }
+                break;
+
+            case StatusType.Burn:
+                if (existingEffect != null)
+                {
+                    // 화상 상태가 이미 있으면 지속시간과 피해량을 갱신
+                    existingEffect.effectTime = statusEffect.effectTime;
+                    existingEffect.damagePerTurn = statusEffect.damagePerTurn;
+                    Debug.Log($"{summonName}에게 중복된 화상 상태이상이 갱신되었습니다.");
+                }
+                else
+                {
+                    // 새로운 화상 상태이상 추가
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}에게 화상 상태이상이 적용되었습니다.");
+                }
+                break;
+
+            case StatusType.Upgrade:
+                if (existingEffect != null)
+                {
+                    // 강화 상태가 이미 있으면 지속시간을 갱신하고 효과를 추가 적용
+                    existingEffect.effectTime = statusEffect.effectTime;
+                    Debug.Log($"{summonName}의 공격력 강화 상태가 갱신되었습니다.");
+                }
+                else
+                {
+                    // 새로운 강화 상태이상 추가
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}의 공격력이 강화되었습니다.");
+                }
+                break;
+
+            case StatusType.Curse:
+                if (existingEffect != null)
+                {
+                    // 저주 상태가 이미 있으면 지속시간을 갱신
+                    existingEffect.effectTime = statusEffect.effectTime;
+                    Debug.Log($"{summonName}에게 중복된 저주 상태이상이 갱신되었습니다.");
+                }
+                else
+                {
+                    // 새로운 저주 상태이상 추가
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}에게 저주 상태이상이 적용되었습니다.");
+                }
+                break;
+
+            case StatusType.Stun:
+                if (existingEffect != null)
+                {
+                    // 스턴 상태가 이미 있으면 지속시간을 갱신
+                    existingEffect.effectTime = statusEffect.effectTime;
+                    Debug.Log($"{summonName}의 스턴 상태가 갱신되었습니다.");
+                }
+                else
+                {
+                    // 새로운 스턴 상태이상 추가
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}이(가) 스턴 상태에 빠졌습니다.");
+                }
+                break;
+
+            default:
+                Debug.Log($"{summonName}에게 알 수 없는 상태이상이 적용되었습니다.");
+                break;
         }
     }
+
 
     // 상태이상 및 쿨타임 업데이트 메소드
     public void UpdateStatusEffectsAndCooldowns()
@@ -144,7 +228,7 @@ public class Summon : MonoBehaviour
         }
     }
 
-    public void ModifyAttackPower(double multiplier)
+    public void UpgradeAttackPower(double multiplier)
     {
         attackPower *= (1 + multiplier);
         Debug.Log($"{summonName}의 공격력이 {multiplier * 100}% 변경되었습니다. 현재 공격력: {attackPower}");
@@ -177,9 +261,35 @@ public class Summon : MonoBehaviour
 
     public virtual void takeDamage(double damage) //데미지 입기
     {
-        nowHP -= damage;
+        if (invincibilityOnce)
+        {
+            invincibilityOnce = false;
+            Debug.Log("1회 무적보호막으로 공격을 보호했습니다.");
+            return;
+        }
+        if (shield > 0) //쉴드가 있을때 데미지 받게
+        {
+            if (shield >= damage)
+            {
+                // 쉴드가 데미지를 모두 막아줌
+                shield -= damage;
+                Debug.Log("쉴드로 피해 방어. 남은 쉴드: " + shield);
+            }
+            else
+            {
+                // 쉴드가 일부만 막고 나머지는 체력에 적용
+                double remainingDamage = damage - shield;
+                shield = 0;
+                nowHP -= remainingDamage;
+                Debug.Log("쉴드가 파괴됨. 남은 체력: " + nowHP);
+            }
+        }
+        else //쉴드가 없을경우
+        {
+            nowHP -= damage;
+        }
 
-        if (nowHP <= 0)
+        if (nowHP <= 0) //죽음처리
         {
             nowHP = 0;  // 체력을 0 이하로 내리지 않음
             Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
@@ -190,8 +300,6 @@ public class Summon : MonoBehaviour
             Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
         }
     }
-
-
 
     // 소환수 초기화 메서드
     public virtual void summonInitialize(){ }
@@ -211,6 +319,13 @@ public class Summon : MonoBehaviour
         Destroy(gameObject); // 소환수 오브젝트를 씬에서 제거
     }
 
+    public void AddShield(int shieldAmount)
+    {
+        shield += shieldAmount;
+
+        Debug.Log("쉴드 부여. 현재 쉴드: " + shield);
+    }
+
 
     public string getSummonName(){ 
         return summonName; 
@@ -225,6 +340,19 @@ public class Summon : MonoBehaviour
         return specialAttackStrategies;
     }
 
+    public IAttackStrategy getAttackStrategy()
+    {
+        return attackStrategy;
+    }
+
+    public bool getInvincibilityOnce()
+    {
+        return invincibilityOnce;
+    }
+    public void setInvincibilityOnce(bool invincibilityOnce)
+    {
+        this.invincibilityOnce = invincibilityOnce;
+    }
 
     public void setMaxHP(double hp)
     {
