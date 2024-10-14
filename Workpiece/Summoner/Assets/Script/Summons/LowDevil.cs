@@ -21,7 +21,7 @@ public class LowDevil : Summon
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1);
         // 특수 공격: 타겟 지정 공격
-        specialAttackStrategies = new IAttackStrategy[] { new StatusAttackStrategy(StatusType.Curse,1 ,3) }; //적용시간1, 쿨타임3
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Curse, 0 ,2,4) }; //타입, 데미지,적용시간, 쿨타임
     }
 
     private void Start()

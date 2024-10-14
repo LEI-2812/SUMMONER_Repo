@@ -1,36 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class TargetedAttackStrategy : IAttackStrategy
 {
     private StatusType statusType; // 상태 타입 (공격인지 힐인지)
-    private double damage;
-    private int cooltime;
-    private int currentCooldown;
-    public TargetedAttackStrategy(StatusType statusType, double damage, int cooltime)
+    private double damage; //데미지
+    private int cooltime; //쿨타임
+    private int currentCooldown; //현재 쿨타임 진행시간
+    private int statusTime; //지속시간
+    public TargetedAttackStrategy(StatusType statusType, double damage, int cooltime, int statusTime=0)
     {
         this.statusType = statusType;
         this.damage = damage;
         this.cooltime = cooltime;
         this.currentCooldown = 0;
+        this.statusTime = statusTime;
     }
     public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int Arrayindex)
     {
-        Summon targetSummon = targetPlates[selectedPlateIndex].getSummon();
+        Summon target = targetPlates[selectedPlateIndex].getSummon();
 
-        if (targetSummon != null)
+        if (target != null)
         {
-            if (statusType == StatusType.Heal) // 힐인 경우
+            switch (statusType)
             {
-                double healAmount = targetSummon.getMaxHP() * 0.3; // 최대 체력의 30%만큼 회복
-                targetSummon.Heal(healAmount);
-                Debug.Log($"{attacker.getSummonName()}이(가) {targetSummon.getSummonName()}을(를) {healAmount}만큼 치유했습니다.");
-            }
-            else // 공격인 경우
-            {
-                Debug.Log($"{attacker.getSummonName()}이(가) {targetSummon.getSummonName()}을(를) 강력하게 공격합니다.");
-                targetSummon.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // 강력한 공격
+                case StatusType.Heal:
+                    double healAmount = target.getMaxHP() * 0.3; // 최대 체력의 30%만큼 회복
+                    target.Heal(healAmount);
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) {healAmount}만큼 치유했습니다.");
+                    break;
+                case StatusType.None:
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) 강력하게 공격합니다.");
+                    target.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // 강력한 공격
+                    break;
+                case StatusType.LifeDrain: //흡혈
+                    double lifeDrainDamage = target.getMaxHP() * 0.1;
+                    attacker.Heal(lifeDrainDamage); // 흡혈한 만큼 체력 회복
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 흡혈을 사용하여 {lifeDrainDamage} 데미지를 입히고 회복합니다.");
+                    break;
+               
             }
         }
         else

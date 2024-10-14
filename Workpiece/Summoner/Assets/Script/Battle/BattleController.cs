@@ -60,10 +60,6 @@ public class BattleController : MonoBehaviour
         {
             HandleTargetedAttack(attackSummon, targetedAttack, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
         }
-        else if (attackStrategy is StatusAttackStrategy statusAttack)
-        {
-            HandleStatusAttack(attackSummon, statusAttack, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
-        }
         else if (attackStrategy is AttackAllEnemiesStrategy attackAll)
         {
             HandleAttackAll(attackSummon, attackAll, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
@@ -122,22 +118,6 @@ public class BattleController : MonoBehaviour
         }
     }
 
-    //상태이상 공격 로직
-    private void HandleStatusAttack(Summon attackSummon, StatusAttackStrategy statusAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
-    {
-        StatusType attackStatusType = statusAttack.getStatusType();
-
-        if (isPlayer)
-        {
-            attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적의 플레이트에 공격
-            Debug.Log("아군의 상태이상 공격이 성공적으로 수행되었습니다.");
-        }
-        else
-        {
-            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적이 플레이어 플레이트에 공격
-            Debug.Log("적의 상태이상 공격이 성공적으로 수행되었습니다.");
-        }
-    }
 
     //전체공격 로직
     private void HandleAttackAll(Summon attackSummon, AttackAllEnemiesStrategy AllusAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)

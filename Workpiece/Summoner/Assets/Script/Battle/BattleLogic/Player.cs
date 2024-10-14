@@ -82,7 +82,7 @@ public class Player : Character
     public void PlayerTurnOverBtn() //버튼에 넣을 메소드
     {
         // 플레이어 턴일 때만 턴 종료 가능
-        if (turnController.currentTurn == TurnController.Turn.PlayerTurn)
+        if (turnController.getCurrentTurn() == TurnController.Turn.PlayerTurn)
         {
             Debug.Log("플레이어 턴 종료");
             turnController.EndTurn();

@@ -14,7 +14,7 @@ public class Snake : Summon
         summonRank = SummonRank.Medium; // 중급 소환수
 
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접 공격
-        specialAttackStrategies = new IAttackStrategy[] { new StatusAttackStrategy(StatusType.Poison, 3,3) };//상태이상 (중독)공격
+        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Poison, 0,3,3) };//상태이상 (중독)공격
     }
 
 

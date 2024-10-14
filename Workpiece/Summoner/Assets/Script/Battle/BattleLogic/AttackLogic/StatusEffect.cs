@@ -11,7 +11,9 @@ public enum StatusType
     Heal, //힐
     Curse, //저주
     LifeDrain, //흡혈
-    Burn //화상
+    Burn, //화상
+    Shield, //보호막
+    Upgrade //강화
 }
 
 public class StatusEffect
