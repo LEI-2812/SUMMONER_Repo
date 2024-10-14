@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ public class StageController : MonoBehaviour
 
     void Start()
     {
+        checkStage = FindObjectOfType<CheckStage>();
         int stageNumber = PlayerPrefs.GetInt("savedStage");
         Debug.Log("savedStage 값 : " + stageNumber);
         ButtonInteractivity(stageNumber);
@@ -42,8 +44,9 @@ public class StageController : MonoBehaviour
 
     public void stageLoader(int stage)
     {
-        checkStage.stageNum = stage;
-        SceneManager.LoadScene("Stage" + stage.ToString());   
+        Debug.Log("버튼 클릭");
+        string sceneName = "Story Screen_" + stage.ToString() + "Stage";
+        SceneManager.LoadScene(sceneName);
     }
 
     //임시코드
@@ -70,4 +73,5 @@ public class StageController : MonoBehaviour
             }
         }
     }
+
 }

@@ -26,4 +26,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Screen/Thank Screen.unity
     guid: 3321e9f1d1d657741a41b0cc337890e1
+  - enabled: 1
+    path: Assets/Screen/StoryScene/Story Screen_2Stage.unity
+    guid: b054c2e7df8ee2f4f8c983629e17fc7b
+  - enabled: 1
+    path: Assets/Screen/StoryScene/Story Screen_3Stage.unity
+    guid: cb2159c8207bcf648979d68df8afb7cf
+  - enabled: 1
+    path: Assets/Screen/StoryScene/Story Screen_5Stage.unity
+    guid: d023e739188081743bcb0b891496d7b3
+  - enabled: 1
+    path: Assets/Screen/StoryScene/Story Screen_7Stage.unity
+    guid: 46f0071ffd2a93e4a9548a79fe81b65b
   m_configObjects: {}

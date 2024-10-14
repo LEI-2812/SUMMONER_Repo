@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class InteractionController : MonoBehaviour
+public class InteractionController : MonoBehaviour, IPointerClickHandler
 {
     [Header("캐릭터이름 텍스트")]
     public Text characterName;
@@ -132,15 +132,20 @@ public class InteractionController : MonoBehaviour
         //    ShowNextLine();
        // }
     }
-    /*
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (isDialogueActive && !isStory)
+        // 현재 씬 이름이 "Pro_Epi Screen"일 때만 클릭 이벤트 처리
+        if (SceneManager.GetActiveScene().name == "Pro_Epi Screen")
         {
-            ShowNextLine();
+            Debug.Log("클릭 이벤트 발생");
+            if (isDialogueActive && !isStory)
+            {
+                ShowNextLine();
+            }
         }
     }
-    */
+
 
     public int getCurrentDialogueIndex()
     {

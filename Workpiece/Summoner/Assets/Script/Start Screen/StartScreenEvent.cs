@@ -28,7 +28,7 @@ public class StartScreenEvent : MonoBehaviour
 
     void Start()
     {
-
+        checkStage = FindObjectOfType<CheckStage>();
         // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
         menuCanvas = GameObject.Find("MenuCanvas");
 
@@ -61,13 +61,19 @@ public class StartScreenEvent : MonoBehaviour
         // 코루틴 실행: newAlert에 대한 처리
         StartCoroutine(WaitForAlertResult(newAlert, newAlertResult, (result) => {
             if (result)
-            {
-                
+            {               
                 // Yes 버튼 클릭 시 로직
                 PlayerPrefs.DeleteAll();
                 PlayerPrefs.SetInt("savedStage", 1); // 스테이지 진행 상황 초기화
                 PlayerPrefs.Save();
-                checkStage.stageNum = 0;
+                if (checkStage == null)
+                {
+                    Debug.LogError("checkStage가 null입니다. 올바르게 설정되었는지 확인하세요.");
+                }
+                else
+                {
+                    checkStage.stageNum = 0;
+                }
                 Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
                 SceneManager.LoadScene("Pro_Epi Screen");
             }
