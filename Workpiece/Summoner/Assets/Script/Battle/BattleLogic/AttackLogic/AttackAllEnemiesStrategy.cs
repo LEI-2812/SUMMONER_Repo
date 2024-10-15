@@ -49,7 +49,6 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
                         double upgradeAttackPower = target.getAttackPower() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage();
                         StatusEffect upgradeEffect = new StatusEffect(StatusType.Upgrade, statusTime, upgradeAttackPower);
                         target.ApplyStatusEffect(upgradeEffect);
-                        target.UpgradeAttackPower(upgradeAttackPower);
                         Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {upgradeAttackPower} 만큼 상승 시켰습니다.");
                         break;
                     case StatusType.Heal:

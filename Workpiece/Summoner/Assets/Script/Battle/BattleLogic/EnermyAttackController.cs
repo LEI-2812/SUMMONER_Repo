@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 
@@ -23,6 +24,7 @@ public class EnermyAttackController : MonoBehaviour
 
             if (continuesAttackByRank(attackingSummon)) //매개변수로 보낸 소환수의 등급에따라 연속공격이 가능하면 기존 로직 최대 3번 수행
             {
+                Debug.Log("연속공격 발동!");
                 continue; //계속실행
             }
             else //연속공격가능성이 false면 바로 종료
@@ -58,6 +60,8 @@ public class EnermyAttackController : MonoBehaviour
         }
     }
 
+
+    //일반 공격
     private void enermyNormalAttackLogic(Summon attackingSummon)
     {
         int selectAttackIndex = plateController.getClosestPlayerPlatesIndex(); //플레이어 플레이트에서 가장 가까운 소환수의 인덱스를 받아온다.
@@ -66,7 +70,18 @@ public class EnermyAttackController : MonoBehaviour
             Debug.Log("공격할 소환수가 없습니다."); return;
         }
 
-        attackingSummon.normalAttack(plateController.getPlayerPlates(), selectAttackIndex); //일반공격 수행
+        float randomValue = Random.Range(0f, 100f); // 0에서 100 사이의 무작위 값
+        if (randomValue < 30f) //강공격
+        {
+            Debug.Log($"{attackingSummon.name} 의 강공격");
+            attackingSummon.setAttackPower(attackingSummon.getHeavyAttakPower()); //공격력을 강공격력으로 전환
+            attackingSummon.normalAttack(plateController.getPlayerPlates(), selectAttackIndex); //일반공격 수행
+            attackingSummon.setAttackPower(attackingSummon.getAttackPower()); //원래 공격력으로 되돌리기
+        }
+        else //일반 공격력으로 공격
+        {
+            attackingSummon.normalAttack(plateController.getPlayerPlates(), selectAttackIndex); //일반공격 수행
+        }
     }
 
 
@@ -129,7 +144,7 @@ public class EnermyAttackController : MonoBehaviour
         {
             return AttackType.NormalAttack;
         }
-        else // High 등급 (15%)
+        else
         {
             return AttackType.SpecialAttack;
         }

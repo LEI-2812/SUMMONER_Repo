@@ -73,7 +73,7 @@ public class Summon : MonoBehaviour
         specialAttack.ApplyCooldown();
     }
 
-    // 상태이상 적용 메소드 (여러 상태이상 중복 허용)
+    // 상태이상 적용 메소드 (여러 상태이상 중복 허용) //덮어씌어지는 로직
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
         var existingEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == statusEffect.statusType); //이미 같은 상태이상이 있는지 가져옴
@@ -152,6 +152,33 @@ public class Summon : MonoBehaviour
                 }
                 break;
 
+            case StatusType.Shield: //쉴드 덮어씌우기
+                if (existingEffect != null)
+                {
+                    shield = existingEffect.damagePerTurn; //보호막을 스킬 수치만큼 다시 채우기
+                    Debug.Log($"{summonName}의 보호막을 덮씌웁니다.");
+                }
+                else
+                {
+                    // 새로운 쉴드 추가
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}에게 보호막이 생겼습니다.");
+                }
+                break;
+            case StatusType.LifeDrain: //쉴드 덮어씌우기
+                if (existingEffect != null)
+                {
+                    Debug.Log($"{summonName}은 이미 흡혈 당하고있습니다.");
+                }
+                else
+                {
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}이 흡혈 당합니다.");
+                }
+                break;
+
             default:
                 Debug.Log($"{summonName}에게 알 수 없는 상태이상이 적용되었습니다.");
                 break;
@@ -174,7 +201,7 @@ public class Summon : MonoBehaviour
 
                     if (effect.damagePerTurn > 0)
                     {
-                        ApplyDamage(effect.damagePerTurn); // 지속 데미지 적용
+                        takeDamage(effect.damagePerTurn); // 지속 데미지 적용
                         Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다. 남은 상태이상시간: {effect.effectTime} 턴");
                     }
 

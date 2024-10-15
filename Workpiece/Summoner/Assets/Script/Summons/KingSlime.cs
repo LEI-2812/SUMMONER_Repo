@@ -10,6 +10,7 @@ public class KingSlime : Summon
         maxHP = 250; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
         attackPower = 50; //일반공격
+        heavyAttakPower = 65;
         summonRank = SummonRank.Special; // 특급 소환수
 
         // 일반 공격: 가장 가까운 적 공격
