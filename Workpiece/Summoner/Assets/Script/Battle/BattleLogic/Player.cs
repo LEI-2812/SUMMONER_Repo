@@ -3,16 +3,29 @@ using UnityEngine.UI;
 using UnityEngine;
 using Unity.VisualScripting;
 using System.Collections;
+using TMPro;
 
 public class Player : Character
 {
     [Header("마나UI")]
     [SerializeField] private List<RawImage> manaList;
+
     [Header("마나텍스쳐")]
     [SerializeField] private Texture notHaveTexture;
     [SerializeField] private Texture haveTexture;
+
     private int mana;
     private int usedMana;
+
+    [Header("버튼 UI")]
+    [SerializeField] private Button summonButton;
+    [SerializeField] private TextMeshProUGUI summonButtonText;
+    [SerializeField] private Button reSummonButton;
+    [SerializeField] private TextMeshProUGUI reSummonButtonText;
+
+
+    [Header("효과음")]
+    [SerializeField] private AudioSource summonFailSound;
 
     [Header("컨트롤러")]
     [SerializeField] private SummonController summonController;
@@ -30,6 +43,7 @@ public class Player : Character
     {
         battleAlert = GetComponent<BattleAlert>();
         ResetPlayerSetting();
+       
     }
 
     private void Update()
@@ -38,6 +52,19 @@ public class Player : Character
         {
             battleAlert.failAlert();
         }
+        //if(나중에 나올 클리어 턴 > turnController.turnCount){  승리 조건 나중에 바꿔야 함
+        //    battleAlert.failAlert();
+        //}
+        if (mana < usedMana)
+        {
+            reSummonButton.image.color = new Color32(174, 174, 174, 255);
+            reSummonButtonText.color = new Color32(209, 209, 209, 255);
+        }
+        else
+        {
+            reSummonButton.image.color = new Color32(249, 247, 196, 255);
+            reSummonButtonText.color = new Color32(249, 247, 196, 255);
+        }
     }
 
     public override void startTurn()
@@ -45,6 +72,7 @@ public class Player : Character
         base.startTurn();
         Debug.Log($"{gameObject.name} 의 마나: {mana}");
         hasSummonedThisTurn = false;
+        UpdateManaUI();
     }
 
     public void OnSummonBtnClick()
@@ -66,13 +94,16 @@ public class Player : Character
                     mana -= 1;
                     hasSummonedThisTurn = true;
                     UpdateManaUI();
+                    summonButton.image.color = new Color32(137, 125, 115, 255); // 회색(#897D73)
+                    summonButtonText.color = new Color32(159, 159, 159, 255);  // 회색(#9F9F9F)
                     return;
                 }
             }
             Debug.Log("모든 플레이트에 소환수가 있습니다.");
         }
         else
-        {
+        {          
+            summonFailSound.Play(); // 효과음 재생
             takeAction();
             Debug.Log("마나가 부족하여 소환 불가능");
         }
@@ -102,10 +133,11 @@ public class Player : Character
                 mana -= usedMana;
                 usedMana += 1;
                 UpdateManaUI();
-            }
+            }           
         }
         else
         {
+            summonFailSound.Play();
             Debug.Log("재소환시 필요한 마나가 모자랍니다.");
         }
     }
@@ -288,8 +320,23 @@ public class Player : Character
         {
             manaList[i].texture = (i < mana) ? haveTexture : notHaveTexture;
         }
+
+        // 소환 버튼 색상 초기화
+        if (mana > 0 && !hasSummonedThisTurn)   //  소환할 마나가 남아있고 이번 턴 소환을 하지 않았다면
+        {
+            summonButton.image.color = new Color32(227, 138, 64, 255);
+            summonButtonText.color = new Color32(233, 197, 135, 255);
+        }
     }
 
+    public void AddMana()
+    {
+        mana += 1;
+        if (mana > 10) {
+            mana = 10;
+        }
+        UpdateManaUI();
+    }
 
     public void setSelectedPlateIndex(int sel)
     {
