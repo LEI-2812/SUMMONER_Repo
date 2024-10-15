@@ -21,7 +21,7 @@ public class HighDevil : Summon
         summonRank = SummonRank.Normal; //일반 적 몬스터
 
         // 일반 공격: 가장 가까운 적 공격
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1);
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,0);
         // 특수 공격: 타겟 지정 공격
         specialAttackStrategies = new IAttackStrategy[] {
             new AttackAllEnemiesStrategy(StatusType.Curse, 140,3), //전체공격 140

@@ -25,7 +25,7 @@ public class Enermy : Character
         {
             if (enermyPlates[i].getSummon() != null && !enermyPlates[i].getSummon().IsCursed())
             {
-                enermyAttackController.EnermyAttackLogic(enermyPlates[i].getSummon());
+                enermyAttackController.EnermyAttackStart(enermyPlates[i].getSummon());
             }
         }
 

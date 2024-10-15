@@ -86,7 +86,7 @@ public class BattleController : MonoBehaviour
     {
         StatusType attackStatusType = targetedAttack.getStatusType();
 
-        if (isPlayer)
+        if (isPlayer) //플레이어
         {
             if (!IsValidPlateIndex(selectedPlateIndex, plateController.getEnermyPlates().Count))
             {
@@ -94,10 +94,10 @@ public class BattleController : MonoBehaviour
                 return;
             }
 
-            if (attackStatusType == StatusType.Heal)
+            if (attackStatusType == StatusType.Heal || attackStatusType == StatusType.Upgrade || attackStatusType == StatusType.Shield)
             {
-                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 아군 플레이트에 힐
-                Debug.Log($"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 치유 대상입니다.");
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 아군 플레이트에 이로운 효과
+                Debug.Log($"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
             }
             else
             {
@@ -105,7 +105,7 @@ public class BattleController : MonoBehaviour
                 Debug.Log($"플레이어가 선택한 적의 플레이트 {selectedPlateIndex}가 공격 대상입니다.");
             }
         }
-        else
+        else //적
         {
             if (!IsValidPlateIndex(selectedPlateIndex, plateController.getPlayerPlates().Count))
             {
@@ -113,8 +113,17 @@ public class BattleController : MonoBehaviour
                 return;
             }
 
-            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적이 플레이어 플레이트에 공격
-            Debug.Log($"적이 플레이어의 플레이트 {selectedPlateIndex}를 공격합니다.");
+            if (attackStatusType == StatusType.Heal || attackStatusType == StatusType.Upgrade || attackStatusType == StatusType.Shield)
+            {
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 이로운 효과
+                Debug.Log($"적이 선택한 적의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
+            }
+            else
+            {
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 공격
+                Debug.Log($"적이 선택한 플레이어의 플레이트 {selectedPlateIndex}가 공격 대상입니다.");
+            }
+
         }
     }
 
@@ -152,6 +161,7 @@ public class BattleController : MonoBehaviour
     }
 
 
+    //유효한 플레이트인지 검사
     private bool IsValidPlateIndex(int selectedPlateIndex, int plateCount)
     {
         return selectedPlateIndex >= 0 && selectedPlateIndex < plateCount;
