@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Screen/StoryScene/Story Screen_1Stage.unity
     guid: 77b6b911b82d6dc47bd331fe492c185b
   - enabled: 1
-    path: Assets/Screen/FightScene/Fight Screen 1.unity
+    path: Assets/Screen/FightScene/Fight Screen_1Stage.unity
     guid: f800f9410f3fa9b42943e39766e12e1e
   - enabled: 1
     path: Assets/Screen/Pro_Epi Screen.unity
