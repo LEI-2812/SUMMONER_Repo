@@ -14,7 +14,7 @@ public class KingSlime : Summon
         summonRank = SummonRank.Special; // 일반 소환수
 
         // 일반 공격: 가장 가까운 적 공격
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1);
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
         specialAttackStrategies = new IAttackStrategy[] { 
             new AttackAllEnemiesStrategy(StatusType.None, specialPower, 1),//전체공격
             new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//쉴드

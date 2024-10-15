@@ -42,11 +42,12 @@ public class StatusEffect
 
             case StatusType.Poison: // 중독
                 target.ApplyDamage(damagePerTurn); // 즉시 데미지 적용
-                Debug.Log($"{target.getSummonName()}이(가) 중독되었습니다. 매 턴 {damagePerTurn}의 피해를 입을 것입니다.");
+                effectTime -= 1; //데미지를 입히자마자 턴 하나를 줄임.
                 break;
 
             case StatusType.Burn: //화상
                 target.ApplyDamage(damagePerTurn); // 즉시 데미지 적용
+                effectTime -= 1 ; //데미지를 입히자마자 턴 하나를 줄임.
                 break;
 
             case StatusType.LifeDrain: //흡혈

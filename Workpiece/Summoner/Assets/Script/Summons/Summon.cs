@@ -18,7 +18,7 @@ public class Summon : MonoBehaviour
     protected double specialPower;  //특수공격
     protected SummonRank summonRank; //등급
     protected double maxHP; //최대체력
-    protected double nowHP; //현재 체력
+    public double nowHP; //현재 체력
     protected double shield = 0; //쉴드량
     protected bool invincibilityOnce = false;
 
@@ -76,7 +76,7 @@ public class Summon : MonoBehaviour
     // 상태이상 적용 메소드 (여러 상태이상 중복 허용)
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
-        var existingEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == statusEffect.statusType);
+        var existingEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == statusEffect.statusType); //이미 같은 상태이상이 있는지 가져옴
 
         // 상태이상 타입에 따라 로직을 다르게 처리
         switch (statusEffect.statusType)
@@ -85,15 +85,13 @@ public class Summon : MonoBehaviour
                 if (existingEffect != null)
                 {
                     // 중독 상태가 이미 있으면 지속시간과 피해량을 갱신
-                    existingEffect.effectTime = statusEffect.effectTime;
-                    existingEffect.damagePerTurn = statusEffect.damagePerTurn;
-                    Debug.Log($"{summonName}에게 중복된 중독 상태이상이 갱신되었습니다.");
+                    Debug.Log($"{summonName}은 이미 중독 상태입니다.");
                 }
                 else
                 {
                     // 새로운 중독 상태이상 추가
                     activeStatusEffects.Add(statusEffect);
-                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용 //데미지를 받음
                     Debug.Log($"{summonName}에게 중독 상태이상이 적용되었습니다.");
                 }
                 break;
@@ -101,10 +99,7 @@ public class Summon : MonoBehaviour
             case StatusType.Burn:
                 if (existingEffect != null)
                 {
-                    // 화상 상태가 이미 있으면 지속시간과 피해량을 갱신
-                    existingEffect.effectTime = statusEffect.effectTime;
-                    existingEffect.damagePerTurn = statusEffect.damagePerTurn;
-                    Debug.Log($"{summonName}에게 중복된 화상 상태이상이 갱신되었습니다.");
+                    Debug.Log($"{summonName}은 이미 화상 상태입니다.");
                 }
                 else
                 {
@@ -118,9 +113,7 @@ public class Summon : MonoBehaviour
             case StatusType.Upgrade:
                 if (existingEffect != null)
                 {
-                    // 강화 상태가 이미 있으면 지속시간을 갱신하고 효과를 추가 적용
-                    existingEffect.effectTime = statusEffect.effectTime;
-                    Debug.Log($"{summonName}의 공격력 강화 상태가 갱신되었습니다.");
+                    Debug.Log($"{summonName}은 이미 강화 상태입니다.");
                 }
                 else
                 {
@@ -134,9 +127,7 @@ public class Summon : MonoBehaviour
             case StatusType.Curse:
                 if (existingEffect != null)
                 {
-                    // 저주 상태가 이미 있으면 지속시간을 갱신
-                    existingEffect.effectTime = statusEffect.effectTime;
-                    Debug.Log($"{summonName}에게 중복된 저주 상태이상이 갱신되었습니다.");
+                    Debug.Log($"{summonName}은 이미 저주 상태입니다.");
                 }
                 else
                 {
@@ -150,9 +141,7 @@ public class Summon : MonoBehaviour
             case StatusType.Stun:
                 if (existingEffect != null)
                 {
-                    // 스턴 상태가 이미 있으면 지속시간을 갱신
-                    existingEffect.effectTime = statusEffect.effectTime;
-                    Debug.Log($"{summonName}의 스턴 상태가 갱신되었습니다.");
+                    Debug.Log($"{summonName}은 이미 스턴 상태입니다.");
                 }
                 else
                 {
@@ -180,17 +169,22 @@ public class Summon : MonoBehaviour
         {
             if (effect != null)
             {
-                effect.effectTime--; // 상태이상 지속시간 감소
-
-                if (effect.damagePerTurn > 0)
+                if (effect.effectTime > 0) // 상태가 남아있는 동안
                 {
-                    ApplyDamage(effect.damagePerTurn); // 데미지 적용
-                    Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다.");
-                }
 
-                if (effect.effectTime <= 0)
-                {
-                    expiredEffects.Add(effect); // 지속 시간이 끝난 상태이상은 만료 처리
+                    if (effect.damagePerTurn > 0)
+                    {
+                        ApplyDamage(effect.damagePerTurn); // 지속 데미지 적용
+                        Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다. 남은 상태이상시간: {effect.effectTime} 턴");
+                    }
+
+                    effect.effectTime--; // 상태이상 지속시간 감소
+
+                    // 상태가 0이 된 후에 만료 리스트에 추가
+                    if (effect.effectTime <= 0)
+                    {
+                        expiredEffects.Add(effect); // 지속 시간이 끝난 상태이상은 만료 처리
+                    }
                 }
             }
         }
@@ -232,7 +226,6 @@ public class Summon : MonoBehaviour
     {
         attackPower *= (1 + multiplier);
         Debug.Log($"{summonName}의 공격력이 {multiplier * 100}% 변경되었습니다. 현재 공격력: {attackPower}");
-
     }
 
     public void ApplyDamage(double damage)
@@ -457,15 +450,17 @@ public class Summon : MonoBehaviour
         return false;
     }
 
-    public List<int> getAvailableSpecialAttackList(Summon summon)
+
+    //사용가능한 
+    public List<int> getAvailableSpecialAttack()
     {
         // 쿨타임이 없는 특수 스킬 목록을 가져옴
         List<int> availableSpecialAttacks = new List<int>();
 
         // 특수 공격 중 쿨타임이 없는 공격을 찾음
-        for (int i = 0; i < summon.getSpecialAttackStrategy().Length; i++)
+        for (int i = 0; i < specialAttackStrategies.Length; i++)
         {
-            var specialAttack = summon.getSpecialAttackStrategy()[i];
+            var specialAttack = specialAttackStrategies[i];
             if (specialAttack != null && specialAttack.getCurrentCooldown() == 0)
             {
                 availableSpecialAttacks.Add(i);

@@ -1848,6 +1848,7 @@ GameObject:
   m_Component:
   - component: {fileID: 313031150}
   - component: {fileID: 313031151}
+  - component: {fileID: 313031152}
   m_Layer: 5
   m_Name: Enermy
   m_TagString: Untagged
@@ -1893,7 +1894,21 @@ MonoBehaviour:
   - {fileID: 1856290379}
   - {fileID: 792077600}
   turnController: {fileID: 893681170}
-  enermyAttackController: {fileID: 893681173}
+  enermyAttackController: {fileID: 313031152}
+--- !u!114 &313031152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313031149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf862d93ab88f8f4cb20c74da9f460f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battleController: {fileID: 893681171}
+  plateController: {fileID: 893681172}
 --- !u!1 &323705123
 GameObject:
   m_ObjectHideFlags: 0
@@ -4521,7 +4536,6 @@ GameObject:
   - component: {fileID: 893681172}
   - component: {fileID: 893681171}
   - component: {fileID: 893681170}
-  - component: {fileID: 893681173}
   m_Layer: 5
   m_Name: Player_Enermy
   m_TagString: Untagged
@@ -4636,19 +4650,6 @@ MonoBehaviour:
   - {fileID: 9184813848463463012}
   - {fileID: 1856290379}
   - {fileID: 792077600}
---- !u!114 &893681173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 893681166}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf862d93ab88f8f4cb20c74da9f460f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  battleController: {fileID: 893681171}
 --- !u!1 &959924360
 GameObject:
   m_ObjectHideFlags: 0
