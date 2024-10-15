@@ -20,6 +20,7 @@ public class Slime : Summon
 
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1);
+        specialAttackStrategies = new IAttackStrategy[]{ new TargetedAttackStrategy(StatusType.Shield, 50, 2)};
     }
 
 

@@ -37,7 +37,7 @@ public class Summon : MonoBehaviour
     }
 
 
-    public void normalAttack(List<Plate> enemyPlates, int selectedPlateIndex,  int SpecialAttackArrayIndex)
+    public void normalAttack(List<Plate> enemyPlates, int selectedPlateIndex)
     {
         if (attackStrategy == null || attackStrategy.getCurrentCooldown() > 0)
         {
@@ -319,7 +319,7 @@ public class Summon : MonoBehaviour
         Destroy(gameObject); // 소환수 오브젝트를 씬에서 제거
     }
 
-    public void AddShield(int shieldAmount)
+    public void AddShield(double shieldAmount)
     {
         shield += shieldAmount;
 
@@ -433,5 +433,45 @@ public class Summon : MonoBehaviour
 
         // Curse 상태가 없으면 false 반환
         return false;
+    }
+
+    public bool IsCooltime() //쿨타임인지 확인
+    {
+        // 먼저 특수 공격 전략 배열이 있는지 확인
+        if (specialAttackStrategies == null || specialAttackStrategies.Length == 0)
+        {
+            Debug.Log("특수 공격 전략이 없습니다.");
+            return false;
+        }
+
+        // 각 특수 공격 전략에 대해 쿨타임 여부 확인
+        foreach (var specialAttack in specialAttackStrategies)
+        {
+            if (specialAttack != null && specialAttack.getCurrentCooldown() > 0)
+            {
+                // 하나라도 쿨타임 중인 전략이 있으면 true 반환
+                Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 스킬이 쿨타임 중입니다.");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<int> getAvailableSpecialAttackList(Summon summon)
+    {
+        // 쿨타임이 없는 특수 스킬 목록을 가져옴
+        List<int> availableSpecialAttacks = new List<int>();
+
+        // 특수 공격 중 쿨타임이 없는 공격을 찾음
+        for (int i = 0; i < summon.getSpecialAttackStrategy().Length; i++)
+        {
+            var specialAttack = summon.getSpecialAttackStrategy()[i];
+            if (specialAttack != null && specialAttack.getCurrentCooldown() == 0)
+            {
+                availableSpecialAttacks.Add(i);
+            }
+        }
+        
+        return availableSpecialAttacks;
     }
 }

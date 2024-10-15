@@ -172,14 +172,18 @@ public class PlateController : MonoBehaviour
         }
     }
 
+    public int getClosestPlayerPlatesIndex() //플레이어 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
+    {
+        for(int i = 0; i < playerPlates.Count; i++)
+        {
+            if (playerPlates[i].currentSummon != null)
+            {
+                return i;
+            }
+        }
 
-
-
-
-
-
-
-
+        return -1;
+    }
 
 
 

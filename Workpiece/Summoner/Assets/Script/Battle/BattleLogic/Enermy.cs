@@ -21,16 +21,16 @@ public class Enermy : Character
 
     public override void takeAction() //여기에 AI로직 작성
     {
-        //for (int i = 0; i < enermyPlates.Count; i++)
-        //{
-        //    if(enermyPlates[i].getSummon() != null && !enermyPlates[i].getSummon().IsCursed())
-        //    {
-        //        enermyAttackController.EnermyAttackLogic(enermyPlates[i].getSummon());
-        //    }
-        //}
+        for (int i = 0; i < enermyPlates.Count; i++)
+        {
+            if (enermyPlates[i].getSummon() != null && !enermyPlates[i].getSummon().IsCursed())
+            {
+                enermyAttackController.EnermyAttackLogic(enermyPlates[i].getSummon());
+            }
+        }
 
 
-        
+
         EndTurn();
     }
 

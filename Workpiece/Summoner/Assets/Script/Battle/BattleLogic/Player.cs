@@ -116,8 +116,8 @@ public class Player : Character
         Summon attackSummon = battleController.attackStart(0); //공격할 소환수를 받아온다.
         if (attackSummon != null)
         {
-            // 일반 공격 수행(플레이트, 특수스킬 배열인덱스, 공격할 인덱스)
-            attackSummon.normalAttack(plateController.getEnermyPlates() ,selectedPlateIndex, 0);
+            // 일반 공격 수행(플레이트, 공격할 인덱스)
+            attackSummon.normalAttack(plateController.getEnermyPlates() ,selectedPlateIndex);
         }
         else
         {

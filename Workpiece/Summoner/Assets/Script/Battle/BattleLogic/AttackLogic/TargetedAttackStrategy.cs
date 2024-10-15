@@ -40,7 +40,9 @@ public class TargetedAttackStrategy : IAttackStrategy
                     attacker.Heal(lifeDrainDamage); // 흡혈한 만큼 체력 회복
                     Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 흡혈을 사용하여 {lifeDrainDamage} 데미지를 입히고 회복합니다.");
                     break;
-               
+                case StatusType.Shield:
+                    target.AddShield(damage);
+                    break;
             }
         }
         else
