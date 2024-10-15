@@ -10,11 +10,10 @@ public class Snake : Summon
         maxHP = 200;
         nowHP = maxHP;
         attackPower = 30; //일반공격
-        specialPower = 25;
         summonRank = SummonRank.Medium; // 중급 소환수
 
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접 공격
-        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Poison, 0,3,3) };//상태이상 (중독)공격
+        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Poison, 0.1, 3 ,3) };//중독, 체력에10% 쿨타임3턴 지속시간3턴
     }
 
 

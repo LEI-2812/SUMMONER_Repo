@@ -40,8 +40,20 @@ public class TargetedAttackStrategy : IAttackStrategy
                     attacker.Heal(lifeDrainDamage); // 흡혈한 만큼 체력 회복
                     Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 흡혈을 사용하여 {lifeDrainDamage} 데미지를 입히고 회복합니다.");
                     break;
-                case StatusType.Shield:
+                case StatusType.Shield: //쉴드
+                    target = attacker;
                     target.AddShield(damage);
+                    break;
+                case StatusType.Upgrade: //강화
+                    double upgradeAttackPower = target.getAttackPower() * attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage();
+                    StatusEffect upgradeEffect = new StatusEffect(StatusType.Upgrade, statusTime, upgradeAttackPower);
+                    target.ApplyStatusEffect(upgradeEffect);
+                    target.UpgradeAttackPower(upgradeAttackPower);
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {upgradeAttackPower} 만큼 상승 시켰습니다.");
+                    break;
+                case StatusType.OnceInvincibility: //무적
+                    target = attacker; //자기자신이 대상
+                    target.setOnceInvincibility(true); //1번 무적 활성화
                     break;
             }
         }

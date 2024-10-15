@@ -34,23 +34,28 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
                         target.takeDamage(attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage());
                         break;
                     case StatusType.Poison:
-                        double poisonDamage = target.getMaxHP() * 0.1; // 최대 체력의 10% 데미지
+                        double poisonDamage = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // 최대 체력의 10% 데미지
                         StatusEffect poisonEffect = new StatusEffect(StatusType.Poison, statusTime, poisonDamage);
                         target.ApplyStatusEffect(poisonEffect);
                         Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 중독 상태를 부여하여 매 턴 {poisonDamage} 데미지를 입힙니다.");
                         break;
                     case StatusType.Burn:
-                        double burnDamage = target.getMaxHP() * 0.2; // 최대 체력의 20% 데미지
+                        double burnDamage = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // 최대 체력의 20% 데미지
                         StatusEffect burnEffect = new StatusEffect(StatusType.Burn, statusTime, burnDamage);
                         target.ApplyStatusEffect(burnEffect);
                         Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 화상을 입혀 매 턴 {burnDamage} 데미지를 입힙니다.");
                         break;
                     case StatusType.Upgrade:
-                        double upgradeAttackPower = target.getAttackPower() * 0.1;
+                        double upgradeAttackPower = target.getAttackPower() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage();
                         StatusEffect upgradeEffect = new StatusEffect(StatusType.Upgrade, statusTime, upgradeAttackPower);
                         target.ApplyStatusEffect(upgradeEffect);
                         target.UpgradeAttackPower(upgradeAttackPower);
                         Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {upgradeAttackPower} 만큼 상승 시켰습니다.");
+                        break;
+                    case StatusType.Heal:
+                        double healAmount = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // 최대 체력의 20%만큼 회복
+                        target.Heal(healAmount);
+                        Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) {healAmount}만큼 치유했습니다.");
                         break;
                 }
 

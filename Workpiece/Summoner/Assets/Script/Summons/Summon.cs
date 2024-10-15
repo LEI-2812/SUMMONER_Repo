@@ -15,12 +15,12 @@ public class Summon : MonoBehaviour
     public Image image; //이미지
     protected string summonName; //이름
     protected double attackPower; //일반공격
-    protected double specialPower;  //특수공격
+    protected double heavyAttakPower; //강 공격력
     protected SummonRank summonRank; //등급
     protected double maxHP; //최대체력
     public double nowHP; //현재 체력
     protected double shield = 0; //쉴드량
-    protected bool invincibilityOnce = false;
+    protected bool onceInvincibility = false;
 
     public bool CanAttack { get; set; } = true; // 상태이상중 공격가능 여부
 
@@ -254,9 +254,9 @@ public class Summon : MonoBehaviour
 
     public virtual void takeDamage(double damage) //데미지 입기
     {
-        if (invincibilityOnce)
+        if (onceInvincibility)
         {
-            invincibilityOnce = false;
+            onceInvincibility = false;
             Debug.Log("1회 무적보호막으로 공격을 보호했습니다.");
             return;
         }
@@ -328,6 +328,15 @@ public class Summon : MonoBehaviour
         this.summonName = name;
     }
 
+    public double getHeavyAttakPower()
+    {
+        return heavyAttakPower;
+    }
+    public void setHeavyAttakPower(double value)
+    {
+        this.heavyAttakPower = value;
+    }
+
     public IAttackStrategy[] getSpecialAttackStrategy()
     {
         return specialAttackStrategies;
@@ -340,11 +349,11 @@ public class Summon : MonoBehaviour
 
     public bool getInvincibilityOnce()
     {
-        return invincibilityOnce;
+        return onceInvincibility;
     }
-    public void setInvincibilityOnce(bool invincibilityOnce)
+    public void setOnceInvincibility(bool isinvincibility)
     {
-        this.invincibilityOnce = invincibilityOnce;
+        this.onceInvincibility = isinvincibility;
     }
 
     public void setMaxHP(double hp)
@@ -375,17 +384,6 @@ public class Summon : MonoBehaviour
     public double getAttackPower()
     {
         return attackPower;
-    }
-
-    // specialPower 관련 메서드
-    public void setSpecialPower(double power)
-    {
-        this.specialPower = power;
-    }
-
-    public double getSpecialPower()
-    {
-        return specialPower;
     }
 
 

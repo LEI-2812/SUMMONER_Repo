@@ -2,23 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KingSlime : Summon
+public class Skeleton : Summon
 {
+
     private void Awake()
     {
-        summonName = "KingSlime"; //이름 슬라임
-        maxHP = 250; //최대체력 200
+        summonInitialize();
+    }
+
+    public override void summonInitialize()
+    {
+        summonName = "Skeleton"; //이름 슬라임
+        maxHP = 650; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
-        attackPower = 50; //일반공격
-        summonRank = SummonRank.Special; // 특급 소환수
+        attackPower = 150; //일반공격
+        heavyAttakPower = 170;
+        summonRank = SummonRank.Normal; // 특급 소환수
 
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] { 
-            new AttackAllEnemiesStrategy(StatusType.None, 35, 1),//전체공격
-            new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//쉴드
+        specialAttackStrategies = new IAttackStrategy[] {
+            new TargetedAttackStrategy(StatusType.None, 160,0)
+        };
     }
-
 
 
     public override void die()
@@ -30,5 +36,4 @@ public class KingSlime : Summon
     {
         base.takeDamage(damage);
     }
-
 }

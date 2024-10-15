@@ -13,7 +13,8 @@ public enum StatusType
     LifeDrain, //흡혈
     Burn, //화상
     Shield, //보호막
-    Upgrade //강화
+    Upgrade, //강화
+    OnceInvincibility //1회 무적
 }
 
 public class StatusEffect
