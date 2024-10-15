@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class TurnController : MonoBehaviour
@@ -12,6 +13,8 @@ public class TurnController : MonoBehaviour
     private Turn currentTurn; // 현재 턴을 나타내는 변수
     private int turnCount;
 
+    [SerializeField] private TextMeshProUGUI turnCountText;
+
     private BattleController battleController;
                             
     void Start()
@@ -19,6 +22,7 @@ public class TurnController : MonoBehaviour
         battleController = GetComponent<BattleController>();
         currentTurn = Turn.PlayerTurn; // 첫 번째 턴은 플레이어 턴으로 시작
         turnCount = 1;
+        UpdateTurnCountUI();
         StartTurn();
     }
 
@@ -63,10 +67,16 @@ public class TurnController : MonoBehaviour
             // 적 턴이 끝난 후 턴 카운트를 증가시키고 플레이어 턴 시작
             currentTurn = Turn.PlayerTurn;
             turnCount++; // 적 턴이 끝나면 턴 카운트를 증가시킴
+            UpdateTurnCountUI();
+            player.AddMana();
             Debug.Log("현재 턴: " + turnCount);
 
             StartTurn();
         }
+    }
+    private void UpdateTurnCountUI()
+    {
+        turnCountText.text = $"Current Turn : {turnCount}";
     }
 
     public Turn getCurrentTurn()
