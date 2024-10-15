@@ -15,12 +15,12 @@ public class Summon : MonoBehaviour
     public Image image; //이미지
     protected string summonName; //이름
     protected double attackPower; //일반공격
-    protected double specialPower;  //특수공격
+    protected double heavyAttakPower; //강 공격력
     protected SummonRank summonRank; //등급
     protected double maxHP; //최대체력
     public double nowHP; //현재 체력
     protected double shield = 0; //쉴드량
-    protected bool invincibilityOnce = false;
+    protected bool onceInvincibility = false;
 
     public bool CanAttack { get; set; } = true; // 상태이상중 공격가능 여부
 
@@ -73,7 +73,7 @@ public class Summon : MonoBehaviour
         specialAttack.ApplyCooldown();
     }
 
-    // 상태이상 적용 메소드 (여러 상태이상 중복 허용)
+    // 상태이상 적용 메소드 (여러 상태이상 중복 허용) //덮어씌어지는 로직
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
         var existingEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == statusEffect.statusType); //이미 같은 상태이상이 있는지 가져옴
@@ -152,6 +152,33 @@ public class Summon : MonoBehaviour
                 }
                 break;
 
+            case StatusType.Shield: //쉴드 덮어씌우기
+                if (existingEffect != null)
+                {
+                    shield = existingEffect.damagePerTurn; //보호막을 스킬 수치만큼 다시 채우기
+                    Debug.Log($"{summonName}의 보호막을 덮씌웁니다.");
+                }
+                else
+                {
+                    // 새로운 쉴드 추가
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}에게 보호막이 생겼습니다.");
+                }
+                break;
+            case StatusType.LifeDrain: //쉴드 덮어씌우기
+                if (existingEffect != null)
+                {
+                    Debug.Log($"{summonName}은 이미 흡혈 당하고있습니다.");
+                }
+                else
+                {
+                    activeStatusEffects.Add(statusEffect);
+                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    Debug.Log($"{summonName}이 흡혈 당합니다.");
+                }
+                break;
+
             default:
                 Debug.Log($"{summonName}에게 알 수 없는 상태이상이 적용되었습니다.");
                 break;
@@ -174,7 +201,7 @@ public class Summon : MonoBehaviour
 
                     if (effect.damagePerTurn > 0)
                     {
-                        ApplyDamage(effect.damagePerTurn); // 지속 데미지 적용
+                        takeDamage(effect.damagePerTurn); // 지속 데미지 적용
                         Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다. 남은 상태이상시간: {effect.effectTime} 턴");
                     }
 
@@ -254,9 +281,9 @@ public class Summon : MonoBehaviour
 
     public virtual void takeDamage(double damage) //데미지 입기
     {
-        if (invincibilityOnce)
+        if (onceInvincibility)
         {
-            invincibilityOnce = false;
+            onceInvincibility = false;
             Debug.Log("1회 무적보호막으로 공격을 보호했습니다.");
             return;
         }
@@ -328,6 +355,15 @@ public class Summon : MonoBehaviour
         this.summonName = name;
     }
 
+    public double getHeavyAttakPower()
+    {
+        return heavyAttakPower;
+    }
+    public void setHeavyAttakPower(double value)
+    {
+        this.heavyAttakPower = value;
+    }
+
     public IAttackStrategy[] getSpecialAttackStrategy()
     {
         return specialAttackStrategies;
@@ -340,11 +376,11 @@ public class Summon : MonoBehaviour
 
     public bool getInvincibilityOnce()
     {
-        return invincibilityOnce;
+        return onceInvincibility;
     }
-    public void setInvincibilityOnce(bool invincibilityOnce)
+    public void setOnceInvincibility(bool isinvincibility)
     {
-        this.invincibilityOnce = invincibilityOnce;
+        this.onceInvincibility = isinvincibility;
     }
 
     public void setMaxHP(double hp)
@@ -375,17 +411,6 @@ public class Summon : MonoBehaviour
     public double getAttackPower()
     {
         return attackPower;
-    }
-
-    // specialPower 관련 메서드
-    public void setSpecialPower(double power)
-    {
-        this.specialPower = power;
-    }
-
-    public double getSpecialPower()
-    {
-        return specialPower;
     }
 
 

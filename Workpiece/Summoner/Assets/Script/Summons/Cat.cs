@@ -15,13 +15,13 @@ public class Cat : Summon
         maxHP = 100;
         nowHP = maxHP;
         attackPower = 15; //일반공격
-        specialPower = 20; //특수공격
         summonRank = SummonRank.Low; // 하급 소환수
-
+        heavyAttakPower = 20;
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower ,1);
         // 특수 공격: 전체 적 공격
-        specialAttackStrategies = new IAttackStrategy[] { new ClosestEnemyAttackStrategy(StatusType.None,attackPower, 1) };
+        specialAttackStrategies = new IAttackStrategy[] { new ClosestEnemyAttackStrategy(StatusType.None, heavyAttakPower, 1) }; //근접공격, 20데미지, 쿨타임1턴
+        //specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.LifeDrain, 0.1, 4,2) }; //근접공격, 20데미지, 쿨타임1턴
     }
 
     //일반 공격과 특수공격이 같은 방식의 경우 데미지가 attackPower로 들어가는 로직이기 때문에 잠깐 SpecialPower로 하고 되돌리게
@@ -43,7 +43,7 @@ public class Cat : Summon
 
         
         double originAttackPower = attackPower;
-        attackPower = specialPower;
+        attackPower = 20;
         // 공격 수행
         specialAttack.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
 

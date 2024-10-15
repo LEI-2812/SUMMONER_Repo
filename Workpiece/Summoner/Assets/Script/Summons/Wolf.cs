@@ -10,11 +10,10 @@ public class Wolf : Summon
         maxHP = 300;
         nowHP = maxHP;
         attackPower = 50; //일반공격
-        specialPower = 25;
         summonRank = SummonRank.High; // 중급 소환수
 
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접공격
-        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.None, specialPower,2) };//전체공격
+        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.None, 25,2) };//전체공격, 25데미지, 쿨타임2턴
     }
 
 

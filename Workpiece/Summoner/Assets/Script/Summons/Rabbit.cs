@@ -19,7 +19,7 @@ public class Rabbit : Summon
         summonRank = SummonRank.Medium; // 중급 소환수
 
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접공격
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Heal, 0, 3) };
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Heal, 0.3, 3) };
     }
 
 

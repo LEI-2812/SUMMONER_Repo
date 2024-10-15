@@ -13,7 +13,8 @@ public enum StatusType
     LifeDrain, //흡혈
     Burn, //화상
     Shield, //보호막
-    Upgrade //강화
+    Upgrade, //강화
+    OnceInvincibility //1회 무적
 }
 
 public class StatusEffect
@@ -24,14 +25,16 @@ public class StatusEffect
 
     private Summon attacker; // 공격자
 
-    public StatusEffect(StatusType type, int time, double damage=0, Summon attacker = null)
+    public StatusEffect(StatusType type, int eTime, double damage=0, Summon attacker = null)
     {
         statusType = type;
-        effectTime = time;
+        effectTime = eTime;
         damagePerTurn = damage;
         this.attacker = attacker;
     }
 
+
+    //덮어씌어지는 것에 대해서만 넣기
     public void ApplyStatus(Summon target)
     {
         switch (statusType)
@@ -41,25 +44,34 @@ public class StatusEffect
                 break;
 
             case StatusType.Poison: // 중독
-                target.ApplyDamage(damagePerTurn); // 즉시 데미지 적용
+                target.takeDamage(damagePerTurn); // 즉시 데미지 적용
                 effectTime -= 1; //데미지를 입히자마자 턴 하나를 줄임.
                 break;
 
             case StatusType.Burn: //화상
-                target.ApplyDamage(damagePerTurn); // 즉시 데미지 적용
+                target.takeDamage(damagePerTurn); // 즉시 데미지 적용
                 effectTime -= 1 ; //데미지를 입히자마자 턴 하나를 줄임.
                 break;
 
             case StatusType.LifeDrain: //흡혈
-                if (attacker != null) //즉시 사용
+                if (target != null) //즉시 사용
                 {
-                    target.ApplyDamage(damagePerTurn);
+                    target.takeDamage(damagePerTurn);
                     attacker.Heal(damagePerTurn);
+                    Debug.Log($"{target.getSummonName()}에게서 {damagePerTurn} 만큼 흡혈합니다. 현재체력: {attacker.getNowHP()}");
+                }
+                else
+                {
+                    Debug.Log("타겟이 없거나 죽어서 흡혈이 안됩니다.");
                 }
                 break;
 
-            case StatusType.Heal: //힐
-                target.Heal(damagePerTurn); //즉시 사용
+            case StatusType.Shield: //쉴드
+                target.AddShield(damagePerTurn);
+                break;
+
+            case StatusType.Upgrade: //강화
+                target.UpgradeAttackPower(damagePerTurn);
                 break;
 
             default:
