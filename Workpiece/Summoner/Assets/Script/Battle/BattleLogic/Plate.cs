@@ -201,10 +201,8 @@ public class Plate : MonoBehaviour,
             // BattleController에 선택된 플레이트 인덱스 전달
             summonController.setPlayerSelectedIndex(plateIndex);
 
-            onMousePlateScript.setStatePanel(currentSummon); // 패널에 소환수 정보 전달 
+            onMousePlateScript.setStatePanel(currentSummon, IsEnermyPlate()); // 패널에 소환수 정보 전달 
         }
-
-
 
         // 공격 중에 클릭할 경우
         if (battleController.getIsAttaking() && isInSummon && battleController)
