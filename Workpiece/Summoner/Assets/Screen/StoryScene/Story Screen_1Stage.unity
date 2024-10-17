@@ -2305,6 +2305,7 @@ MonoBehaviour:
   confusebubbleImage: {fileID: 1643105480}
   dotbubbleImage: {fileID: 666924674}
   dialogueBox: {fileID: 1118826677}
+  skipBtn: {fileID: 1391477646}
   playerAni: {fileID: 637407126}
   interactionController: {fileID: 1102135335}
   playerMove: {fileID: 637407130}
@@ -2444,7 +2445,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1227581520
 RectTransform:
   m_ObjectHideFlags: 0

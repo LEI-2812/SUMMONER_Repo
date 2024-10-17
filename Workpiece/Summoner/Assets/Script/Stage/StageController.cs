@@ -37,7 +37,7 @@ public class StageController : MonoBehaviour
     //스테이지 저장 (매 스테이지 클리어마다 호출하면됨.)
     public void SaveStage(int stageNumber)
     {
-        // "CurrentStage"라는 키로 스테이지 번호를 저장합니다.
+        // "savedStage"라는 키로 스테이지 번호를 저장합니다.
         PlayerPrefs.SetInt("savedStage", stageNumber);
         PlayerPrefs.Save(); // 저장을 강제 실행합니다.
     }
@@ -45,16 +45,21 @@ public class StageController : MonoBehaviour
     public void stageLoader(int stage)
     {
         Debug.Log("버튼 클릭");
-        string sceneName = "Story Screen_" + stage.ToString() + "Stage";
-        SceneManager.LoadScene(sceneName);
-    }
 
-    //임시코드
-    public void TestSceneLoad()
-    {
-        checkStage.stageNum = 1;
-        SceneManager.LoadScene("Story Screen");
-        //SceneManager.LoadScene("Fight Screen");
+        // 현재 플레이 중인 스테이지를 "playingStage"로 저장
+        PlayerPrefs.SetInt("playingStage", stage);
+        PlayerPrefs.Save();
+
+        if (stage == 4 || stage == 6)
+        {
+            string sceneName = "Fight Screen_" + stage.ToString() + "Stage";
+            SceneManager.LoadScene(sceneName);
+        }
+        else
+        {
+            string sceneName = "Story Screen_" + stage.ToString() + "Stage";
+            SceneManager.LoadScene(sceneName);
+        }
     }
 
     void ButtonInteractivity(int stageNumber)
