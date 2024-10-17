@@ -14,6 +14,8 @@ public class Summon : MonoBehaviour
 {
     public Image image; //이미지
     protected string summonName; //이름
+    public Sprite normalAttackSprite; // 일반 공격 스프라이트
+    public Sprite specialAttackSprite; // 특수 공격 스프라이트
     protected double attackPower; //일반공격
     protected double heavyAttakPower; //강 공격력
     protected SummonRank summonRank; //등급

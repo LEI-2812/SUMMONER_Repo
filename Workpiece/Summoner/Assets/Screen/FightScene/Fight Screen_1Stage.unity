@@ -780,6 +780,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2986970121398512521, guid: 3c7c2537101f88c49ad31ede087e9727, type: 3}
+      propertyPath: normalAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8cce46fa48f60be40bc7c67691775e26, type: 3}
+    - target: {fileID: 2986970121398512521, guid: 3c7c2537101f88c49ad31ede087e9727, type: 3}
+      propertyPath: specialAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 40b16a7eb38d1524da92aebd88853ede, type: 3}
     - target: {fileID: 6357672399787545836, guid: 3c7c2537101f88c49ad31ede087e9727, type: 3}
       propertyPath: m_Name
       value: Cat
@@ -1219,6 +1227,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 323705124}
     m_Modifications:
+    - target: {fileID: 1378068078022664671, guid: df28165c19b62ce458b9c0d62950ce08, type: 3}
+      propertyPath: normalAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d07e24f27cf62c2489991f6834f20813, type: 3}
+    - target: {fileID: 1378068078022664671, guid: df28165c19b62ce458b9c0d62950ce08, type: 3}
+      propertyPath: specialAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4836ae1bdf26d4b4db0861ee3d6d1f88, type: 3}
     - target: {fileID: 2490388254837929149, guid: df28165c19b62ce458b9c0d62950ce08, type: 3}
       propertyPath: m_Name
       value: Wolf
@@ -3208,6 +3224,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Eagle
       objectReference: {fileID: 0}
+    - target: {fileID: 6433092605041983929, guid: dcd000ee8afad7440ae5efea0c2f5283, type: 3}
+      propertyPath: normalAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3ee089c8166da874da2a5bf0ca0c7758, type: 3}
+    - target: {fileID: 6433092605041983929, guid: dcd000ee8afad7440ae5efea0c2f5283, type: 3}
+      propertyPath: specialAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 10459c43a24e9eb4b91815dcfaba2130, type: 3}
     - target: {fileID: 6629665481673828616, guid: dcd000ee8afad7440ae5efea0c2f5283, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4748,6 +4772,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rabbit
       objectReference: {fileID: 0}
+    - target: {fileID: 6965631153138215153, guid: 06d16d61d0745f9478bc61eee3e048ee, type: 3}
+      propertyPath: normalAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 360794c93e5827940bcf2cca0d9a4d8f, type: 3}
+    - target: {fileID: 6965631153138215153, guid: 06d16d61d0745f9478bc61eee3e048ee, type: 3}
+      propertyPath: specialAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 25629c64dea980243b4c6a438bc8ac76, type: 3}
     - target: {fileID: 9081143273772552200, guid: 06d16d61d0745f9478bc61eee3e048ee, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -6263,6 +6295,8 @@ MonoBehaviour:
   stateSummon: {fileID: 0}
   summonImage: {fileID: 959924362}
   HPSlider: {fileID: 342250390}
+  NormalAttackButton: {fileID: 1052664224}
+  SpecialAttackButton: {fileID: 541171654}
 --- !u!1 &1295850070
 GameObject:
   m_ObjectHideFlags: 0
@@ -7802,6 +7836,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 0}
+  normalAttackSprite: {fileID: 0}
+  specialAttackSprite: {fileID: 0}
   nowHP: 0
 --- !u!114 &1654113819 stripped
 MonoBehaviour:
@@ -8994,6 +9030,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 323705124}
     m_Modifications:
+    - target: {fileID: 5587979153400695691, guid: f160c72833f9d27418af9c7e3b1c8334, type: 3}
+      propertyPath: normalAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: bd4c4359e85865042bc730a3d73895a7, type: 3}
+    - target: {fileID: 5587979153400695691, guid: f160c72833f9d27418af9c7e3b1c8334, type: 3}
+      propertyPath: specialAttackSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b9fcbaed45a69914a9bf4bd38ba7f6bc, type: 3}
     - target: {fileID: 7501550928776738885, guid: f160c72833f9d27418af9c7e3b1c8334, type: 3}
       propertyPath: m_Name
       value: Snake

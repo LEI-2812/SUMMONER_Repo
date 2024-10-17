@@ -9,8 +9,13 @@ public class StatePanel: MonoBehaviour
     [SerializeField] private Image summonImage; //image
     [SerializeField] private Slider HPSlider;
 
+    [Header("공격 버튼들")]
+    [SerializeField] private Button NormalAttackButton;
+    [SerializeField] private Button SpecialAttackButton;
+
+
     //상태 판넬에 소환수정보 설정
-    public void setStatePanel(Summon stateSummon)
+    public void setStatePanel(Summon stateSummon, bool isEnemyPlate)
     {
         this.stateSummon = stateSummon;
 
@@ -25,6 +30,21 @@ public class StatePanel: MonoBehaviour
         {
             float sliderHP = (float) (stateSummon.getNowHP() / stateSummon.getMaxHP());  // 체력 비율 계산
             HPSlider.value = sliderHP;  // 체력 비율에 따른 슬라이더 값 설정
+        }
+
+        //  적 플레이트 클릭 시 공격 버튼 비활성화
+        if (isEnemyPlate)
+        {
+            NormalAttackButton.gameObject.SetActive(false);
+            SpecialAttackButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            NormalAttackButton.gameObject.SetActive(true);
+            SpecialAttackButton.gameObject.SetActive(true);
+
+            NormalAttackButton.image.sprite = stateSummon.normalAttackSprite;   // 일반 공격 스프라이트 설정
+            SpecialAttackButton.image.sprite = stateSummon.specialAttackSprite; // 특수 공격 스프라이트 설정
         }
     }
 
