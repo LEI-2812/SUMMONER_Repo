@@ -106,21 +106,21 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         isDialogueActive = false;
         Debug.Log("대화가 종료되었습니다.");
 
-        if (checkStage.stageNum == 0)
+        switch (checkStage.stageNum)
         {
-            Debug.Log("프롤로그");
-            SceneManager.LoadScene("Stage Select Screen"); //프롤로그 이후 출력
-        }
-        else if (checkStage.stageNum == 8)
-        {
-            Debug.Log("에필로그");
-            SceneManager.LoadScene("Thank Screen"); //에필로그 이후 출력
-        }
-        else
-        {
-            Debug.Log("이도저도 아닌");
-            fadeController.FadeOut();
-            Invoke("GotoFightScreen", 1f); // 페이드 아웃을 걸고 전투 씬으로 이동           
+            case 0:
+                Debug.Log("프롤로그");
+                SceneManager.LoadScene("Stage Select Screen"); //프롤로그 이후 출력
+                break;
+            case 8:
+                Debug.Log("에필로그");
+                SceneManager.LoadScene("Thank Screen"); //에필로그 이후 출력
+                break;
+            default:
+                Debug.Log("이도저도 아닌");
+                fadeController.FadeOut();
+                Invoke("GotoFightScreen", 1f); // 페이드 아웃을 걸고 전투 씬으로 이동           
+                break;
         }
     }
 
@@ -174,6 +174,6 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
     public void GotoFightScreen()
     {
-        SceneManager.LoadScene("Fight Screen"); // 대화가 끝나면 전투 씬으로 변경 
+        SceneManager.LoadScene("Fight Screen_1Stage"); // 대화가 끝나면 전투 씬으로 변경 
     }
 }

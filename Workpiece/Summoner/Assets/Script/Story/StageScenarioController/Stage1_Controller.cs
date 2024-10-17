@@ -11,6 +11,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     public GameObject confusebubbleImage; // 끙앓는 이미지
     public GameObject dotbubbleImage; // ... 이미지
     public GameObject dialogueBox;
+    public GameObject skipBtn;
 
     private int scenarioFlowCount = 0; //대사 카운트
 
@@ -19,7 +20,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     [Header("컨트롤러")]
     [SerializeField]private InteractionController interactionController;
-    [SerializeField]private PlayerMove playerMove;
+    [SerializeField] private PlayerMove playerMove;
 
     private int isSameDialgueIndex = -1;
 
@@ -31,7 +32,7 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     void Start() //Start에서 처음 실행할 메소드나 오브젝트를 지정해주도록 한다.
     {
-        scenarioFlow();
+        scenarioFlow();       
     }
 
     void Update()

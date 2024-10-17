@@ -12,6 +12,7 @@ public class Story : MonoBehaviour
     public GameObject SkipBtn; //Button 으로 하면 비활성화가 안됨
 
     private Setting setting;  // SettingMenuController의 인스턴스를 참조
+    private string playingStage;   // 플레이 중인 스테이지 번호
 
     private void Start()
     {
@@ -23,6 +24,7 @@ public class Story : MonoBehaviour
             Debug.LogWarning("SettingMenuController 인스턴스가 존재하지 않습니다.");
         }
 
+        playingStage = PlayerPrefs.GetInt("playingStage", 0).ToString();
         isSkipActive(); //스킵버튼 활성화 여부 판별
     }
 
@@ -57,7 +59,8 @@ public class Story : MonoBehaviour
             if (result)
             {
                 Debug.Log("스킵하여 전투 씬으로 이동");
-                SceneManager.LoadScene("Fight Screen");
+                string sceneName = "Fight Screen_" + playingStage + "Stage";
+                SceneManager.LoadScene(sceneName);
             }
             else
             {

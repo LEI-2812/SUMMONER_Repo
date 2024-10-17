@@ -38,4 +38,22 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Screen/StoryScene/Story Screen_7Stage.unity
     guid: 46f0071ffd2a93e4a9548a79fe81b65b
+  - enabled: 1
+    path: Assets/Screen/FightScene/Fight Screen_2Stage.unity
+    guid: d1970f38a7990624bb14366f1c430fc4
+  - enabled: 1
+    path: Assets/Screen/FightScene/Fight Screen_3Stage.unity
+    guid: 9444b70458b59d545a64a32d634bb03c
+  - enabled: 1
+    path: Assets/Screen/FightScene/Fight Screen_4Stage.unity
+    guid: 6db72e66a1f31a641acd29b70a018a0e
+  - enabled: 1
+    path: Assets/Screen/FightScene/Fight Screen_5Stage.unity
+    guid: 400010386faa1874182894f530fbe7c0
+  - enabled: 1
+    path: Assets/Screen/FightScene/Fight Screen_6Stage.unity
+    guid: 14742eba7d5bd2b4a9e8a1a8f4e9abb7
+  - enabled: 1
+    path: Assets/Screen/FightScene/Fight Screen_7Stage.unity
+    guid: 040791b04a5f4114db9c8252123307e7
   m_configObjects: {}
