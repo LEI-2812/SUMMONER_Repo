@@ -19,9 +19,9 @@ public class Player : Character
 
     [Header("버튼 UI")]
     [SerializeField] private Button summonButton;
-    [SerializeField] private TextMeshProUGUI summonButtonText;
+     private TextMeshProUGUI summonButtonText;
     [SerializeField] private Button reSummonButton;
-    [SerializeField] private TextMeshProUGUI reSummonButtonText;
+     private TextMeshProUGUI reSummonButtonText;
 
 
     [Header("효과음")]
@@ -41,6 +41,8 @@ public class Player : Character
 
     private void Start()
     {
+        summonButtonText = summonButton.GetComponentInChildren<TextMeshProUGUI>();
+        reSummonButtonText = reSummonButton.GetComponentInChildren<TextMeshProUGUI>();
         battleAlert = GetComponent<BattleAlert>();
         ResetPlayerSetting();
        
@@ -184,7 +186,7 @@ public class Player : Character
             if (attackStrategy is TargetedAttackStrategy targetedAttack)
             {
                 StatusType attackStatusType = targetedAttack.getStatusType();
-                if (attackStatusType == StatusType.Heal) //타겟중에 힐일경우
+                if (attackStatusType == StatusType.Heal || attackStatusType == StatusType.Upgrade || attackStatusType == StatusType.Shield) //타겟중에 힐일경우
                 {
                     Debug.Log("TargetedAttackStrategy의 Heal을 사용합니다. 아군의 플레이트를 선택하세요.");
                     // 아군의 플레이트를 선택하는 코루틴 실행
@@ -285,7 +287,7 @@ public class Player : Character
         // 아군의 플레이트가 선택된 후 로직 수행
         if (selectedPlateIndex >= 0)
         {
-            Debug.Log($"힐을 준비 중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");
+            Debug.Log($"아군에게 버프를 준비중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");
             battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true); // true: 플레이어 공격
             summonController.OnDarkBackground(false); // 공격 후 배경 복원
             selectedPlateIndex = -1; //선택했던 플레이트 되돌리기

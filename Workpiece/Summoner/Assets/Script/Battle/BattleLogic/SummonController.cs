@@ -164,9 +164,9 @@ public class SummonController : MonoBehaviour
             Summon summon = randomSelectedSummons[i];
             selectSummonPanels[i].setAssignedSummon(summon);
 
-            if (summon.image != null && summon.image.sprite != null)
+            if (summon.getImage() != null && summon.getImage().sprite != null)
             {
-                selectSummonPanels[i].SetSummonImage(summon.image);
+                selectSummonPanels[i].SetSummonImage(summon.getImage());
             }
         }
 
@@ -185,9 +185,9 @@ public class SummonController : MonoBehaviour
             Summon summon = randomSelectedSummons[i];
             ReselectSummonPanels[i].setAssignedSummon(summon);
 
-            if (summon.image != null && summon.image.sprite != null)
+            if (summon.getImage() != null && summon.getImage().sprite != null)
             {
-                ReselectSummonPanels[i].SetSummonImage(summon.image);
+                ReselectSummonPanels[i].SetSummonImage(summon.getImage());
             }
         }
 

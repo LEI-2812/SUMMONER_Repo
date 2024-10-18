@@ -27,6 +27,7 @@ public class Plate : MonoBehaviour,
     {
         statePanel.SetActive(false);
         plateImage = GetComponent<Image>(); // 자신의 Image 컴포넌트 가져오기
+       // summonImg = GetComponentInChildren<Image>();
         originalColor = plateImage.color; // 원래 색상 저장
     }
 
@@ -51,17 +52,17 @@ public class Plate : MonoBehaviour,
             summonClone.transform.localPosition = Vector3.zero;  // 필요한 경우 위치 초기화
 
             // 클론의 이미지 투명도 설정 (완전히 투명하게)
-            if (summonClone.image != null)
+            if (summonClone.getImage() != null)
             {
-                Color cloneColor = summonClone.image.color;
+                Color cloneColor = summonClone.getImage().color;
                 cloneColor.a = 0.0f;  // 클론의 알파 값을 0으로 설정하여 투명하게 만듦
-                summonClone.image.color = cloneColor;
+                summonClone.getImage().color = cloneColor;
             }
 
             // 플레이트의 summonImg에 소환수의 이미지 설정
-            if (summonImg != null && summonClone.image != null && summonClone.image.sprite != null)
+            if (summonImg != null && summonClone.getImage() != null && summonClone.getImage().sprite != null)
             {
-                summonImg.sprite = summonClone.image.sprite; // summonImg에 소환수 이미지 설정
+                summonImg.sprite = summonClone.getImage().sprite; // summonImg에 소환수 이미지 설정
 
                 // summonImg의 투명도를 1로 설정하여 완전히 보이게
                 Color plateColor = summonImg.color;
@@ -135,7 +136,9 @@ public class Plate : MonoBehaviour,
        
         //타겟공격을 위한 마우스 효과
         if (isInSummon && battleController.getIsAttaking()){ //공격중일때
-            if (battleController.getNowSpecialAttackInfo().getAttackInfoStrategy().getStatusType() == StatusType.Heal)//힐이면서 아군플레이트만 강조
+            if (battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Heal
+                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Upgrade
+                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Shield)//힐이면서 아군플레이트만 강조
             { //힐일때
                 if (IsPlayerPlate())
                 {
@@ -208,7 +211,9 @@ public class Plate : MonoBehaviour,
         if (battleController.getIsAttaking() && isInSummon && battleController)
         {
             //힐일때
-            if (battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Heal) //힐이 아니면 적 플레이트
+            if (battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Heal
+                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Upgrade
+                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Shield) //힐, 업그레이드, 쉴드
             {
                 if (IsPlayerPlate())
                 {
