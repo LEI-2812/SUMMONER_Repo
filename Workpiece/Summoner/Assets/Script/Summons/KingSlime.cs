@@ -6,18 +6,23 @@ public class KingSlime : Summon
 {
     private void Awake()
     {
+        summonInitialize();
+    }
+
+    public override void summonInitialize()
+    {
         summonName = "KingSlime"; //이름 슬라임
         maxHP = 250; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
         attackPower = 50; //일반공격
         heavyAttakPower = 65;
-        summonRank = SummonRank.Special; // 특급 소환수
+        summonRank = SummonRank.Special; // 특급 적 몬스터
 
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] { 
+        specialAttackStrategies = new IAttackStrategy[] {
             new AttackAllEnemiesStrategy(StatusType.None, 35, 1),//전체공격
-            new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//쉴드
+            new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//쉴드 
     }
 
 

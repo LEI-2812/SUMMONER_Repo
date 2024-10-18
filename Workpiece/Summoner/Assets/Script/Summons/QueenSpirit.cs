@@ -7,8 +7,8 @@ public class QueenSpirit : Summon
 
     private void Awake()
     {
-        summonName = "QueenSpirit"; //이름 슬라임
-        maxHP = 400; //최대체력 200
+        summonName = "QueenSpirit"; //이름 정령여왕
+        maxHP = 400; //최대체력 400
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
         attackPower = 100; //일반공격
         heavyAttakPower = 140;

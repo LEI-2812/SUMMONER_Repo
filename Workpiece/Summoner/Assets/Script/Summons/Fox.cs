@@ -5,13 +5,20 @@ using UnityEngine;
 public class Fox : Summon
 {
 
+
     private void Awake()
     {
-        summonName = "Fox"; //이름 슬라임
+        summonInitialize();
+
+    }
+
+    public override void summonInitialize()
+    {
+        summonName = "Fox"; //이름 Fox
         maxHP = 200; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
         attackPower = 15; //일반공격
-        summonRank = SummonRank.Low; // 특급 소환수
+        summonRank = SummonRank.Low; // 하급 소환수
 
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);

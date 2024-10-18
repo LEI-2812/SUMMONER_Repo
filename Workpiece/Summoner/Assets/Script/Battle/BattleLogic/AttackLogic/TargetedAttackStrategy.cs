@@ -20,7 +20,7 @@ public class TargetedAttackStrategy : IAttackStrategy
     }
     public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int Arrayindex)
     {
-        Summon target = targetPlates[selectedPlateIndex].getSummon();
+        Summon target = targetPlates[selectedPlateIndex].getCurrentSummon();
 
         if (target != null)
         {

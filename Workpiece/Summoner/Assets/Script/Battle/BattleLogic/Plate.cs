@@ -10,11 +10,11 @@ public class Plate : MonoBehaviour,
     IPointerClickHandler //플레이트 클릭시 상태창 
 {
     //plate를 프리팹시켜서 넣을것.
-    public bool isInSummon = false; // 현재 소환수가 있는지 여부
-    public Summon currentSummon;   // 플레이트 위에 있는 소환수
-    public GameObject statePanel;  // 상태 패널 (On/Off)
-    public StatePanel onMousePlateScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
-    public Image summonImg;
+    private bool isInSummon = false; // 현재 소환수가 있는지 여부
+    private Summon currentSummon;   // 플레이트 위에 있는 소환수
+    [SerializeField]private GameObject statePanel;  // 상태 패널 (On/Off)
+    [SerializeField] private StatePanel onMousePlateScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
+    [SerializeField] private Image summonImg;
 
     private Image plateImage; // 자기 자신의 Image 컴포넌트
     private Color originalColor;
@@ -278,31 +278,36 @@ public class Plate : MonoBehaviour,
     }
 
 
-    public Summon getSummon() //플레이트의 소환수를 반환
+    public Summon getCurrentSummon() //플레이트의 소환수를 반환
     {
         return currentSummon;
     }
 
-    public void ResetAllPlatesState()
+    public bool getIsInSummon()
     {
-        // 아군 플레이트의 상태 복원
-        foreach (var plate in battleController.GetPlateController().getPlayerPlates())
-        {
-            if (plate.currentSummon != null)
-            {
-                plate.SetSummonImageTransparency(1.0f); // 투명도 복원
-                plate.Unhighlight(); // 강조 해제
-            }
-        }
-
-        // 적 플레이트의 상태 복원
-        foreach (var plate in battleController.GetPlateController().getEnermyPlates())
-        {
-            if (plate.currentSummon != null)
-            {
-                plate.SetSummonImageTransparency(1.0f); // 투명도 복원
-                plate.Unhighlight(); // 강조 해제
-            }
-        }
+        return isInSummon;
     }
+
+    //public void ResetAllPlatesState()
+    //{
+    //    // 아군 플레이트의 상태 복원
+    //    foreach (var plate in battleController.GetPlateController().getPlayerPlates())
+    //    {
+    //        if (plate.currentSummon != null)
+    //        {
+    //            plate.SetSummonImageTransparency(1.0f); // 투명도 복원
+    //            plate.Unhighlight(); // 강조 해제
+    //        }
+    //    }
+
+    //    // 적 플레이트의 상태 복원
+    //    foreach (var plate in battleController.GetPlateController().getEnermyPlates())
+    //    {
+    //        if (plate.currentSummon != null)
+    //        {
+    //            plate.SetSummonImageTransparency(1.0f); // 투명도 복원
+    //            plate.Unhighlight(); // 강조 해제
+    //        }
+    //    }
+    //}
 }

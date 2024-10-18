@@ -14,12 +14,9 @@ public class TurnController : MonoBehaviour
     private int turnCount;
 
     [SerializeField] private TextMeshProUGUI turnCountText;
-
-    private BattleController battleController;
                             
     void Start()
     {
-        battleController = GetComponent<BattleController>();
         currentTurn = Turn.PlayerTurn; // 첫 번째 턴은 플레이어 턴으로 시작
         turnCount = 1;
         UpdateTurnCountUI();
@@ -32,7 +29,7 @@ public class TurnController : MonoBehaviour
         {
             player.startTurn();
 
-            foreach (var summon in battleController.getEnermySummons()) //플레이어 턴 시작시 적 플레이트의 상태이상 데미지 적용
+            foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons()) //플레이어 턴 시작시 적 플레이트의 상태이상 데미지 적용
             {
                 summon.UpdateStatusEffectsAndCooldowns(); // 상태이상 업데이트
                 summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
@@ -43,7 +40,7 @@ public class TurnController : MonoBehaviour
             enermy.startTurn();
 
             // 적 턴 종료 시, 적 소환수의 상태이상 및 쿨타임 업데이트
-            foreach (var summon in battleController.getPlayerSummons())
+            foreach (var summon in player.getPlateController().getPlayerSummons())
             {
                 summon.UpdateStatusEffectsAndCooldowns(); // 상태이상 업데이트
                 summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소

@@ -19,7 +19,7 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
     }
     public void Attack(Summon attacker, List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)
     {
-        Summon closestEnemySummon = GetClosestEnemySummon(selectedPlateIndex, enemyPlates);
+        Summon closestEnemySummon = GetClosestEnemySummon(enemyPlates);
 
         if (closestEnemySummon != null)
         {
@@ -32,11 +32,11 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
         }
     }
 
-    private Summon GetClosestEnemySummon(int playerPlateIndex, List<Plate> enemyPlates)
+    private Summon GetClosestEnemySummon(List<Plate> enemyPlates)
     {
         for (int i = 0; i < enemyPlates.Count; i++)
         {
-            Summon enemySummon = enemyPlates[i].getSummon();
+            Summon enemySummon = enemyPlates[i].getCurrentSummon();
             if (enemySummon != null)
             {
                 return enemySummon; // 첫 번째로 존재하는 소환수를 바로 반환

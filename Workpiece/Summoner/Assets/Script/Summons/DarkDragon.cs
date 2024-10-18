@@ -7,7 +7,7 @@ public class DarkDragon : Summon
 
     private void Awake()
     {
-        summonName = "QueenSpirit"; //이름 슬라임
+        summonName = "DarkDragon"; //이름 다크 드래곤
         maxHP = 3000; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
         attackPower = 400; //일반공격
