@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6357672399787545836
+--- !u!1 &3024428123702163846
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,26 +8,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1632615220590149883}
-  - component: {fileID: 2986970121398512521}
-  - component: {fileID: 2873855588243872689}
-  - component: {fileID: 195944174135075105}
+  - component: {fileID: 5473196907121688026}
+  - component: {fileID: 6070155094882544941}
+  - component: {fileID: 4325176343875209551}
+  - component: {fileID: 4012839161702128938}
   m_Layer: 0
-  m_Name: Cat
+  m_Name: Grass Spirit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1632615220590149883
+--- !u!224 &5473196907121688026
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6357672399787545836}
+  m_GameObject: {fileID: 3024428123702163846}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5.1777606}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -35,54 +35,54 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1018.04016, y: 514.5198}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2986970121398512521
+--- !u!114 &6070155094882544941
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6357672399787545836}
+  m_GameObject: {fileID: 3024428123702163846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f541ba20dca837747b63f2a30d68a83a, type: 3}
+  m_Script: {fileID: 11500000, guid: cfcafde00a02c8b4aaed2359ada94d95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 195944174135075105}
+  image: {fileID: 4012839161702128938}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
   nowHP: 0
---- !u!222 &2873855588243872689
+--- !u!222 &4325176343875209551
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6357672399787545836}
+  m_GameObject: {fileID: 3024428123702163846}
   m_CullTransparentMesh: 1
---- !u!114 &195944174135075105
+--- !u!114 &4012839161702128938
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6357672399787545836}
+  m_GameObject: {fileID: 3024428123702163846}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5529844, g: 0.754717, b: 0.6499957, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1355712335, guid: efa15268afc86d548a63723fa05e5cc3, type: 3}
+  m_Sprite: {fileID: -879384537, guid: 6b7a6fa8bf56ddd48877bcac27fd1d1a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

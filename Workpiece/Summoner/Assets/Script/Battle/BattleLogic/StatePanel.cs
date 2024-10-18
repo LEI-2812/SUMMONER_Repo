@@ -20,9 +20,9 @@ public class StatePanel: MonoBehaviour
         this.stateSummon = stateSummon;
 
         // 소환수의 이미지를 패널에 설정
-        if (summonImage != null && stateSummon != null && stateSummon.image != null)
+        if (summonImage != null && stateSummon != null && stateSummon.getImage() != null)
         {
-            summonImage.sprite = stateSummon.image.sprite; // 소환수 이미지를 패널로 전달
+            summonImage.sprite = stateSummon.getImage().sprite; // 소환수 이미지를 패널로 전달
         }
 
         // 소환수의 HP를 패널에 표시

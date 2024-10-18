@@ -12,7 +12,7 @@ public enum SummonRank
 
 public class Summon : MonoBehaviour
 {
-    public Image image; //이미지
+    [SerializeField] private Image image; //이미지
     protected string summonName; //이름
     public Sprite normalAttackSprite; // 일반 공격 스프라이트
     public Sprite specialAttackSprite; // 특수 공격 스프라이트
@@ -32,11 +32,12 @@ public class Summon : MonoBehaviour
 
     
 
-    private void Start()
+    private void Awake()
     {
         image = GetComponent<Image>();
         nowHP = maxHP;
     }
+
 
 
     public void normalAttack(List<Plate> enemyPlates, int selectedPlateIndex)
@@ -423,6 +424,15 @@ public class Summon : MonoBehaviour
     public void setSummonRank(SummonRank rank)
     {
         this.summonRank = rank;
+    }
+
+    public void setImage(Image image)
+    {
+        this.image = image;
+    }
+    public Image getImage()
+    {
+        return image;
     }
 
     public List<StatusType> getAllStatusTypes()
