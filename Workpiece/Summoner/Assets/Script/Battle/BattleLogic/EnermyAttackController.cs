@@ -150,6 +150,10 @@ public class EnermyAttackController : MonoBehaviour
         }
     }
 
+    public PlateController getPlateController()
+    {
+        return plateController;
+    }
 
 
 }

@@ -48,7 +48,7 @@ public class Player : Character
 
     private void Update()
     {
-        if(battleController.IsPlayerPlateClear() && mana <= 0)
+        if(plateController.IsPlayerPlateClear() && mana <= 0)
         {
             battleAlert.failAlert();
         }
@@ -87,7 +87,7 @@ public class Player : Character
         {
             for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
             {
-                if (!plateController.getPlayerPlates()[i].isInSummon)
+                if (!plateController.getPlayerPlates()[i].getIsInSummon())
                 {
                     Debug.Log(i + "번째 플레이트에 소환 예정");
                     summonController.StartSummon(i, false);
@@ -156,7 +156,7 @@ public class Player : Character
             Debug.Log("선택된 plate에 소환수가 없습니다.");
         }
 
-        if (battleController.IsEnermyPlateClear())
+        if (plateController.IsEnermyPlateClear())
         {
             Debug.Log("승리!");
             battleAlert.clearAlert();
@@ -210,7 +210,7 @@ public class Player : Character
         }
 
 
-        if (battleController.IsEnermyPlateClear())
+        if (plateController.IsEnermyPlateClear())
         {
             Debug.Log("승리!");
             battleAlert.clearAlert();
@@ -341,5 +341,10 @@ public class Player : Character
     public void setSelectedPlateIndex(int sel)
     {
         this.selectedPlateIndex = sel;
+    }
+
+    public PlateController getPlateController()
+    {
+        return plateController;
     }
 }

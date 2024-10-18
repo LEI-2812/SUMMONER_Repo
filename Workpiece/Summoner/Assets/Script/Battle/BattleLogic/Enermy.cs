@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class Enermy : Character
 {
-    [Header("적 플레이트")]
-    [SerializeField] private List<Plate> enermyPlates; // 적이 사용할 플레이트 목록
+    private List<Plate> enermyPlates; // 적이 사용할 플레이트 목록
 
     [Header("컨트롤러")]
     [SerializeField] private TurnController turnController;
     [SerializeField] private EnermyAttackController enermyAttackController;
+
+    private void Start()
+    {
+        enermyPlates = enermyAttackController.getPlateController().getEnermyPlates(); //적 플레이트를 가져온다.
+    }
 
     public override void startTurn()
     {
@@ -23,9 +27,9 @@ public class Enermy : Character
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            if (enermyPlates[i].getSummon() != null && !enermyPlates[i].getSummon().IsCursed())
+            if (enermyPlates[i].getCurrentSummon() != null && !enermyPlates[i].getCurrentSummon().IsCursed())
             {
-                enermyAttackController.EnermyAttackStart(enermyPlates[i].getSummon());
+                enermyAttackController.EnermyAttackStart(enermyPlates[i].getCurrentSummon());
             }
         }
 
@@ -38,5 +42,11 @@ public class Enermy : Character
     {
         Debug.Log("적 턴 종료");
         turnController.EndTurn();
+    }
+
+
+    public EnermyAttackController getEnermyAttackController()
+    {
+        return enermyAttackController;
     }
 }

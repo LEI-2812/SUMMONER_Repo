@@ -24,7 +24,7 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
     {
         foreach (var plate in enemyPlates)
         {
-            Summon target = plate.getSummon();
+            Summon target = plate.getCurrentSummon();
             if (target != null)
             {
                 switch (statusType)

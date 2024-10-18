@@ -12,8 +12,6 @@ public class BattleController : MonoBehaviour
 
     private bool isAttacking = false; //공격중인이 판별
 
-    [Header("(외부 오브젝트)컨트롤러")]
-    [SerializeField] private SummonController summonController;
     private PlateController plateController;
 
     Summon attakingSummon;
@@ -169,80 +167,12 @@ public class BattleController : MonoBehaviour
 
 
 
-
-
-
-
-
-
-
-
     public void ResetBattleSummonAndAttackInfo()
     {
         isAttacking = false;
         attakingSummon = null;
         SpecialAttackInfo = null;
         plateController.ResetAllPlateHighlight();
-    }
-
-
-    //적 플레이트에 소환수가 존재하는지
-    public bool IsEnermyPlateClear()
-    {
-        foreach(Plate plate in plateController.getPlayerPlates()) //플레이트를 순환
-        {
-            Summon summon = plate.getSummon(); //플레이트마다 소환수를 가져온다
-            if(summon != null) //만약 소환수가 하나라도 있다면 true를 반환
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public bool IsPlayerPlateClear()
-    {
-        foreach (Plate plate in plateController.getPlayerPlates()) //플레이트를 순환
-        {
-            Summon summon = plate.getSummon(); //플레이트마다 소환수를 가져온다
-            if (summon != null) //만약 소환수가 하나라도 있다면 true를 반환
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    // 플레이어의 플레이트에 있는 모든 소환수들을 반환하는 메소드
-    public List<Summon> getPlayerSummons()
-    {
-        List<Summon> playerSummons = new List<Summon>();
-        foreach (Plate plate in plateController.getPlayerPlates())
-        {
-            Summon summon = plate.getSummon();
-            if (summon != null)
-            {
-                playerSummons.Add(summon);
-            }
-        }
-        return playerSummons;
-    }
-
-    // 적의 플레이트에 있는 모든 소환수들을 반환하는 메소드
-    public List<Summon> getEnermySummons()
-    {
-        List<Summon> enermySummons = new List<Summon>();
-        foreach (Plate plate in plateController.getEnermyPlates())
-        {
-            Summon summon = plate.getSummon();
-            if (summon != null)
-            {
-                enermySummons.Add(summon);
-            }
-        }
-        return enermySummons;
     }
 
 

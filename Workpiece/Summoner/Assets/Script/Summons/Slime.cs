@@ -6,11 +6,6 @@ public class Slime : Summon
 {
     private void Awake()
     {
-        summonInitialize();
-    }
-
-    public override void summonInitialize()
-    {
         summonName = "Slime"; //이름 슬라임
         maxHP = 200; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
@@ -18,8 +13,8 @@ public class Slime : Summon
         summonRank = SummonRank.Normal; // 일반 소환수
         heavyAttakPower = 40; //강공격력이 없음
         // 일반 공격: 가장 가까운 적 공격
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1);
-        specialAttackStrategies = new IAttackStrategy[]{ new TargetedAttackStrategy(StatusType.Shield, 50, 2)};
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1);
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Shield, 50, 2) };
     }
 
 

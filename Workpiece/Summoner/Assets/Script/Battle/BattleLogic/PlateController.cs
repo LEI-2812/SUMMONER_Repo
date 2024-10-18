@@ -16,16 +16,74 @@ public class PlateController : MonoBehaviour
     {
         InitializePlates();
     }
-    
 
-    
-   public void DownTransparencyForWhoPlate(bool isPlayer)
+    // 플레이어의 플레이트에 있는 모든 소환수들을 반환하는 메소드
+    public List<Summon> getPlayerSummons()
+    {
+        List<Summon> playerSummons = new List<Summon>();
+        foreach (Plate plate in playerPlates)
+        {
+            Summon summon = plate.getCurrentSummon();
+            if (summon != null)
+            {
+                playerSummons.Add(summon);
+            }
+        }
+        return playerSummons;
+    }
+
+    // 적의 플레이트에 있는 모든 소환수들을 반환하는 메소드
+    public List<Summon> getEnermySummons()
+    {
+        List<Summon> enermySummons = new List<Summon>();
+        foreach (Plate plate in enermyPlates)
+        {
+            Summon summon = plate.getCurrentSummon();
+            if (summon != null)
+            {
+                enermySummons.Add(summon);
+            }
+        }
+        return enermySummons;
+    }
+
+    //적 플레이트에 소환수가 존재하는지
+    public bool IsEnermyPlateClear()
+    {
+        foreach (Plate plate in playerPlates) //플레이트를 순환
+        {
+            Summon summon = plate.getCurrentSummon(); //플레이트마다 소환수를 가져온다
+            if (summon != null) //만약 소환수가 하나라도 있다면 true를 반환
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool IsPlayerPlateClear()
+    {
+        foreach (Plate plate in enermyPlates) //플레이트를 순환
+        {
+            Summon summon = plate.getCurrentSummon(); //플레이트마다 소환수를 가져온다
+            if (summon != null) //만약 소환수가 하나라도 있다면 true를 반환
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public void DownTransparencyForWhoPlate(bool isPlayer)
    {
         if (isPlayer)
         {
             for (int i = 0; i < playerPlates.Count; i++)
             {
-                if (playerPlates[i].currentSummon != null)
+                if (playerPlates[i].getCurrentSummon() != null)
                 {
                     playerPlates[i].SetSummonImageTransparency(0.5f);
                 }
@@ -35,7 +93,7 @@ public class PlateController : MonoBehaviour
         {
             for (int i = 0; i < enermyPlates.Count; i++)
             {
-                if (enermyPlates[i].currentSummon != null)
+                if (enermyPlates[i].getCurrentSummon() != null)
                 {
                     enermyPlates[i].SetSummonImageTransparency(0.5f);
                 }
@@ -54,7 +112,7 @@ public class PlateController : MonoBehaviour
         // 플레이어 플레이트만 강조
         for (int i = 0; i < playerPlates.Count; i++)
         {
-            if (playerPlates[i].currentSummon != null)
+            if (playerPlates[i].getCurrentSummon() != null)
             {
                 playerPlates[i].Highlight(); // 노란색으로 강조
                 playerPlates[i].SetSummonImageTransparency(0.5f); // 소환수는 투명도 조절
@@ -70,7 +128,7 @@ public class PlateController : MonoBehaviour
     {
         for (int i = 0; i < playerPlates.Count; i++)
         {
-            if (playerPlates[i].currentSummon != null)
+            if (playerPlates[i].getCurrentSummon() != null)
             {
                 playerPlates[i].Unhighlight(); // 강조 해제
                 playerPlates[i].SetSummonImageTransparency(1.0f); // 투명도 기본값으로 되돌리기
@@ -105,7 +163,7 @@ public class PlateController : MonoBehaviour
         // 플레이어 플레이트만 강조
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            if (enermyPlates[i].currentSummon != null)
+            if (enermyPlates[i].getCurrentSummon() != null)
             {
                 enermyPlates[i].Highlight(); // 노란색으로 강조
                 enermyPlates[i].SetSummonImageTransparency(0.5f); // 소환수는 투명도 조절
@@ -121,7 +179,7 @@ public class PlateController : MonoBehaviour
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            if (enermyPlates[i].currentSummon != null)
+            if (enermyPlates[i].getCurrentSummon() != null)
             {
                 enermyPlates[i].Unhighlight(); // 강조 해제
                 enermyPlates[i].SetSummonImageTransparency(1.0f); // 투명도 기본값으로 되돌리기
@@ -176,7 +234,7 @@ public class PlateController : MonoBehaviour
     {
         for(int i = 0; i < playerPlates.Count; i++)
         {
-            if (playerPlates[i].currentSummon != null)
+            if (playerPlates[i].getCurrentSummon() != null)
             {
                 return i;
             }

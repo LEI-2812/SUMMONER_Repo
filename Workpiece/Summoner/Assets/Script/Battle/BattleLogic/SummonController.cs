@@ -109,7 +109,7 @@ public class SummonController : MonoBehaviour
     //차례로 재소환 로직
     public bool StartResummon()
     {
-        if (plateController.getPlayerPlates()[0].currentSummon == null && plateController.getPlayerPlates()[1].currentSummon == null && plateController.getPlayerPlates()[2].currentSummon == null)
+        if (plateController.getPlayerPlates()[0].getCurrentSummon() == null && plateController.getPlayerPlates()[1].getCurrentSummon() == null && plateController.getPlayerPlates()[2].getCurrentSummon() == null)
         {
             Debug.Log("플레이트에 소환수가 없습니다.");
             return false;
@@ -272,7 +272,7 @@ public class SummonController : MonoBehaviour
         // 소환수가 있는 플레이트만 강조 및 투명도 되돌리기
         for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
         {
-            if (plateController.getPlayerPlates()[i].isInSummon)
+            if (plateController.getPlayerPlates()[i].getIsInSummon())
             {
                 plateController.getPlayerPlates()[i].Unhighlight(); //색상 되돌리기
                 plateController.getPlayerPlates()[i].SetSummonImageTransparency(1.0f); //투명도 되돌리기
@@ -280,12 +280,6 @@ public class SummonController : MonoBehaviour
         }
         takeSummonPanel.SetActive(false);
         reTakeSummonPanel.SetActive(false);
-    }
-
-    // 선택된 소환수 반환
-    public Summon GetSelectedSummon()
-    {
-        return selectedSummon;
     }
 
     // 어둡게 배경 활성화
