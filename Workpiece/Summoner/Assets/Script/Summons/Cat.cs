@@ -16,6 +16,7 @@ public class Cat : Summon
         nowHP = maxHP;
         attackPower = 15; //일반공격
         summonRank = SummonRank.Low; // 하급 소환수
+        summonType = SummonType.Cat;
         heavyAttakPower = 20;
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower ,1);

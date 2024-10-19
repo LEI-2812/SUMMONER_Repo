@@ -18,39 +18,36 @@ public struct AttackProbability
 
 public class EnermyAlgorithm : MonoBehaviour
 {
-    private PlateController plateController;
-    private List<Plate> playerPlates;
-    private PlayerAttackPrediction playerAttackPrediction;
-    Dictionary<int, AttackProbability> attackProbabilityMap = new Dictionary<int, AttackProbability>();
+    [SerializeField] private PlateController plateController;
+    [SerializeField] private PlayerAttackPrediction playerAttackPrediction;
+     private List<AttackPrediction> playerAttackPredictionsList;
 
-    private void Awake()
-    {
-        plateController = GetComponent<PlateController>();
-        playerAttackPrediction = GetComponent<PlayerAttackPrediction>();
-    }
 
     // 알고리즘 순서대로 실행
     public void ExecuteEnermyAlgorithm(Summon attackingSummon, int targetIndex)
     {
-       
+
         // 1. 소환수의 상태 체크
-        playerPlates = CheckPlayerPlateState(); // 현재 playerPlates들
+        List<Plate> playerPlates = CheckPlayerPlateState(); // 현재 playerPlates들
 
         // 2. 몬스터의 상태 체크 (새 리스트에 상태 조정된 enermyPlates 추가)
         List<Plate> applyEnermyPlates = GetApplyStatusEnermyPlates();
 
-        for (int i = 0; i < playerPlates.Count; i++) //플레이어 플레이트 수만큼 검사
-        {
-            // 3. 소환수의 공격 예측 알고리즘 실행 (특수공격 확률을 받음)
-            AttackProbability defaultProbability = new AttackProbability(0.5f, 0.5f); //기본 50% 50%
-            attackProbabilityMap[targetIndex] = defaultProbability; //플레이어 플레이트의 인덱스와 키값을 일치하도록
+        //3. 소환수의 예측공격 리스트를 받아온다.
+        playerAttackPredictionsList = playerAttackPrediction.getPlayerAttackPredictionList(playerPlates, applyEnermyPlates);
 
-            // 3.2 PlayerAttackPrediction 클래스에서 재계산된 값을 가져와서 업데이트
-            //AttackProbability recalculatedProbability = playerAttackPrediction.ExecutePlayerAttackPrediction(playerPlates, applyEnermyPlates, defaultProbability);
-            //attackProbabilityMap[targetIndex] = recalculatedProbability;
-        }
         // 4. 몬스터의 공격 알고리즘 실행
+        //추후 추가예정
     }
+
+
+
+
+
+
+
+
+
 
     // 1. 현재 playerPlate들을 공격이나 데미지 적용이 안되게 새 리스트로 가져온다.
     public List<Plate> CheckPlayerPlateState()
