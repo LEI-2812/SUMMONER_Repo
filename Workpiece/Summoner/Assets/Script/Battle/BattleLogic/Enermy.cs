@@ -25,7 +25,7 @@ public class Enermy : Character
 
     public override void takeAction() //여기에 AI로직 작성
     {
-        for (int i = 0; i < enermyPlates.Count; i++)
+        for (int i = 0; i < enermyPlates.Count; i++) //몬스터 순서대로 공격
         {
             if (enermyPlates[i].getCurrentSummon() != null && !enermyPlates[i].getCurrentSummon().IsCursed())
             {

@@ -57,6 +57,18 @@ public class TargetedAttackStrategy : IAttackStrategy
                     target = attacker; //자기자신이 대상
                     target.setOnceInvincibility(true); //1번 무적 활성화
                     break;
+                case StatusType.Curse:
+                    double curseAttackPower = target.getAttackPower() - (target.getAttackPower() * 0.2); //대상 공격력 20% 감소
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) 강력하게 공격합니다.");
+                    StatusEffect curseEffect = new StatusEffect(StatusType.Upgrade, statusTime, curseAttackPower);
+                    target.ApplyStatusEffect(curseEffect);
+                    target.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // 강력한 공격
+                    break;
+                case StatusType.Stun:
+                    StatusEffect stunEffect = new StatusEffect(StatusType.Stun, statusTime);
+                    target.ApplyStatusEffect(stunEffect);
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 스턴을 적용했습니다.");
+                    break;
             }
         }
         else

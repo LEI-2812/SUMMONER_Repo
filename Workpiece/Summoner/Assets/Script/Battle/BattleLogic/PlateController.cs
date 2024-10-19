@@ -76,6 +76,29 @@ public class PlateController : MonoBehaviour
         return true;
     }
 
+    // 적 소환수의 빈 플레이트를 앞당기는 로직
+    public void CompactEnermyPlates()
+    {
+        int nextAvailableIndex = 0; // 채워야 할 인덱스 위치
+
+        for (int i = 0; i < enermyPlates.Count; i++)
+        {
+            Summon summon = enermyPlates[i].getCurrentSummon();
+            if (summon != null)
+            {
+                // 만약 현재 인덱스와 nextAvailableIndex가 다르면 소환수를 앞으로 옮긴다.
+                if (i != nextAvailableIndex)
+                {
+                    // 현재 소환수를 nextAvailableIndex 위치로 직접 이동
+                    enermyPlates[nextAvailableIndex].DirectMoveSummon(summon);
+                    enermyPlates[i].RemoveSummon(); // 원래 위치의 소환수를 제거
+                }
+                nextAvailableIndex++; // 다음 위치로 이동
+            }
+        }
+    }
+
+
 
     public void DownTransparencyForWhoPlate(bool isPlayer)
    {
@@ -230,17 +253,18 @@ public class PlateController : MonoBehaviour
         }
     }
 
-    public int getClosestPlayerPlatesIndex() //플레이어 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
+    public int getClosestPlayerPlatesIndex(Summon attackingSummon) //플레이어 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
     {
-        for(int i = 0; i < playerPlates.Count; i++)
+        for (int i = 0; i < playerPlates.Count; i++)
         {
-            if (playerPlates[i].getCurrentSummon() != null)
+            Summon currentSummon = playerPlates[i].getCurrentSummon();
+            if (currentSummon != null && currentSummon != attackingSummon) // 현재 소환수가 존재하고, 공격하는 소환수와 같지 않은 경우
             {
                 return i;
             }
         }
 
-        return -1;
+        return -1; // 공격할 소환수가 없으면 -1 반환
     }
 
 
@@ -248,7 +272,7 @@ public class PlateController : MonoBehaviour
 
 
 
-    public int GetPlateIndex(Plate selectedPlate)
+    public int getPlateIndex(Plate selectedPlate)
     {
         return plates.IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
     }

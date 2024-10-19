@@ -24,7 +24,7 @@ public class Summon : MonoBehaviour
     protected double shield = 0; //쉴드량
     protected bool onceInvincibility = false;
 
-    public bool CanAttack { get; set; } = true; // 상태이상중 공격가능 여부
+    public bool isAttack = true; // 상태이상중 공격가능 여부
 
     private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //상태이상
     protected IAttackStrategy attackStrategy;
@@ -246,10 +246,19 @@ public class Summon : MonoBehaviour
 
     public void CheckCanAttack()
     {
-        if (!CanAttack)
+        if (!isAttack)
         {
             Debug.Log($"{summonName}은(는) 현재 공격할 수 없습니다.");
         }
+    }
+
+    public bool getIsAttack()
+    {
+        return isAttack;
+    }
+    public void setIsAttack(bool isAttack)
+    {
+        this.isAttack = isAttack;
     }
 
     public void UpgradeAttackPower(double multiplier)
@@ -488,7 +497,7 @@ public class Summon : MonoBehaviour
     }
 
 
-    //사용가능한 
+    //사용가능한 특수공격 반환
     public List<int> getAvailableSpecialAttack()
     {
         // 쿨타임이 없는 특수 스킬 목록을 가져옴
@@ -503,7 +512,22 @@ public class Summon : MonoBehaviour
                 availableSpecialAttacks.Add(i);
             }
         }
-        
         return availableSpecialAttacks;
+    }
+
+    public IAttackStrategy[] getAvailableSpecialAttacks()
+    {
+        List<IAttackStrategy> availableSpecialAttacks = new List<IAttackStrategy>();
+
+        // 특수 공격 중 쿨타임이 없는 공격을 필터링하여 추가
+        foreach (IAttackStrategy specialAttack in specialAttackStrategies)
+        {
+            if (specialAttack != null && specialAttack.getCurrentCooldown() == 0)
+            {
+                availableSpecialAttacks.Add(specialAttack);
+            }
+        }
+
+        return availableSpecialAttacks.ToArray();
     }
 }

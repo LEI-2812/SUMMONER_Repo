@@ -163,6 +163,7 @@ public class Player : Character
             Debug.Log("½Â¸®!");
             battleAlert.clearAlert();
         }
+        plateController.CompactEnermyPlates();
     }
 
     public void OnSpecialAttackBtnClick() //Æ¯¼ö°ø°Ý
@@ -217,6 +218,8 @@ public class Player : Character
             Debug.Log("½Â¸®!");
             battleAlert.clearAlert();
         }
+
+        plateController.CompactEnermyPlates();
 
     }
 
