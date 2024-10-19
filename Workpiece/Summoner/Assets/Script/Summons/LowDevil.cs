@@ -19,7 +19,7 @@ public class LowDevil : Summon
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
         // 특수 공격: 타겟 지정 공격
         specialAttackStrategies = new IAttackStrategy[] {
-            new TargetedAttackStrategy(StatusType.Curse, 0.1 ,4,1),//저주, 공격력의 10% 감소, 쿨타임 4턴, 적용 1턴
+            new TargetedAttackStrategy(StatusType.Curse, 0.2 ,4,1),//저주, 공격력의 20% 감소, 쿨타임 4턴, 적용 1턴
             new TargetedAttackStrategy(StatusType.OnceInvincibility,0,2) //1번 무적, 쿨타임 2턴
         };
     }

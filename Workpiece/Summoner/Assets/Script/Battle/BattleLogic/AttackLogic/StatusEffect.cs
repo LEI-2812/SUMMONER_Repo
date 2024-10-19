@@ -39,8 +39,8 @@ public class StatusEffect
     {
         switch (statusType)
         {
-            case StatusType.Stun: //공격을 막음
-                target.CanAttack = false;
+            case StatusType.Stun: //공격 불가능
+                target.setIsAttack(false);
                 break;
 
             case StatusType.Poison: // 중독

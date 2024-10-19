@@ -8,6 +8,8 @@ public class EnermyAttackController : MonoBehaviour
     [Header("컨트롤러")]
     [SerializeField] private BattleController battleController;
     [SerializeField] private PlateController plateController;
+
+    double normalAttackValue = 50f; double specialAttackValue = 50f;
     private enum AttackType{ NormalAttack, SpecialAttack}; //특수스킬을 사용할지 일반공격을 사용할지를 위한 Enum
     
     public void EnermyAttackStart(Summon attackingSummon)
@@ -18,23 +20,29 @@ public class EnermyAttackController : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < 2; i++) //연속공격 가능성
+        for (int i = 0; i < plateController.getPlayerPlates().Count; i++) //플레이어 플레이트를 순차적으로 공격
         {
-            EnerymyAttackLogic(attackingSummon); //최소1번은 실행
+            Plate targetPlate = plateController.getPlayerPlates()[i];
+            Summon target = targetPlate.getCurrentSummon();
 
-            if (continuesAttackByRank(attackingSummon)) //매개변수로 보낸 소환수의 등급에따라 연속공격이 가능하면 기존 로직 최대 3번 수행
+            for (int ii = 0; ii < 2; ii++) //연속공격 가능성
             {
-                Debug.Log("연속공격 발동!");
-                continue; //계속실행
-            }
-            else //연속공격가능성이 false면 바로 종료
-            {
-                return;
+                EnerymyAttackLogic(attackingSummon, target); //최소1번은 실행
+
+                if (continuesAttackByRank(attackingSummon)) //매개변수로 보낸 소환수의 등급에따라 연속공격이 가능하면 기존 로직 최대 3번 수행
+                {
+                    Debug.Log("연속공격 발동!");
+                    continue; //계속실행
+                }
+                else //연속공격가능성이 false면 바로 종료
+                {
+                    return;
+                }
             }
         }
     }
 
-    private void EnerymyAttackLogic(Summon attackingSummon)
+    private void EnerymyAttackLogic(Summon attackingSummon, Summon target)
     {
         if (!attackingSummon.IsCooltime()) //쿨타임중인 스킬이 없을경우
         {
@@ -45,7 +53,7 @@ public class EnermyAttackController : MonoBehaviour
                 List<int> availableSpecialAttacks = attackingSummon.getAvailableSpecialAttack();  // 쿨타임이 없는 특수 스킬 목록을 가져옴
                 int selectSpecialAttackIndex = getRandomAvilableSpecialAttackIndex(availableSpecialAttacks); //랜덤의 특수스킬 번호를 가져옴
 
-                int selectedPlateIndex = plateController.getClosestPlayerPlatesIndex(); //임시로 가장 가까운적 공격하게 함. 나중에 수정필요
+                int selectedPlateIndex = plateController.getClosestPlayerPlatesIndex(attackingSummon); //임시로 가장 가까운적 공격하게 함. 나중에 수정필요
 
                 battleController.SpecialAttackLogic(attackingSummon, selectedPlateIndex, selectSpecialAttackIndex); //특수스킬 사용
             }
@@ -64,7 +72,7 @@ public class EnermyAttackController : MonoBehaviour
     //일반 공격
     private void enermyNormalAttackLogic(Summon attackingSummon)
     {
-        int selectAttackIndex = plateController.getClosestPlayerPlatesIndex(); //플레이어 플레이트에서 가장 가까운 소환수의 인덱스를 받아온다.
+        int selectAttackIndex = plateController.getClosestPlayerPlatesIndex(attackingSummon); //플레이어 플레이트에서 가장 가까운 소환수의 인덱스를 받아온다.
         if (selectAttackIndex < 0)
         {
             Debug.Log("공격할 소환수가 없습니다."); return;
@@ -156,4 +164,15 @@ public class EnermyAttackController : MonoBehaviour
     }
 
 
+
+
+
+    public void setNormalAttackValue(float value)
+    {
+        normalAttackValue = value;
+    }
+    public void setSpecialAttackValue(float value)
+    {
+        specialAttackValue = value;
+    }
 }

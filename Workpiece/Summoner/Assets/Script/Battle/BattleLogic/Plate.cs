@@ -11,7 +11,7 @@ public class Plate : MonoBehaviour,
 {
     //plate를 프리팹시켜서 넣을것.
     private bool isInSummon = false; // 현재 소환수가 있는지 여부
-    private Summon currentSummon;   // 플레이트 위에 있는 소환수
+    [SerializeField]private Summon currentSummon;   // 플레이트 위에 있는 소환수
     [SerializeField]private GameObject statePanel;  // 상태 패널 (On/Off)
     [SerializeField] private StatePanel onMousePlateScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
     [SerializeField] private Image summonImg;
@@ -287,7 +287,10 @@ public class Plate : MonoBehaviour,
     {
         return currentSummon;
     }
-
+    public void setCurrentSummon(Summon currentSummon)
+    {
+        this.currentSummon = currentSummon;
+    }
     public bool getIsInSummon()
     {
         return isInSummon;
