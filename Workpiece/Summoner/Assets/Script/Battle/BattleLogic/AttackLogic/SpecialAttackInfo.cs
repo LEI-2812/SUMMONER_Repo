@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AttackType
+{
+    NormalAttack, SpecialAttack
+}
 public class SpecialAttackInfo
 {
     private IAttackStrategy attackStrategy;

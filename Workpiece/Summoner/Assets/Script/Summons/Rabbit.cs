@@ -17,7 +17,7 @@ public class Rabbit : Summon
         nowHP = maxHP;
         attackPower = 20; //일반공격
         summonRank = SummonRank.Medium; // 중급 소환수
-
+        summonType = SummonType.Rabbit;
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접공격
         specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Heal, 0.3, 3) };
     }

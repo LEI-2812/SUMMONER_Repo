@@ -10,6 +10,11 @@ public enum SummonRank
     Normal, Special, Boss //적 소환수
 }
 
+public enum SummonType
+{
+    Cat, Rabbit, Wolf, Eagle, Snake, Fox
+}
+
 public class Summon : MonoBehaviour
 {
     [SerializeField] private Image image; //이미지
@@ -19,6 +24,7 @@ public class Summon : MonoBehaviour
     protected double attackPower; //일반공격
     protected double heavyAttakPower; //강 공격력
     protected SummonRank summonRank; //등급
+    protected SummonType summonType;
     protected double maxHP; //최대체력
     public double nowHP; //현재 체력
     protected double shield = 0; //쉴드량
@@ -260,6 +266,12 @@ public class Summon : MonoBehaviour
     {
         this.isAttack = isAttack;
     }
+
+    public SummonType getSummonType()
+    {
+        return summonType;
+    }
+    
 
     public void UpgradeAttackPower(double multiplier)
     {
@@ -530,4 +542,11 @@ public class Summon : MonoBehaviour
 
         return availableSpecialAttacks.ToArray();
     }
+
+
+    public int getSpecialAttackCount()
+    {
+        return specialAttackStrategies.Length;
+    }
+
 }

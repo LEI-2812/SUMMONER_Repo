@@ -16,6 +16,7 @@ public class Eagle : Summon
         nowHP = maxHP;
         attackPower = 45; //일반공격
         summonRank = SummonRank.High; // 상급 소환수
+        summonType = SummonType.Eagle;
         heavyAttakPower = 30;
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1);
