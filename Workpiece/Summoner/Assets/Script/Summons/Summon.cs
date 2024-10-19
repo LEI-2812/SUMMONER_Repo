@@ -497,7 +497,7 @@ public class Summon : MonoBehaviour
     }
 
 
-    //사용가능한 
+    //사용가능한 특수공격 반환
     public List<int> getAvailableSpecialAttack()
     {
         // 쿨타임이 없는 특수 스킬 목록을 가져옴
@@ -512,7 +512,22 @@ public class Summon : MonoBehaviour
                 availableSpecialAttacks.Add(i);
             }
         }
-        
         return availableSpecialAttacks;
+    }
+
+    public IAttackStrategy[] getAvailableSpecialAttacks()
+    {
+        List<IAttackStrategy> availableSpecialAttacks = new List<IAttackStrategy>();
+
+        // 특수 공격 중 쿨타임이 없는 공격을 필터링하여 추가
+        foreach (IAttackStrategy specialAttack in specialAttackStrategies)
+        {
+            if (specialAttack != null && specialAttack.getCurrentCooldown() == 0)
+            {
+                availableSpecialAttacks.Add(specialAttack);
+            }
+        }
+
+        return availableSpecialAttacks.ToArray();
     }
 }

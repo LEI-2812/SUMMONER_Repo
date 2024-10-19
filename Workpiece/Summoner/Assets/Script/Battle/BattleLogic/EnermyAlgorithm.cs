@@ -2,11 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct AttackProbability
+{
+    public float normalAttackProbability;
+    public float specialAttackProbability;
+
+    // 생성자를 추가하여 초기화할 수 있도록 함
+    public AttackProbability(float normalProb, float specialProb)
+    {
+        normalAttackProbability = normalProb;
+        specialAttackProbability = specialProb;
+    }
+}
+
+
 public class EnermyAlgorithm : MonoBehaviour
 {
     private PlateController plateController;
     private List<Plate> playerPlates;
     private PlayerAttackPrediction playerAttackPrediction;
+    Dictionary<int, AttackProbability> attackProbabilityMap = new Dictionary<int, AttackProbability>();
 
     private void Awake()
     {
@@ -15,17 +30,25 @@ public class EnermyAlgorithm : MonoBehaviour
     }
 
     // 알고리즘 순서대로 실행
-    public void ExecuteEnermyAlgorithm(Summon attackingSummon)
+    public void ExecuteEnermyAlgorithm(Summon attackingSummon, int targetIndex)
     {
+       
         // 1. 소환수의 상태 체크
         playerPlates = CheckPlayerPlateState(); // 현재 playerPlates들
 
         // 2. 몬스터의 상태 체크 (새 리스트에 상태 조정된 enermyPlates 추가)
         List<Plate> applyEnermyPlates = GetApplyStatusEnermyPlates();
 
-        // 3. 소환수의 공격 예측 알고리즘 실행 (특수공격 확률을 받음)
-        float selectedPlateIndex = playerAttackPrediction.ExecutePlayerAttackPrediction(playerPlates, applyEnermyPlates);
+        for (int i = 0; i < playerPlates.Count; i++) //플레이어 플레이트 수만큼 검사
+        {
+            // 3. 소환수의 공격 예측 알고리즘 실행 (특수공격 확률을 받음)
+            AttackProbability defaultProbability = new AttackProbability(0.5f, 0.5f); //기본 50% 50%
+            attackProbabilityMap[targetIndex] = defaultProbability; //플레이어 플레이트의 인덱스와 키값을 일치하도록
 
+            // 3.2 PlayerAttackPrediction 클래스에서 재계산된 값을 가져와서 업데이트
+            //AttackProbability recalculatedProbability = playerAttackPrediction.ExecutePlayerAttackPrediction(playerPlates, applyEnermyPlates, defaultProbability);
+            //attackProbabilityMap[targetIndex] = recalculatedProbability;
+        }
         // 4. 몬스터의 공격 알고리즘 실행
     }
 

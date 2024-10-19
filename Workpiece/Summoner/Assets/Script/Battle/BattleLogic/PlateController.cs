@@ -89,14 +89,15 @@ public class PlateController : MonoBehaviour
                 // 만약 현재 인덱스와 nextAvailableIndex가 다르면 소환수를 앞으로 옮긴다.
                 if (i != nextAvailableIndex)
                 {
-                    // 현재 소환수를 nextAvailableIndex 위치로 이동
-                    enermyPlates[nextAvailableIndex].setCurrentSummon(summon);
-                    enermyPlates[i].setCurrentSummon(null); // 원래 위치는 빈칸으로
+                    // 현재 소환수를 nextAvailableIndex 위치로 직접 이동
+                    enermyPlates[nextAvailableIndex].DirectMoveSummon(summon);
+                    enermyPlates[i].RemoveSummon(); // 원래 위치의 소환수를 제거
                 }
                 nextAvailableIndex++; // 다음 위치로 이동
             }
         }
     }
+
 
 
     public void DownTransparencyForWhoPlate(bool isPlayer)

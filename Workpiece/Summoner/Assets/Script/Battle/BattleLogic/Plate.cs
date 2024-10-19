@@ -90,23 +90,46 @@ public class Plate : MonoBehaviour,
     {
         if (isInSummon)
         {
-            // 소환수 이미지를 초기 설정으로 되돌리기
             if (summonImg != null)
             {
-                summonImg.sprite = null; // 이미지를 비움 (또는 기본 이미지로 변경)
-
-                // 투명도를 0으로 설정 (완전히 투명하게)
+                summonImg.sprite = null; // 이미지를 비움
                 Color color = summonImg.color;
-                color.a = 0f;
+                color.a = 0f; // 완전히 투명하게 설정
                 summonImg.color = color;
             }
 
-            // 소환수 제거
-            currentSummon = null;
+            currentSummon = null; // 소환수 연결 해제
             isInSummon = false;
             Debug.Log("소환수 제거.");
         }
     }
+    public void DirectMoveSummon(Summon summon)
+    {
+        if (summon == null) return;
+
+        // 현재 소환수를 설정 (현재 상태 유지)
+        currentSummon = summon;
+        isInSummon = true;
+
+        // 소환수의 부모를 재설정하여 위치 이동
+        currentSummon.transform.SetParent(this.transform, false);
+        currentSummon.transform.localPosition = Vector3.zero; // 위치 초기화
+
+        // 소환수 이미지 설정 (초기화 없이 그대로 사용)
+        if (summon.getImage() != null)
+        {
+            if (summonImg != null && summon.getImage().sprite != null)
+            {
+                summonImg.sprite = summon.getImage().sprite;
+                Color plateColor = summonImg.color;
+                plateColor.a = 1.0f; // 완전 불투명
+                summonImg.color = plateColor;
+            }
+        }
+
+        Debug.Log($"소환수 {summon.getSummonName()} 이(가) 새 위치로 이동했습니다.");
+    }
+
 
     // 플레이트 강조 (색상 변경)
     public void Highlight()

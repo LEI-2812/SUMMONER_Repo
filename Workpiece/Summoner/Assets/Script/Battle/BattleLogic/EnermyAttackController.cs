@@ -8,10 +8,18 @@ public class EnermyAttackController : MonoBehaviour
     [Header("컨트롤러")]
     [SerializeField] private BattleController battleController;
     [SerializeField] private PlateController plateController;
+    private EnermyAlgorithm algorithm;
 
     double normalAttackValue = 50f; double specialAttackValue = 50f;
     private enum AttackType{ NormalAttack, SpecialAttack}; //특수스킬을 사용할지 일반공격을 사용할지를 위한 Enum
-    
+
+
+    private void Start()
+    {
+        algorithm = GetComponent<EnermyAlgorithm>();
+    }
+
+
     public void EnermyAttackStart(Summon attackingSummon)
     {
         if (attackingSummon == null)
@@ -20,14 +28,14 @@ public class EnermyAttackController : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < plateController.getPlayerPlates().Count; i++) //플레이어 플레이트를 순차적으로 공격
+        for (int targetIndex = 0; targetIndex < plateController.getPlayerPlates().Count; targetIndex++) //플레이어 플레이트를 순차적으로 공격
         {
-            Plate targetPlate = plateController.getPlayerPlates()[i];
+            Plate targetPlate = plateController.getPlayerPlates()[targetIndex];
             Summon target = targetPlate.getCurrentSummon();
 
             for (int ii = 0; ii < 2; ii++) //연속공격 가능성
             {
-                EnerymyAttackLogic(attackingSummon, target); //최소1번은 실행
+                EnerymyAttackLogic(attackingSummon, target, targetIndex); //최소1번은 실행
 
                 if (continuesAttackByRank(attackingSummon)) //매개변수로 보낸 소환수의 등급에따라 연속공격이 가능하면 기존 로직 최대 3번 수행
                 {
@@ -42,30 +50,40 @@ public class EnermyAttackController : MonoBehaviour
         }
     }
 
-    private void EnerymyAttackLogic(Summon attackingSummon, Summon target)
+
+    //기존 코드
+    //private void EnerymyAttackLogic(Summon attackingSummon, Summon target, int targetIndex)
+    //{
+    //    if (!attackingSummon.IsCooltime()) //쿨타임중인 스킬이 없을경우
+    //    {
+    //        AttackType selectedAttakType = SelectAttackType(); //일반공격과 특수공격을 랜덤으로 받아옴
+    //        if (selectedAttakType == AttackType.SpecialAttack)
+    //        {
+    //            //쿨타임이 없는 특수스킬을 사용하게 한다.
+    //            List<int> availableSpecialAttacks = attackingSummon.getAvailableSpecialAttack();  // 쿨타임이 없는 특수 스킬 목록을 가져옴
+
+
+    //            int selectSpecialAttackIndex = getRandomAvilableSpecialAttackIndex(availableSpecialAttacks); //랜덤의 특수스킬 번호를 가져옴
+    //            int selectedPlateIndex = plateController.getClosestPlayerPlatesIndex(attackingSummon); //임시로 가장 가까운적 공격하게 함. 나중에 수정필요
+    //            algorithm.ExecuteEnermyAlgorithm(attackingSummon, targetIndex); //알고리즘 실행
+
+    //            battleController.SpecialAttackLogic(attackingSummon, selectedPlateIndex, selectSpecialAttackIndex); //특수스킬 사용
+    //        }
+    //        else
+    //        {
+    //            enermyNormalAttackLogic(attackingSummon); //평타
+    //        }
+    //    }
+    //    else //스킬들이 쿨타임이여서 평타만 공격
+    //    {
+    //        enermyNormalAttackLogic(attackingSummon);
+    //    }
+    //}
+
+    private void EnerymyAttackLogic(Summon attackingSummon, Summon target, int targetIndex)
     {
-        if (!attackingSummon.IsCooltime()) //쿨타임중인 스킬이 없을경우
-        {
-            AttackType selectedAttakType = SelectAttackType(); //일반공격과 특수공격을 랜덤으로 받아옴
-            if (selectedAttakType == AttackType.SpecialAttack)
-            {
-                //쿨타임이 없는 특수스킬을 사용하게 한다.
-                List<int> availableSpecialAttacks = attackingSummon.getAvailableSpecialAttack();  // 쿨타임이 없는 특수 스킬 목록을 가져옴
-                int selectSpecialAttackIndex = getRandomAvilableSpecialAttackIndex(availableSpecialAttacks); //랜덤의 특수스킬 번호를 가져옴
 
-                int selectedPlateIndex = plateController.getClosestPlayerPlatesIndex(attackingSummon); //임시로 가장 가까운적 공격하게 함. 나중에 수정필요
 
-                battleController.SpecialAttackLogic(attackingSummon, selectedPlateIndex, selectSpecialAttackIndex); //특수스킬 사용
-            }
-            else
-            {
-                enermyNormalAttackLogic(attackingSummon); //평타
-            }
-        }
-        else //스킬들이 쿨타임이여서 평타만 공격
-        {
-            enermyNormalAttackLogic(attackingSummon);
-        }
     }
 
 
