@@ -57,19 +57,25 @@ public class EnermyAttackController : MonoBehaviour
         for (int enermyPlateIndex = 0; enermyPlateIndex < enermyPlate.Count; enermyPlateIndex++) //적이 순차적으로 공격준비
         {
             Summon attackingSummon = enermyPlate[enermyPlateIndex].getCurrentSummon(); //플레이트에 소환수를 차례로 가져와서
-
             // 소환수가 스턴 상태인지 확인
             if (IsSummonStunned(attackingSummon))
             {
                 continue; // 스턴 상태면 다음 소환수로 넘어감
             }
-            // 소환수의 지속 상태 검사 및 맞대응
-            playerAttackPredictionsList = HandleStatusAndReactPrediction(attackingSummon, enermyPlate, enermyPlateIndex, playerAttackPredictionsList); //최소 1번 수행
+
+            // 소환수의 지속 상태 검사
+            if(HandleStatusAndReactPrediction(attackingSummon, enermyPlate, enermyPlateIndex, playerAttackPredictionsList))
+            {
+                return;
+            }
+                                    
+            //맞대응 시작
+            playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, playerAttackPredictionsList); //최소 1번 수행
             for (int seq = 0; seq < 2; seq++)
             {
                 if (continuesAttackByRank(attackingSummon))
                 {
-                    playerAttackPredictionsList = HandleStatusAndReactPrediction(attackingSummon, enermyPlate, enermyPlateIndex, playerAttackPredictionsList); //연속공격 여부에 따라 최대 2번 더
+                    playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, playerAttackPredictionsList);
                 }
                 else
                 {
@@ -80,26 +86,20 @@ public class EnermyAttackController : MonoBehaviour
     }
 
 
-    private List<AttackPrediction> HandleStatusAndReactPrediction(Summon attackingSummon, List<Plate> enermyPlate, int enermyPlateIndex, List<AttackPrediction> playerAttackPredictionsList)
+    private bool HandleStatusAndReactPrediction(Summon attackingSummon, List<Plate> enermyPlate, int enermyPlateIndex, List<AttackPrediction> playerAttackPredictionsList)
     {
         List<StatusType> statusList = attackingSummon.getAllStatusTypes();
-
         // 지속 상태가 있는지 검사
         foreach (StatusType statusType in statusList)
         {
             if (statusType == StatusType.Burn || statusType == StatusType.LifeDrain || statusType == StatusType.Poison)
             {
                 useHealIfAvailable(attackingSummon, enermyPlate, enermyPlateIndex);
-                Debug.Log("들어오나?");
-            }
-            else
-            {
-                // EnermyAlgorithm 클래스에서 대응 알고리즘을 처리하도록 위임
-                playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, playerAttackPredictionsList);
+                return true;
             }
         }
 
-        return playerAttackPredictionsList; // 변경된 리스트 반환
+        return false; // 변경된 리스트 반환
     }
 
 
@@ -118,7 +118,7 @@ public class EnermyAttackController : MonoBehaviour
             if (specialAttackStrategies[i].getStatusType() == StatusType.Heal)
             {
                 attackingSummon.SpecialAttack(enermyPlate, enermyPlateIndex, i); // 자기 자신에게 힐 사용
-                break; // 힐을 사용했으면 루프 탈출
+                return; // 힐을 사용했으면 루프 탈출
             }
         }
     }

@@ -29,6 +29,8 @@ public class Enermy : Character
     {
         //플레이어의 예측공격 리스트를 가져오고
         List<AttackPrediction> playerAttackPredictionsList = enermyAlgorithm.getPlayerAttackPredictionsList();
+
+        Debug.Log("리스트를 가져와서 적 대응시작");
         //적의 공격 시작
         enermyAttackController.EnermyAttackStart(playerAttackPredictionsList);
 

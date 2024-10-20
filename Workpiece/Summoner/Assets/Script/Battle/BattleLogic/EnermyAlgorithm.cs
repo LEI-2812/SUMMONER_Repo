@@ -34,42 +34,57 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             // 리스트가 비어있으면 일반 공격으로 처리
             handleReactNormalAttack(attackingEnermySummon, plateController.getClosestPlayerPlateIndex()); // 기본 타겟 플레이트 인덱스 사용
+            Debug.Log("리스트가 비어서 일반공격 대응");
         }
         else
         {
-            for (int i = 0; i < playerAttackPredictionsList.Count; i++)
+            Debug.Log("대응공격 중...");
+            int indexToRemove = canReactWithSpecialAttack(attackingEnermySummon, playerAttackPredictionsList);
+            if (indexToRemove != -1) //특수공격으로 대응이 가능할경우
             {
-                AttackPrediction playerPrediction = playerAttackPredictionsList[i];
-
-                AttackProbability preAttackProbability = playerPrediction.getAttackProbability(); // 확률
-                Summon preAttackingPlayerSummon = playerPrediction.getAttackSummon(); // 예측한 플레이어의 공격 소환수
-                int preSummonPlateIndex = playerPrediction.getAttackSummonPlateIndex(); // 예측한 플레이어 공격 소환수의 플레이트 판넬
-                IAttackStrategy preAttackStrategy = playerPrediction.getAttackStrategy(); // 예측한 공격방식
-                List<Plate> targetPlate = playerPrediction.getTargetPlate(); // 예측한 타겟의 플레이트 (플레이어 혹은 적)
-                int targetPlateIndex = playerPrediction.getTargetPlateIndex(); // 공격 타겟 플레이트 번호
-
-                if (canReactSpecialAttack(preAttackProbability)) // 특수공격으로 공격할지
-                {
-                    handleReactSpecialAttack(attackingEnermySummon, preAttackStrategy, preSummonPlateIndex, targetPlate, targetPlateIndex);
-                }
-                else // 일반공격으로 공격
-                {
-                    handleReactNormalAttack(attackingEnermySummon, targetPlateIndex);
-                }
-
-                // 대응한 공격은 리스트에서 제거
-                playerAttackPredictionsList.RemoveAt(i);
-                i--; // 인덱스 보정
+                // 특수공격으로 대응한 경우 해당 항목을 리스트에서 제거
+                playerAttackPredictionsList.RemoveAt(indexToRemove);
+                Debug.Log("특수공격 대응 완료, 리스트에서 항목 제거");
+            }
+            else
+            {
+                // 특수공격이 불가능한 경우 일반공격으로 대응
+                handleReactNormalAttack(attackingEnermySummon, plateController.getClosestPlayerPlateIndex());
+                Debug.Log("특수공격 불가, 일반공격으로 대응");
             }
         }
 
         return playerAttackPredictionsList; // 변경된 리스트 반환
     }
 
+    // 특수공격으로 대응이 가능한지 검사하는 메소드
+    private int canReactWithSpecialAttack(Summon attacker, List<AttackPrediction> playerAttackPredictionsList)
+    {
+        int indexToRemove = -1;
+        for (int i = 0; i < playerAttackPredictionsList.Count; i++)
+        {
+            AttackPrediction playerPrediction = playerAttackPredictionsList[i];
+            AttackProbability preAttackProbability = playerPrediction.getAttackProbability(); // 확률
+            IAttackStrategy preAttackStrategy = playerPrediction.getAttackStrategy(); // 예측한 공격방식
+            List<Plate> targetPlate = playerPrediction.getTargetPlate(); // 예측한 타겟의 플레이트 (플레이어 혹은 적)
+            int targetPlateIndex = playerPrediction.getTargetPlateIndex(); // 공격 타겟 플레이트 번호
+
+            if (canReactSpecialAttack(preAttackProbability)) // 특수공격으로 공격할지
+            {
+                bool specialAttackExecuted = handleReactSpecialAttack(attacker, preAttackStrategy, playerPrediction.getAttackSummonPlateIndex(), targetPlate, targetPlateIndex);
+                if (specialAttackExecuted)
+                {
+                    return indexToRemove = i; // 특수 공격 성공 시 해당 인덱스를 반환
+                }
+            }
+        }
+        return indexToRemove; // 특수 공격에 성공하지 못한 경우
+    }
+
 
 
     //특수공격에 대한 대응
-    private void handleReactSpecialAttack(Summon attacker, IAttackStrategy preAttackStrategy, int preAttackerIndex, List<Plate> targetPlate, int targetPlateIndex)
+    private bool handleReactSpecialAttack(Summon attacker, IAttackStrategy preAttackStrategy, int preAttackerIndex, List<Plate> targetPlate, int targetPlateIndex)
     {
         if(preAttackStrategy is AttackAllEnemiesStrategy allAttackStrategy) //예측한 공격타입이 전체공격인지 검사
         {
@@ -83,20 +98,29 @@ public class EnermyAlgorithm : MonoBehaviour
             if (targetAttackStrategy.getStatusType() == StatusType.None)
             {
                 reactSpecialFromTargetNone(attacker, preAttackerIndex, targetPlate, targetPlateIndex);
+
             }
             else if (targetAttackStrategy.getStatusType() == StatusType.None)
             {
                 reactSpecialFromUpgrade(attacker, preAttackerIndex, targetPlate, targetPlateIndex);
+
             }
             else if (targetAttackStrategy.getStatusType() == StatusType.Heal)
             {
                 reactSpecialFromHeal(attacker, preAttackerIndex, targetPlate, targetPlateIndex);
+
             }
+        }
+        else if (preAttackStrategy is ClosestEnemyAttackStrategy closestEnemyAttackStrategy)//예측한 공격이 근접공격일경우 (24.10.20 기준 cat뿐)
+        { //가독성을 위해 else 말고 elseif사용
+            return false; //고양이는 특수공격 대응에 없으므로
         }
         else
         {
-            Debug.Log("예측공격이 잘못받아와졌음");
+            Debug.Log("적 소환수의 특수공격 대응에서 공격이 잘못 들어옴");
+            return false;
         }
+        return true;
     }
 
 
@@ -314,11 +338,22 @@ public class EnermyAlgorithm : MonoBehaviour
 
         if (attackStrategy == null)
         {
-            attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //일반공격수행
+            float randomValue = UnityEngine.Random.Range(0f, 100f); // 0에서 100 사이의 무작위 값
+            if (randomValue < 30f) //강공격
+            {
+                Debug.Log($"{attacker.name} 의 강공격");
+                attacker.setAttackPower(attacker.getHeavyAttakPower()); //공격력을 강공격력으로 전환
+                attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //일반공격수행
+                attacker.setAttackPower(attacker.getAttackPower()); //원래 공격력으로 되돌리기
+            }
+            else //일반 공격력으로 공격
+            {
+                attacker.normalAttack(plateController.getPlayerPlates(), targetPlateIndex); //일반공격 수행
+            }
             Debug.Log($"{attacker.getSummonName()}가 일반 공격을 실행했습니다.");
             return;
         }
-        if (plateController.getPlayerPlates().Count >= 2) //소환수가 2마리 이상 존재하는가?
+        if (plateController.getPlayerSummonCount() >= 2) //소환수가 2마리 이상 존재하는가?
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
@@ -380,7 +415,18 @@ public class EnermyAlgorithm : MonoBehaviour
         }
         else
         {
-            attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlateIndex()); //일반공격수행
+            float randomValue = UnityEngine.Random.Range(0f, 100f); // 0에서 100 사이의 무작위 값
+            if (randomValue < 30f) //강공격
+            {
+                Debug.Log($"{attacker.name} 의 강공격");
+                attacker.setAttackPower(attacker.getHeavyAttakPower()); //공격력을 강공격력으로 전환
+                attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //일반공격수행
+                attacker.setAttackPower(attacker.getAttackPower()); //원래 공격력으로 되돌리기
+            }
+            else //일반 공격력으로 공격
+            {
+                attacker.normalAttack(plateController.getPlayerPlates(), targetPlateIndex); //일반공격 수행
+            }
             Debug.Log($"{attacker.getSummonName()}가 일반 공격을 실행했습니다.");
             return;
         }
