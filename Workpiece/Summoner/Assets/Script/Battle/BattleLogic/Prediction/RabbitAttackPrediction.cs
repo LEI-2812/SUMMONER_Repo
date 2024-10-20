@@ -98,6 +98,31 @@ public class RabbitAttackPrediction : MonoBehaviour
         return true;
     }
 
+    // 가장 낮은 체력을 가진 소환수의 인덱스를 반환하는 메소드
+    public int getIndexOfLowestHealthSummon(List<Plate> playerPlates)
+    {
+        double minHealthRatio = double.MaxValue;
+        int indexOfMinHealth = -1;
+
+        for (int i = 0; i < playerPlates.Count; i++)
+        {
+            Summon summon = playerPlates[i].getCurrentSummon();
+            if (summon != null)
+            {
+                double healthRatio = summon.getNowHP() / summon.getMaxHP();
+
+                // 가장 낮은 체력을 가진 소환수의 인덱스 기록
+                if (healthRatio < minHealthRatio)
+                {
+                    minHealthRatio = healthRatio;
+                    indexOfMinHealth = i;
+                }
+            }
+        }
+
+        return indexOfMinHealth; // 가장 낮은 체력의 소환수 인덱스 반환
+    }
+
     // 가장 가까운 적을 공격했을 때 물리칠 수 있는지 확인하는 메소드
     public bool CanNormalAttackKill(Summon rabbit, List<Plate> enermyPlates)
     {
