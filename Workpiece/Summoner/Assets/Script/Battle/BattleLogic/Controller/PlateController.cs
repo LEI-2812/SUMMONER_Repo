@@ -267,6 +267,20 @@ public class PlateController : MonoBehaviour
         return -1; // 공격할 소환수가 없으면 -1 반환
     }
 
+    public int getClosestPlayerPlateIndex()
+    {
+        List<Plate> playerPlates = getPlayerPlates(); // playerPlates 리스트를 가져옴
+        for (int i = 0; i < playerPlates.Count; i++)
+        {
+            Summon playerSummon = playerPlates[i].getCurrentSummon();
+            if (playerSummon != null)
+            {
+                return i; // 가장 가까운(첫 번째로 발견된) 소환수의 인덱스 반환
+            }
+        }
+        return -1; // 소환수가 없으면 -1 반환
+    }
+
     public int getClosestEnermyPlatesIndex(Summon attackingSummon) //플레이어 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
     {
         for (int i = 0; i < playerPlates.Count; i++)
@@ -281,13 +295,56 @@ public class PlateController : MonoBehaviour
         return -1; // 공격할 소환수가 없으면 -1 반환
     }
 
-
-
-
-
-    public int getPlateIndex(Plate selectedPlate)
+    public int getPlayerSummonCount()
     {
-        return plates.IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
+        int summonCount = 0;
+
+        foreach (Plate plate in playerPlates)
+        {
+            if (plate.getCurrentSummon() != null) // 플레이트에 소환수가 있는 경우만 카운트
+            {
+                summonCount++;
+            }
+        }
+
+        return summonCount;
+    }
+
+    public int getEnermySummonCount()
+    {
+        int summonCount = 0;
+
+        foreach (Plate plate in enermyPlates)
+        {
+            if (plate.getCurrentSummon() != null) // 플레이트에 소환수가 있는 경우만 카운트
+            {
+                summonCount++;
+            }
+        }
+
+        return summonCount;
+    }
+
+
+
+    // 특정 플레이트의 인덱스를 반환하는 메소드
+    public int GetPlateIndex(Plate plate)
+    {
+        // 플레이어 플레이트에서 탐색
+        int index = playerPlates.IndexOf(plate);
+        if (index != -1)
+        {
+            return index; // 해당 플레이트의 인덱스 반환
+        }
+
+        // 적 플레이트에서 탐색
+        index = enermyPlates.IndexOf(plate);
+        if (index != -1)
+        {
+            return index; // 해당 플레이트의 인덱스 반환
+        }
+
+        return -1; // 플레이트가 목록에 없을 경우 -1 반환
     }
 
 

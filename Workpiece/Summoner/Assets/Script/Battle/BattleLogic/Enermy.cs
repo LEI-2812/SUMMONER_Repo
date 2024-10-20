@@ -9,11 +9,13 @@ public class Enermy : Character
 
     [Header("컨트롤러")]
     [SerializeField] private TurnController turnController;
-    [SerializeField] private EnermyAttackController enermyAttackController;
+    private EnermyAttackController enermyAttackController;
+    private EnermyAlgorithm enermyAlgorithm;
 
-    private void Start()
+    private void Awake()
     {
-        enermyPlates = enermyAttackController.getPlateController().getEnermyPlates(); //적 플레이트를 가져온다.
+        enermyAttackController = GetComponent<EnermyAttackController>();
+        enermyAlgorithm = GetComponent<EnermyAlgorithm>();
     }
 
     public override void startTurn()
@@ -25,13 +27,12 @@ public class Enermy : Character
 
     public override void takeAction() //여기에 AI로직 작성
     {
-        for (int i = 0; i < enermyPlates.Count; i++) //몬스터 순서대로 공격
-        {
-            if (enermyPlates[i].getCurrentSummon() != null && !enermyPlates[i].getCurrentSummon().IsCursed())
-            {
-                enermyAttackController.EnermyAttackStart(enermyPlates[i].getCurrentSummon());
-            }
-        }
+        //플레이어의 예측공격 리스트를 가져오고
+        List<AttackPrediction> playerAttackPredictionsList = enermyAlgorithm.getPlayerAttackPredictionsList();
+
+        Debug.Log("리스트를 가져와서 적 대응시작");
+        //적의 공격 시작
+        enermyAttackController.EnermyAttackStart(playerAttackPredictionsList);
 
 
 

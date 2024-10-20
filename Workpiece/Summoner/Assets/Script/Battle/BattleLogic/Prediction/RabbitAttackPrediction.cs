@@ -12,18 +12,18 @@ public class RabbitAttackPrediction : MonoBehaviour
     }
 
     // 소환수의 체력 차이가 30% 이상 낮은지 확인하는 메소드
-    // 적 소환수 중 체력 차이가 30% 이상인 경우, 더 낮은 체력을 가진 소환수의 인덱스를 반환하는 메소드
-    public int GetIndexOfLowerHealthIfDifferenceOver30(List<Plate> enermyPlates)
+    // 아군 소환수 중 체력 차이가 30% 이상인 경우, 더 낮은 체력을 가진 소환수의 인덱스를 반환하는 메소드
+    public int GetIndexOfLowerHealthIfDifferenceOver30(List<Plate> playerPlates)
     {
-        if (enermyPlates.Count < 2) return -1; // 적이 2명 미만이면 비교할 수 없음
+        if (playerPlates.Count < 2) return -1; // 아군이 2명 미만이면 비교할 수 없음
 
         double maxHealthRatio = double.MinValue;
         double minHealthRatio = double.MaxValue;
         int indexOfMinHealth = -1;
 
-        for (int i = 0; i < enermyPlates.Count; i++)
+        for (int i = 0; i < playerPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = playerPlates[i].getCurrentSummon();
             if (enermySummon != null)
             {
                 double healthRatio = enermySummon.getNowHP() / enermySummon.getMaxHP();
@@ -96,6 +96,31 @@ public class RabbitAttackPrediction : MonoBehaviour
             }
         }
         return true;
+    }
+
+    // 가장 낮은 체력을 가진 소환수의 인덱스를 반환하는 메소드
+    public int getIndexOfLowestHealthSummon(List<Plate> playerPlates)
+    {
+        double minHealthRatio = double.MaxValue;
+        int indexOfMinHealth = -1;
+
+        for (int i = 0; i < playerPlates.Count; i++)
+        {
+            Summon summon = playerPlates[i].getCurrentSummon();
+            if (summon != null)
+            {
+                double healthRatio = summon.getNowHP() / summon.getMaxHP();
+
+                // 가장 낮은 체력을 가진 소환수의 인덱스 기록
+                if (healthRatio < minHealthRatio)
+                {
+                    minHealthRatio = healthRatio;
+                    indexOfMinHealth = i;
+                }
+            }
+        }
+
+        return indexOfMinHealth; // 가장 낮은 체력의 소환수 인덱스 반환
     }
 
     // 가장 가까운 적을 공격했을 때 물리칠 수 있는지 확인하는 메소드

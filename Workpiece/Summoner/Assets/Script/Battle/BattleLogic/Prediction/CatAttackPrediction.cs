@@ -14,15 +14,19 @@ public class CatAttackPrediction : MonoBehaviour
     // 일반 공격으로 적을 물리칠 수 있는 가장 가까운 인덱스를 반환하는 메소드
     public int getIndexofNormalAttackCanKill(Summon attackingSummon, List<Plate> enermyPlates)
     {
-        for (int i = 0; i < enermyPlates.Count; i++)
+        // 가장 가까운 적의 인덱스를 가져옴
+        int closestIndex = getClosestEnermyIndex(enermyPlates);
+
+        if (closestIndex != -1)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
-            if (enermySummon != null && attackingSummon.getAttackPower() >= enermySummon.getNowHP())
+            Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
+            // 가장 가까운 적의 소환수가 있고, 일반 공격으로 물리칠 수 있는지 확인
+            if (closestEnermySummon != null && attackingSummon.getAttackPower() >= closestEnermySummon.getNowHP())
             {
-                // 일반 공격으로 적의 체력을 0 이하로 만들 수 있으면 해당 인덱스 반환
-                return i;
+                return closestIndex; // 공격으로 물리칠 수 있으면 인덱스 반환
             }
         }
+
         return -1; // 공격 가능한 적이 없으면 -1 반환
     }
 

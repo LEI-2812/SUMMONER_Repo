@@ -12,17 +12,17 @@ public class FoxAttackPrediction : MonoBehaviour
     }
 
     // 소환수 중 저주 상태 이상에 걸려있는 몹이 존재하는가?
-    public bool isAnySummonWithCurseStatus(List<Plate> playerPlates)
+    public int getIndexOfSummonWithCurseStatus(List<Plate> playerPlates)
     {
-        foreach (Plate plate in playerPlates)
+        for (int i = 0; i < playerPlates.Count; i++)
         {
-            Summon playerSummon = plate.getCurrentSummon();
+            Summon playerSummon = playerPlates[i].getCurrentSummon();
             if (playerSummon != null && playerSummon.IsCursed())
             {
-                return true;
+                return i; // 저주 상태에 걸린 소환수의 인덱스 반환
             }
         }
-        return false;
+        return -1; // 저주 상태에 걸린 소환수가 없으면 -1 반환
     }
 
     // 적이 2마리 이상인가?
@@ -102,6 +102,29 @@ public class FoxAttackPrediction : MonoBehaviour
             }
         }
         return false;
+    }
+
+    // 가장 공격력이 높은 소환수의 플레이트 인덱스를 반환하는 메소드
+    public int getIndexOfHighestAttackPower(List<Plate> playerPlates)
+    {
+        int highestAttackIndex = -1;
+        double highestAttackPower = double.MinValue;
+
+        for (int i = 0; i < playerPlates.Count; i++)
+        {
+            Summon summon = playerPlates[i].getCurrentSummon();
+            if (summon != null)
+            {
+                double attackPower = summon.getAttackPower();
+                if (attackPower > highestAttackPower)
+                {
+                    highestAttackPower = attackPower;
+                    highestAttackIndex = i; // 가장 높은 공격력을 가진 소환수의 인덱스를 기록
+                }
+            }
+        }
+
+        return highestAttackIndex; // 가장 높은 공격력의 소환수 인덱스 반환
     }
 
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 public class PlayerAttackPrediction : MonoBehaviour
@@ -37,20 +38,31 @@ public class PlayerAttackPrediction : MonoBehaviour
                 // 소환수의 특수 스킬이 사용 가능한지 확인
                 IAttackStrategy[] availableSpecialAttacks = summon.getAvailableSpecialAttacks();
                 bool hasUsableSpecialAttack = (availableSpecialAttacks != null && availableSpecialAttacks.Length > 0);
+                int attackIndex = plateController.getClosestPlayerPlateIndex();
+                if (attackIndex == -1)
+                {
+                    Debug.Log("공격할 인덱스가 없음");
+                }
+                int attackSummonPlateIndex = plateController.GetPlateIndex(plate); //자기 자신의 플레이트 번호
 
                 // 특수 스킬이 없는 경우 일반 공격으로 예측
                 if (!hasUsableSpecialAttack)
                 {
-                    Debug.Log($"{summon.getSummonName()}는 사용 가능한 특수 스킬이 없습니다. 일반 공격으로 처리.");
+                    Debug.Log($"{summon.getSummonName()}는 사용 가능한 특수 스킬이 없습니다. 일반 공격으로 예측합니다.");
                     AttackProbability attackProbability = new AttackProbability(100f, 0f); //일반공격을 100%
-                    int attackIndex = plateController.getClosestEnermyPlatesIndex(summon);
-                    if(attackIndex == -1)
-                    {
-                        Debug.Log("공격할 인덱스가 없음");
-                    }
-                    AttackPrediction attackPrediction = new AttackPrediction(enermyPlates, attackProbability, attackIndex);
+
+                    AttackPrediction attackPrediction = new AttackPrediction(
+                        summon, //공격
+                        plateController.GetPlateIndex(plate), //자기 자신의 플레이트 번호
+                        summon.getAttackStrategy(), //일반공격
+                        0, //특수공격 번호
+                        enermyPlates, //타겟 플레이트
+                        attackIndex, ///타겟 번호
+                        attackProbability //확률
+                        );
              
                     playerPrediction.Add(attackPrediction);
+                    Debug.Log($"추가된 일반공격 Prediction: {GetPredictionDetails(attackPrediction)}");
                 }
                 else
                 {
@@ -58,48 +70,54 @@ public class PlayerAttackPrediction : MonoBehaviour
                     switch (summon.getSummonType())
                     {
                         case SummonType.Cat:
-                            AttackPrediction catPrediction = getCatAttackPrediction(summon, enermyPlates);
+                            AttackPrediction catPrediction = getCatAttackPrediction(summon, attackSummonPlateIndex, enermyPlates);
                             if (catPrediction != null)
                             {
                                 playerPrediction.Add(catPrediction);
+                                Debug.Log($"추가된 고양이 Prediction: {GetPredictionDetails(catPrediction)}");
                             }
                             break;
                         case SummonType.Wolf:
-                            AttackPrediction wolfPrediction = getWolfAttackPrediction(summon, enermyPlates);
+                            AttackPrediction wolfPrediction = getWolfAttackPrediction(summon, attackSummonPlateIndex, enermyPlates);
                             if (wolfPrediction != null)
                             {
                                 playerPrediction.Add(wolfPrediction);
+                                Debug.Log($"추가된 늑대 Prediction: {GetPredictionDetails(wolfPrediction)}");
                             }
                             break;
                         case SummonType.Snake:
-                            AttackPrediction snakePrediction = getSnakeAttackPrediction(summon, enermyPlates);
+                            AttackPrediction snakePrediction = getSnakeAttackPrediction(summon, attackSummonPlateIndex, enermyPlates);
                             if (snakePrediction != null)
                             {
                                 playerPrediction.Add(snakePrediction);
+                                Debug.Log($"추가된 뱀 Prediction: {GetPredictionDetails(snakePrediction)}");
                             }
                             break;
 
                         case SummonType.Rabbit:
-                            AttackPrediction rabitPrediction = getRabbitAttackPrediction(summon, playerPlates, enermyPlates);
+                            AttackPrediction rabitPrediction = getRabbitAttackPrediction(summon, attackSummonPlateIndex, playerPlates, enermyPlates);
                             if (rabitPrediction != null)
                             {
                                 playerPrediction.Add(rabitPrediction);
+                                Debug.Log($"추가된 토끼 Prediction: {GetPredictionDetails(rabitPrediction)}");
                             }
                             break;
 
                         case SummonType.Eagle:
-                            AttackPrediction eaglePrediction = getEagleAttackPrediction(summon, enermyPlates);
+                            AttackPrediction eaglePrediction = getEagleAttackPrediction(summon, attackSummonPlateIndex, enermyPlates);
                             if (eaglePrediction != null)
                             {
                                 playerPrediction.Add(eaglePrediction);
+                                Debug.Log($"추가된 독수리 Prediction: {GetPredictionDetails(eaglePrediction)}");
                             }
                             break;
 
                         case SummonType.Fox:
-                            AttackPrediction foxPrediction = getFoxAttackPrediction(summon, playerPlates, enermyPlates);
+                            AttackPrediction foxPrediction = getFoxAttackPrediction(summon, attackSummonPlateIndex,  playerPlates, enermyPlates);
                             if (foxPrediction != null)
                             {
                                 playerPrediction.Add(foxPrediction);
+                                Debug.Log($"추가된 여우 Prediction: {GetPredictionDetails(foxPrediction)}");
                             }
                             break;
                     }
@@ -112,17 +130,17 @@ public class PlayerAttackPrediction : MonoBehaviour
 
 
     //고양이 예측공격
-    private AttackPrediction getCatAttackPrediction(Summon cat, List<Plate> enermyPlates)
+    private AttackPrediction getCatAttackPrediction(Summon cat, int catPlateIndex ,List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = catAttackPrediction.getClosestEnermyIndex(enermyPlates);
-
+        AttackPrediction attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         // 일반 공격으로 처치가 가능하면 일반 공격 확률 10% 증가
         if (catAttackPrediction.getIndexofNormalAttackCanKill(cat, enermyPlates) != -1)
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 0.1f, true);
+            attackProbability = AdjustAttackProbabilities(attackProbability, 0.1f, true,"고양이 일반공격으로 처치 가능");
             attackIndex = catAttackPrediction.getIndexofNormalAttackCanKill(cat, enermyPlates); //일반 공격으로 처치가능한 인덱스 받기
         }
         else
@@ -130,114 +148,118 @@ public class PlayerAttackPrediction : MonoBehaviour
             // 특수 공격으로 처치가 가능하면 특수 공격 확률 증가
             if (catAttackPrediction.getIndexofSpecialCanKill(cat, enermyPlates) != -1)
             {
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"고양이 특수공격으로 처치가능");
                 attackIndex = catAttackPrediction.getIndexofSpecialCanKill(cat, enermyPlates); //특수 공격으로 처치가능한 인덱스 받기
             }
             else
             { //특수공격에 +5%
-                attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false);
+                attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false,"고양이 특수공격으로 처치 불가능");
                 attackIndex = catAttackPrediction.getClosestEnermyIndex(enermyPlates); //적 플레이트 중에서 가장 가까이 있는 인덱스 받기
             }
         }
 
-        AttackPrediction attackPrediction = new AttackPrediction(enermyPlates, attackProbability, attackIndex);
+        attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         return attackPrediction;
     }
 
     //늑대의 예측공격
-    private AttackPrediction getWolfAttackPrediction(Summon wolf, List<Plate> enermyPlates)
+    private AttackPrediction getWolfAttackPrediction(Summon wolf, int wolfPlateIndex, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = wolfAttackPrediction.getClosestEnermyIndex(enermyPlates);
+        AttackPrediction attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         if (wolfAttackPrediction.IsEnermyCountTwoOrMore(enermyPlates)) //적이 2마리 이상인가?
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"늑대 적이 2마리 이상");
             if (wolfAttackPrediction.AllEnermyHealthOver50(enermyPlates)) //몬스터 체력이 모두 50% 이상인가?
             {
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"늑대 적 몬스터 체력이 모두 50% 이상");
             }
             else if(wolfAttackPrediction.AllEnermyHealthDown50(enermyPlates)) //몬스터 체력이 모두 50% 이하인가?
             {
                 if (wolfAttackPrediction.HasSpecificAvailableSpecialAttack(wolf, enermyPlates))
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"늑대 적 몬스터 체력이 모두 50% 이하");
                 }
             }
             else if (wolfAttackPrediction.IsEnermyHealthDifferenceOver30(enermyPlates)) //몬스터 한쪽이 다른 쪽에비해 체력이 30% 높은가?
             {
                 if (wolfAttackPrediction.IsLowestHealthEnermyClosest(wolf, enermyPlates)) //낮은쪽의 인덱스가 근접공격하는 인덱스와 동일한가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 20f, true);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 20f, true,"늑대 낮은쪽으로 공격하는 인덱스가 동일");
                 }
                 else
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"늑대 일반공격으로 공격하는 인덱스가 불일치");
                 }
             }
         }
         else if(wolfAttackPrediction.IsEnermyCountOne(enermyPlates)) //적이 1마리 인가?
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"늑대 적이 1마리뿐");
             
             if(wolfAttackPrediction.getIndexofNormalAttackCanKill(wolf,enermyPlates) != -1) //일반 공격으로 몬스터를 물리칠 수 있는가?
             {
                 attackIndex = wolfAttackPrediction.getIndexofNormalAttackCanKill(wolf, enermyPlates);
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"늑대 일반 공격으로 처치가능");
             }
             else
             {
                 //일반 공격과 특수공격중 피해를 더 줄 수 있는 공격을 반환했을 때 일반 공격일경우
                 if (wolfAttackPrediction.getMostDamageAttack(wolf, enermyPlates) == AttackType.NormalAttack)
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true,"늑대 일반 공격이 더 많은 피해를 입힘");
                 }
                 else
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false,"늑대 특수공격이 더 많은 피해를 입힘");
                 }
             }
         }
-        else
-        {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
-        }
 
-        AttackPrediction attackPrediction = new AttackPrediction(enermyPlates, attackProbability, attackIndex);
+        attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         return attackPrediction;
     }
 
 
     //토끼의 예측공격
-    private AttackPrediction getRabbitAttackPrediction(Summon rabbit, List<Plate> playerPlates, List<Plate> enermyPlates)
+    private AttackPrediction getRabbitAttackPrediction(Summon rabbit, int rabbitPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = rabbitAttackPrediction.getClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(enermyPlates, attackProbability, attackIndex); //기본은 가장 가까운적 공격
+        AttackPrediction attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         if (rabbitAttackPrediction.GetIndexOfLowerHealthIfDifferenceOver30(playerPlates) != -1) //소환수 중 한쪽이 다른 쪽과 체력을 비교했을 때 30% 이상 낮은가?
         {
             attackIndex = rabbitAttackPrediction.GetIndexOfLowerHealthIfDifferenceOver30(playerPlates);
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
-            attackPrediction = new AttackPrediction(playerPlates, attackProbability, attackIndex);
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"토끼 소환수중 한쪽이 다른 쪽과 비교할때 30% 낮음");
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
         else if (rabbitAttackPrediction.getIndexOfLowerHealthIfAllDown30(playerPlates) != -1) //소환수 모두의 체력이 30% 이하인가?
         {
             attackIndex = rabbitAttackPrediction.getIndexOfLowerHealthIfAllDown30(playerPlates);
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
-            attackPrediction = new AttackPrediction(playerPlates, attackProbability, attackIndex);
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"토끼 소환수의 체력이 모두 30% 이하");
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
         else if (rabbitAttackPrediction.AllPlayerSummonOver70Percent(playerPlates))
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
-            attackPrediction = new AttackPrediction(enermyPlates, attackProbability, attackIndex);
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"토끼 모든 플레이어 소환수 체력이 70% 이상");
+            attackIndex = rabbitAttackPrediction.getIndexOfLowestHealthSummon(playerPlates);
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
         else if (rabbitAttackPrediction.CanNormalAttackKill(rabbit, enermyPlates))
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
-            attackPrediction = new AttackPrediction(enermyPlates, attackProbability, attackIndex);
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"토끼 일반공격으로 처치가능");
+            attackIndex = rabbitAttackPrediction.getIndexOfLowestHealthSummon(playerPlates);
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+        }
+        else// 모두 조건이 안맞으면 가장 낮은 체력 아군 힐
+        {
+            attackIndex = rabbitAttackPrediction.getIndexOfLowestHealthSummon(playerPlates);
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
 
 
@@ -246,19 +268,21 @@ public class PlayerAttackPrediction : MonoBehaviour
 
 
     //뱀 예측공격
-    private AttackPrediction getSnakeAttackPrediction(Summon snake, List<Plate> enermyPlates)
+    private AttackPrediction getSnakeAttackPrediction(Summon snake, int snakePlateIndex, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = snakeAttackPrediction.getClosestEnermyIndex(enermyPlates);
-
+        AttackPrediction attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         if (snakeAttackPrediction.IsEnermyAlreadyPoisoned(enermyPlates)){ //몬스터들이 이미 중독 상태인가?
             attackProbability = new AttackProbability(100f, 0f);
+            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.getAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
         }
         else if(!snakeAttackPrediction.canUseSpecialAttack(snake)) //특수공격을 사용할 수 있는가?
         {
             attackProbability = new AttackProbability(100f, 0f);
+            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.getAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
         }
         else
         {
@@ -266,48 +290,52 @@ public class PlayerAttackPrediction : MonoBehaviour
             {
                 if (snakeAttackPrediction.AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"뱀 적의 체력이 모두 50%이상");
                 }
                 else
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"뱀 적의 체력이 모두 50%가 아님");
                 }
                 if (snakeAttackPrediction.hasMonsterWithMoreThan4Attacks(enermyPlates)) //몬스터 중 공격의 개수가 4개 이상인 몹이 존재하는가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"뱀 적의 몬스터중 공격이 4개 이상인 몹이 있는가");
                 }
             }
             else //1마리 일때
             {
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"뱀 적이 1마리 뿐");
                 if (snakeAttackPrediction.AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 모두 50% 이상");
                 }
                 if (snakeAttackPrediction.CanNormalAttackKill(snake, enermyPlates)) //일반 공격 시 몬스터를 물리칠 수 있는가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"뱀 일반 공격시 처치가능");
                 }
             }
+            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         }
 
-        AttackPrediction attackPrediction = new AttackPrediction(enermyPlates, attackProbability, attackIndex);
         return attackPrediction;
     }
 
     //여우 예측공격
-    private AttackPrediction getFoxAttackPrediction(Summon fox, List<Plate> playerPlates, List<Plate> enermyPlates)
+    private AttackPrediction getFoxAttackPrediction(Summon fox, int foxPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = foxAttackPrediction.getClosestEnermyIndex(enermyPlates);
         List<Plate> targetPlate = enermyPlates;
 
+        //소환수, 소환수의 플레이트 번호, 소환수의 특수공격첫번째, 특수공격배열 인덱스번호, 타겟플레이트, 타겟플레이트 변호, 확률
+        AttackPrediction attackPrediction = new AttackPrediction(fox, foxPlateIndex, fox.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
-        if (foxAttackPrediction.isAnySummonWithCurseStatus(playerPlates)) //소환수중 저주상태에 걸려있는 몹이 있는가?
+
+        if (foxAttackPrediction.getIndexOfSummonWithCurseStatus(playerPlates) != -1) //소환수중 저주상태에 걸려있는 몹이 있는가?
         {
             attackProbability = new AttackProbability(0f, 100f); //특수공격 100%
-            targetPlate = playerPlates;
+            attackIndex = foxAttackPrediction.getIndexOfSummonWithCurseStatus(playerPlates);
+            attackPrediction = new AttackPrediction(fox, foxPlateIndex, fox.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
         else if(foxAttackPrediction.isTwoOrMoreEnemies(enermyPlates)) //적이 2마리 이상 존재하는가?
         {
@@ -315,7 +343,7 @@ public class PlayerAttackPrediction : MonoBehaviour
             {
                 if (foxAttackPrediction.AllSummonsLowOrMediumRank(playerPlates)) //아군의 등급이 모두 하급과 중급인가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"여우 아군 등급이 모두 하급과 중급");
                     targetPlate = playerPlates;
                 }
             }
@@ -323,7 +351,7 @@ public class PlayerAttackPrediction : MonoBehaviour
             {
                 if (foxAttackPrediction.CanNormalAttackKill(fox, enermyPlates)) //일반공격시 처치할 수 있는가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"여우 일반공격시 처치가능");
                 }
             }
         }
@@ -333,7 +361,7 @@ public class PlayerAttackPrediction : MonoBehaviour
             {
                 if (foxAttackPrediction.AllSummonsLowOrMediumRank(playerPlates)) //아군의 등급이 모두 하급과 중급인가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"여우 아군 등급이 모두 하급과 중급");
                     targetPlate = playerPlates;
                 }
             }
@@ -341,18 +369,22 @@ public class PlayerAttackPrediction : MonoBehaviour
             {
                 if (foxAttackPrediction.CanNormalAttackKill(fox, enermyPlates)) //일반공격시 처치할 수 있는가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"여우 일반공격시 가까운적 처치 가능");
                 }
             }
         }
+        else
+        {
+            attackIndex = foxAttackPrediction.getIndexOfHighestAttackPower(playerPlates);
+            attackPrediction = new AttackPrediction(fox, foxPlateIndex, fox.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+        }
 
-        AttackPrediction attackPrediction = new AttackPrediction(targetPlate, attackProbability, attackIndex);
         return attackPrediction;
     }
 
 
     //독수리 예측공격
-    private AttackPrediction getEagleAttackPrediction(Summon eagle, List<Plate> enermyPlates)
+    private AttackPrediction getEagleAttackPrediction(Summon eagle,int eaglePlateIndex, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
@@ -366,12 +398,12 @@ public class PlayerAttackPrediction : MonoBehaviour
                 if (eagleAttackPrediction.getNormalAttackKillIndex(eagle, enermyPlates) != -1) //일반 공격으로 체력이 낮은 쪽을 공격할 수 있는가?
                 {
                     attackIndex = eagleAttackPrediction.getNormalAttackKillIndex(eagle, enermyPlates);
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true,"독수리 일반공격으로 체력이 낮은 적 공격 가능");
                 }
                 else
                 {
                     attackIndex = eagleAttackPrediction.getSpecialAttackKillIndex(eagle, enermyPlates);
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false,"독수리 일반공격으로 체력이 낮은쪽 공격 불가능");
                 }
             }
             else if (eagleAttackPrediction.AreEnermyHealthWithin10Percent(enermyPlates)) //몬스터의 체력이 서로 비슷한가?
@@ -379,7 +411,7 @@ public class PlayerAttackPrediction : MonoBehaviour
                 if (eagleAttackPrediction.getIndexOfMostHealthEnermy(enermyPlates) != -1) //가장 체력이 많은 몬스터의 인덱스
                 {
                     attackIndex = eagleAttackPrediction.getIndexOfMostHealthEnermy(enermyPlates);
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 몬스터 체력이 10퍼이내로 비슷함");
                 }
             }
         }
@@ -388,47 +420,57 @@ public class PlayerAttackPrediction : MonoBehaviour
             if (eagleAttackPrediction.getNormalAttackKillIndex(eagle, enermyPlates) != -1)
             {
                 attackIndex = eagleAttackPrediction.getNormalAttackKillIndex(eagle, enermyPlates);
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true);
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "독수리 일반공격으로 사냥가능");
             }
             else if (eagleAttackPrediction.getSpecialAttackKillIndex(eagle, enermyPlates) != -1)
             {
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false);
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 특수공격으로 사냥가능");
             }
             else
             {
                 if(eagleAttackPrediction.getTypeOfMoreAttackDamage(eagle,enermyPlates) == AttackType.NormalAttack)//일반공격과 특수공격 중 피해를 많이 줄 공격에 5%상승
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true,"독수리 일반공격이 더 큰 피해를 입힘");
                 }
                 else
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false);
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "독수리 일반공격이 더 큰 피해를 입힘");
                 }
             }
         }
 
-        AttackPrediction attackPrediction = new AttackPrediction(enermyPlates, attackProbability, attackIndex);
+        //소환수, 소환수의 플레이트 번호, 소환수의 특수공격첫번째, 특수공격배열 인덱스번호, 타겟플레이트, 타겟플레이트 변호, 확률
+        AttackPrediction attackPrediction = new AttackPrediction(eagle, eaglePlateIndex, eagle.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         return attackPrediction;
     }
 
 
-        // 확률 값을 설정하고 조정하여 반환하는 메소드
-        public AttackProbability AdjustAttackProbabilities(AttackProbability currentProbabilities, float AttackChange, bool isNormalAttack)
+    // 확률 값을 설정하고 조정하여 반환하는 메소드
+    public AttackProbability AdjustAttackProbabilities(AttackProbability currentProbabilities, float AttackChange, bool isNormalAttack, string reason)
     {
         if (isNormalAttack)
         {
             // 일반 공격 확률을 증가시키고, 특수 공격 확률을 그만큼 감소
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
+            Debug.Log($"일반 공격 확률이 {AttackChange}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
-            // 또는, 특수 공격 확률을 증가시키고, 일반 공격 확률을 그만큼 감소
+            // 특수 공격 확률을 증가시키고, 일반 공격 확률을 그만큼 감소
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
+            Debug.Log($"특수 공격 확률이 {AttackChange}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         return currentProbabilities;
     }
 
-
+    private string GetPredictionDetails(AttackPrediction prediction)
+    {
+        return $"아군 공격 소환수: {prediction.getAttackSummon().getSummonName()}, " +
+               $"아군 공격 종류: {prediction.getAttackStrategy().GetType().Name}, " +
+               $"아군 타겟 플레이트번호: {prediction.getTargetPlateIndex()}, " +
+               $"일반공격 확률: {prediction.getAttackProbability().normalAttackProbability}%, " +
+               $"특수공격 확률: {prediction.getAttackProbability().specialAttackProbability}%";
+    }
 }
