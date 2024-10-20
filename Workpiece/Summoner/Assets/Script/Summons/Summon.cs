@@ -543,6 +543,25 @@ public class Summon : MonoBehaviour
         return availableSpecialAttacks.ToArray();
     }
 
+    public StatusType[] getSpecialAttackStatusTypes(Summon summon)
+    {
+        List<StatusType> statusTypes = new List<StatusType>();
+
+        // 소환수의 사용 가능한 특수 스킬들을 가져옴
+        IAttackStrategy[] specialAttacks = summon.getAvailableSpecialAttacks();
+
+        // 사용 가능한 특수 스킬들을 순회하며 각 스킬의 StatusType을 추가
+        foreach (IAttackStrategy attack in specialAttacks)
+        {
+            if (attack != null)
+            {
+                statusTypes.Add(attack.getStatusType());
+            }
+        }
+
+        // StatusType 배열로 반환
+        return statusTypes.ToArray();
+    }
 
     public int getSpecialAttackCount()
     {
