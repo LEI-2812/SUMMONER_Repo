@@ -50,8 +50,8 @@ public class BattleController : MonoBehaviour
             return;
         }
 
-        // 특수 공격을 배열 인덱스로 가져옴
-        IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy()[selectSpecialAttackIndex];
+        // 사용 가능한 특수 공격을 배열 인덱스로 가져옴
+        IAttackStrategy attackStrategy = attackSummon.getAvailableSpecialAttacks()[selectSpecialAttackIndex];
 
         // 공격 타입별로 로직 수행
         if (attackStrategy is TargetedAttackStrategy targetedAttack)
@@ -82,7 +82,6 @@ public class BattleController : MonoBehaviour
     //타겟지정 로직
     private void HandleTargetedAttack(Summon attackSummon, TargetedAttackStrategy targetedAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
-        StatusType attackStatusType = targetedAttack.getStatusType();
 
         if (isPlayer) //플레이어
         {
@@ -92,7 +91,7 @@ public class BattleController : MonoBehaviour
                 return;
             }
 
-            if (attackStatusType == StatusType.Heal || attackStatusType == StatusType.Upgrade || attackStatusType == StatusType.Shield)
+            if (targetedAttack.isBenefitEffect(targetedAttack))
             {
                 attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 아군 플레이트에 이로운 효과
                 Debug.Log($"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
@@ -111,14 +110,14 @@ public class BattleController : MonoBehaviour
                 return;
             }
 
-            if (attackStatusType == StatusType.Heal || attackStatusType == StatusType.Upgrade || attackStatusType == StatusType.Shield)
+            if (targetedAttack.isBenefitEffect(targetedAttack))
             {
                 attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 이로운 효과
                 Debug.Log($"적이 선택한 적의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
             }
             else
             {
-                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 공격
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 공격
                 Debug.Log($"적이 선택한 플레이어의 플레이트 {selectedPlateIndex}가 공격 대상입니다.");
             }
 
@@ -127,17 +126,31 @@ public class BattleController : MonoBehaviour
 
 
     //전체공격 로직
-    private void HandleAttackAll(Summon attackSummon, AttackAllEnemiesStrategy AllusAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
+    private void HandleAttackAll(Summon attackSummon, AttackAllEnemiesStrategy allAttackstrategy, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
 
         if (isPlayer)
         {
-            attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적의 플레이트에 공격
+            if(allAttackstrategy.isBenefitEffect(allAttackstrategy)) //힐, 보호막, 강화 인지 묻기
+            {
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적의 플레이트에 공격
+            }
+            else
+            {
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적의 플레이트에 공격
+            }
             Debug.Log("아군의 특수 전체 공격이 성공적으로 수행되었습니다.");
         }
         else
         {
-            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적이 플레이어 플레이트에 공격
+            if (allAttackstrategy.isBenefitEffect(allAttackstrategy)) //힐, 보호막, 강화 인지 묻기
+            {
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 버프
+            }
+            else
+            {
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 플레이어 플레이트에 공격
+            }
             Debug.Log("적의 특수 전체 공격이 성공적으로 수행되었습니다.");
         }
     }

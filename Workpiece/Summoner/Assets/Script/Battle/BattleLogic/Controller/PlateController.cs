@@ -122,8 +122,6 @@ public class PlateController : MonoBehaviour
                 }
             }
         }
-
-
    
    }
 
@@ -345,6 +343,54 @@ public class PlateController : MonoBehaviour
         }
 
         return -1; // 플레이트가 목록에 없을 경우 -1 반환
+    }
+
+
+
+    // 아군 플레이트 중 가장 체력이 낮은 소환수의 인덱스를 반환하는 메소드
+    public int getLowestHealthPlayerPlateIndex()
+    {
+        int lowestHealthIndex = -1;
+        double lowestHealth = double.MaxValue;
+
+        for (int i = 0; i < playerPlates.Count; i++)
+        {
+            Summon currentSummon = playerPlates[i].getCurrentSummon();
+            if (currentSummon != null)
+            {
+                double currentHealth = currentSummon.getNowHP();
+                if (currentHealth < lowestHealth)
+                {
+                    lowestHealth = currentHealth;
+                    lowestHealthIndex = i;
+                }
+            }
+        }
+
+        return lowestHealthIndex;
+    }
+
+    // 적 플레이트 중 가장 체력이 낮은 소환수의 인덱스를 반환하는 메소드
+    public int getLowestHealthEnermyPlateIndex()
+    {
+        int lowestHealthIndex = -1;
+        double lowestHealth = double.MaxValue;
+
+        for (int i = 0; i < enermyPlates.Count; i++)
+        {
+            Summon currentSummon = enermyPlates[i].getCurrentSummon();
+            if (currentSummon != null)
+            {
+                double currentHealth = currentSummon.getNowHP();
+                if (currentHealth < lowestHealth)
+                {
+                    lowestHealth = currentHealth;
+                    lowestHealthIndex = i;
+                }
+            }
+        }
+
+        return lowestHealthIndex;
     }
 
 

@@ -9133,7 +9133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f6eef2be85f6754ca145d6870f804af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  summon: {fileID: 1750558109740812656, guid: bf542230506a74c42b2451b8d3bc631f, type: 3}
+  summon: {fileID: 0}
 --- !u!1 &1961257246
 GameObject:
   m_ObjectHideFlags: 0

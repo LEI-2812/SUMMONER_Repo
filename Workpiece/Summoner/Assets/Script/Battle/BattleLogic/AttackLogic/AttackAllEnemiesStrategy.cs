@@ -20,9 +20,9 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
         this.statusTime = statusTime;
     }
 
-    public void Attack(Summon attacker, List<Plate> enemyPlates,int selectedPlateIndex, int SpecialAttackArrayIndex)
+    public void Attack(Summon attacker, List<Plate> targetPlates,int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
-        foreach (var plate in enemyPlates)
+        foreach (var plate in targetPlates)
         {
             Summon target = plate.getCurrentSummon();
             if (target != null)
@@ -60,6 +60,15 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
 
             }
         }
+    }
+
+    public bool isBenefitEffect(AttackAllEnemiesStrategy strategy)
+    {
+        if (strategy.getStatusType() == StatusType.Heal || strategy.getStatusType() == StatusType.Shield 
+            || strategy.getStatusType() == StatusType.Upgrade  || strategy.getStatusType() == StatusType.OnceInvincibility)
+            return true;
+        else
+            return false;
     }
 
     public double getSpecialDamage()

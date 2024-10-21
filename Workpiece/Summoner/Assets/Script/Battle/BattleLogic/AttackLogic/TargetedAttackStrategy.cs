@@ -77,6 +77,15 @@ public class TargetedAttackStrategy : IAttackStrategy
         }
     }
 
+    public bool isBenefitEffect(TargetedAttackStrategy strategy)
+    {
+        if (strategy.getStatusType() == StatusType.Heal || strategy.getStatusType() == StatusType.Shield
+            || strategy.getStatusType() == StatusType.Upgrade || strategy.getStatusType() == StatusType.OnceInvincibility)
+            return true;
+        else
+            return false;
+    }
+
     public double getSpecialDamage()
     {
         return damage;

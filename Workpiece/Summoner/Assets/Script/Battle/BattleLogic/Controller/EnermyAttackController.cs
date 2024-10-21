@@ -52,9 +52,8 @@ public class EnermyAttackController : MonoBehaviour
     public void EnermyAttackStart(List<AttackPrediction> playerAttackPredictionsList)
     {
         List<Plate> enermyPlate = plateController.getEnermyPlates();
-        List<Plate> playerPlate = plateController.getPlayerPlates();
 
-        for (int enermyPlateIndex = 0; enermyPlateIndex < enermyPlate.Count; enermyPlateIndex++) //적이 순차적으로 공격준비
+        for (int enermyPlateIndex = 0; enermyPlateIndex < plateController.getEnermySummonCount(); enermyPlateIndex++) //적이 순차적으로 공격준비
         {
             Summon attackingSummon = enermyPlate[enermyPlateIndex].getCurrentSummon(); //플레이트에 소환수를 차례로 가져와서
             // 소환수가 스턴 상태인지 확인
@@ -70,12 +69,13 @@ public class EnermyAttackController : MonoBehaviour
             }
                                     
             //맞대응 시작
-            playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, playerAttackPredictionsList); //최소 1번 수행
+            playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, enermyPlateIndex, playerAttackPredictionsList); //최소 1번 수행
             for (int seq = 0; seq < 2; seq++)
             {
                 if (continuesAttackByRank(attackingSummon))
                 {
-                    playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, playerAttackPredictionsList);
+                    Debug.Log("연속공격 발동");
+                    playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, enermyPlateIndex, playerAttackPredictionsList);
                 }
                 else
                 {
@@ -151,11 +151,6 @@ public class EnermyAttackController : MonoBehaviour
     //    }
     //}   
 
-    private void EnerymyAttackLogic(Summon attackingSummon, Summon target, int targetIndex)
-    {
-
-
-    }
 
 
     //일반 공격

@@ -17,9 +17,9 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
         this.currentCooldown = 0;
         this.statusTime = statusTime;
     }
-    public void Attack(Summon attacker, List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)
+    public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)
     {
-        Summon closestEnemySummon = GetClosestEnemySummon(enemyPlates);
+        Summon closestEnemySummon = GetClosestEnemySummon(targetPlates);
 
         if (closestEnemySummon != null)
         {
@@ -32,11 +32,11 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
         }
     }
 
-    private Summon GetClosestEnemySummon(List<Plate> enemyPlates)
+    private Summon GetClosestEnemySummon(List<Plate> targetPlates)
     {
-        for (int i = 0; i < enemyPlates.Count; i++)
+        for (int i = 0; i < targetPlates.Count; i++)
         {
-            Summon enemySummon = enemyPlates[i].getCurrentSummon();
+            Summon enemySummon = targetPlates[i].getCurrentSummon();
             if (enemySummon != null)
             {
                 return enemySummon; // 첫 번째로 존재하는 소환수를 바로 반환

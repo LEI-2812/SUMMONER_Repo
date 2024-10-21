@@ -46,20 +46,20 @@ public class Summon : MonoBehaviour
 
 
 
-    public void normalAttack(List<Plate> enemyPlates, int selectedPlateIndex)
+    public void normalAttack(List<Plate> targetPlates, int selectedPlateIndex)
     {
         if (attackStrategy == null || attackStrategy.getCurrentCooldown() > 0)
         {
             Debug.Log("일반 공격을 해당턴에 사용했습니다.");
             return;
         }
-        attackStrategy.Attack(this, enemyPlates, selectedPlateIndex, 0); // 일반 공격 수행
+        attackStrategy.Attack(this, targetPlates, selectedPlateIndex, 0); // 일반 공격 수행
 
         // 해당 공격에 쿨타임 적용
         attackStrategy.ApplyCooldown();
     }
 
-    public virtual void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
+    public virtual void SpecialAttack(List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
         if (SpecialAttackArrayIndex < 0 || SpecialAttackArrayIndex >= specialAttackStrategies.Length)
         {
@@ -76,7 +76,7 @@ public class Summon : MonoBehaviour
         }
 
         // 공격 수행
-        specialAttack.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
+        specialAttack.Attack(this, targetPlates, selectedPlateIndex, SpecialAttackArrayIndex);
 
         // 해당 공격에 쿨타임 적용
         specialAttack.ApplyCooldown();
