@@ -45,7 +45,6 @@ public class Player : Character
         reSummonButtonText = reSummonButton.GetComponentInChildren<TextMeshProUGUI>();
         battleAlert = GetComponent<BattleAlert>();
         ResetPlayerSetting();
-       
     }
 
     private void Update()
@@ -81,6 +80,7 @@ public class Player : Character
     {
         if (hasSummonedThisTurn)
         {
+            summonFailSound.Play();
             Debug.Log("이 턴에서는 이미 소환을 했습니다. 다음 턴에 소환할 수 있습니다.");
             return;
         }
@@ -104,7 +104,7 @@ public class Player : Character
             Debug.Log("모든 플레이트에 소환수가 있습니다.");
         }
         else
-        {          
+        {
             summonFailSound.Play(); // 효과음 재생
             takeAction();
             Debug.Log("마나가 부족하여 소환 불가능");
