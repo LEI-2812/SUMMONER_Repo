@@ -29,7 +29,8 @@ public class TurnController : MonoBehaviour
         {
             player.startTurn();
 
-            foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons()) //플레이어 턴 시작시 적 플레이트의 상태이상 데미지 적용
+            //플레이어 턴 시작시 적 플레이트의 상태이상 데미지 적용
+            foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
             {
                 summon.UpdateStatusEffectsAndCooldowns(); // 상태이상 업데이트
                 summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
@@ -39,7 +40,7 @@ public class TurnController : MonoBehaviour
         {
             enermy.startTurn();
 
-            // 적 턴 종료 시, 적 소환수의 상태이상 및 쿨타임 업데이트
+            // 적 턴 시작시 아군 소환수 상태이상 및 쿨타임 업데이트
             foreach (var summon in player.getPlateController().getPlayerSummons())
             {
                 summon.UpdateStatusEffectsAndCooldowns(); // 상태이상 업데이트
