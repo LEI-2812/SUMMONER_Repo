@@ -6,7 +6,7 @@
   - Click_2 : Setting, Alert의 모든 버튼 클릭 시
   - Click_3 : Alert 출력 시 (Fight Screen Alert 제외)
   - Click_4 : Fight Screen의 모든 버튼 클릭 시
-  - Click_No : Fight Screen의 버튼 클릭 불가능 시
+  - Click_5 : Fight Screen의 버튼 클릭 불가능 시
 - Story 폴더
   - Angry : Stage3 여우가 화내는 이미지 출력 시
   - Effect : Stage2, Stage3 노란색/파란색 효과 이미지 출력 시
