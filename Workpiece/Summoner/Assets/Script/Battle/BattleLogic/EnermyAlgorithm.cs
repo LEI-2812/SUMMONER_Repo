@@ -131,7 +131,7 @@ public class EnermyAlgorithm : MonoBehaviour
 
     private bool reactSpecialFromPoison(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getAvailableSpecialAttacks(); // 사용 가능한 스킬들 가져오기
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //해당 소환수의 스킬 가져오기
 
         if (attackStrategy == null)
         {
@@ -142,6 +142,10 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                {
+                    continue;
+                }
                 if (attackStrategy[i].getStatusType() == StatusType.Heal) //타겟플레이트가 적이 되어야함
                 {
                     int targetPlateIndex = plateController.getLowestHealthEnermyPlateIndex();
@@ -163,7 +167,7 @@ public class EnermyAlgorithm : MonoBehaviour
 
     private bool reactSpecialFromTargetNone(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getAvailableSpecialAttacks(); // 사용 가능한 스킬들 가져오기
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //해당 소환수의 스킬 가져오기
 
         if (attackStrategy == null)
         {
@@ -174,6 +178,10 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                {
+                    continue;
+                }
                 if (attackStrategy[i].getStatusType() == StatusType.Stun)
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i);
@@ -193,13 +201,6 @@ public class EnermyAlgorithm : MonoBehaviour
                     return true;
                 }
             }
-
-            //// 특수 공격을 실행하지 않은 경우, 일반 공격 실행
-            //if (!specialAttackExecuted)
-            //{
-            //    handleReactNormalAttack(attacker, targetPlateIndex);
-            //    Debug.Log($"{attacker.getSummonName()}가 일반 공격을 실행했습니다."); 
-            //}
         }
         return false;
     }
@@ -207,7 +208,7 @@ public class EnermyAlgorithm : MonoBehaviour
     //전체 공격 대응
     private bool reactSpecialFromAllNone(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getAvailableSpecialAttacks(); // 사용 가능한 스킬들 가져오기
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //해당 소환수의 스킬 가져오기
 
         if (attackStrategy == null)
         {
@@ -218,6 +219,10 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                {
+                    continue;
+                }
                 if (attackStrategy[i].getStatusType() == StatusType.Stun)
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i); //공격한 대상에게 스턴
@@ -244,7 +249,7 @@ public class EnermyAlgorithm : MonoBehaviour
     }
     private bool reactSpecialFromHeal(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getAvailableSpecialAttacks(); // 사용 가능한 스킬들 가져오기
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //해당 소환수의 스킬 가져오기
 
         if (attackStrategy == null)
         {
@@ -255,6 +260,10 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                {
+                    continue;
+                }
                 if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //타겟공격인지 검사
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i);
@@ -274,7 +283,7 @@ public class EnermyAlgorithm : MonoBehaviour
     }
     private bool reactSpecialFromUpgrade(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getAvailableSpecialAttacks(); // 사용 가능한 스킬들 가져오기
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //해당 소환수의 스킬 가져오기
 
         if (attackStrategy == null)
         {
@@ -285,6 +294,10 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                {
+                    continue;
+                }
                 if (attackStrategy[i].getStatusType() == StatusType.Curse) //저주공격인지 검사
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i);
@@ -308,7 +321,7 @@ public class EnermyAlgorithm : MonoBehaviour
 
     private void handleReactNormalAttack(Summon attacker, int attackingEnermyPlateIndex, int targetPlateIndex)
     {
-        IAttackStrategy[] attackStrategy = attacker.getAvailableSpecialAttacks(); // 사용 가능한 스킬들 가져오기
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //해당 소환수의 스킬 가져오기
         float randomValue;
         if (attackStrategy == null)
         {
@@ -332,6 +345,10 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                {
+                    continue;
+                }
                 if (attackStrategy[i].getStatusType() == StatusType.Upgrade) //강화 공격인지 검사
                 {
                     battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
@@ -356,6 +373,10 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                {
+                    continue;
+                }
                 if (attackStrategy[i].getStatusType() == StatusType.Curse)
                 {
                     battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
@@ -380,6 +401,10 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                {
+                    continue;
+                }
                 if (attackStrategy[i].getStatusType() == StatusType.LifeDrain) //저주 공격인지 검사
                 {
                     battleController.SpecialAttackLogic(attacker, get30PercentDifferentHP(attacker, plateController.getPlayerPlates()), i);

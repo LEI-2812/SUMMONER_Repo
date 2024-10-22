@@ -48,19 +48,19 @@ public class TargetedAttackStrategy : IAttackStrategy
                     Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 {damage} 만큼 보호막을 부여합니다.");
                     break;
                 case StatusType.Upgrade: //강화
-                    double upgradeAttackPower = target.getAttackPower() * attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage();
+                    double upgradeAttackPower = attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage();
                     StatusEffect upgradeEffect = new StatusEffect(StatusType.Upgrade, statusTime, upgradeAttackPower);
                     target.ApplyStatusEffect(upgradeEffect);
-                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {upgradeAttackPower} 만큼 상승 시켰습니다.");
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {upgradeAttackPower*100} 만큼 상승 시켰습니다.");
                     break;
                 case StatusType.OnceInvincibility: //무적
                     target = attacker; //자기자신이 대상
                     target.setOnceInvincibility(true); //1번 무적 활성화
                     break;
                 case StatusType.Curse: //저주
-                    double curseAttackPower = target.getAttackPower() - (target.getAttackPower() * 0.2); //대상 공격력 20% 감소
-                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) 강력하게 공격합니다.");
-                    StatusEffect curseEffect = new StatusEffect(StatusType.Upgrade, statusTime, curseAttackPower);
+                    double curseAttackPower =  attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage(); //대상 공격력 20% 감소
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게  공격력 {curseAttackPower * 100} 만큼 저주를 걸었습니다.");
+                    StatusEffect curseEffect = new StatusEffect(StatusType.Curse, statusTime, curseAttackPower);
                     target.ApplyStatusEffect(curseEffect);
                     target.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // 강력한 공격
                     break;

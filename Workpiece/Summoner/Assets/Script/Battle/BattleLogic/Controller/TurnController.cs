@@ -27,25 +27,36 @@ public class TurnController : MonoBehaviour
     {
         if (currentTurn == Turn.PlayerTurn)  // 플레이어 턴일 경우
         {
-            player.startTurn();
-
             //플레이어 턴 시작시 적 플레이트의 상태이상 데미지 적용
             foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
             {
-                summon.UpdateStatusEffectsAndCooldowns(); // 상태이상 업데이트
+                summon.UpdateDamageStatusEffects(); // 데미지를 주는 상태이상 업데이트
+                summon.UpdateStunAndCurseStatus(); // 스턴 및 저주 상태 업데이트
                 summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
             }
+            foreach(var summon in player.getPlateController().getPlayerSummons())
+            {
+                summon.UpdateSpecialAttackCooldowns(); // 특수 공격 쿨타임 업데이트
+            }
+
+            player.startTurn();
         }
         else if (currentTurn == Turn.EnermyTurn)  // 적의 턴일 경우
         {
-            enermy.startTurn();
-
             // 적 턴 시작시 아군 소환수 상태이상 및 쿨타임 업데이트
             foreach (var summon in player.getPlateController().getPlayerSummons())
             {
-                summon.UpdateStatusEffectsAndCooldowns(); // 상태이상 업데이트
+                summon.UpdateDamageStatusEffects(); // 데미지를 주는 상태이상 업데이트
+                summon.UpdateStunAndCurseStatus(); // 스턴 및 저주 상태 업데이트
                 summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
             }
+
+            foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
+            {
+                summon.UpdateSpecialAttackCooldowns(); // 특수 공격 쿨타임 업데이트
+            }
+
+            enermy.startTurn();
         }
     }
 
@@ -56,8 +67,16 @@ public class TurnController : MonoBehaviour
             // 다음 턴을 적의 턴으로 설정
             currentTurn = Turn.EnermyTurn;
 
+            // 적 턴 시작시 아군 소환수 상태이상 및 쿨타임 업데이트
+            foreach (var summon in player.getPlateController().getPlayerSummons())
+            {
+                summon.UpdateUpgradeStatus(); //강화 상태 업데이트
+            }
+
             // 플레이어 턴이 끝나면 턴 카운트를 증가시키지 않고 바로 적 턴 시작
             StartTurn();
+
+
         }
         else if (currentTurn == Turn.EnermyTurn)
         {
@@ -67,6 +86,22 @@ public class TurnController : MonoBehaviour
             turnCount++; // 적 턴이 끝나면 턴 카운트를 증가시킴
             UpdateTurnCountUI();
             player.AddMana();
+
+            //적 턴 끝날때 적 플레이트의 강화를 품
+            foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
+            {
+                summon.UpdateUpgradeStatus(); //강화 상태 업데이트
+            }
+
+            // 플레이어 턴이 끝날 때 혼란 상태가 아닌 소환수들의 공격 가능 여부를 설정
+            foreach (var summon in player.getPlateController().getPlayerSummons())
+            {
+                if (!summon.IsStun()) // 스턴 상태가 아닌 경우
+                {
+                    summon.setIsAttack(true); // 공격 가능하게 설정
+                }
+            }
+
             Debug.Log("현재 턴: " + turnCount);
 
             StartTurn();

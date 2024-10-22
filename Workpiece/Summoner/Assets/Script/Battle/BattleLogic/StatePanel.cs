@@ -1,9 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StatePanel: MonoBehaviour
+public interface stateObserver
+{
+    void StateUpdate();
+}
+
+public interface UpdateStateObserver
+{
+    void AddObserver(stateObserver observer);
+    void RemoveObserver(stateObserver observer);
+    void NotifyObservers();
+}
+
+public class StatePanel: MonoBehaviour, stateObserver
 {
     [SerializeField] private Summon stateSummon; //Summon
     [SerializeField] private Image summonImage; //image
@@ -18,6 +31,7 @@ public class StatePanel: MonoBehaviour
     public void setStatePanel(Summon stateSummon, bool isEnemyPlate)
     {
         this.stateSummon = stateSummon;
+        stateSummon.AddObserver(this); // 옵저버로 등록
 
         // 소환수의 이미지를 패널에 설정
         if (summonImage != null && stateSummon != null && stateSummon.getImage() != null)
@@ -46,6 +60,8 @@ public class StatePanel: MonoBehaviour
             NormalAttackButton.image.sprite = stateSummon.normalAttackSprite;   // 일반 공격 스프라이트 설정
             SpecialAttackButton.image.sprite = stateSummon.specialAttackSprite; // 특수 공격 스프라이트 설정
         }
+
+        StateUpdate();
     }
 
 
@@ -54,4 +70,21 @@ public class StatePanel: MonoBehaviour
         return stateSummon;
     }
 
+    public void StateUpdate()
+    {
+        if (stateSummon != null)
+        {
+            // 소환수가 사망 상태인지 체크
+            if (stateSummon.getNowHP() <= 0)
+            {
+                // 사망 시 StatePanel 비활성화
+                gameObject.SetActive(false);
+                return;
+            }
+
+            // HP 슬라이더 업데이트
+            float sliderHP = (float)(stateSummon.getNowHP() / stateSummon.getMaxHP());
+            HPSlider.value = sliderHP;
+        }
+    }
 }

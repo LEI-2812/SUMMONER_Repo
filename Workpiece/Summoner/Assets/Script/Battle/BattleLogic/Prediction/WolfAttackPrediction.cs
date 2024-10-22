@@ -3,15 +3,73 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class WolfAttackPrediction : MonoBehaviour
+public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 {
-    private PlateController plateController;
 
-    private void Awake()
+    public SummonType getPreSummonType()
     {
-        plateController = GetComponent<PlateController>();
+        return SummonType.Wolf;
     }
 
+    public AttackPrediction getAttackPrediction(Summon wolf, int wolfPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    {
+        // 기본값 설정: 일반 공격 50%, 특수 공격 50%
+        AttackProbability attackProbability = new AttackProbability(50f, 50f);
+        int attackIndex = getClosestEnermyIndex(enermyPlates);
+        AttackPrediction attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+
+        if (IsEnermyCountTwoOrMore(enermyPlates)) //적이 2마리 이상인가?
+        {
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "늑대 적이 2마리 이상");
+            if (AllEnermyHealthOver50(enermyPlates)) //몬스터 체력이 모두 50% 이상인가?
+            {
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "늑대 적 몬스터 체력이 모두 50% 이상");
+            }
+            else if (AllEnermyHealthDown50(enermyPlates)) //몬스터 체력이 모두 50% 이하인가?
+            {
+                if (HasSpecificAvailableSpecialAttack(wolf, enermyPlates))
+                {
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "늑대 적 몬스터 체력이 모두 50% 이하");
+                }
+            }
+            else if (IsEnermyHealthDifferenceOver30(enermyPlates)) //몬스터 한쪽이 다른 쪽에비해 체력이 30% 높은가?
+            {
+                if (IsLowestHealthEnermyClosest(wolf, enermyPlates)) //낮은쪽의 인덱스가 근접공격하는 인덱스와 동일한가?
+                {
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 20f, true, "늑대 낮은쪽으로 공격하는 인덱스가 동일");
+                }
+                else
+                {
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "늑대 일반공격으로 공격하는 인덱스가 불일치");
+                }
+            }
+        }
+        else if (IsEnermyCountOne(enermyPlates)) //적이 1마리 인가?
+        {
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "늑대 적이 1마리뿐");
+
+            if (getIndexOfNormalAttackCanKill(wolf, enermyPlates) != -1) //일반 공격으로 몬스터를 물리칠 수 있는가?
+            {
+                attackIndex = getIndexOfNormalAttackCanKill(wolf, enermyPlates);
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "늑대 일반 공격으로 처치가능");
+            }
+            else
+            {
+                //일반 공격과 특수공격중 피해를 더 줄 수 있는 공격을 반환했을 때 일반 공격일경우
+                if (getMostDamageAttack(wolf, enermyPlates) == AttackType.NormalAttack)
+                {
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "늑대 일반 공격이 더 많은 피해를 입힘");
+                }
+                else
+                {
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "늑대 특수공격이 더 많은 피해를 입힘");
+                }
+            }
+        }
+
+        attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        return attackPrediction;
+    }
 
 
     // 적의 체력이 모두 50% 이상인지 확인하는 메소드
@@ -117,19 +175,6 @@ public class WolfAttackPrediction : MonoBehaviour
     }
 
 
-    public int getClosestEnermyIndex(List<Plate> enermyPlates)
-    {
-        for (int i = 0; i < enermyPlates.Count; i++)
-        {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
-            if (enermySummon != null)
-            {
-                return i; // 가장 가까운(첫 번째로 발견된) 적 소환수의 인덱스 반환
-            }
-        }
-        return -1; // 적 소환수가 없으면 -1 반환
-    }
-
 
     // 적이 2마리 이상인지 확인하는 메소드
     public bool IsEnermyCountTwoOrMore(List<Plate> enermyPlates)
@@ -144,7 +189,7 @@ public class WolfAttackPrediction : MonoBehaviour
     }
 
 
-    // 자기 자신을 제외하고 플레이어의 소환수에 특정 특수 공격 상태가 있는지 확인하는 메소드
+    // 자기 자신을 제외하고 플레이어의 소환수에 특수공격이 공격형인 스킬이 있는지 확인하는 메소드
     public bool HasSpecificAvailableSpecialAttack(Summon self, List<Plate> playerPlates)
     {
         // 검사할 특수 공격 상태 타입들 (None, Burn, Poison, LifeDrain)
@@ -173,21 +218,6 @@ public class WolfAttackPrediction : MonoBehaviour
         return false; // 특정 상태가 없으면 false 반환
     }
 
-
-    // 일반 공격으로 적을 물리칠 수 있는 가장 가까운 인덱스를 반환하는 메소드
-    public int getIndexofNormalAttackCanKill(Summon attackingSummon, List<Plate> enermyPlates)
-    {
-        for (int i = 0; i < enermyPlates.Count; i++)
-        {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
-            if (enermySummon != null && attackingSummon.getAttackPower() >= enermySummon.getNowHP())
-            {
-                // 일반 공격으로 적의 체력을 0 이하로 만들 수 있으면 해당 인덱스 반환
-                return i;
-            }
-        }
-        return -1; // 공격 가능한 적이 없으면 -1 반환
-    }
 
     public AttackType getMostDamageAttack(Summon attackingSummon, List<Plate> enermyPlates)
     {
@@ -221,5 +251,59 @@ public class WolfAttackPrediction : MonoBehaviour
         }
 
         return AttackType.NormalAttack;
+    }
+
+    // 가장 가까운 적을 공격했을 때 물리칠 수 있는지 확인하는 메소드
+    public int getIndexOfNormalAttackCanKill(Summon wolf, List<Plate> enermyPlates)
+    {
+        // 가장 가까운 적의 인덱스를 가져옴
+        int closestIndex = getClosestEnermyIndex(enermyPlates);
+
+        if (closestIndex != -1)
+        {
+            Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
+            // 가장 가까운 적의 소환수가 있고, 일반 공격으로 물리칠 수 있는지 확인
+            if (closestEnermySummon != null && wolf.getAttackPower() >= closestEnermySummon.getNowHP())
+            {
+                return closestIndex; // 공격으로 물리칠 수 있으면 인덱스 반환
+            }
+        }
+
+        return -1; // 공격 가능한 적이 없으면 -1 반환
+    }
+
+
+    public int getClosestEnermyIndex(List<Plate> enermyPlates)
+    {
+        for (int i = 0; i < enermyPlates.Count; i++)
+        {
+            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            if (enermySummon != null)
+            {
+                return i; // 가장 가까운(첫 번째로 발견된) 적 소환수의 인덱스 반환
+            }
+        }
+        return -1; // 적 소환수가 없으면 -1 반환
+    }
+
+
+    // 확률 값을 설정하고 조정하여 반환하는 메소드
+    private AttackProbability AdjustAttackProbabilities(AttackProbability currentProbabilities, float AttackChange, bool isNormalAttack, string reason)
+    {
+        if (isNormalAttack)
+        {
+            // 일반 공격 확률을 증가시키고, 특수 공격 확률을 그만큼 감소
+            currentProbabilities.normalAttackProbability += AttackChange;
+            currentProbabilities.specialAttackProbability -= AttackChange;
+            Debug.Log($"일반 공격 확률이 {AttackChange}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
+        }
+        else
+        {
+            // 특수 공격 확률을 증가시키고, 일반 공격 확률을 그만큼 감소
+            currentProbabilities.specialAttackProbability += AttackChange;
+            currentProbabilities.normalAttackProbability -= AttackChange;
+            Debug.Log($"특수 공격 확률이 {AttackChange}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
+        }
+        return currentProbabilities;
     }
 }

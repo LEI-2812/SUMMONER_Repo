@@ -51,7 +51,7 @@ public class BattleController : MonoBehaviour
         }
 
         // 사용 가능한 특수 공격을 배열 인덱스로 가져옴
-        IAttackStrategy attackStrategy = attackSummon.getAvailableSpecialAttacks()[selectSpecialAttackIndex];
+        IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy()[selectSpecialAttackIndex];
 
         // 공격 타입별로 로직 수행
         if (attackStrategy is TargetedAttackStrategy targetedAttack)
