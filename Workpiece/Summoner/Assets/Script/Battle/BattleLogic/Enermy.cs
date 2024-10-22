@@ -18,14 +18,14 @@ public class Enermy : Character
         enermyAlgorithm = GetComponent<EnermyAlgorithm>();
     }
 
-    public override void startTurn()
+    public  void startTurn()
     {
-        base.startTurn();
+        Debug.Log("적 턴 시작");
         // 적의 행동을 자동으로 결정함 (예: 플레이어를 공격)
         takeAction();
     }
 
-    public override void takeAction() //여기에 AI로직 작성
+    public  void takeAction() //여기에 AI로직 작성
     {
         //플레이어의 예측공격 리스트를 가져오고
         List<AttackPrediction> playerAttackPredictionsList = enermyAlgorithm.getPlayerAttackPredictionsList();
@@ -39,7 +39,7 @@ public class Enermy : Character
         EndTurn();
     }
 
-    public override void EndTurn()
+    public void EndTurn()
     {
         Debug.Log("적 턴 종료");
         turnController.EndTurn();

@@ -68,9 +68,9 @@ public class Player : Character
         }
     }
 
-    public override void startTurn()
+    public void startTurn()
     {
-        base.startTurn();
+        Debug.Log("플레이어 턴 시작");
         Debug.Log($"{gameObject.name} 의 마나: {mana}");
         hasSummonedThisTurn = false;
         UpdateManaUI();
@@ -106,7 +106,6 @@ public class Player : Character
         else
         {
             summonFailSound.Play(); // 효과음 재생
-            takeAction();
             Debug.Log("마나가 부족하여 소환 불가능");
         }
     }
@@ -148,6 +147,11 @@ public class Player : Character
     public void OnAttackBtnClick() //일반공격
     {
         Summon attackSummon = battleController.attackStart(0); //공격할 소환수를 받아온다.
+        if (!attackSummon.getIsAttack()) {
+            Debug.Log("공격할 수 없습니다. ");  
+            return; 
+        }
+
         if (attackSummon != null)
         {
             // 일반 공격 수행(플레이트, 공격할 인덱스)
@@ -169,6 +173,11 @@ public class Player : Character
     public void OnSpecialAttackBtnClick() //특수공격
     {
         Summon attackSummon = battleController.attackStart(0); // 공격할 소환수를 가져옴
+        if (!attackSummon.getIsAttack())
+        {
+            Debug.Log("공격할 수 없습니다. ");
+            return;
+        }
 
         if (attackSummon != null)
         {

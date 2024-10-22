@@ -25,12 +25,15 @@ public class StatusEffect
 
     private Summon attacker; // 공격자
 
+    private bool applyOnce = false;
+
     public StatusEffect(StatusType type, int eTime, double damage=0, Summon attacker = null)
     {
         statusType = type;
         effectTime = eTime;
         damagePerTurn = damage;
         this.attacker = attacker;
+        applyOnce = false;
     }
 
 
@@ -73,10 +76,23 @@ public class StatusEffect
             case StatusType.Upgrade: //강화
                 target.UpgradeAttackPower(damagePerTurn);
                 break;
+            case StatusType.Curse: //저주
+                target.Cursed(damagePerTurn);
+                break;
 
             default:
                 Debug.Log("정의되지 않은 상태이상입니다.");
                 break;
         }
+    }
+
+    public bool shouldApplyOnce()
+    {
+        return damagePerTurn > 0 && !applyOnce;
+    }
+
+    public void setApplyOnce()
+    {
+        applyOnce = true; // 한 번만 적용되도록 표시
     }
 }

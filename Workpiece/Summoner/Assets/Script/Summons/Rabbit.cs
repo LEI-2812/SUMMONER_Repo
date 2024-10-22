@@ -7,15 +7,15 @@ public class Rabbit : Summon
 {
     private void Awake()
     {
-        summonInitialize();
+        summonInitialize(5);
     }
 
-    public override void summonInitialize()
+    public void summonInitialize(int n)
     {
         summonName = "Rabbit";
-        maxHP = 250;
+        maxHP = 250 * n;
         nowHP = maxHP;
-        attackPower = 20; //일반공격
+        attackPower = 20*n; //일반공격
         summonRank = SummonRank.Medium; // 중급 소환수
         summonType = SummonType.Rabbit;
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접공격

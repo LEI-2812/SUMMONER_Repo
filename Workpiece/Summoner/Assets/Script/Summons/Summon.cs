@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ public enum SummonType
     Cat, Rabbit, Wolf, Eagle, Snake, Fox
 }
 
-public class Summon : MonoBehaviour
+public class Summon : MonoBehaviour, UpdateStateObserver
 {
     [SerializeField] private Image image; //이미지
     protected string summonName; //이름
@@ -36,7 +37,8 @@ public class Summon : MonoBehaviour
     protected IAttackStrategy attackStrategy;
     protected IAttackStrategy[] specialAttackStrategies;
 
-    
+    private List<stateObserver> observers = new List<stateObserver>();
+
 
     private void Awake()
     {
@@ -57,6 +59,7 @@ public class Summon : MonoBehaviour
 
         // 해당 공격에 쿨타임 적용
         attackStrategy.ApplyCooldown();
+        isAttack = false;
     }
 
     public virtual void SpecialAttack(List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
@@ -80,6 +83,7 @@ public class Summon : MonoBehaviour
 
         // 해당 공격에 쿨타임 적용
         specialAttack.ApplyCooldown();
+        isAttack = false;
     }
 
     // 상태이상 적용 메소드 (여러 상태이상 중복 허용) //덮어씌어지는 로직
@@ -128,7 +132,11 @@ public class Summon : MonoBehaviour
                 {
                     // 새로운 강화 상태이상 추가
                     activeStatusEffects.Add(statusEffect);
-                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    if (statusEffect.shouldApplyOnce())
+                    {
+                        statusEffect.ApplyStatus(this); // 한 번만 적용
+                        statusEffect.setApplyOnce(); // 적용된 상태 표시
+                    }
                     Debug.Log($"{summonName}의 공격력이 강화되었습니다.");
                 }
                 break;
@@ -142,7 +150,11 @@ public class Summon : MonoBehaviour
                 {
                     // 새로운 저주 상태이상 추가
                     activeStatusEffects.Add(statusEffect);
-                    statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    if (statusEffect.shouldApplyOnce())
+                    {
+                        statusEffect.ApplyStatus(this); // 한 번만 적용
+                        statusEffect.setApplyOnce(); // 적용된 상태 표시
+                    }
                     Debug.Log($"{summonName}에게 저주 상태이상이 적용되었습니다.");
                 }
                 break;
@@ -194,69 +206,131 @@ public class Summon : MonoBehaviour
         }
     }
 
-
-    // 상태이상 및 쿨타임 업데이트 메소드
-    public void UpdateStatusEffectsAndCooldowns()
+    // 데미지를 주는 상태이상 업데이트 메소드 (예: Poison, Burn 등)
+    public void UpdateDamageStatusEffects()
     {
         List<StatusEffect> expiredEffects = new List<StatusEffect>();
 
-        // 모든 상태이상의 지속시간을 감소시키고, 지속 데미지 처리
         foreach (var effect in activeStatusEffects)
         {
-            if (effect != null)
+            if (effect != null && effect.effectTime > 0)
             {
-                if (effect.effectTime > 0) // 상태가 남아있는 동안
+                // 데미지 주는 상태 확인 및 처리
+                if (effect.damagePerTurn > 0 && effect.statusType != StatusType.Upgrade && effect.statusType != StatusType.Curse)
                 {
+                    takeDamage(effect.damagePerTurn);
+                    Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다. 남은 상태이상시간: {effect.effectTime} 턴");
+                }
 
-                    if (effect.damagePerTurn > 0)
-                    {
-                        takeDamage(effect.damagePerTurn); // 지속 데미지 적용
-                        Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다. 남은 상태이상시간: {effect.effectTime} 턴");
-                    }
+                // 지속시간 감소
+                effect.effectTime--;
 
-                    effect.effectTime--; // 상태이상 지속시간 감소
-
-                    // 상태가 0이 된 후에 만료 리스트에 추가
-                    if (effect.effectTime <= 0)
-                    {
-                        expiredEffects.Add(effect); // 지속 시간이 끝난 상태이상은 만료 처리
-                    }
+                // 상태가 만료될 경우 만료 리스트에 추가
+                if (effect.effectTime <= 0)
+                {
+                    expiredEffects.Add(effect);
                 }
             }
         }
 
-        // 만료된 상태이상 제거
+        RemoveExpiredEffects(expiredEffects);
+    }
+
+    // 스턴 상태 업데이트 메소드
+    public void UpdateStunAndCurseStatus()
+    {
+        List<StatusEffect> expiredEffects = new List<StatusEffect>();
+
+        foreach (var effect in activeStatusEffects)
+        {
+            if (effect != null && (effect.statusType == StatusType.Stun || effect.statusType == StatusType.Curse))
+            {
+                // 스턴 상태는 공격 불가능하게 설정
+                if (effect.statusType == StatusType.Stun)
+                {
+                    setIsAttack(false);
+                    Debug.Log($"{summonName}은 스턴 상태로 공격할 수 없습니다.");
+                }
+
+                // 지속시간 감소
+                effect.effectTime--;
+
+                // 상태가 만료될 경우 만료 리스트에 추가
+                if (effect.effectTime <= 0)
+                {
+                    expiredEffects.Add(effect);
+                }
+            }
+        }
+
+        RemoveExpiredEffects(expiredEffects);
+    }
+
+    // 강화 상태 업데이트 메소드
+    public void UpdateUpgradeStatus()
+    {
+        List<StatusEffect> expiredEffects = new List<StatusEffect>();
+
+        foreach (var effect in activeStatusEffects)
+        {
+            if (effect != null && effect.statusType == StatusType.Upgrade)
+            {
+                // 강화는 지속시간만 관리하며, 데미지를 주지 않음
+                effect.effectTime--;
+
+                // 상태가 만료될 경우 만료 리스트에 추가
+                if (effect.effectTime <= 0)
+                {
+                    expiredEffects.Add(effect);
+                }
+            }
+        }
+
+        RemoveExpiredEffects(expiredEffects);
+    }
+
+    // 만료된 상태이상 제거 메소드
+    private void RemoveExpiredEffects(List<StatusEffect> expiredEffects)
+    {
         foreach (var expired in expiredEffects)
         {
             activeStatusEffects.Remove(expired);
             Debug.Log($"{summonName}의 {expired.statusType} 상태이상이 종료되었습니다.");
-        }
 
-        // 특수 공격들의 쿨타임 처리
-        if (specialAttackStrategies != null) // 배열이 null이 아닌지 확인
-        {
-            foreach (var specialAttack in specialAttackStrategies)
+            // 스턴 해제 시 공격 가능하도록 설정
+            if (expired.statusType == StatusType.Stun)
             {
-                if (specialAttack != null) // 각 공격이 null인지 확인
+                setIsAttack(true);
+                Debug.Log($"{summonName}의 스턴이 해제되었습니다. 공격 가능.");
+            }
+        }
+    }
+
+
+
+    // 특수 공격 쿨타임 업데이트 메소드
+    public void UpdateSpecialAttackCooldowns()
+    {
+        if (specialAttackStrategies == null) return; // 배열이 null인 경우 체크
+
+        foreach (var specialAttack in specialAttackStrategies)
+        {
+            if (specialAttack != null)
+            {
+                if (specialAttack.getCurrentCooldown() > 0)
                 {
-                    if (specialAttack.getCurrentCooldown() > 0){
-                        specialAttack.ReduceCooldown(); // 쿨타임 감소
-                        Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 스킬의 남은 쿨타임: {specialAttack.getCurrentCooldown()} 턴");
-                    }
-                    else
-                        Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 스킬 쿨타임이 종료되었습니다.");
+                    specialAttack.ReduceCooldown(); // 쿨타임 감소
+                    Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 스킬의 남은 쿨타임: {specialAttack.getCurrentCooldown()} 턴");
+                }
+                else
+                {
+                    Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 스킬 쿨타임이 종료되었습니다.");
                 }
             }
         }
     }
 
-    public void CheckCanAttack()
-    {
-        if (!isAttack)
-        {
-            Debug.Log($"{summonName}은(는) 현재 공격할 수 없습니다.");
-        }
-    }
+
 
     public bool getIsAttack()
     {
@@ -276,7 +350,13 @@ public class Summon : MonoBehaviour
     public void UpgradeAttackPower(double multiplier)
     {
         attackPower *= (1 + multiplier);
-        Debug.Log($"{summonName}의 공격력이 {multiplier * 100}% 변경되었습니다. 현재 공격력: {attackPower}");
+        Debug.Log($"{summonName}의 공격력이 {multiplier * 100}% 강화 되었습니다. 현재 공격력: {attackPower}");
+    }
+
+    public void Cursed(double curse)
+    {
+        attackPower *= (1 - curse);
+        Debug.Log($"{summonName}의 공격력이 {curse * 100}% 다운 되었습니다. 현재 공격력: {attackPower}");
     }
 
     public void ApplyDamage(double damage)
@@ -300,6 +380,8 @@ public class Summon : MonoBehaviour
             nowHP = maxHP;
         }
         Debug.Log($"{summonName}이(가) {healAmount}만큼 체력을 회복했습니다.");
+        // 체력 변경 시 옵저버들에게 알림
+        NotifyObservers();
     }
 
 
@@ -343,6 +425,9 @@ public class Summon : MonoBehaviour
         {
             Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
         }
+
+        // 체력 변경 시 옵저버들에게 알림
+        NotifyObservers();
     }
 
     // 소환수 초기화 메서드
@@ -361,7 +446,10 @@ public class Summon : MonoBehaviour
 
         // 소환수 오브젝트 삭제
         Destroy(gameObject); // 소환수 오브젝트를 씬에서 제거
+
     }
+
+  
 
     public void AddShield(double shieldAmount)
     {
@@ -456,6 +544,18 @@ public class Summon : MonoBehaviour
         return image;
     }
 
+
+    //특수공격이 쿨타임인지
+    public bool isSpecialAttackCool(IAttackStrategy specialAttack)
+    {
+        if (specialAttack!= null && specialAttack.getCurrentCooldown() > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public List<StatusType> getAllStatusTypes()
     {
         List<StatusType> statusTypes = new List<StatusType>();
@@ -486,12 +586,29 @@ public class Summon : MonoBehaviour
         return false;
     }
 
+    public bool IsStun()
+    {
+        // activeStatusEffects 리스트를 하나씩 순회
+        foreach (StatusEffect effect in activeStatusEffects)
+        {
+            // 각 상태이상의 상태 타입이 StatusType.Stun 확인
+            if (effect.statusType == StatusType.Stun)
+            {
+                // Stun 상태가 발견되면 true 반환
+                return true;
+            }
+        }
+
+        // Stun 상태가 없으면 false 반환
+        return false;
+    }
+
     public bool IsCooltime() //쿨타임인지 확인
     {
         // 먼저 특수 공격 전략 배열이 있는지 확인
         if (specialAttackStrategies == null || specialAttackStrategies.Length == 0)
         {
-            Debug.Log("특수 공격 전략이 없습니다.");
+            Debug.Log("특수 공격이 없습니다.");
             return false;
         }
 
@@ -506,25 +623,6 @@ public class Summon : MonoBehaviour
             }
         }
         return false;
-    }
-
-
-    //사용가능한 특수공격 반환
-    public List<int> getAvailableSpecialAttack()
-    {
-        // 쿨타임이 없는 특수 스킬 목록을 가져옴
-        List<int> availableSpecialAttacks = new List<int>();
-
-        // 특수 공격 중 쿨타임이 없는 공격을 찾음
-        for (int i = 0; i < specialAttackStrategies.Length; i++)
-        {
-            var specialAttack = specialAttackStrategies[i];
-            if (specialAttack != null && specialAttack.getCurrentCooldown() == 0)
-            {
-                availableSpecialAttacks.Add(i);
-            }
-        }
-        return availableSpecialAttacks;
     }
 
     public IAttackStrategy[] getAvailableSpecialAttacks()
@@ -543,29 +641,29 @@ public class Summon : MonoBehaviour
         return availableSpecialAttacks.ToArray();
     }
 
-    public StatusType[] getSpecialAttackStatusTypes(Summon summon)
-    {
-        List<StatusType> statusTypes = new List<StatusType>();
-
-        // 소환수의 사용 가능한 특수 스킬들을 가져옴
-        IAttackStrategy[] specialAttacks = summon.getAvailableSpecialAttacks();
-
-        // 사용 가능한 특수 스킬들을 순회하며 각 스킬의 StatusType을 추가
-        foreach (IAttackStrategy attack in specialAttacks)
-        {
-            if (attack != null)
-            {
-                statusTypes.Add(attack.getStatusType());
-            }
-        }
-
-        // StatusType 배열로 반환
-        return statusTypes.ToArray();
-    }
 
     public int getSpecialAttackCount()
     {
         return specialAttackStrategies.Length;
+    }
+
+
+    public void AddObserver(stateObserver observer)
+    {
+        observers.Add(observer);
+    }
+
+    public void RemoveObserver(stateObserver observer)
+    {
+        observers.Remove(observer);
+    }
+
+    public void NotifyObservers()
+    {
+        foreach (var observer in observers)
+        {
+            observer.StateUpdate();
+        }
     }
 
 }
