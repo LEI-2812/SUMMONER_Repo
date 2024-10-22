@@ -449,14 +449,27 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
     }
 
-  
+    private StatePanel statePanel;
+    public void SetStatePanel(StatePanel panel)
+    {
+        statePanel = panel; // 인스턴스를 설정
+    }
 
     public void AddShield(double shieldAmount)
     {
         shield += shieldAmount;
-
         Debug.Log("쉴드 부여. 현재 쉴드: " + shield);
+        // 쉴드 추가 후 StatePanel에서 슬라이더 업데이트
+        if (statePanel != null)
+        {
+            statePanel.setStatePanel(this, false); // 패널 업데이트
+        }
     }
+    public double getShield()
+    {
+        return shield; // 현재 쉴드 값을 반환
+    }
+
 
 
     public string getSummonName(){ 

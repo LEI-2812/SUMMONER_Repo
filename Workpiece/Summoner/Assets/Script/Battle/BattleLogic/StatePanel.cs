@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,7 @@ public class StatePanel: MonoBehaviour, stateObserver
     [SerializeField] private Summon stateSummon; //Summon
     [SerializeField] private Image summonImage; //image
     [SerializeField] private Slider HPSlider;
+    [SerializeField] private Image shieldFillImage;
 
     [Header("공격 버튼들")]
     [SerializeField] private Button NormalAttackButton;
@@ -44,6 +46,16 @@ public class StatePanel: MonoBehaviour, stateObserver
         {
             float sliderHP = (float) (stateSummon.getNowHP() / stateSummon.getMaxHP());  // 체력 비율 계산
             HPSlider.value = sliderHP;  // 체력 비율에 따른 슬라이더 값 설정
+
+            // 쉴드 비율 계산
+            float shieldAmount = (float) stateSummon.getShield(); // 현재 쉴드량
+            float shieldRatio = (float) (shieldAmount / stateSummon.getMaxHP()); // 최대 체력 기준으로 쉴드 비율 계산
+
+            if (shieldFillImage != null)
+            {
+                shieldFillImage.fillAmount = shieldRatio; // 쉴드 비율에 따라 슬라이더의 fill amount 설정
+            }
+
         }
 
         //  적 플레이트 클릭 시 공격 버튼 비활성화
