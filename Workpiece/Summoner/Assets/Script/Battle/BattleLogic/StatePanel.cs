@@ -22,7 +22,7 @@ public class StatePanel: MonoBehaviour, stateObserver
     [SerializeField] private Summon stateSummon; //Summon
     [SerializeField] private Image summonImage; //image
     [SerializeField] private Slider HPSlider;
-    [SerializeField] private Image shieldFillImage;
+    [SerializeField] private Image shieldImage;
 
     [Header("공격 버튼들")]
     [SerializeField] private Button NormalAttackButton;
@@ -46,16 +46,6 @@ public class StatePanel: MonoBehaviour, stateObserver
         {
             float sliderHP = (float) (stateSummon.getNowHP() / stateSummon.getMaxHP());  // 체력 비율 계산
             HPSlider.value = sliderHP;  // 체력 비율에 따른 슬라이더 값 설정
-
-            // 쉴드 비율 계산
-            float shieldAmount = (float) stateSummon.getShield(); // 현재 쉴드량
-            float shieldRatio = (float) (shieldAmount / stateSummon.getMaxHP()); // 최대 체력 기준으로 쉴드 비율 계산
-
-            if (shieldFillImage != null)
-            {
-                shieldFillImage.fillAmount = shieldRatio; // 쉴드 비율에 따라 슬라이더의 fill amount 설정
-            }
-
         }
 
         //  적 플레이트 클릭 시 공격 버튼 비활성화
@@ -84,6 +74,10 @@ public class StatePanel: MonoBehaviour, stateObserver
 
     public void StateUpdate()
     {
+        Color color = shieldImage.color;
+        color.a = 0.7f;
+        shieldImage.color = color;
+
         if (stateSummon != null)
         {
             // 소환수가 사망 상태인지 체크
@@ -95,8 +89,37 @@ public class StatePanel: MonoBehaviour, stateObserver
             }
 
             // HP 슬라이더 업데이트
-            float sliderHP = (float)(stateSummon.getNowHP() / stateSummon.getMaxHP());
-            HPSlider.value = sliderHP;
+            float currentHP = (float)stateSummon.getNowHP();
+            float maxHP = (float)stateSummon.getMaxHP();
+
+            // 체력 비율을 0과 1 사이로 설정
+            float sliderHP = currentHP / maxHP;
+            HPSlider.value = Mathf.Clamp(sliderHP, 0f, 1f);
+
+            // 쉴드 비율 계산
+            float shieldAmount = (float)stateSummon.getShield(); // 현재 쉴드량
+            float initialShieldAmount = (float)stateSummon.GetInitialShield();
+            Debug.Log("현재 쉴드량 : " + shieldAmount + ", 초기 쉴드량 : " + initialShieldAmount);
+
+            if (shieldImage != null)
+            {
+                if (shieldAmount > 0)
+                {
+                    // 쉴드가 있을 때는 체력바를 가득 채운 뒤 쉴드를 표시
+                    shieldImage.gameObject.SetActive(true); // 쉴드 이미지 활성화
+                    shieldImage.fillAmount = (float)(shieldAmount / initialShieldAmount); // 남은 쉴드 / 처음 받아온 쉴드량
+
+                    if (shieldImage.fillAmount > 1) // 쉴드가 최대 체력 이상일 때 처리
+                    {
+                        shieldImage.fillAmount = 1; // 체력바를 넘지 않도록 설정
+                    }
+                }
+                else
+                {
+                    // 쉴드가 없으면 이미지 비활성화
+                    shieldImage.gameObject.SetActive(false);
+                }
+            }
         }
     }
 }

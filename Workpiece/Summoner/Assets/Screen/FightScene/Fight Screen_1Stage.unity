@@ -6169,7 +6169,7 @@ MonoBehaviour:
   stateSummon: {fileID: 0}
   summonImage: {fileID: 959924362}
   HPSlider: {fileID: 342250390}
-  shieldFillImage: {fileID: 1990284226}
+  shieldImage: {fileID: 1990284226}
   NormalAttackButton: {fileID: 1052664224}
   SpecialAttackButton: {fileID: 541171654}
 --- !u!1 &1295850070
