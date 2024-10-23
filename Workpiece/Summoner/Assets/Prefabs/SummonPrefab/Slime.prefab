@@ -51,6 +51,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 4967410675575056086}
+  normalAttackSprite: {fileID: 0}
+  specialAttackSprite: {fileID: 0}
+  nowHP: 0
+  isAttack: 1
 --- !u!222 &4188775480218640745
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -79,7 +83,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1339472230, guid: 5d38447b6e33bef439ff62b12b1b5bef, type: 3}
+  m_Sprite: {fileID: -9869291, guid: a48b29361d190a54b83f8e1f37ab67d5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
