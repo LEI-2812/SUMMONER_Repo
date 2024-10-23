@@ -29,6 +29,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     protected double maxHP; //최대체력
     public double nowHP; //현재 체력
     protected double shield = 0; //쉴드량
+    private double initialShield; // 초기 쉴드 양
     protected bool onceInvincibility = false;
 
     public bool isAttack = true; // 상태이상중 공격가능 여부
@@ -457,19 +458,26 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
     public void AddShield(double shieldAmount)
     {
+        if (shield == 0) // 현재 쉴드가 0일 때만 초기화
+        {
+            initialShield = shieldAmount;
+        }
         shield += shieldAmount;
         Debug.Log("쉴드 부여. 현재 쉴드: " + shield);
         // 쉴드 추가 후 StatePanel에서 슬라이더 업데이트
         if (statePanel != null)
         {
-            statePanel.setStatePanel(this, false); // 패널 업데이트
+            statePanel.StateUpdate(); // 패널 업데이트
         }
     }
     public double getShield()
     {
         return shield; // 현재 쉴드 값을 반환
     }
-
+    public double GetInitialShield()
+    {
+        return initialShield; // 초기 쉴드 양을 반환
+    }
 
 
     public string getSummonName(){ 
