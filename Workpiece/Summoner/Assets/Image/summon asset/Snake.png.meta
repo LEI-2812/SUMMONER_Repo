@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6505ea5c3ca1fd5429a43cfd21848387
+guid: bb622a6aa78efd74989b741a9261d10e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Summon Sprite Sheet_0
+      name: Snake_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1000
-        height: 1000
+        width: 40
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7560d8f950f8b414cb14bc9d2c8f8d60
-      internalID: 1887820896
+      spriteID: a8513cc40feea244a9760ef7eccaae6d
+      internalID: -896434850
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Summon Sprite Sheet_1
+      name: Snake_1
       rect:
         serializedVersion: 2
-        x: 1000
+        x: 40
         y: 0
-        width: 1000
-        height: 1000
+        width: 40
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,92 +145,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a657ce481992ce343844863931a052b8
-      internalID: 2015578199
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Summon Sprite Sheet_2
-      rect:
-        serializedVersion: 2
-        x: 2000
-        y: 0
-        width: 1000
-        height: 1000
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 24273be972810174799b63849dc49fcb
-      internalID: -690527185
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Summon Sprite Sheet_3
-      rect:
-        serializedVersion: 2
-        x: 3000
-        y: 0
-        width: 1000
-        height: 1000
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c441ea9b34880894499a1d6a26212ff5
-      internalID: -1793831239
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Summon Sprite Sheet_4
-      rect:
-        serializedVersion: 2
-        x: 4000
-        y: 0
-        width: 1000
-        height: 1000
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c1927a03e6174e0489e7bf9ebed52c6d
-      internalID: -1785466255
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Summon Sprite Sheet_5
-      rect:
-        serializedVersion: 2
-        x: 5000
-        y: 0
-        width: 1000
-        height: 1000
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 63f1d19b5aa74ca4bbceeb53dd23234c
-      internalID: 2114745033
+      spriteID: c1e7fd56a9bb8fe44aa6ddca9f77bbc1
+      internalID: 142947563
       vertices: []
       indices: 
       edges: []
@@ -246,12 +162,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Summon Sprite Sheet_0: 1887820896
-      Summon Sprite Sheet_1: 2015578199
-      Summon Sprite Sheet_2: -690527185
-      Summon Sprite Sheet_3: -1793831239
-      Summon Sprite Sheet_4: -1785466255
-      Summon Sprite Sheet_5: 2114745033
+      Snake_0: -896434850
+      Snake_1: 142947563
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

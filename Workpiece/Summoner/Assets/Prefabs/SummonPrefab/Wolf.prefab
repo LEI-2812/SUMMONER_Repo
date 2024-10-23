@@ -54,6 +54,7 @@ MonoBehaviour:
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
   nowHP: 0
+  isAttack: 1
 --- !u!222 &2033112740896684424
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -82,7 +83,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2114745033, guid: 6505ea5c3ca1fd5429a43cfd21848387, type: 3}
+  m_Sprite: {fileID: -1720323784, guid: 61e14c39d98362f4caa88beae9dff857, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
