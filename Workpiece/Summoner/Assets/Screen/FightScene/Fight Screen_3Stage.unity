@@ -5991,6 +5991,7 @@ MonoBehaviour:
   stateSummon: {fileID: 0}
   summonImage: {fileID: 959924362}
   HPSlider: {fileID: 342250390}
+  shieldImage: {fileID: 0}
   NormalAttackButton: {fileID: 1052664224}
   SpecialAttackButton: {fileID: 541171654}
 --- !u!1 &1296326274
@@ -7779,7 +7780,7 @@ PrefabInstance:
     - target: {fileID: 5192321352324646301, guid: dff2b5038caad10488ae21b2d2ed5eb7, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 2015578199, guid: 6505ea5c3ca1fd5429a43cfd21848387, type: 3}
+      objectReference: {fileID: -1876336162, guid: ccd85671b3248574f88d5b7f3915786b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
