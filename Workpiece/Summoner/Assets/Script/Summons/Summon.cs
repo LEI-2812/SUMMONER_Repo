@@ -250,7 +250,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 if (effect.statusType == StatusType.Stun)
                 {
                     setIsAttack(false);
-                    Debug.Log($"{summonName}은 스턴 상태로 공격할 수 없습니다.");
+                    Debug.Log($"{summonName}은 스턴과 저주 상태로 공격할 수 없습니다.");
                 }
 
                 // 지속시간 감소

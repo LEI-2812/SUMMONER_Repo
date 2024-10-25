@@ -279,7 +279,7 @@ public class PlateController : MonoBehaviour
         return -1; // 소환수가 없으면 -1 반환
     }
 
-    public int getClosestEnermyPlatesIndex(Summon attackingSummon) //플레이어 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
+    public int getClosestEnermyPlatesIndex(Summon attackingSummon) //적 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
     {
         for (int i = 0; i < playerPlates.Count; i++)
         {

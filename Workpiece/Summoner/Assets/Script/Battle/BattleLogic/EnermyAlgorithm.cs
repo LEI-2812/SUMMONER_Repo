@@ -567,4 +567,11 @@ public class EnermyAlgorithm : MonoBehaviour
 
         return enermySummon; // 상태 적용된 몬스터 반환
     }
+
+
+
+    public PlateController getPlateController()
+    {
+        return this.plateController;
+    }
 }
