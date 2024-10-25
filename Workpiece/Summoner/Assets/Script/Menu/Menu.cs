@@ -32,6 +32,10 @@ public class Menu : MonoBehaviour
     [Header("백그라운드 배경")]
     [SerializeField ]private GameObject backGroundPanel;
 
+    [Header("클릭음 사운드")]
+    public AudioSource menuClick;
+    public AudioSource alertClick;
+
     private void Awake()
     {
         // 싱글톤 인스턴스 설정
@@ -73,23 +77,23 @@ public class Menu : MonoBehaviour
     }
     public void toMainAlert()
     {
-        // audioSource.Play(); 일단 빼놨읍니다
         toMain.SetActive(true); // 알림창 활성화
-
+        menuClick.Play();
         // 알림창 상태를 초기화
         toMainResult.ResetAlert();
         // 코루틴 실행: newAlert에 대한 처리
         StartCoroutine(WaitForAlertResult(toMain, toMainResult, (result) => {
             if (result)
             {
+                alertClick.Play();
                 SceneManager.LoadScene("Start Screen");
                 openCloseMenu();
             }
             else
             {
                 // No 버튼 클릭 시 로직
+                alertClick.Play();
                 toMain.SetActive(false);
-                openCloseMenu();
             }
         }));
     }
@@ -97,56 +101,31 @@ public class Menu : MonoBehaviour
     public void toQuitAlert()
     {
         toQuit.SetActive(true); // 알림창 활성화
-
+        menuClick.Play();
         // 알림창 상태를 초기화
         toQuitResult.ResetAlert();
         // 코루틴 실행: newAlert에 대한 처리
         StartCoroutine(WaitForAlertResult(toQuit, toQuitResult, (result) => {
             if (result)
             {
+                alertClick.Play();
                 Debug.Log("게임을 종료합니다.");
                 Application.Quit();
             }
             else
             {
                 // No 버튼 클릭 시 로직
+                alertClick.Play();
                 toQuit.SetActive(false);
             }
         }));
     }
 
-    /*
-    // 메인 화면 가기 전 세이브 알림창
-    public void checkSave()
-    {
-        toMain.SetActive(true);
-    }
-
-    // 화면 끄기 전 세이브 알림창
-    public void checkSave2()
-    {
-        toQuit.SetActive(true);
-    }
-
-    // 메인 화면으로 이동
-    public void gotoMain()
-    {
-        SceneManager.LoadScene("Start Screen");
-        menu.SetActive(false); // 스테이지 선택 화면으로 이동과 동시에 알림창 비활성화
-        toMain.SetActive(false);
-    }
-
-    //게임 종료
-    public void ExitGame()
-    {
-        Debug.Log("게임을 종료합니다.");
-        Application.Quit();
-    }
-    */
     // 설정창 가져오기 - 다만 현재는 메인화면에서 한번 설정창을 켜야 가져올 수 있음
     public void openSettingCanvas()
     {
-       setting.openOption();
+        setting.openOption();
+        menuClick.Play();
     }
     
     private IEnumerator WaitForAlertResult(GameObject alertObject, Alert alertScript, System.Action<bool> callback)

@@ -23,9 +23,9 @@ public class Player : Character
     [SerializeField] private Button reSummonButton;
      private TextMeshProUGUI reSummonButtonText;
 
-
     [Header("효과음")]
-    [SerializeField] private AudioSource summonFailSound;
+    [SerializeField] private AudioSource clickSound;
+    [SerializeField] private AudioSource failSound;
 
     [Header("컨트롤러")]
     [SerializeField] private SummonController summonController;
@@ -80,7 +80,7 @@ public class Player : Character
     {
         if (hasSummonedThisTurn)
         {
-            summonFailSound.Play();
+            failSound.Play();
             Debug.Log("이 턴에서는 이미 소환을 했습니다. 다음 턴에 소환할 수 있습니다.");
             return;
         }
@@ -96,6 +96,7 @@ public class Player : Character
                     mana -= 1;
                     hasSummonedThisTurn = true;
                     UpdateManaUI();
+                    clickSound.Play();
                     summonButton.image.color = new Color32(137, 125, 115, 255); // 회색(#897D73)
                     summonButtonText.color = new Color32(159, 159, 159, 255);  // 회색(#9F9F9F)
                     return;
@@ -105,7 +106,7 @@ public class Player : Character
         }
         else
         {
-            summonFailSound.Play(); // 효과음 재생
+            failSound.Play(); // 효과음 재생
             Debug.Log("마나가 부족하여 소환 불가능");
         }
     }
@@ -117,10 +118,12 @@ public class Player : Character
         if (turnController.getCurrentTurn() == TurnController.Turn.PlayerTurn)
         {
             Debug.Log("플레이어 턴 종료");
+            clickSound.Play();
             turnController.EndTurn();
         }
         else
         {
+            failSound.Play();
             Debug.Log("플레이어 턴이 아닙니다.");
         }
     }
@@ -134,11 +137,12 @@ public class Player : Character
                 mana -= usedMana;
                 usedMana += 1;
                 UpdateManaUI();
+                clickSound.Play();
             }           
         }
         else
         {
-            summonFailSound.Play();
+            failSound.Play();
             Debug.Log("재소환시 필요한 마나가 모자랍니다.");
         }
     }
