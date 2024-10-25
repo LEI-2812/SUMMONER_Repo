@@ -10,12 +10,12 @@ public class Enermy : Character
     [Header("컨트롤러")]
     [SerializeField] private TurnController turnController;
     private EnermyAttackController enermyAttackController;
-    private EnermyAlgorithm enermyAlgorithm;
+    //private EnermyAlgorithm enermyAlgorithm;
 
     private void Awake()
     {
         enermyAttackController = GetComponent<EnermyAttackController>();
-        enermyAlgorithm = GetComponent<EnermyAlgorithm>();
+        //enermyAlgorithm = GetComponent<EnermyAlgorithm>();
     }
 
     public  void startTurn()
@@ -28,7 +28,7 @@ public class Enermy : Character
     public  void takeAction() //여기에 AI로직 작성
     {
         //플레이어의 예측공격 리스트를 가져오고
-        List<AttackPrediction> playerAttackPredictionsList = enermyAlgorithm.getPlayerAttackPredictionsList();
+        List<AttackPrediction> playerAttackPredictionsList = enermyAttackController.getEnermyAlgorithmController().getPlayerAttackPredictionsList();
 
         Debug.Log("리스트를 가져와서 적 대응시작");
         //적의 공격 시작
