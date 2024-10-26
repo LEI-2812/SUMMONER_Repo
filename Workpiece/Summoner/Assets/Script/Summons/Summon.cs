@@ -231,7 +231,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 // 데미지 주는 상태 확인 및 처리
                 if (effect.damagePerTurn > 0 && effect.statusType != StatusType.Upgrade && effect.statusType != StatusType.Curse)
                 {
-                    takeDamage(effect.damagePerTurn);
                     Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다. 남은 상태이상시간: {effect.effectTime} 턴");
                 }
 

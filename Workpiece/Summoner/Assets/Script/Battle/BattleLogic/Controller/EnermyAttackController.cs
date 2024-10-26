@@ -62,8 +62,8 @@ public class EnermyAttackController : MonoBehaviour
         {
             if (statusType == StatusType.Burn || statusType == StatusType.LifeDrain || statusType == StatusType.Poison)
             {
-                useHealIfAvailable(attackingSummon, enermyPlate, enermyPlateIndex);
-                return true;
+                if(useHealIfAvailable(attackingSummon, enermyPlate, enermyPlateIndex)) //힐스킬을 사용 했는가
+                    return true;
             }
         }
 
@@ -71,7 +71,7 @@ public class EnermyAttackController : MonoBehaviour
     }
 
     //힐 사용이 가능하다면 힐 사용
-    private void useHealIfAvailable(Summon attackingSummon, List<Plate> enermyPlate, int enermyPlateIndex)
+    private bool useHealIfAvailable(Summon attackingSummon, List<Plate> enermyPlate, int enermyPlateIndex)
     {
         IAttackStrategy[] specialAttackStrategies = attackingSummon.getSpecialAttackStrategy(); // 사용가능한 스킬들을 가져옴
 
@@ -81,9 +81,10 @@ public class EnermyAttackController : MonoBehaviour
             if (specialAttackStrategies[i].getStatusType() == StatusType.Heal)
             {
                 attackingSummon.SpecialAttack(enermyPlate, enermyPlateIndex, i); // 자기 자신에게 힐 사용
-                return; // 힐을 사용했으면 루프 탈출
+                return true; // 힐을 사용했으면 루프 탈출
             }
         }
+        return false;
     }
 
 
