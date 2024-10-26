@@ -11,6 +11,9 @@ public class GamePlayController : MonoBehaviour
     [Header("마우스만 사용가능 툴팁")]
     [SerializeField] private Toggle isOnlyMouse;
 
+    [Header("버튼 클릭음")]
+    [SerializeField] private AudioSource audioSource;
+
 
     private void Update()
     {
@@ -44,7 +47,12 @@ public class GamePlayController : MonoBehaviour
             Debug.Log("키보드 & 마우스 사용가능");
     }
 
-    public bool getIsStorySkip(){ return isStorySkip.isOn; }
+    public void onClickSound()
+    {
+        audioSource.Play();
+    }
+
+    public bool getIsStorySkip() { return isStorySkip.isOn; }
 
     public void setIsStorySkip(bool isSkip) { this.isStorySkip.isOn = isSkip; }
 

@@ -13,6 +13,9 @@ public class VideoController : MonoBehaviour
     [Header("화면크기 토글")]
     public List<Toggle> screenModeToggles;
 
+    [Header("버튼 클릭음")]
+    [SerializeField] private AudioSource audioSource;
+
     // 해상도 설정 값들
     private readonly List<Vector2Int> resolutions = new List<Vector2Int>
     {
@@ -53,6 +56,7 @@ public class VideoController : MonoBehaviour
     // 토글이 변경될 때 호출되는 메소드
     void OnToggleChanged(List<Toggle> toggles, int index, bool isResolution)
     {
+        audioSource.Play();
         if (toggles[index].isOn)
         {
             // 해당 인덱스 제외한 나머지 토글을 비활성화
