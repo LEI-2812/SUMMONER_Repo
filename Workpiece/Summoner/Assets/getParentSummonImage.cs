@@ -10,7 +10,7 @@ public class getParenSummontImage : MonoBehaviour
     [SerializeField] private Summon summon; // 적 소환수 직접 할당
     private Plate plate; // 부모 Plate 컴포넌트를 받기 위한 변수
 
-    void Start()
+    void Awake()
     {
         // 부모 오브젝트에 붙어 있는 Plate 컴포넌트를 가져옴
         plate = GetComponentInParent<Plate>();

@@ -27,14 +27,21 @@ public class TurnController : MonoBehaviour
     {
         if (currentTurn == Turn.PlayerTurn)  // 플레이어 턴일 경우
         {
-            //플레이어 턴 시작시 적 플레이트의 상태이상 데미지 적용
-            foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
+            // 적 소환수 상태 업데이트 및 데미지 처리
+            var enermyPlates = enermy.getEnermyAttackController().getPlateController().getEnermySummons();
+
+            // 상태 업데이트를 먼저 진행
+            foreach (var summon in enermyPlates)
             {
                 summon.UpdateDamageStatusEffects(); // 데미지를 주는 상태이상 업데이트
-                summon.UpdateStunAndCurseStatus(); // 스턴 및 저주 상태 업데이트
+                summon.UpdateStunAndCurseStatus();  // 스턴 및 저주 상태 업데이트
                 summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
             }
-            foreach(var summon in player.getPlateController().getPlayerSummons())
+
+            player.getPlateController().CompactEnermyPlates(); //앞당기기
+
+
+            foreach (var summon in player.getPlateController().getPlayerSummons())
             {
                 summon.UpdateSpecialAttackCooldowns(); // 특수 공격 쿨타임 업데이트
             }

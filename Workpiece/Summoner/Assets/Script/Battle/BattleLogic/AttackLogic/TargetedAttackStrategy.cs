@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +28,8 @@ public class TargetedAttackStrategy : IAttackStrategy
             switch (statusType)
             {
                 case StatusType.Heal:
-                    double healAmount = target.getMaxHP() * 0.3; // 최대 체력의 30%만큼 회복
+                    double healAmount = (int)target.getMaxHP() * 0.3; // 최대 체력의 30%만큼 회복
+                    healAmount = Math.Floor(healAmount); // 소수점 아래를 버림
                     target.Heal(healAmount);
                     Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) {healAmount}만큼 치유했습니다.");
                     break;
@@ -51,7 +53,7 @@ public class TargetedAttackStrategy : IAttackStrategy
                     double upgradeAttackPower = attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage();
                     StatusEffect upgradeEffect = new StatusEffect(StatusType.Upgrade, statusTime, upgradeAttackPower);
                     target.ApplyStatusEffect(upgradeEffect);
-                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {upgradeAttackPower*100} 만큼 상승 시켰습니다.");
+                    Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {(int)(target.getAttackPower() * upgradeAttackPower)} 만큼 상승 시켰습니다.");
                     break;
                 case StatusType.OnceInvincibility: //무적
                     target = attacker; //자기자신이 대상

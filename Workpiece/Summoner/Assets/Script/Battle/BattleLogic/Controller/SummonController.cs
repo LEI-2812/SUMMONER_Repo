@@ -30,6 +30,7 @@ public class SummonController : MonoBehaviour
     [Header("소환수 프리팹 목록")]
     private Summon selectedSummon; // 선택된 소환수
 
+
     private void Awake()
     {
         // 싱글톤 패턴 구현
@@ -79,6 +80,7 @@ public class SummonController : MonoBehaviour
         isSummoning = false;
         darkBackground.SetActive(false);
         plateController.ResetPlayerPlateHighlight();
+       
     }
 
     // 재소환 코루틴 (재소환 로직)
@@ -104,6 +106,7 @@ public class SummonController : MonoBehaviour
         darkBackground.SetActive(false);
 
         plateController.ResetPlayerPlateHighlight();
+
     }
 
     //차례로 재소환 로직
@@ -307,4 +310,5 @@ public class SummonController : MonoBehaviour
     {
         player.setSelectedPlateIndex(index);
     }
+
 }

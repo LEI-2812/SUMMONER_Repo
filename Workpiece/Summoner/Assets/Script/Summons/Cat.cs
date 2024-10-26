@@ -6,7 +6,7 @@ public class Cat : Summon
 {
     private void Awake()
     {
-        summonInitialize(5);
+        summonInitialize(1);
     }
 
     public void summonInitialize(int n)
@@ -50,6 +50,7 @@ public class Cat : Summon
         // 해당 공격에 쿨타임 적용
         specialAttack.ApplyCooldown();
         attackPower = originAttackPower;
+        isAttack = false;
     }
 
 
