@@ -34,13 +34,45 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
             }
             else
             { //특수공격에 +5%
-                attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "고양이 특수공격으로 처치 불가능");
+                if(getMostDamageAttack(cat) == AttackType.NormalAttack)
+                {
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "고양이 일반공격이 더 많은 데미지를 입힘");
+                }
+                else
+                {
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "고양이 특수공격이 더 많은 데미지를 입힘");
+                }
                 attackIndex = getClosestEnermyIndex(enermyPlates); //적 플레이트 중에서 가장 가까이 있는 인덱스 받기
             }
         }
 
         attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         return attackPrediction;
+    }
+
+    public AttackType getMostDamageAttack(Summon attackingSummon)
+    {
+
+        // 사용 가능한 특수 공격 목록 가져오기
+        IAttackStrategy[] availableSpecialAttacks = attackingSummon.getAvailableSpecialAttacks();
+
+        // 각 특수 공격 확인
+        foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
+        {
+            //특수공격이 null이면 일반공격 반환
+            if(availableSpecialAttacks == null)
+            {
+                return AttackType.NormalAttack;
+            }
+
+            //일반공격력이 더 쌔면 일반공격 반환 고양이는 단일타깃 공격이기때문에 공격력만 비교
+            if (attackingSummon.getAttackPower() > specialAttack.getSpecialDamage())
+                return AttackType.NormalAttack;
+            else
+                return AttackType.SpecialAttack;
+            }
+
+        return AttackType.NormalAttack;
     }
 
 

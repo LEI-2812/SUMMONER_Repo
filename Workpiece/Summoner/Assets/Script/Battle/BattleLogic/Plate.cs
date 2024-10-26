@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class Plate : MonoBehaviour, 
     IPointerEnterHandler, //플레이트에 마우스 올렸을때 이벤트 인터페이스
     IPointerExitHandler,  //플레이트에 마우스가 벗어낫을때 이벤트 인터페이스
-    IPointerClickHandler //플레이트 클릭시 상태창 
+    IPointerClickHandler, //플레이트 클릭시 상태창 
+    UpdateStateObserver
 {
     //plate를 프리팹시켜서 넣을것.
     private bool isInSummon = false; // 현재 소환수가 있는지 여부
     [SerializeField]private Summon currentSummon;   // 플레이트 위에 있는 소환수
     [SerializeField]private GameObject statePanel;  // 상태 패널 (On/Off)
-    [SerializeField] private StatePanel onMousePlateScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
+    [SerializeField] private StatePanel statePanelScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
     [SerializeField] private Image summonImg;
 
     private Image plateImage; // 자기 자신의 Image 컴포넌트
@@ -23,11 +25,12 @@ public class Plate : MonoBehaviour,
     [SerializeField] private SummonController summonController;
     [SerializeField] private BattleController battleController;
 
+    private List<stateObserver> observers = new List<stateObserver>();
+
     void Start()
     {
         statePanel.SetActive(false);
         plateImage = GetComponent<Image>(); // 자신의 Image 컴포넌트 가져오기
-       // summonImg = GetComponentInChildren<Image>();
         originalColor = plateImage.color; // 원래 색상 저장
     }
 
@@ -40,13 +43,16 @@ public class Plate : MonoBehaviour,
             // 기존 소환수가 있으면 파괴 (재소환 시)
             if (currentSummon != null && isResummon)
             {
+                // 이전 소환수에서 옵저버 해제
+                currentSummon.RemoveObserver(statePanelScript);
+
                 Destroy(currentSummon.gameObject);
                 Debug.Log("기존 소환수가 파괴되었습니다.");
             }
 
             // 소환수 프리팹을 클론하여 생성
             Summon summonClone = Instantiate(summon);
-
+ 
             // 클론을 현재 플레이트의 자식으로 배치
             summonClone.transform.SetParent(this.transform, false);
             summonClone.transform.localPosition = Vector3.zero;  // 필요한 경우 위치 초기화
@@ -74,8 +80,26 @@ public class Plate : MonoBehaviour,
             currentSummon = summonClone;
             isInSummon = true;
 
+            // 소환수 옵저버로 등록하여 상태 업데이트 가능하게 설정
+            if (statePanelScript != null)
+            {
+                currentSummon.AddObserver(statePanelScript);
+            }
+            else
+            {
+                Debug.LogError("statePanelScript가 null임");
+            }
+
             // 소환수 초기화 로직 호출 (초기 능력치나 스킬 설정)
             summonClone.summonInitialize();
+
+            // 재소환된 소환수의 공격 상태를 비활성화
+            if (isResummon)
+            {
+                currentSummon.setIsAttack(false);
+                statePanelScript.setStatePanel(summon,false);
+                NotifyObservers();
+            }
 
             Debug.Log($"소환수 {summonClone.getSummonName()} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
         }
@@ -227,7 +251,7 @@ public class Plate : MonoBehaviour,
             // BattleController에 선택된 플레이트 인덱스 전달
             summonController.setPlayerSelectedIndex(plateIndex);
 
-            onMousePlateScript.setStatePanel(currentSummon, IsEnermyPlate()); // 패널에 소환수 정보 전달 
+            statePanelScript.setStatePanel(currentSummon, IsEnermyPlate()); // 패널에 소환수 정보 전달 
         }
 
         // 공격 중에 클릭할 경우
@@ -319,26 +343,22 @@ public class Plate : MonoBehaviour,
         return isInSummon;
     }
 
-    //public void ResetAllPlatesState()
-    //{
-    //    // 아군 플레이트의 상태 복원
-    //    foreach (var plate in battleController.GetPlateController().getPlayerPlates())
-    //    {
-    //        if (plate.currentSummon != null)
-    //        {
-    //            plate.SetSummonImageTransparency(1.0f); // 투명도 복원
-    //            plate.Unhighlight(); // 강조 해제
-    //        }
-    //    }
+    public void AddObserver(stateObserver observer)
+    {
+        observers.Add(observer);
+    }
 
-    //    // 적 플레이트의 상태 복원
-    //    foreach (var plate in battleController.GetPlateController().getEnermyPlates())
-    //    {
-    //        if (plate.currentSummon != null)
-    //        {
-    //            plate.SetSummonImageTransparency(1.0f); // 투명도 복원
-    //            plate.Unhighlight(); // 강조 해제
-    //        }
-    //    }
-    //}
+    public void RemoveObserver(stateObserver observer)
+    {
+        observers.Remove(observer);
+    }
+
+    public void NotifyObservers()
+    {
+        Debug.Log("호출");
+        foreach (var observer in observers)
+        {
+            observer.StateUpdate();
+        }
+    }
 }

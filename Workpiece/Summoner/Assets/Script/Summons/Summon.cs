@@ -22,7 +22,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     protected string summonName; //이름
     public Sprite normalAttackSprite; // 일반 공격 스프라이트
     public Sprite specialAttackSprite; // 특수 공격 스프라이트
-    protected double attackPower; //일반공격
+    public double attackPower; //일반공격
     protected double heavyAttakPower; //강 공격력
     protected SummonRank summonRank; //등급
     protected SummonType summonType;
@@ -106,6 +106,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                     // 새로운 중독 상태이상 추가
                     activeStatusEffects.Add(statusEffect);
                     statusEffect.ApplyStatus(this);  // 즉시 효과 적용 //데미지를 받음
+                    NotifyObservers(); // 상태 적용 후 알림
                     Debug.Log($"{summonName}에게 중독 상태이상이 적용되었습니다.");
                 }
                 break;
@@ -120,6 +121,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                     // 새로운 화상 상태이상 추가
                     activeStatusEffects.Add(statusEffect);
                     statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    NotifyObservers(); // 상태 적용 후 알림
                     Debug.Log($"{summonName}에게 화상 상태이상이 적용되었습니다.");
                 }
                 break;
@@ -131,13 +133,19 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 }
                 else
                 {
+                    // 기존 공격력을 저장합니다.
+                    statusEffect.setOriginAttack(this.attackPower);
+
                     // 새로운 강화 상태이상 추가
                     activeStatusEffects.Add(statusEffect);
                     if (statusEffect.shouldApplyOnce())
                     {
                         statusEffect.ApplyStatus(this); // 한 번만 적용
                         statusEffect.setApplyOnce(); // 적용된 상태 표시
+                        NotifyObservers(); // 상태 적용 후 알림
                     }
+
+       
                     Debug.Log($"{summonName}의 공격력이 강화되었습니다.");
                 }
                 break;
@@ -155,6 +163,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                     {
                         statusEffect.ApplyStatus(this); // 한 번만 적용
                         statusEffect.setApplyOnce(); // 적용된 상태 표시
+                        NotifyObservers(); // 상태 적용 후 알림
                     }
                     Debug.Log($"{summonName}에게 저주 상태이상이 적용되었습니다.");
                 }
@@ -170,6 +179,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                     // 새로운 스턴 상태이상 추가
                     activeStatusEffects.Add(statusEffect);
                     statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    NotifyObservers(); // 상태 적용 후 알림
                     Debug.Log($"{summonName}이(가) 스턴 상태에 빠졌습니다.");
                 }
                 break;
@@ -185,6 +195,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                     // 새로운 쉴드 추가
                     activeStatusEffects.Add(statusEffect);
                     statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    NotifyObservers(); // 상태 적용 후 알림
                     Debug.Log($"{summonName}에게 보호막이 생겼습니다.");
                 }
                 break;
@@ -197,6 +208,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 {
                     activeStatusEffects.Add(statusEffect);
                     statusEffect.ApplyStatus(this);  // 즉시 효과 적용
+                    NotifyObservers(); // 상태 적용 후 알림
                     Debug.Log($"{summonName}이 흡혈 당합니다.");
                 }
                 break;
@@ -282,6 +294,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 // 상태가 만료될 경우 만료 리스트에 추가
                 if (effect.effectTime <= 0)
                 {
+                    Debug.Log("공격력복원");
+                    attackPower = effect.getOriginAttack(); // 원래 공격력으로 복원
                     expiredEffects.Add(effect);
                 }
             }
@@ -304,6 +318,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 setIsAttack(true);
                 Debug.Log($"{summonName}의 스턴이 해제되었습니다. 공격 가능.");
             }
+            NotifyObservers(); // 상태 적용 후 알림
         }
     }
 
@@ -351,6 +366,10 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     public void UpgradeAttackPower(double multiplier)
     {
         attackPower *= (1 + multiplier);
+        attackPower = Math.Floor(attackPower); // 소수점 아래를 버림
+
+        attackPower = (int)attackPower; // double을 int로 변환
+
         Debug.Log($"{summonName}의 공격력이 {multiplier * 100}% 강화 되었습니다. 현재 공격력: {attackPower}");
     }
 
@@ -388,6 +407,9 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
     public virtual void takeDamage(double damage) //데미지 입기
     {
+        damage = (int)damage; //데미지의 소숫점 제거
+        damage = Math.Floor(damage); // 소수점 아래를 버림
+
         if (onceInvincibility)
         {
             onceInvincibility = false;
@@ -432,7 +454,9 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     }
 
     // 소환수 초기화 메서드
-    public virtual void summonInitialize(){ }
+    public virtual void summonInitialize(){
+        NotifyObservers();
+    }
 
 
     public virtual void die()
@@ -465,10 +489,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         shield += shieldAmount;
         Debug.Log("쉴드 부여. 현재 쉴드: " + shield);
         // 쉴드 추가 후 StatePanel에서 슬라이더 업데이트
-        if (statePanel != null)
-        {
-            statePanel.StateUpdate(); // 패널 업데이트
-        }
+        //if (statePanel != null)
+        //{
+        //    statePanel.StateUpdate(); // 패널 업데이트
+        //}
+        NotifyObservers();
     }
     public double getShield()
     {
@@ -623,6 +648,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         // Stun 상태가 없으면 false 반환
         return false;
     }
+
+    
 
     public bool IsCooltime() //쿨타임인지 확인
     {

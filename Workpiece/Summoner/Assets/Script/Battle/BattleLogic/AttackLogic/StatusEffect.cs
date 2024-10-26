@@ -27,6 +27,7 @@ public class StatusEffect
 
     private bool applyOnce = false;
 
+    private double originAttack;
     public StatusEffect(StatusType type, int eTime, double damage=0, Summon attacker = null)
     {
         statusType = type;
@@ -84,6 +85,15 @@ public class StatusEffect
                 Debug.Log("정의되지 않은 상태이상입니다.");
                 break;
         }
+    }
+
+    public double getOriginAttack()
+    {
+        return originAttack;
+    }
+    public void setOriginAttack(double originAttack)
+    {
+        this.originAttack = originAttack;
     }
 
     public bool shouldApplyOnce()

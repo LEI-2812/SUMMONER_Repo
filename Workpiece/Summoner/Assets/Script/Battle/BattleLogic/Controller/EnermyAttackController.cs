@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 
@@ -26,7 +25,7 @@ public class EnermyAttackController : MonoBehaviour
         {
             Summon attackingSummon = enermyPlate[enermyPlateIndex].getCurrentSummon(); //플레이트에 소환수를 차례로 가져와서
             // 소환수가 스턴 상태인지 확인
-            if (IsSummonStunned(attackingSummon))
+            if (attackingSummon.IsStun())
             {
                 continue; // 스턴 상태면 다음 소환수로 넘어감
             }
@@ -71,12 +70,7 @@ public class EnermyAttackController : MonoBehaviour
         return false; // 변경된 리스트 반환
     }
 
-   
-    private bool IsSummonStunned(Summon summon)
-    {
-        List<StatusType> statusList = summon.getAllStatusTypes();
-        return statusList.Contains(StatusType.Stun);
-    }
+    //힐 사용이 가능하다면 힐 사용
     private void useHealIfAvailable(Summon attackingSummon, List<Plate> enermyPlate, int enermyPlateIndex)
     {
         IAttackStrategy[] specialAttackStrategies = attackingSummon.getSpecialAttackStrategy(); // 사용가능한 스킬들을 가져옴
@@ -91,36 +85,6 @@ public class EnermyAttackController : MonoBehaviour
             }
         }
     }
-
-    //private void EnerymyAttackLogic(Summon attackingSummon, Summon target, int targetIndex)
-    //{
-    //    if (!attackingSummon.IsCooltime()) //쿨타임중인 스킬이 없을경우
-    //    {
-    //        AttackType selectedAttakType = SelectAttackType(); //일반공격과 특수공격을 랜덤으로 받아옴
-    //        if (selectedAttakType == AttackType.SpecialAttack)
-    //        {
-    //            //쿨타임이 없는 특수스킬을 사용하게 한다.
-    //            List<int> availableSpecialAttacks = attackingSummon.getAvailableSpecialAttack();  // 쿨타임이 없는 특수 스킬 목록을 가져옴
-
-
-    //            int selectSpecialAttackIndex = getRandomAvilableSpecialAttackIndex(availableSpecialAttacks); //랜덤의 특수스킬 번호를 가져옴
-    //            int selectedPlateIndex = plateController.getClosestPlayerPlatesIndex(attackingSummon); //임시로 가장 가까운적 공격하게 함. 나중에 수정필요
-    //            algorithm.ExecuteEnermyAlgorithm(attackingSummon, targetIndex); //알고리즘 실행
-
-    //            battleController.SpecialAttackLogic(attackingSummon, selectedPlateIndex, selectSpecialAttackIndex); //특수스킬 사용
-    //        }
-    //        else
-    //        {
-    //            enermyNormalAttackLogic(attackingSummon); //평타
-    //        }
-    //    }
-    //    else //스킬들이 쿨타임이여서 평타만 공격
-    //    {
-    //        enermyNormalAttackLogic(attackingSummon);
-    //    }
-    //}   
-
-
 
 
     //등급별 연속공격 가능여부
