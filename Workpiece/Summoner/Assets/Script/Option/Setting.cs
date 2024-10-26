@@ -16,9 +16,12 @@ public class Setting : MonoBehaviour
     public List<Button> buttons;
 
     [Header("설정 컨트롤러")]
-    [SerializeField ]private AudioController audioController;
+    [SerializeField] private AudioController audioController;
     [SerializeField] private VideoController videoController;
     [SerializeField] private GamePlayController gamePlayController;
+
+    [Header("버튼 클릭음")]
+    [SerializeField] private AudioSource audioSource;
 
     // 색상을 진하게 할 정도
     private float darkenFactor = 0.8f; // 진하게 할 비율 (1.0보다 작으면 더 진해짐)
@@ -76,6 +79,7 @@ public class Setting : MonoBehaviour
             previousButton.GetComponent<Image>().color = originalColors[previousButton];
         }
 
+        audioSource.Play();
         // 현재 클릭된 버튼의 색상을 진하게 변경
         activeIndex = index;
         ShowPanel(index);
@@ -105,18 +109,21 @@ public class Setting : MonoBehaviour
     public void openOption()
     {
         if (settingPanel.activeSelf)
+        {
+            audioSource.Play();
             settingPanel.SetActive(false);
+        }
         else
             settingPanel.SetActive(true);
     }
 
 
     // AudioController를 가져오는 메소드
-    public AudioController GetAudioController() {return audioController; }
+    public AudioController GetAudioController() { return audioController; }
 
     // VideoController를 가져오는 메소드
-    public VideoController GetVideoController(){ return videoController; }
+    public VideoController GetVideoController() { return videoController; }
 
     // GamePlayController를 가져오는 메소드
-    public GamePlayController GetGamePlayController(){ return gamePlayController; }
+    public GamePlayController GetGamePlayController() { return gamePlayController; }
 }

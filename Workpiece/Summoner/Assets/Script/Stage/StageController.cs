@@ -12,6 +12,9 @@ public class StageController : MonoBehaviour
     [Header("스테이지 버튼들(순서대로)")]
     public Button[] buttons;    // 활성화/비활성화할 버튼들
 
+    [Header("버튼 클릭음")]
+    [SerializeField] private AudioSource audioSource;
+
     private CheckStage checkStage;
 
     void Start()
@@ -26,7 +29,7 @@ public class StageController : MonoBehaviour
     [SerializeField]
     [Header("스테이지 진행도")]
     private int savedStage = 0;
-    
+
     // PlayerPrefs로 스테이지 진행 정도 저장
     void SaveStage()
     {
@@ -45,7 +48,7 @@ public class StageController : MonoBehaviour
     public void stageLoader(int stage)
     {
         Debug.Log("버튼 클릭");
-
+        audioSource.Play();
         // 현재 플레이 중인 스테이지를 "playingStage"로 저장
         PlayerPrefs.SetInt("playingStage", stage);
         PlayerPrefs.Save();
