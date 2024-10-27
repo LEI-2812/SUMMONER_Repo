@@ -30,6 +30,7 @@ public class StatePanel: MonoBehaviour, stateObserver
     [SerializeField] private Button SpecialAttackButton;
 
 
+
     //상태 판넬에 소환수정보 설정
     public void setStatePanel(Summon stateSummon, bool isEnemyPlate)
     {

@@ -121,8 +121,8 @@ public class Player : Character
         if (turnController.getCurrentTurn() == TurnController.Turn.PlayerTurn)
         {
             Debug.Log("플레이어 턴 종료");
-            clickSound.Play();
             turnController.EndTurn();
+            clickSound.Play();
         }
         else
         {
@@ -155,7 +155,8 @@ public class Player : Character
     {
         Summon attackSummon = battleController.attackStart(0); //공격할 소환수를 받아온다.
         if (!attackSummon.getIsAttack()) {
-            Debug.Log("공격할 수 없습니다. ");  
+            Debug.Log("공격할 수 없습니다. ");
+            failSound.Play();
             return; 
         }
 
@@ -163,6 +164,7 @@ public class Player : Character
         {
             // 일반 공격 수행(플레이트, 공격할 인덱스)
             attackSummon.normalAttack(plateController.getEnermyPlates() ,selectedPlateIndex);
+            clickSound.Play();
         }
         else
         {
@@ -184,6 +186,7 @@ public class Player : Character
         if (!attackSummon.getIsAttack())
         {
             Debug.Log("공격할 수 없습니다. ");
+            failSound.Play();
             return;
         }
 
@@ -196,14 +199,15 @@ public class Player : Character
             if (attackStrategy.getCurrentCooldown() > 0)
             {
                 Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
+                failSound.Play();
                 return;
             }
-
             
             // TargetedAttackStrategy를 사용하는지 확인
             if (attackStrategy is TargetedAttackStrategy targetedAttack)
             {
                 StatusType attackStatusType = targetedAttack.getStatusType();
+                clickSound.Play();
                 if (attackStatusType == StatusType.Heal || attackStatusType == StatusType.Upgrade || attackStatusType == StatusType.Shield) //타겟중에 힐일경우
                 {
                     Debug.Log("TargetedAttackStrategy의 Heal을 사용합니다. 아군의 플레이트를 선택하세요.");
@@ -222,6 +226,7 @@ public class Player : Character
                 // TargetedAttackStrategy가 아닌 경우 바로 공격 실행
                 //공격할 소환수, 공격할 플레이트 인덱스, 특수스킬 배열인덱스, 플레이어 공격
                 battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, 0,true);
+                clickSound.Play();
             }
         }
         else

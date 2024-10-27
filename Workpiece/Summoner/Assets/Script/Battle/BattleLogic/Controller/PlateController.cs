@@ -98,8 +98,6 @@ public class PlateController : MonoBehaviour
         }
     }
 
-
-
     public void DownTransparencyForWhoPlate(bool isPlayer)
    {
         if (isPlayer)
