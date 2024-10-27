@@ -91,7 +91,7 @@ public class Plate : MonoBehaviour,
             }
 
             // 소환수 초기화 로직 호출 (초기 능력치나 스킬 설정)
-            summonClone.summonInitialize();
+            summonClone.summonInitialize(Summon.multiple);
 
             // 재소환된 소환수의 공격 상태를 비활성화
             if (isResummon)

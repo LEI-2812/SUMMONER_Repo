@@ -9,15 +9,15 @@ public class Cat : Summon
         summonInitialize(1);
     }
 
-    public void summonInitialize(int n)
+    public override void summonInitialize(double n)
     {
         summonName = "Cat";
-        maxHP = 100 * n;
+        maxHP = (int)100 * n;
         nowHP = maxHP;
-        attackPower = 15 * n; //일반공격
+        attackPower = (int)15 * n; //일반공격
         summonRank = SummonRank.Low; // 하급 소환수
         summonType = SummonType.Cat;
-        heavyAttakPower = 20 * n;
+        heavyAttakPower = (int)20 * n;
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower ,1);
         // 특수 공격: 전체 적 공격

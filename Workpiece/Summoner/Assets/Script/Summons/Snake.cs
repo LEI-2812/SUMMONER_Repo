@@ -9,12 +9,12 @@ public class Snake : Summon
         summonInitialize(5);
     }
 
-    public void summonInitialize(int n)
+    public override void summonInitialize(double n)
     {
         summonName = "Snake";
-        maxHP = 200 * n;
+        maxHP = (int)(200 * n);
         nowHP = maxHP;
-        attackPower = 30 * n; //일반공격
+        attackPower = (int)(30 * n); //일반공격
         summonRank = SummonRank.Medium; // 중급 소환수
         summonType = SummonType.Snake;
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1); //근접 공격

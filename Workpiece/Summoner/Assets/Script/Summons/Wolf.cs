@@ -9,13 +9,13 @@ public class Wolf : Summon
         summonInitialize(5);
     }
 
-    public void summonInitialize(int n)
+    public override void summonInitialize(double n)
     {
         summonName = "Wolf";
-        maxHP = 300*n;
+        maxHP = (int)(300 *n);
         nowHP = maxHP;
-        attackPower = 50 * n; //일반공격
-        heavyAttakPower = 25 * n;
+        attackPower = (int)(50 * n); //일반공격
+        heavyAttakPower = (int)(25 * n);
         summonRank = SummonRank.High; // 중급 소환수
         summonType = SummonType.Wolf;
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1); //근접공격

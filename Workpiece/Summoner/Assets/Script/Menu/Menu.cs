@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
     // 싱글톤 인스턴스
-    public static Menu instance;
+    public static Menu instance; //최상위 오브젝트에 있는 스크립트
 
     [Header("메뉴 판넬")]
     [SerializeField] private GameObject menuPanel;
