@@ -8,12 +8,12 @@ public class Fox : Summon
 
     private void Awake()
     {
-        summonInitialize(5);
 
     }
 
     public override void summonInitialize(double n)
     {
+        n = 5;
         summonName = "Fox"; //이름 Fox
         maxHP = (int)(200 * n); //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정

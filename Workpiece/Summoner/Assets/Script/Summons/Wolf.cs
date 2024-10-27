@@ -6,11 +6,11 @@ public class Wolf : Summon
 {
     private void Awake()
     {
-        summonInitialize(5);
     }
 
     public override void summonInitialize(double n)
     {
+        n = 5;
         summonName = "Wolf";
         maxHP = (int)(300 *n);
         nowHP = maxHP;

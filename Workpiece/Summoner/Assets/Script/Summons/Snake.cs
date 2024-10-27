@@ -11,6 +11,7 @@ public class Snake : Summon
 
     public override void summonInitialize(double n)
     {
+        n = 5;
         summonName = "Snake";
         maxHP = (int)(200 * n);
         nowHP = maxHP;

@@ -7,7 +7,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
 
     public SummonType getPreSummonType()
     {
-        return SummonType.Rabbit;
+        return SummonType.Fox;
     }
 
     //여우 예측공격

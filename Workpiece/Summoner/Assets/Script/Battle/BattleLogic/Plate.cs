@@ -37,12 +37,14 @@ public class Plate : MonoBehaviour,
     // 소환수를 플레이트에 배치
     public void SummonPlaceOnPlate(Summon summon, bool isResummon = false)
     {
+        bool isAttack = true;
         // 이미 소환수가 있어도 재소환이면 진행
         if (!isInSummon || isResummon)
         {
             // 기존 소환수가 있으면 파괴 (재소환 시)
             if (currentSummon != null && isResummon)
             {
+                isAttack = currentSummon.getIsAttack();
                 // 이전 소환수에서 옵저버 해제
                 currentSummon.RemoveObserver(statePanelScript);
 
@@ -96,7 +98,7 @@ public class Plate : MonoBehaviour,
             // 재소환된 소환수의 공격 상태를 비활성화
             if (isResummon)
             {
-                currentSummon.setIsAttack(false);
+                currentSummon.setIsAttack(isAttack); //이전 소환수의 공격상태를 받아온다.
                 statePanelScript.setStatePanel(summon,false);
                 NotifyObservers();
             }
