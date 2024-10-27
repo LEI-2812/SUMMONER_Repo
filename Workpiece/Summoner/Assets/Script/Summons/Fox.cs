@@ -12,12 +12,12 @@ public class Fox : Summon
 
     }
 
-    public void summonInitialize(int n)
+    public override void summonInitialize(double n)
     {
         summonName = "Fox"; //이름 Fox
-        maxHP = 200 * n; //최대체력 200
+        maxHP = (int)(200 * n); //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
-        attackPower = 15 * n; //일반공격
+        attackPower = (int)(15 * n); //일반공격
         summonRank = SummonRank.Low; // 하급 소환수
         summonType = SummonType.Fox;
         // 일반 공격: 가장 가까운 적 공격

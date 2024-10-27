@@ -452,8 +452,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         NotifyObservers();
     }
 
+
+    public static double multiple; //배수설정
     // 소환수 초기화 메서드
-    public virtual void summonInitialize(){
+    public virtual void summonInitialize(double multiple)
+    {
         NotifyObservers();
     }
 

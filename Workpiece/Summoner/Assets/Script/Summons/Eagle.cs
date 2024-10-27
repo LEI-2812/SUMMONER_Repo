@@ -9,15 +9,15 @@ public class Eagle : Summon
         summonInitialize(5);
     }
 
-    public void summonInitialize(int n)
+    public override void summonInitialize(double n)
     {
         summonName = "Eagle";
-        maxHP = 400 * n;
+        maxHP = (int)(400 * n);
         nowHP = maxHP;
-        attackPower = 45 * n; //일반공격
+        attackPower = (int)(45 * n); //일반공격
         summonRank = SummonRank.High; // 상급 소환수
         summonType = SummonType.Eagle;
-        heavyAttakPower = 30 * n;
+        heavyAttakPower = (int)(30 * n);
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1);
         // 특수 공격: 타겟 지정 공격
