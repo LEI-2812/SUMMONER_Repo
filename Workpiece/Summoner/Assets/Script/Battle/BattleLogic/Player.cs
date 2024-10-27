@@ -23,6 +23,9 @@ public class Player : Character
     [SerializeField] private Button reSummonButton;
      private TextMeshProUGUI reSummonButtonText;
 
+    [Header("상태창 패널")]
+    [SerializeField] private Image statePanel;
+
     [Header("효과음")]
     [SerializeField] private AudioSource clickSound;
     [SerializeField] private AudioSource failSound;
@@ -33,7 +36,7 @@ public class Player : Character
     [SerializeField] private BattleController battleController;
     [SerializeField] private PlateController plateController;
 
-     BattleAlert battleAlert;
+    BattleAlert battleAlert;
 
     private int selectedPlateIndex = -1;
 
@@ -172,6 +175,7 @@ public class Player : Character
             battleAlert.clearAlert();
         }
         plateController.CompactEnermyPlates();
+        statePanel.gameObject.SetActive(false);
     }
 
     public void OnSpecialAttackBtnClick() //특수공격
@@ -233,7 +237,7 @@ public class Player : Character
         }
 
         plateController.CompactEnermyPlates();
-
+        statePanel.gameObject.SetActive(false);
     }
 
     private IEnumerator WaitForEnermyPlateSelection(Summon attackSummon, int SpecialAttackArrayIndex)
