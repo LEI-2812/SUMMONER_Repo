@@ -202,11 +202,11 @@ public class SummonController : MonoBehaviour
     {
         List<Summon> selectedSummons = new List<Summon>(); // 소환 판넬에 보이게 할 소환수들
 
-        // Low, Medium, High 확률에 맞춰 3마리의 소환수 선택
-        for (int i = 0; i < 3; i++)
+        // 3마리의 소환수를 선택할 때까지 반복
+        while (selectedSummons.Count < 3)
         {
             Summon summon = SelectSummonByRank();
-            if (summon != null)
+            if (summon != null && !selectedSummons.Contains(summon)) // 중복 방지
             {
                 selectedSummons.Add(summon);
             }
@@ -218,22 +218,29 @@ public class SummonController : MonoBehaviour
     // 등급에 따른 확률로 소환수를 뽑음
     private Summon SelectSummonByRank()
     {
-        float randomValue = Random.Range(0f, 100f); // 0에서 100 사이의 무작위 값
+        float randomValue = Random.Range(0f, 100f);
 
+        Summon summon = null;
         if (randomValue <= 50) // Low 등급 (50%)
         {
-            selectedSummon = GetSummonByRank(SummonRank.Low);
+            summon = GetSummonByRank(SummonRank.Low);
         }
         else if (randomValue <= 85) // Medium 등급 (35%)
         {
-            selectedSummon = GetSummonByRank(SummonRank.Medium);
+            summon = GetSummonByRank(SummonRank.Medium);
         }
         else // High 등급 (15%)
         {
-            selectedSummon = GetSummonByRank(SummonRank.High);
+            summon = GetSummonByRank(SummonRank.High);
         }
 
-        return selectedSummon;
+        // 해당 등급의 소환수가 없으면 다른 등급으로 대체
+        if (summon == null)
+        {
+            summon = GetSummonByRank(SummonRank.Low) ?? GetSummonByRank(SummonRank.Medium) ?? GetSummonByRank(SummonRank.High);
+        }
+
+        return summon;
     }
 
     // 특정 등급의 소환수 중 하나를 무작위로 선택하는 메소드

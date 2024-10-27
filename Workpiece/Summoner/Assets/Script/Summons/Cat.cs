@@ -6,11 +6,12 @@ public class Cat : Summon
 {
     private void Awake()
     {
-        summonInitialize(1);
+        summonInitialize(Summon.multiple);
     }
 
-    public override void summonInitialize(double n)
+    public override void summonInitialize(double n=5)
     {
+        n = 5;
         summonName = "Cat";
         maxHP = (int)100 * n;
         nowHP = maxHP;

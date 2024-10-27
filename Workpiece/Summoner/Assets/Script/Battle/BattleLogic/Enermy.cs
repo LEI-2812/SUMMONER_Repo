@@ -25,11 +25,15 @@ public class Enermy : Character
         takeAction();
     }
 
-    public  void takeAction() //여기에 AI로직 작성
+    public void takeAction() //여기에 AI로직 작성
     {
         //플레이어의 예측공격 리스트를 가져오고
         List<AttackPrediction> playerAttackPredictionsList = enermyAttackController.getEnermyAlgorithmController().getPlayerAttackPredictionsList();
-
+        if(playerAttackPredictionsList.Count == 0)
+        {
+            Debug.Log("예측 리스트가 비어있습니다.");
+            return;
+        }
         Debug.Log("리스트를 가져와서 적 대응시작");
         //적의 공격 시작
         enermyAttackController.EnermyAttackStart(playerAttackPredictionsList);

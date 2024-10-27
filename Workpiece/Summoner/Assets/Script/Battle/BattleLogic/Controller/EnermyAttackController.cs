@@ -21,9 +21,9 @@ public class EnermyAttackController : MonoBehaviour
     {
         List<Plate> enermyPlate = plateController.getEnermyPlates();
 
-        for (int enermyPlateIndex = 0; enermyPlateIndex < plateController.getEnermySummonCount(); enermyPlateIndex++) //적이 순차적으로 공격준비
+        for (int index = 0; index < plateController.getEnermySummonCount(); index++) //적이 순차적으로 공격준비
         {
-            Summon attackingSummon = enermyPlate[enermyPlateIndex].getCurrentSummon(); //플레이트에 소환수를 차례로 가져와서
+            Summon attackingSummon = enermyPlate[index].getCurrentSummon(); //플레이트에 소환수를 차례로 가져와서
             // 소환수가 스턴 상태인지 확인
             if (attackingSummon.IsStun())
             {
@@ -31,19 +31,19 @@ public class EnermyAttackController : MonoBehaviour
             }
 
             // 소환수의 지속 상태 검사
-            if(HandleStatusAndReactPrediction(attackingSummon, enermyPlate, enermyPlateIndex))
+            if(HandleStatusAndReactPrediction(attackingSummon, enermyPlate, index))
             {
                 return;
             }
                                     
             //맞대응 시작
-            playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, enermyPlateIndex, playerAttackPredictionsList); //최소 1번 수행
+            playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, index, playerAttackPredictionsList); //최소 1번 수행
             for (int seq = 0; seq < 2; seq++)
             {
                 if (continuesAttackByRank(attackingSummon))
                 {
                     Debug.Log("연속공격 발동");
-                    playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, enermyPlateIndex, playerAttackPredictionsList);
+                    playerAttackPredictionsList = enermyAlgorithm.HandleReactPrediction(attackingSummon, index, playerAttackPredictionsList);
                 }
                 else
                 {
@@ -73,12 +73,12 @@ public class EnermyAttackController : MonoBehaviour
     //힐 사용이 가능하다면 힐 사용
     private bool useHealIfAvailable(Summon attackingSummon, List<Plate> enermyPlate, int enermyPlateIndex)
     {
-        IAttackStrategy[] specialAttackStrategies = attackingSummon.getSpecialAttackStrategy(); // 사용가능한 스킬들을 가져옴
+        IAttackStrategy[] specialAttackStrategies = attackingSummon.getSpecialAttackStrategy(); //스킬들을 가져온다.
 
         for (int i = 0; i < specialAttackStrategies.Length; i++)
         {
             // 스킬들 중 힐 스킬이 있는 경우 자기 자신에게 사용
-            if (specialAttackStrategies[i].getStatusType() == StatusType.Heal)
+            if (specialAttackStrategies[i].getStatusType() == StatusType.Heal && specialAttackStrategies[i].getCooltime()<=0) //힐이여야하고 쿨타임이 0 아래여야한다.
             {
                 attackingSummon.SpecialAttack(enermyPlate, enermyPlateIndex, i); // 자기 자신에게 힐 사용
                 return true; // 힐을 사용했으면 루프 탈출
