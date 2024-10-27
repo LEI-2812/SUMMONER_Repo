@@ -27,6 +27,9 @@ public class SummonController : MonoBehaviour
     [Header("(외부 오브젝트)컨트롤러")]
     [SerializeField] private PlateController plateController;
 
+    [Header("효과음")]
+    [SerializeField] private AudioSource clickSound;
+
     [Header("소환수 프리팹 목록")]
     private Summon selectedSummon; // 선택된 소환수
 
@@ -145,7 +148,7 @@ public class SummonController : MonoBehaviour
                 break;
             }
         }
-
+        clickSound.Play();
         Debug.Log($"플레이트 {selectedPlateIndex}가 선택되었습니다.");
     }
 
@@ -290,6 +293,7 @@ public class SummonController : MonoBehaviour
         }
         takeSummonPanel.SetActive(false);
         reTakeSummonPanel.SetActive(false);
+        clickSound.Play();
     }
 
     // 어둡게 배경 활성화

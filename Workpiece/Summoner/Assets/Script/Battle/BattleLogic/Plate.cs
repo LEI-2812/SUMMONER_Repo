@@ -25,6 +25,9 @@ public class Plate : MonoBehaviour,
     [SerializeField] private SummonController summonController;
     [SerializeField] private BattleController battleController;
 
+    [Header("효과음")]
+    [SerializeField] private AudioSource clickSound;
+
     private List<stateObserver> observers = new List<stateObserver>();
 
     void Start()
@@ -304,6 +307,7 @@ public class Plate : MonoBehaviour,
                 }
             }
         }
+        clickSound.Play();
     }
 
     // 소환수 이미지 투명도 설정
