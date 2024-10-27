@@ -23,6 +23,7 @@ public class StatePanel: MonoBehaviour, stateObserver
     [SerializeField] private Image summonImage; //image
     [SerializeField] private Slider HPSlider;
     [SerializeField] private Image shieldImage;
+    [SerializeField] private Image statePanel;
 
     [Header("공격 버튼들")]
     [SerializeField] private Button NormalAttackButton;
@@ -32,6 +33,7 @@ public class StatePanel: MonoBehaviour, stateObserver
     //상태 판넬에 소환수정보 설정
     public void setStatePanel(Summon stateSummon, bool isEnemyPlate)
     {
+        statePanel.gameObject.SetActive(true);
         this.stateSummon = stateSummon;
         stateSummon.AddObserver(this); // 옵저버로 등록
 

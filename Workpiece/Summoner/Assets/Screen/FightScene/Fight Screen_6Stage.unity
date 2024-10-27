@@ -14001,6 +14001,7 @@ MonoBehaviour:
   summonImage: {fileID: 959924362}
   HPSlider: {fileID: 342250390}
   shieldImage: {fileID: 1158107536}
+  statePanel: {fileID: 1291976792}
   NormalAttackButton: {fileID: 1052664224}
   SpecialAttackButton: {fileID: 541171654}
 --- !u!1 &1296326274
@@ -15606,6 +15607,7 @@ MonoBehaviour:
   haveTexture: {fileID: 2800000, guid: 7d626db1d5084a746a419e605d76699e, type: 3}
   summonButton: {fileID: 839549381}
   reSummonButton: {fileID: 1625915091}
+  statePanel: {fileID: 1291976792}
   clickSound: {fileID: 1469478341}
   failSound: {fileID: 1469478341}
   summonController: {fileID: 290545741}
