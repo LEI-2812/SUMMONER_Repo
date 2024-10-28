@@ -78,7 +78,7 @@ public class EnermyAttackController : MonoBehaviour
         for (int i = 0; i < specialAttackStrategies.Length; i++)
         {
             // 스킬들 중 힐 스킬이 있는 경우 자기 자신에게 사용
-            if (specialAttackStrategies[i].getStatusType() == StatusType.Heal && specialAttackStrategies[i].getCooltime()<=0) //힐이여야하고 쿨타임이 0 아래여야한다.
+            if (specialAttackStrategies[i].getStatusType() == StatusType.Heal && specialAttackStrategies[i].getCurrentCooldown()<=0) //힐이여야하고 쿨타임이 0 아래여야한다.
             {
                 attackingSummon.SpecialAttack(enermyPlate, enermyPlateIndex, i); // 자기 자신에게 힐 사용
                 return true; // 힐을 사용했으면 루프 탈출

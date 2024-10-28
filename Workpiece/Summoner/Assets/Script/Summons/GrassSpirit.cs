@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GrassSpirit : Summon
 {
-
     private void Awake()
     {
         summonName = "GrassSpirit"; //이름 풀정령

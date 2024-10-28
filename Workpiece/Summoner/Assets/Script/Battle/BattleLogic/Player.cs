@@ -188,7 +188,7 @@ public class Player : Character
     public void OnSpecialAttackBtnClick() //특수공격
     {
         Summon attackSummon = battleController.attackStart(0); // 공격할 소환수를 가져옴
-        if (!attackSummon.getIsAttack())
+        if (!attackSummon.getIsAttack() && attackSummon.IsStun())
         {
             Debug.Log("공격할 수 없습니다. ");
             failSound.Play();

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Skeleton : Summon
 {
-
     private void Awake()
     {
         summonName = "Skeleton"; //ÀÌ¸§ ½ºÄÌ·¹Åæ

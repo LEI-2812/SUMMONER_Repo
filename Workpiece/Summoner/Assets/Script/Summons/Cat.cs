@@ -6,23 +6,34 @@ public class Cat : Summon
 {
     private void Awake()
     {
-        summonInitialize(Summon.multiple);
+        summonInitialize();
     }
 
-    public override void summonInitialize(double n=5)
+    public override void summonInitialize()
     {
-        n = 5;
         summonName = "Cat";
-        maxHP = (int)100 * n;
+        maxHP = 100;
         nowHP = maxHP;
-        attackPower = (int)15 * n; //일반공격
+        attackPower = 15; //일반공격
         summonRank = SummonRank.Low; // 하급 소환수
         summonType = SummonType.Cat;
-        heavyAttakPower = (int)20 * n;
+        heavyAttakPower = 20;
+
+        ApplayMultiple(multiple);
+
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower ,1);
         // 특수 공격: 전체 적 공격
         specialAttackStrategies = new IAttackStrategy[] { new ClosestEnemyAttackStrategy(StatusType.None, heavyAttakPower, 1) }; //근접공격, 20데미지, 쿨타임1턴
+
+    }
+
+    public override void ApplayMultiple(double multiple)
+    {
+        maxHP = (int)(maxHP * multiple);
+        nowHP = maxHP;
+        attackPower = (int)(attackPower * multiple); //일반공격
+        heavyAttakPower = (int)(heavyAttakPower * multiple);
     }
 
     //일반 공격과 특수공격이 같은 방식의 경우 데미지가 attackPower로 들어가는 로직이기 때문에 잠깐 SpecialPower로 하고 되돌리게

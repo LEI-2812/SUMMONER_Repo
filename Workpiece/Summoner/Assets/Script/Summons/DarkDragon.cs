@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DarkDragon : Summon
 {
-
     private void Awake()
     {
         summonName = "DarkDragon"; //이름 다크 드래곤
