@@ -52,15 +52,15 @@ public class Player : Character
 
     private void Update()
     {
-        if (plateController.IsEnermyPlateClear())
-        {
-            Debug.Log("승리!");
-            battleAlert.clearAlert();
-        }
-        if (plateController.IsPlayerPlateClear() && mana <= 0)
-        {
-            battleAlert.failAlert();
-        }
+        //if (plateController.IsEnermyPlateClear())
+        //{
+        //    Debug.Log("승리!");
+        //    battleAlert.clearAlert();
+        //}
+        //if (plateController.IsPlayerPlateClear() && mana <= 0)
+        //{
+        //    battleAlert.failAlert();
+        //}
         //if(나중에 나올 클리어 턴 > turnController.turnCount){  승리 조건 나중에 바꿔야 함
         //    battleAlert.failAlert();
         //}
