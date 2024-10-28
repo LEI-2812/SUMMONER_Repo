@@ -39,7 +39,9 @@ public class Player : Character
     BattleAlert battleAlert;
 
     private int selectedPlateIndex = -1;
-
+    private int stageNum;
+    private int currentTurn;
+    private int clearTurn;
     private bool hasSummonedThisTurn;
 
     private void Start()
@@ -47,23 +49,13 @@ public class Player : Character
         summonButtonText = summonButton.GetComponentInChildren<TextMeshProUGUI>();
         reSummonButtonText = reSummonButton.GetComponentInChildren<TextMeshProUGUI>();
         battleAlert = GetComponent<BattleAlert>();
+        stageNum = PlayerPrefs.GetInt("playingStage");
+        clearTurn = turnController.GetClearTurn();
         ResetPlayerSetting();
     }
 
     private void Update()
     {
-        //if (plateController.IsEnermyPlateClear())
-        //{
-        //    Debug.Log("승리!");
-        //    battleAlert.clearAlert();
-        //}
-        //if (plateController.IsPlayerPlateClear() && mana <= 0)
-        //{
-        //    battleAlert.failAlert();
-        //}
-        //if(나중에 나올 클리어 턴 > turnController.turnCount){  승리 조건 나중에 바꿔야 함
-        //    battleAlert.failAlert();
-        //}
         if (mana < usedMana)
         {
             reSummonButton.image.color = new Color32(174, 174, 174, 255);
@@ -80,8 +72,14 @@ public class Player : Character
     {
         Debug.Log("플레이어 턴 시작");
         Debug.Log($"{gameObject.name} 의 마나: {mana}");
+        currentTurn = turnController.GetTurnCount();
         hasSummonedThisTurn = false;
         UpdateManaUI();
+        
+        if(clearTurn < currentTurn)
+        {
+            TurnOver();
+        }
     }
 
     public void OnSummonBtnClick()
@@ -176,10 +174,11 @@ public class Player : Character
             Debug.Log("선택된 plate에 소환수가 없습니다.");
         }
 
-        if (plateController.IsEnermyPlateClear())
+        // 승리 조건 1
+        if (plateController.IsEnermyPlateClear() && (clearTurn <= currentTurn))
         {
             Debug.Log("승리!");
-            battleAlert.clearAlert();
+            battleAlert.clearAlert(stageNum);
         }
         plateController.CompactEnermyPlates();
         statePanel.gameObject.SetActive(false);
@@ -239,6 +238,12 @@ public class Player : Character
             Debug.Log("선택된 plate에 소환수가 없습니다.");
         }
 
+        // 승리 조건 2
+        if (plateController.IsEnermyPlateClear() && (clearTurn <= currentTurn))
+        {
+            Debug.Log("승리!");
+            battleAlert.clearAlert(stageNum);
+        }
         plateController.CompactEnermyPlates();
         statePanel.gameObject.SetActive(false);
     }
@@ -371,5 +376,11 @@ public class Player : Character
     public PlateController getPlateController()
     {
         return plateController;
+    }
+
+    public void TurnOver()
+    {
+        Debug.Log("패배!");
+        battleAlert.failAlert(stageNum);
     }
 }

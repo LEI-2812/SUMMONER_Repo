@@ -54,7 +54,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
         switch (scenarioFlowCount)
         {
-            case 1: //  34 ~ 41
+            case 1: //  34 ~ 40
                 Debug.Log(scenarioFlowCount);
                 //  (오른쪽으로 걸어 나간다.)
                 offDialgueBox();
@@ -85,7 +85,6 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
             case 6:
                 Debug.Log(scenarioFlowCount);
                 //  (소환수 '여우'가 화를 낸다.)
-                foxMove.playAngryAni();
                 showAngryEffect();
                 offDialgueBox();
                 break;
@@ -93,14 +92,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
                 Debug.Log(scenarioFlowCount);
                 //  어쩔 수 없잖아. 내가 먹고 살아야지 너희도 나올 수 있다고.
                 onDialgueBox();
-                break;
-            case 8:
-                Debug.Log(scenarioFlowCount);
-                // (소환수 '여우'가 오른쪽으로 걸어가 사라진다.)
-                offDialgueBox();
-                endAngryEffect();
-                foxMove.CharacterMove(1200f, 400f);
-                break;          
+                break;      
         }
     }
 

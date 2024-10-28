@@ -23,13 +23,13 @@ public class CheckStage : MonoBehaviour
                 x = 28; y = 33;
                 break;
             case 3:  // 3스테이지 대사 시작, 끝값 지정
-                x = 34; y = 41;
+                x = 34; y = 40;
                 break;
             case 5:  // 5스테이지 대사 시작, 끝값 지정
-                x = 42; y = 49;
+                x = 41; y = 48;
                 break;
             case 7:  // 7스테이지 대사 시작, 끝값 지정
-                x = 50; y = 58;
+                x = 49; y = 57;
                 break;
             case 8:  // 에필로그 대사 시작, 끝값 지정
                 x = 10; y = 15;

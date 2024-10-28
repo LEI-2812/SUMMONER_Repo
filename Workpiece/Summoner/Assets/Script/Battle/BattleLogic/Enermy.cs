@@ -9,13 +9,24 @@ public class Enermy : Character
 
     [Header("컨트롤러")]
     [SerializeField] private TurnController turnController;
+    [SerializeField] private PlateController plateController;
     private EnermyAttackController enermyAttackController;
     //private EnermyAlgorithm enermyAlgorithm;
+
+    BattleAlert battleAlert;
+
+    private int stageNum;
+    private int currentTurn;
 
     private void Awake()
     {
         enermyAttackController = GetComponent<EnermyAttackController>();
         //enermyAlgorithm = GetComponent<EnermyAlgorithm>();
+    }
+
+    private void Start()
+    {
+        battleAlert = GetComponent<BattleAlert>();
     }
 
     public  void startTurn()
@@ -36,8 +47,6 @@ public class Enermy : Character
         Debug.Log("리스트를 가져와서 적 대응시작");
         //적의 공격 시작
         enermyAttackController.EnermyAttackStart(playerAttackPredictionsList);
-
-
 
         EndTurn();
     }

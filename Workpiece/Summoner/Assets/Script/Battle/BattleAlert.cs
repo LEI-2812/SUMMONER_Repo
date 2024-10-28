@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,8 +12,19 @@ public class BattleAlert : MonoBehaviour
     public GameObject alertFail; // 전투 패배 알림창
     public Alert FailResult; // 전투 패배 알림 결과
 
-    // 승리 시 호출할 함수 (지금 안되는 이유가 얘를 호출하는 곳이 없어서 그런듯.. 밑의 failAlert도 마찬가지)
-    public void clearAlert()
+    private StageController stageController;
+
+    private void Start()
+    {
+        // StageController 인스턴스를 찾아 참조 설정
+        stageController = FindObjectOfType<StageController>();
+        if (stageController == null)
+        {
+            Debug.LogError("StageController가 씬에 없습니다. StageController를 추가해 주세요.");
+        }
+    }
+
+    public void clearAlert(int stageNum)
     {
         alertClear.SetActive(true);
 
@@ -21,16 +33,18 @@ public class BattleAlert : MonoBehaviour
             if (result) // 처음부터 다시하기
             {
                 Debug.Log("전투를 다시 시작합니다.");
+                stageController.SendFightStage(stageNum);
             }
             else // 다음 스테이지로
             {
-                Debug.Log("다음 스테이지로 이동합니다.");
+                Debug.Log("다음 스테이지로 이동합니다." + (stageNum + 1));
+                stageController.SendStage(stageNum + 1);
             }
         }));
     }
 
     // 패배 시 호출할 함수
-    public void failAlert()
+    public void failAlert(int stageNum)
     {
         alertFail.SetActive(true);
 
@@ -39,6 +53,7 @@ public class BattleAlert : MonoBehaviour
             if (result) // 처음부터 다시하기
             {
                 Debug.Log("전투를 다시 시작합니다.");
+                stageController.SendFightStage(stageNum);
             }
             else // 스테이지 선택화면으로
             {
