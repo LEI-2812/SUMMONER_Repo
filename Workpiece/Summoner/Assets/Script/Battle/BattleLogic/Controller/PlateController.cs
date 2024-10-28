@@ -50,7 +50,7 @@ public class PlateController : MonoBehaviour
     //적 플레이트에 소환수가 존재하는지
     public bool IsEnermyPlateClear()
     {
-        foreach (Plate plate in playerPlates) //플레이트를 순환
+        foreach (Plate plate in enermyPlates) //플레이트를 순환
         {
             Summon summon = plate.getCurrentSummon(); //플레이트마다 소환수를 가져온다
             if (summon != null) //만약 소환수가 하나라도 있다면 true를 반환
@@ -64,7 +64,7 @@ public class PlateController : MonoBehaviour
 
     public bool IsPlayerPlateClear()
     {
-        foreach (Plate plate in enermyPlates) //플레이트를 순환
+        foreach (Plate plate in playerPlates) //플레이트를 순환
         {
             Summon summon = plate.getCurrentSummon(); //플레이트마다 소환수를 가져온다
             if (summon != null) //만약 소환수가 하나라도 있다면 true를 반환

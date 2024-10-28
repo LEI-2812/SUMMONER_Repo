@@ -11,6 +11,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public Text dialogueContext;
 
     [SerializeField] private InteractionEvent interactionEvent; // InteractionEvent 연결
+    private StageController stageController;
 
     private Dialogue[] currentDialogues; // 현재 진행 중인 대화
     private int currentDialogueIndex = 0; // 현재 진행 중인 Dialogue 인덱스(CSV의 ID순서)
@@ -24,6 +25,12 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     void Start()
     {
         checkStage = GetComponent<CheckStage>();
+        // StageController 인스턴스를 찾아 참조 설정
+        stageController = FindObjectOfType<StageController>();
+        if (stageController == null)
+        {
+            Debug.LogError("StageController가 씬에 없습니다. StageController를 추가해 주세요.");
+        }
 
         // 초기화
         characterName.text = "";
@@ -119,18 +126,9 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
             default:
                 Debug.Log("이도저도 아닌");
                 fadeController.FadeOut();
-                Invoke("GotoFightScreen", 1f); // 페이드 아웃을 걸고 전투 씬으로 이동           
+                Invoke("GotoFightScreen", 0.5f); // 페이드 아웃을 걸고 전투 씬으로 이동           
                 break;
         }
-    }
-
-    void Update()
-    {
-        // 유저의 입력으로 대사 넘기기 (예: 스페이스바)
-       // if (isDialogueActive && Input.GetKeyDown(KeyCode.Space) && !isStory)
-       // {
-        //    ShowNextLine();
-       // }
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -145,7 +143,6 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
             }
         }
     }
-
 
     public int getCurrentDialogueIndex()
     {
@@ -174,6 +171,6 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
     public void GotoFightScreen()
     {
-        SceneManager.LoadScene("Fight Screen_1Stage"); // 대화가 끝나면 전투 씬으로 변경 
+        stageController.SendFight(checkStage.stageNum); // 대화가 끝나면 전투 씬으로 변경 
     }
 }

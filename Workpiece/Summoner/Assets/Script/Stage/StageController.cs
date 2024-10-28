@@ -16,7 +16,20 @@ public class StageController : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
 
     private CheckStage checkStage;
-
+    private static StageController instance;
+    private void Awake()
+    {
+        // 중복 방지를 위해 싱글톤 패턴 적용
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // 이 GameObject를 파괴하지 않음
+        }
+        else
+        {
+            Destroy(gameObject); // 이미 인스턴스가 있으면 새로 생성된 것을 삭제
+        }
+    }
     void Start()
     {
         checkStage = FindObjectOfType<CheckStage>();
@@ -52,43 +65,39 @@ public class StageController : MonoBehaviour
         // 현재 플레이 중인 스테이지를 "playingStage"로 저장
         PlayerPrefs.SetInt("playingStage", stage);
         PlayerPrefs.Save();
-        string sceneName;
+        SendStage(stage);
+    }
 
+    public void SendStage(int stage)    // 스테이지 선택 화면에서 보낼 씬(스토리 + 전투)
+    {
         switch (stage)
         {
             case 1:
-                sceneName = "Story Screen_" + stage.ToString() + "Stage";
-                SceneManager.LoadScene(sceneName);
+                SendStory(stage);
                 Summon.multiple = 1;
                 break;
             case 2:
-                sceneName = "Story Screen_" + stage.ToString() + "Stage";
-                SceneManager.LoadScene(sceneName);
+                SendStory(stage);
                 Summon.multiple = 1;
                 break;
             case 3:
-                sceneName = "Story Screen_" + stage.ToString() + "Stage";
-                SceneManager.LoadScene(sceneName);
+                SendStory(stage);
                 Summon.multiple = 1.5;
                 break;
             case 4:
+                SendFight(stage);
                 Summon.multiple = 1.5;
-                sceneName = "Fight Screen_" + stage.ToString() + "Stage";
-                SceneManager.LoadScene(sceneName);
                 break;
             case 5:
-                sceneName = "Story Screen_" + stage.ToString() + "Stage";
-                SceneManager.LoadScene(sceneName);
+                SendStory(stage);
                 Summon.multiple = 2;
                 break;
             case 6:
-                sceneName = "Fight Screen_" + stage.ToString() + "Stage";
-                SceneManager.LoadScene(sceneName);
+                SendFight(stage);
                 Summon.multiple = 2;
                 break;
             case 7:
-                sceneName = "Story Screen_" + stage.ToString() + "Stage";
-                SceneManager.LoadScene(sceneName);
+                SendStory(stage);
                 Summon.multiple = 4;
                 break;
             // 필요한 스테이지만큼 추가
@@ -96,17 +105,57 @@ public class StageController : MonoBehaviour
                 Debug.Log("잘못된 스테이지입니다.");
                 break;
         }
+    }
+    public void SendFightStage(int stage)   // 승리/패배창에서 보낼 씬(오직 전투)
+    {
+        switch (stage)
+        {
+            case 1:
+                SendFight(stage);
+                Summon.multiple = 1;
+                break;
+            case 2:
+                SendFight(stage);
+                Summon.multiple = 1;
+                break;
+            case 3:
+                SendFight(stage);
+                Summon.multiple = 1.5;
+                break;
+            case 4:
+                SendFight(stage);
+                Summon.multiple = 1.5;                
+                break;
+            case 5:
+                SendFight(stage);
+                Summon.multiple = 2;
+                break;
+            case 6:
+                SendFight(stage);
+                Summon.multiple = 2;
+                break;
+            case 7:
+                SendFight(stage);
+                Summon.multiple = 4;
+                break;
+            // 필요한 스테이지만큼 추가
+            default:
+                Debug.Log("잘못된 스테이지입니다.");
+                break;
+        }
+    }
 
-        //if (stage == 4 || stage == 6)
-        //{
-        //    string sceneName = "Fight Screen_" + stage.ToString() + "Stage";
-        //    SceneManager.LoadScene(sceneName);
-        //}
-        //else
-        //{
-        //    string sceneName = "Story Screen_" + stage.ToString() + "Stage";
-        //    SceneManager.LoadScene(sceneName);
-        //}
+    public void SendStory(int stage)
+    {
+        string sceneName;
+        sceneName = "Story Screen_" + stage.ToString() + "Stage";
+        SceneManager.LoadScene(sceneName);
+    }
+    public void SendFight(int stage)
+    {
+        string sceneName;
+        sceneName = "Fight Screen_" + stage.ToString() + "Stage";
+        SceneManager.LoadScene(sceneName);
     }
 
     void ButtonInteractivity(int stageNumber)

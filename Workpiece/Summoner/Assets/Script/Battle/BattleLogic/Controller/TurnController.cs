@@ -7,7 +7,7 @@ using UnityEngine;
 public class TurnController : MonoBehaviour
 {
     
-    [SerializeField]private Player player;
+    [SerializeField] private Player player;
     [SerializeField] private Enermy enermy;
     public enum Turn { PlayerTurn, EnermyTurn }
     private Turn currentTurn; // 현재 턴을 나타내는 변수
@@ -85,8 +85,6 @@ public class TurnController : MonoBehaviour
 
             // 플레이어 턴이 끝나면 턴 카운트를 증가시키지 않고 바로 적 턴 시작
             StartTurn();
-
-
         }
         else if (currentTurn == Turn.EnermyTurn)
         {
