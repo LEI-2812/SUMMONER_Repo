@@ -12,14 +12,17 @@ public class TurnController : MonoBehaviour
     public enum Turn { PlayerTurn, EnermyTurn }
     private Turn currentTurn; // 현재 턴을 나타내는 변수
     private int turnCount;
+    [SerializeField] private int clearTurn;
 
     [SerializeField] private TextMeshProUGUI turnCountText;
-                            
+    [SerializeField] private TextMeshProUGUI turnClearText;
+
     void Start()
     {
         currentTurn = Turn.PlayerTurn; // 첫 번째 턴은 플레이어 턴으로 시작
         turnCount = 1;
         UpdateTurnCountUI();
+        SetClearCountUI();
         StartTurn();
     }
 
@@ -119,8 +122,23 @@ public class TurnController : MonoBehaviour
         turnCountText.text = $"Current Turn : {turnCount}";
     }
 
+    private void SetClearCountUI()
+    {
+        turnClearText.text = $"Clear Turn : {clearTurn}";
+    }
+
     public Turn getCurrentTurn()
     {
         return currentTurn;
+    }
+
+    public int GetTurnCount()
+    {
+        return turnCount;
+    }
+
+    public int GetClearTurn()
+    {
+        return clearTurn;
     }
 } 
