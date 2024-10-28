@@ -23,7 +23,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     public Sprite normalAttackSprite; // 일반 공격 스프라이트
     public Sprite specialAttackSprite; // 특수 공격 스프라이트
     public double attackPower; //일반공격
-    protected double heavyAttakPower; //강 공격력
+    public double heavyAttakPower; //강 공격력
     protected SummonRank summonRank; //등급
     protected SummonType summonType;
     protected double maxHP; //최대체력
@@ -232,6 +232,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 if (effect.damagePerTurn > 0 && effect.statusType != StatusType.Upgrade && effect.statusType != StatusType.Curse)
                 {
                     Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다. 남은 상태이상시간: {effect.effectTime} 턴");
+                    takeDamage(effect.damagePerTurn); // 피해 적용
                 }
 
                 // 지속시간 감소
@@ -378,17 +379,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         Debug.Log($"{summonName}의 공격력이 {curse * 100}% 다운 되었습니다. 현재 공격력: {attackPower}");
     }
 
-    public void ApplyDamage(double damage)
-    {
-        nowHP -= damage; 
-        Debug.Log($"{summonName}이(가) {damage} 피해를 입었습니다. 남은 체력: {nowHP}");
-
-        if (nowHP <= 0)
-        {
-            die(); // 사망 처리
-        }
-    }
-
 
     // 체력 회복
     public void Heal(double healAmount)
@@ -453,11 +443,18 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     }
 
 
-    public static double multiple=1; //배수설정
     // 소환수 초기화 메서드
-    public virtual void summonInitialize(double multiple)
+    public virtual void summonInitialize()
     {
         NotifyObservers();
+    }
+
+    public static double multiple = 5; //배수설정
+    public virtual void ApplayMultiple(double m) {
+        maxHP = (int)(maxHP * m);
+        nowHP = maxHP;
+        attackPower = (int)(attackPower * m); // 일반공격 배수 적용
+        heavyAttakPower = (int)(heavyAttakPower * m); // 강공격 배수 적용
     }
 
 
@@ -714,6 +711,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         {
             observer.StateUpdate();
         }
+    }
+
+    public Summon Clone() //얉은 복사
+    {
+        return (Summon)this.MemberwiseClone();
     }
 
 }

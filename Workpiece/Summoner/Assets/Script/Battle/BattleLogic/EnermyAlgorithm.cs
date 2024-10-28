@@ -27,13 +27,14 @@ public class EnermyAlgorithm : MonoBehaviour
     private List<AttackPrediction> playerAttackPredictionsList;
 
 
-    // 알고리즘 순서대로 실행
-    public List<AttackPrediction> HandleReactPrediction(Summon attackingEnermySummon, int attackingEnermyPlateIndex,List<AttackPrediction> playerAttackPredictionsList)
+    //알고리즘 순서대로 실행
+    public List<AttackPrediction> HandleReactPrediction(Summon attackingEnermySummon, int attackingEnermyPlateIndex, List<AttackPrediction> playerAttackPredictionsList)
     {
+
         if (playerAttackPredictionsList.Count == 0)
         {
             // 리스트가 비어있으면 일반 공격으로 처리
-            handleReactNormalAttack(attackingEnermySummon, attackingEnermyPlateIndex,plateController.getClosestPlayerPlateIndex()); // 기본 타겟 플레이트 인덱스 사용
+            handleReactNormalAttack(attackingEnermySummon, attackingEnermyPlateIndex, plateController.getClosestPlayerPlateIndex()); // 기본 타겟 플레이트 인덱스 사용
             Debug.Log("리스트가 비어서 일반공격 대응");
         }
         else
@@ -57,6 +58,7 @@ public class EnermyAlgorithm : MonoBehaviour
         return playerAttackPredictionsList; // 변경된 리스트 반환
     }
 
+
     // 특수공격으로 대응이 가능한지 검사하는 메소드
     private int canReactWithSpecialAttack(Summon attacker, int attackingEnermyPlateIndex, List<AttackPrediction> playerAttackPredictionsList)
     {
@@ -72,7 +74,7 @@ public class EnermyAlgorithm : MonoBehaviour
                 bool specialAttackExecuted = handleReactSpecialAttack(attacker, attackingEnermyPlateIndex, playerPrediction);
                 if (specialAttackExecuted)
                 {
-                    return indexToRemove = i; // 특수 공격 성공 시 해당 인덱스를 반환
+                    return i; // 특수 공격 성공 시 해당 인덱스를 반환
                 }
             }
         }
@@ -431,8 +433,6 @@ public class EnermyAlgorithm : MonoBehaviour
         }
         Debug.Log($"{attacker.getSummonName()}가 일반 공격을 실행했습니다.");
 
-
-
     }
 
 
@@ -492,7 +492,7 @@ public class EnermyAlgorithm : MonoBehaviour
         List<Plate> playerPlates = CheckPlayerPlateState(); // 현재 playerPlates들
 
         // 2. 몬스터의 상태 체크 (새 리스트에 상태 조정된 enermyPlates 추가)
-        List<Plate> applyEnermyPlates = GetApplyStatusEnermyPlates();
+        List<Plate> applyEnermyPlates = getApplyStatusEnermyPlates();
 
         //3. 소환수의 예측공격 리스트를 받아온다.
         playerAttackPredictionsList = playerAttackPrediction.getPlayerAttackPredictionList(playerPlates, applyEnermyPlates);
@@ -522,53 +522,108 @@ public class EnermyAlgorithm : MonoBehaviour
 
         return playerPlateStates;
     }
-
     // 2. 적 몬스터의 상태를 조정하여 새로운 플레이트 리스트 반환
-    private List<Plate> GetApplyStatusEnermyPlates()
+    private List<Plate> getApplyStatusEnermyPlates()
     {
-        List<Plate> applyEnermyPlates = new List<Plate>(); // 새 리스트
+        List<Plate> applyEnermyPlates = new List<Plate>();
 
-        foreach (Plate plate in plateController.getEnermyPlates()) // enermyPlates를 하나씩 가져온다
+        foreach (Plate plate in plateController.getEnermyPlates())
         {
-            Summon originalSummon = plate.getCurrentSummon(); // 해당 플레이트의 소환수를 가져와서
-            if (originalSummon != null)
+            Summon originSummon = plate.getCurrentSummon();
+            if (originSummon != null)
             {
-                // 기존 몬스터를 가져와 상태를 조정 후 새 플레이트 리스트에 추가
-                Summon applySummon = ApplyEnermyStatus(originalSummon);
-                plate.setCurrentSummon(applySummon); //null이여도 넣어줌. 죽었을땐 null이므로 공격대상이 되지 않게
+                // Summon 객체만 복제하고 상태 효과를 적용
+                Summon clonedSummon = originSummon.Clone();
+                Summon adjustedSummon = ApplyEnermyStatus(clonedSummon);
+
+                // 원본 Plate에 임시로 복제된 Summon 설정
+                plate.setCurrentSummon(adjustedSummon);
                 applyEnermyPlates.Add(plate);
+
+                // 원본 Summon으로 복원
+                plate.setCurrentSummon(originSummon);
+            }
+            else
+            {
+                applyEnermyPlates.Add(plate); // 소환수가 없으면 그대로 추가
             }
         }
 
         return applyEnermyPlates;
     }
 
-    // 2.(1) 몬스터 상태에 따라 수치 조정
-    private Summon ApplyEnermyStatus(Summon enermySummon)
+    // 복제된 Summon에 상태 효과 적용
+    private Summon ApplyEnermyStatus(Summon clonedSummon)
     {
-        // 독성: 최대 체력의 10% 데미지 적용
-        if (enermySummon.getAllStatusTypes().Contains(StatusType.Poison))
+        if (clonedSummon.getAllStatusTypes().Contains(StatusType.Poison))
         {
-            enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.1); // 10% 체력 감소
-            if (enermySummon.getNowHP() <= 0) return null; // 체력이 0 이하라면 제외
+            clonedSummon.setNowHP(clonedSummon.getNowHP() - clonedSummon.getMaxHP() * 0.1);
+            if (clonedSummon.getNowHP() <= 0) return null;
         }
 
-        // 화상: 최대 체력의 20% 데미지 적용
-        if (enermySummon.getAllStatusTypes().Contains(StatusType.Burn))
+        if (clonedSummon.getAllStatusTypes().Contains(StatusType.Burn))
         {
-            enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.2); // 20% 체력 감소
-            if (enermySummon.getNowHP() <= 0) return null; // 체력이 0 이하라면 제외
+            clonedSummon.setNowHP(clonedSummon.getNowHP() - clonedSummon.getMaxHP() * 0.2);
+            if (clonedSummon.getNowHP() <= 0) return null;
         }
 
-        // 흡혈: 최대 체력의 20% 데미지 적용
-        if (enermySummon.getAllStatusTypes().Contains(StatusType.LifeDrain))
+        if (clonedSummon.getAllStatusTypes().Contains(StatusType.LifeDrain))
         {
-            enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.2); // 20% 체력 감소
-            if (enermySummon.getNowHP() <= 0) return null; // 체력이 0 이하라면 제외
+            clonedSummon.setNowHP(clonedSummon.getNowHP() - clonedSummon.getMaxHP() * 0.2);
+            if (clonedSummon.getNowHP() <= 0) return null;
         }
 
-        return enermySummon; // 상태 적용된 몬스터 반환
+        return clonedSummon; // 상태가 적용된 복제본 Summon 반환
     }
+
+
+    //// 2. 적 몬스터의 상태를 조정하여 새로운 플레이트 리스트 반환
+    //private List<Plate> getApplyStatusEnermyPlates()
+    //{
+    //    List<Plate> applyEnermyPlates = new List<Plate>(); // 새 리스트
+
+    //    foreach (Plate plate in plateController.getEnermyPlates()) // enermyPlates를 하나씩 가져온다
+    //    {
+    //        Summon originSummon = plate.getCurrentSummon(); // 해당 플레이트의 소환수를 가져와서
+    //        if (originSummon != null)
+    //        {
+    //            Summon copySummon = originSummon;
+    //            // 기존 몬스터를 가져와 상태를 조정 후 새 플레이트 리스트에 추가
+    //            Summon applySummon = ApplyEnermyStatus(copySummon);
+    //            plate.setCurrentSummon(applySummon); //null이여도 넣어줌. 죽었을땐 null이므로 공격대상이 되지 않게
+    //            applyEnermyPlates.Add(plate);
+    //        }
+    //    }
+
+    //    return applyEnermyPlates;
+    //}
+
+    //// 2.(1) 몬스터 상태에 따라 수치 조정
+    //private Summon ApplyEnermyStatus(Summon enermySummon)
+    //{
+    //    // 독성: 최대 체력의 10% 데미지 적용
+    //    if (enermySummon.getAllStatusTypes().Contains(StatusType.Poison))
+    //    {
+    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.1); // 10% 체력 감소
+    //        if (enermySummon.getNowHP() <= 0) return null; // 체력이 0 이하라면 제외
+    //    }
+
+    //    // 화상: 최대 체력의 20% 데미지 적용
+    //    if (enermySummon.getAllStatusTypes().Contains(StatusType.Burn))
+    //    {
+    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.2); // 20% 체력 감소
+    //        if (enermySummon.getNowHP() <= 0) return null; // 체력이 0 이하라면 제외
+    //    }
+
+    //    // 흡혈: 최대 체력의 20% 데미지 적용
+    //    if (enermySummon.getAllStatusTypes().Contains(StatusType.LifeDrain))
+    //    {
+    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.2); // 20% 체력 감소
+    //        if (enermySummon.getNowHP() <= 0) return null; // 체력이 0 이하라면 제외
+    //    }
+
+    //    return enermySummon; // 상태 적용된 몬스터 반환
+    //}
 
 
 

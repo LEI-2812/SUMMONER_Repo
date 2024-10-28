@@ -89,6 +89,7 @@ public class Plate : MonoBehaviour,
             if (statePanelScript != null)
             {
                 currentSummon.AddObserver(statePanelScript);
+                NotifyObservers();
             }
             else
             {
@@ -96,14 +97,13 @@ public class Plate : MonoBehaviour,
             }
 
             // 소환수 초기화 로직 호출 (초기 능력치나 스킬 설정)
-            summonClone.summonInitialize(Summon.multiple);
+            summonClone.summonInitialize();
 
             // 재소환된 소환수의 공격 상태를 비활성화
             if (isResummon)
             {
                 currentSummon.setIsAttack(isAttack); //이전 소환수의 공격상태를 받아온다.
                 statePanelScript.setStatePanel(summon,false);
-                NotifyObservers();
             }
 
             Debug.Log($"소환수 {summonClone.getSummonName()} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
@@ -256,7 +256,7 @@ public class Plate : MonoBehaviour,
             // BattleController에 선택된 플레이트 인덱스 전달
             summonController.setPlayerSelectedIndex(plateIndex);
 
-            statePanelScript.setStatePanel(currentSummon, IsEnermyPlate()); // 패널에 소환수 정보 전달 
+            statePanelScript.setStatePanel(currentSummon, IsEnermyPlate()); // 패널에 소환수 정보 전달
         }
 
         // 공격 중에 클릭할 경우
@@ -361,7 +361,7 @@ public class Plate : MonoBehaviour,
 
     public void NotifyObservers()
     {
-        Debug.Log("호출");
+        //Debug.Log("호출");
         foreach (var observer in observers)
         {
             observer.StateUpdate();

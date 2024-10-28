@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Slime : Summon
 {
+
     private void Awake()
     {
         summonName = "Slime"; //이름 슬라임

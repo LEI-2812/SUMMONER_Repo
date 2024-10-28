@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class HighDevil : Summon
 {
-
     private void Awake()
     {
         summonName = "HighDevil"; //이름 하급악마

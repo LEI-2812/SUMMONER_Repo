@@ -6,22 +6,30 @@ public class Snake : Summon
 {
     private void Awake()
     {
-        summonInitialize(5);
+        summonInitialize();
     }
 
-    public override void summonInitialize(double n)
+    public override void summonInitialize()
     {
-        n = 5;
         summonName = "Snake";
-        maxHP = (int)(200 * n);
+        maxHP = 200;
         nowHP = maxHP;
-        attackPower = (int)(30 * n); //일반공격
+        attackPower = 30; //일반공격
         summonRank = SummonRank.Medium; // 중급 소환수
         summonType = SummonType.Snake;
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1); //근접 공격
         specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Poison, 0.1, 3, 3) };//중독, 체력에10% 쿨타임3턴 지속시간3턴
+
+        ApplyMultiple(multiple);
     }
 
+    public void ApplyMultiple(double multiple)
+    {
+        maxHP = (int)(maxHP * multiple);
+        nowHP = maxHP;
+        attackPower = (int)(attackPower * multiple); //일반공격
+        heavyAttakPower = (int)(heavyAttakPower * multiple);
+    }
 
 
     public override void die()

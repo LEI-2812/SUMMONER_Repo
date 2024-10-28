@@ -38,6 +38,9 @@ public class StatePanel: MonoBehaviour, stateObserver
         this.stateSummon = stateSummon;
         stateSummon.AddObserver(this); // 옵저버로 등록
 
+        // 체력바를 초기 설정
+        UpdateHealthSlider();
+
         // 소환수의 이미지를 패널에 설정
         if (summonImage != null && stateSummon != null && stateSummon.getImage() != null)
         {
@@ -98,11 +101,12 @@ public class StatePanel: MonoBehaviour, stateObserver
             // 체력 비율을 0과 1 사이로 설정
             float sliderHP = currentHP / maxHP;
             HPSlider.value = Mathf.Clamp(sliderHP, 0f, 1f);
+            //Debug.Log("체력 슬라이더 최종 값: " + HPSlider.value);
 
             // 쉴드 비율 계산
             float shieldAmount = (float)stateSummon.getShield(); // 현재 쉴드량
             float initialShieldAmount = (float)stateSummon.GetInitialShield();
-            Debug.Log("현재 쉴드량 : " + shieldAmount + ", 초기 쉴드량 : " + initialShieldAmount);
+            //Debug.Log("현재 쉴드량 : " + shieldAmount + ", 초기 쉴드량 : " + initialShieldAmount);
 
             if (shieldImage != null)
             {
@@ -125,4 +129,14 @@ public class StatePanel: MonoBehaviour, stateObserver
             }
         }
     }
+
+    private void UpdateHealthSlider()
+    {
+        if (HPSlider != null && stateSummon != null)
+        {
+            float sliderHP = (float)(stateSummon.getNowHP() / stateSummon.getMaxHP());
+            HPSlider.value = Mathf.Clamp(sliderHP, 0f, 1f);
+        }
+    }
+
 }

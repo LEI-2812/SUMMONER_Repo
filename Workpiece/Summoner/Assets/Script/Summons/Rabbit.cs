@@ -5,24 +5,35 @@ using UnityEngine.UI;
 
 public class Rabbit : Summon
 {
+
     private void Awake()
     {
-        summonInitialize(5);
+        summonInitialize();
     }
 
-    public override void summonInitialize(double n)
+    public override void summonInitialize()
     {
-        n = 5;
         summonName = "Rabbit";
-        maxHP = (int)(250 * n);
+        maxHP = 250;
         nowHP = maxHP;
-        attackPower = (int)(20 *n); //일반공격
+        attackPower = 20; //일반공격
         summonRank = SummonRank.Medium; // 중급 소환수
         summonType = SummonType.Rabbit;
+
+        ApplayMultiple(multiple);
+
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접공격
         specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Heal, 0.3, 3) };
+
     }
 
+    public override void ApplayMultiple(double multiple)
+    {
+        maxHP = (int)(maxHP * multiple);
+        nowHP = maxHP;
+        attackPower = (int)(attackPower * multiple); //일반공격
+        heavyAttakPower = (int)(heavyAttakPower * multiple);
+    }
 
 
     public override void die()
