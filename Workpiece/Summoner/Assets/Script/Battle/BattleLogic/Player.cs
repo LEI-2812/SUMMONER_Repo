@@ -52,7 +52,12 @@ public class Player : Character
 
     private void Update()
     {
-        if(plateController.IsPlayerPlateClear() && mana <= 0)
+        if (plateController.IsEnermyPlateClear())
+        {
+            Debug.Log("승리!");
+            battleAlert.clearAlert();
+        }
+        if (plateController.IsPlayerPlateClear() && mana <= 0)
         {
             battleAlert.failAlert();
         }
@@ -232,13 +237,6 @@ public class Player : Character
         else
         {
             Debug.Log("선택된 plate에 소환수가 없습니다.");
-        }
-
-
-        if (plateController.IsEnermyPlateClear())
-        {
-            Debug.Log("승리!");
-            battleAlert.clearAlert();
         }
 
         plateController.CompactEnermyPlates();
