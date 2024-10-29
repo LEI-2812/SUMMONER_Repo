@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class Wolf : Summon
 {
-    private void Awake()
-    {
-    }
-
     public override void summonInitialize()
     {
         summonName = "Wolf";

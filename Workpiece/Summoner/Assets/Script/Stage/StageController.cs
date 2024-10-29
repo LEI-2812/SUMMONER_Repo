@@ -8,45 +8,26 @@ using UnityEngine.UI;
 
 public class StageController : MonoBehaviour
 {
+    public int stageNum;  //스테이지 번호 받기
 
-    [Header("스테이지 버튼들(순서대로)")]
-    public Button[] buttons;    // 활성화/비활성화할 버튼들
 
     [Header("버튼 클릭음")]
     [SerializeField] private AudioSource audioSource;
 
-    private CheckStage checkStage;
-    private static StageController instance;
     private void Awake()
     {
-        // 중복 방지를 위해 싱글톤 패턴 적용
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject); // 이 GameObject를 파괴하지 않음
-        }
-        else
-        {
-            Destroy(gameObject); // 이미 인스턴스가 있으면 새로 생성된 것을 삭제
-        }
+        stageNum = PlayerPrefs.GetInt("savedStage");
     }
     void Start()
     {
-        checkStage = FindObjectOfType<CheckStage>();
-        int stageNumber = PlayerPrefs.GetInt("savedStage");
-        Debug.Log("savedStage 값 : " + stageNumber);
-        ButtonInteractivity(7);
+        //int stageNumber = PlayerPrefs.GetInt("savedStage");
+        Debug.Log("savedStage 값 : " + stageNum);
     }
-
-    // 현재 스테이지 진행 정도
-    [SerializeField]
-    [Header("스테이지 진행도")]
-    private int savedStage = 7;
 
     // PlayerPrefs로 스테이지 진행 정도 저장
     void SaveStage()
     {
-        PlayerPrefs.SetInt("savedStage", savedStage);
+        PlayerPrefs.SetInt("savedStage", stageNum);
         PlayerPrefs.Save();
     }
 
@@ -158,21 +139,15 @@ public class StageController : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
-    void ButtonInteractivity(int stageNumber)
-    {
-        // 모든 버튼 비활성화
-        foreach (Button button in buttons)
-        {
-            button.interactable = false; // 기본적으로 비활성화
-        }
 
-        for (int i = 0; i < stageNumber; i++)
-        {
-            if (i < buttons.Length) // 배열의 범위를 벗어나지 않도록 체크
-            {
-                buttons[i].interactable = true; // 해당 단계의 버튼 활성화
-            }
-        }
+
+    public int getStageNum()
+    {
+        return stageNum;
+    }
+    public void setStageNum(int stage)
+    {
+        stageNum = stage;
     }
 
 }
