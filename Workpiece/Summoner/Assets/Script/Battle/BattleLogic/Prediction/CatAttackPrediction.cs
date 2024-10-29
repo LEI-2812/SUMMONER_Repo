@@ -21,7 +21,7 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
         // 일반 공격으로 처치가 가능하면 일반 공격 확률 10% 증가
         if (getIndexOfNormalAttackCanKill(cat, enermyPlates) != -1)
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 0.1f, true, "고양이 일반공격으로 처치 가능");
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "고양이 일반공격으로 처치 가능");
             attackIndex = getIndexOfNormalAttackCanKill(cat, enermyPlates); //일반 공격으로 처치가능한 인덱스 받기
         }
         else
@@ -101,7 +101,7 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
         for (int i = 0; i < enermyPlates.Count; i++)
         {
             Summon enermySummon = enermyPlates[i].getCurrentSummon();
-            if (enermySummon != null && cat.getAttackPower() >= enermySummon.getNowHP())
+            if (enermySummon != null && cat.getHeavyAttackPower() >= enermySummon.getNowHP())
             {
                 // 일반 공격으로 적의 체력을 0 이하로 만들 수 있으면 해당 인덱스 반환
                 return i;
@@ -132,14 +132,14 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
             // 일반 공격 확률을 증가시키고, 특수 공격 확률을 그만큼 감소
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률이 {AttackChange}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"일반 공격 확률이 {AttackChange*100}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
             // 특수 공격 확률을 증가시키고, 일반 공격 확률을 그만큼 감소
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"특수 공격 확률이 {AttackChange}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"특수 공격 확률이 {AttackChange * 100}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         return currentProbabilities;
     }

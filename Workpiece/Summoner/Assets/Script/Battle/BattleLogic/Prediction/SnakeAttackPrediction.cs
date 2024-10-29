@@ -50,7 +50,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 적이 1마리 뿐");
                 if (AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 모두 50% 이상");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 50% 이상");
                 }
                 if (getIndexOfNormalAttackCanKill(snake, enermyPlates) != -1) //일반 공격 시 몬스터를 물리칠 수 있는가?
                 {

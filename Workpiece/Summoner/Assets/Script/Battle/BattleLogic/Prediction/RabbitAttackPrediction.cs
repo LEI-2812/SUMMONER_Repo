@@ -18,9 +18,9 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
         int attackIndex = getClosestEnermyIndex(enermyPlates);
         AttackPrediction attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
-        if (GetIndexOfLowerHealthIfDifferenceOver30(playerPlates) != -1) //소환수 중 한쪽이 다른 쪽과 체력을 비교했을 때 30% 이상 낮은가?
+        if (GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex) != -1) //소환수 중 한쪽이 다른 쪽과 체력을 비교했을 때 30% 이상 낮은가?
         {
-            attackIndex = GetIndexOfLowerHealthIfDifferenceOver30(playerPlates);
+            attackIndex = GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex);
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "토끼 소환수중 한쪽이 다른 쪽과 비교할때 30% 낮음");
             attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
@@ -57,39 +57,40 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
     // 소환수의 체력 차이가 30% 이상 낮은지 확인하는 메소드
     // 아군 소환수 중 체력 차이가 30% 이상인 경우, 더 낮은 체력을 가진 소환수의 인덱스를 반환하는 메소드
-    public int GetIndexOfLowerHealthIfDifferenceOver30(List<Plate> playerPlates)
+    public int GetIndexOfLowerHealthIfDifferenceOver30(List<Plate> playerPlates,int rabbitIndex)
     {
-        if (playerPlates.Count < 2) return -1; // 아군이 2명 미만이면 비교할 수 없음
+        if (playerPlates.Count < 2) return -1;
 
-        double maxHealthRatio = double.MinValue;
-        double minHealthRatio = double.MaxValue;
-        int indexOfMinHealth = -1;
+        int lowestHealthIndex = -1;
+        double lowestHealth = double.MaxValue;
 
         for (int i = 0; i < playerPlates.Count; i++)
         {
-            Summon enermySummon = playerPlates[i].getCurrentSummon();
-            if (enermySummon != null)
+            if (i == rabbitIndex) continue; // rabbitIndex는 제외
+
+            Summon currentSummon = playerPlates[i].getCurrentSummon();
+            if (currentSummon == null) continue;
+
+            for (int j = 0; j < playerPlates.Count; j++)
             {
-                double healthRatio = enermySummon.getNowHP() / enermySummon.getMaxHP();
-                if (healthRatio < minHealthRatio)
+                if (i == j || j == rabbitIndex) continue; // 자기 자신과 rabbitIndex는 제외
+
+                Summon compareSummon = playerPlates[j].getCurrentSummon();
+                if (compareSummon == null) continue;
+
+                // 현재 소환수의 체력 비율 계산 (자기 체력 / 비교 소환수 체력)
+                double healthRatio = currentSummon.getNowHP() / compareSummon.getNowHP();
+
+                // 조건을 만족하는 경우 중에서 가장 낮은 체력을 가진 소환수의 인덱스를 추적
+                if (healthRatio <= 0.7 && currentSummon.getNowHP() < lowestHealth)
                 {
-                    minHealthRatio = healthRatio;
-                    indexOfMinHealth = i; // 체력이 더 낮은 소환수의 인덱스를 기록
-                }
-                if (healthRatio > maxHealthRatio)
-                {
-                    maxHealthRatio = healthRatio;
+                    lowestHealth = currentSummon.getNowHP();
+                    lowestHealthIndex = i;
                 }
             }
         }
 
-        // 체력 차이가 30% 이상인 경우에만 인덱스 반환
-        if ((maxHealthRatio - minHealthRatio) > 0.3f)
-        {
-            return indexOfMinHealth;
-        }
-
-        return -1; // 체력 차이가 30% 이상이 아니면 -1 반환
+        return lowestHealthIndex; // 조건을 만족하는 가장 낮은 체력의 소환수 인덱스 반환, 없으면 -1 반환
     }
 
 

@@ -332,7 +332,7 @@ public class EnermyAlgorithm : MonoBehaviour
             {
                 Debug.Log($"{attacker.name} 의 강공격");
                 double originPower = attacker.getAttackPower();
-                attacker.setAttackPower(attacker.getHeavyAttakPower()); //공격력을 강공격력으로 전환
+                attacker.setAttackPower(attacker.getHeavyAttackPower()); //공격력을 강공격력으로 전환
                 attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //일반공격수행
                 attacker.setAttackPower(originPower); //원래 공격력으로 되돌리기
             }
@@ -423,7 +423,7 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             Debug.Log($"{attacker.name} 의 강공격");
             double originPower = attacker.getAttackPower();
-            attacker.setAttackPower(attacker.getHeavyAttakPower()); //공격력을 강공격력으로 전환
+            attacker.setAttackPower(attacker.getHeavyAttackPower()); //공격력을 강공격력으로 전환
             attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //일반공격수행
             attacker.setAttackPower(originPower); //원래 공격력으로 되돌리기
         }
