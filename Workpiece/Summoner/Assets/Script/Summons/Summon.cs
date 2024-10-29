@@ -449,7 +449,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         NotifyObservers();
     }
 
-    public static double multiple=1; //배수설정
+    public static double multiple=5; //배수설정
     public virtual void ApplayMultiple(double m) {
         maxHP = (int)(maxHP * m);
         nowHP = maxHP;
@@ -503,11 +503,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         this.summonName = name;
     }
 
-    public double getHeavyAttakPower()
+    public double getHeavyAttackPower()
     {
         return heavyAttakPower;
     }
-    public void setHeavyAttakPower(double value)
+    public void setHeavyAttackPower(double value)
     {
         this.heavyAttakPower = value;
     }
