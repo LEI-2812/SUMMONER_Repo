@@ -11,7 +11,6 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public Text dialogueContext;
 
     [SerializeField] private InteractionEvent interactionEvent; // InteractionEvent 연결
-    private StageController stageController;
 
     private Dialogue[] currentDialogues; // 현재 진행 중인 대화
     private int currentDialogueIndex = 0; // 현재 진행 중인 Dialogue 인덱스(CSV의 ID순서)
@@ -19,18 +18,19 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     private bool isDialogueActive = false; // 대화 진행 상태 체크
 
     private bool isStory; //스토리가 진행중인지 확인
-    private CheckStage checkStage;
+    private StoryStage storyStage;
     public FadeController fadeController;
+
+    private StoryChangeImage changeImage;
+
+    void Awake()
+    {
+        changeImage = GetComponent<StoryChangeImage>();
+        storyStage = GetComponent<StoryStage>();
+    }
 
     void Start()
     {
-        checkStage = GetComponent<CheckStage>();
-        // StageController 인스턴스를 찾아 참조 설정
-        stageController = FindObjectOfType<StageController>();
-        if (stageController == null)
-        {
-            Debug.LogError("StageController가 씬에 없습니다. StageController를 추가해 주세요.");
-        }
 
         // 초기화
         characterName.text = "";
@@ -113,7 +113,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         isDialogueActive = false;
         Debug.Log("대화가 종료되었습니다.");
 
-        switch (checkStage.stageNum)
+        switch (storyStage.getStoryNum())
         {
             case 0:
                 Debug.Log("프롤로그");
@@ -126,7 +126,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
             default:
                 Debug.Log("이도저도 아닌");
                 fadeController.FadeOut();
-                Invoke("GotoFightScreen", 0.5f); // 페이드 아웃을 걸고 전투 씬으로 이동           
+                goToFightScreen();
                 break;
         }
     }
@@ -140,6 +140,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
             if (isDialogueActive && !isStory)
             {
                 ShowNextLine();
+                changeImage.ShowImage();
             }
         }
     }
@@ -169,8 +170,8 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         isStory = true; // 이동이 끝나면 InteractionController에서 대사 진행을 허용
     }
 
-    public void GotoFightScreen()
+    private void goToFightScreen()
     {
-        stageController.SendFight(checkStage.stageNum); // 대화가 끝나면 전투 씬으로 변경 
+        SceneManager.LoadScene("Fight Screen_"+storyStage.getStoryNum()+"Stage");
     }
 }

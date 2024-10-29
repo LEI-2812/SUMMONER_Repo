@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandler
@@ -92,7 +93,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
                 Debug.Log(scenarioFlowCount);
                 //  어쩔 수 없잖아. 내가 먹고 살아야지 너희도 나올 수 있다고.
                 onDialgueBox();
-                break;      
+                break;
         }
     }
 

@@ -44,7 +44,7 @@ public class Player : Character
     private int clearTurn;
     private bool hasSummonedThisTurn;
 
-    private void Start()
+    private void Awake()
     {
         summonButtonText = summonButton.GetComponentInChildren<TextMeshProUGUI>();
         reSummonButtonText = reSummonButton.GetComponentInChildren<TextMeshProUGUI>();

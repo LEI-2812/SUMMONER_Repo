@@ -8555,7 +8555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a77d96a038c01040ae4fb06376dab31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageNum: 5
+  storyNum: 5
 --- !u!114 &1102135341
 MonoBehaviour:
   m_ObjectHideFlags: 0

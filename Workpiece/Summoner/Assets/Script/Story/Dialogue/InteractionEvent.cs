@@ -9,17 +9,17 @@ public class InteractionEvent : MonoBehaviour
     [Header("Dialogue")]
     DialogueEvent dialogue;
 
-    private CheckStage checkStage;
+    private StoryStage storyStage;
     private void Start()
     {
-        checkStage = GetComponent<CheckStage>();
+        storyStage = GetComponent<StoryStage>();
     }
 
     public Dialogue[] getDialogue()
     {
-        checkStage.checkStage();
-        dialogue.line.x = CheckStage.x;
-        dialogue.line.y = CheckStage.y;
+        storyStage.checkStage();
+        dialogue.line.x = storyStage.getX();
+        dialogue.line.y = storyStage.getY();
         dialogue.dialogues = DatabaseManager.instance.getDialogue((int)dialogue.line.x, (int)dialogue.line.y);
         return dialogue.dialogues;
     }

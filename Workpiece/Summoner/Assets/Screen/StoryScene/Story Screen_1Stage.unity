@@ -8953,8 +8953,8 @@ GameObject:
   - component: {fileID: 1102135336}
   - component: {fileID: 1102135335}
   - component: {fileID: 1102135334}
-  - component: {fileID: 1102135340}
   - component: {fileID: 1102135341}
+  - component: {fileID: 1102135342}
   m_Layer: 5
   m_Name: StoryAndTalkManager
   m_TagString: Untagged
@@ -9076,19 +9076,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1102135332}
   m_CullTransparentMesh: 1
---- !u!114 &1102135340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1102135332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a77d96a038c01040ae4fb06376dab31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stageNum: 1
 --- !u!114 &1102135341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9108,6 +9095,19 @@ MonoBehaviour:
   playerAni: {fileID: 637407126}
   interactionController: {fileID: 1102135335}
   playerMove: {fileID: 637407130}
+--- !u!114 &1102135342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102135332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a77d96a038c01040ae4fb06376dab31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyNum: 1
 --- !u!1 &1118826677
 GameObject:
   m_ObjectHideFlags: 0

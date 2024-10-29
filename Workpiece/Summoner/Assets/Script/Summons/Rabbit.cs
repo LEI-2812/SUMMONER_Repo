@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Rabbit : Summon
 {
 
-    private void Awake()
+    private void Start()
     {
         summonInitialize();
     }

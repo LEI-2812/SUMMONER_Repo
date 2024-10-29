@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Snake : Summon
 {
-    private void Awake()
+    private void Start()
     {
         summonInitialize();
     }

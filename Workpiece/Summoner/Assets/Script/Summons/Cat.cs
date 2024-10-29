@@ -1,13 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Cat : Summon
 {
-    private void Awake()
-    {
-        summonInitialize();
-    }
 
     public override void summonInitialize()
     {

@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Fox : Summon
 {
-    private void Awake()
-    {
-        summonInitialize();
-    }
 
     public override void summonInitialize()
     {

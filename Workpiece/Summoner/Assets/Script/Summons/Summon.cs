@@ -449,7 +449,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         NotifyObservers();
     }
 
-    public static double multiple = 5; //배수설정
+    public static double multiple=1; //배수설정
     public virtual void ApplayMultiple(double m) {
         maxHP = (int)(maxHP * m);
         nowHP = maxHP;
@@ -473,11 +473,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
     }
 
-    private StatePanel statePanel;
-    public void SetStatePanel(StatePanel panel)
-    {
-        statePanel = panel; // 인스턴스를 설정
-    }
 
     public void AddShield(double shieldAmount)
     {
@@ -487,11 +482,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         }
         shield += shieldAmount;
         Debug.Log("쉴드 부여. 현재 쉴드: " + shield);
-        // 쉴드 추가 후 StatePanel에서 슬라이더 업데이트
-        //if (statePanel != null)
-        //{
-        //    statePanel.StateUpdate(); // 패널 업데이트
-        //}
+
         NotifyObservers();
     }
     public double getShield()
