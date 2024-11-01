@@ -175,7 +175,7 @@ public class Player : Character
         }
 
         // ½Â¸® Á¶°Ç 1
-        if (plateController.IsEnermyPlateClear() && (clearTurn <= currentTurn))
+        if (plateController.IsEnermyPlateClear() && (clearTurn >= currentTurn))
         {
             Debug.Log("½Â¸®!");
             battleAlert.clearAlert(stageNum);
@@ -239,7 +239,7 @@ public class Player : Character
         }
 
         // ½Â¸® Á¶°Ç 2
-        if (plateController.IsEnermyPlateClear() && (clearTurn <= currentTurn))
+        if (plateController.IsEnermyPlateClear() && (clearTurn >= currentTurn))
         {
             Debug.Log("½Â¸®!");
             battleAlert.clearAlert(stageNum);

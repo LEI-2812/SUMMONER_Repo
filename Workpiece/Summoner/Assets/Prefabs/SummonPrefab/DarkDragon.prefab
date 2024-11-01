@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 436934086063799255}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -59,8 +59,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 3619127772477133430}
+  sprites:
+  - {fileID: 1787854662, guid: bb8377c37e567a34d9808eceb850e529, type: 3}
+  - {fileID: 1787854662, guid: bb8377c37e567a34d9808eceb850e529, type: 3}
+  animator: {fileID: 0}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
+  attackPower: 0
+  heavyAttakPower: 0
   nowHP: 0
   isAttack: 1
 --- !u!114 &3619127772477133430
