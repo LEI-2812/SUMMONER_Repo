@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1378068078022664671}
   - component: {fileID: 2033112740896684424}
   - component: {fileID: 8721398464925212949}
+  - component: {fileID: 2030948058271404649}
   m_Layer: 0
   m_Name: Wolf
   m_TagString: Untagged
@@ -28,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 2490388254837929149}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.4, y: 2.4, z: 2.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -51,8 +52,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 8721398464925212949}
-  normalAttackSprite: {fileID: 0}
-  specialAttackSprite: {fileID: 0}
+  sprites:
+  - {fileID: -1720323784, guid: 61e14c39d98362f4caa88beae9dff857, type: 3}
+  - {fileID: -1933813027, guid: 61e14c39d98362f4caa88beae9dff857, type: 3}
+  animator: {fileID: 2030948058271404649}
+  normalAttackSprite: {fileID: 21300000, guid: d07e24f27cf62c2489991f6834f20813, type: 3}
+  specialAttackSprite: {fileID: 21300000, guid: 4836ae1bdf26d4b4db0861ee3d6d1f88, type: 3}
+  attackPower: 0
+  heavyAttakPower: 0
   nowHP: 0
   isAttack: 1
 --- !u!222 &2033112740896684424
@@ -93,3 +100,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &2030948058271404649
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2490388254837929149}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 850f9e744f3849e41ad0707ab629f7ee, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

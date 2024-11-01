@@ -19,6 +19,8 @@ public enum SummonType
 public class Summon : MonoBehaviour, UpdateStateObserver
 {
     [SerializeField] private Image image; //이미지
+    [SerializeField] private Sprite[] sprites; // 스프라이트 모음
+    [SerializeField] private Animator animator;
     protected string summonName; //이름
     public Sprite normalAttackSprite; // 일반 공격 스프라이트
     public Sprite specialAttackSprite; // 특수 공격 스프라이트
@@ -47,6 +49,10 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         nowHP = maxHP;
     }
 
+    public void SetSprite(int index)
+    {
+        image.sprite = sprites[index];        
+    }
 
 
     public void normalAttack(List<Plate> targetPlates, int selectedPlateIndex)
@@ -57,10 +63,22 @@ public class Summon : MonoBehaviour, UpdateStateObserver
             return;
         }
         attackStrategy.Attack(this, targetPlates, selectedPlateIndex, 0); // 일반 공격 수행
-
+        animator.SetTrigger("attack");
+        
+        StartCoroutine(ColorChange(Color.black));
+        
         // 해당 공격에 쿨타임 적용
         attackStrategy.ApplyCooldown();
         isAttack = false;
+    }
+
+    IEnumerator ColorChange(Color color)    // 색이 변했다가 돌아옴
+    {  
+        image.color = color;
+
+        yield return new WaitForSeconds(1f);
+
+        image.color = Color.white;
     }
 
     public virtual void SpecialAttack(List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
@@ -72,7 +90,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         }
 
         var specialAttack = specialAttackStrategies[SpecialAttackArrayIndex];
-
+        animator.SetTrigger("attack");
         if (specialAttack == null || specialAttack.getCurrentCooldown() > 0)
         {
             Debug.Log("특수 스킬이 쿨타임 중입니다.");
@@ -391,6 +409,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         Debug.Log($"{summonName}이(가) {healAmount}만큼 체력을 회복했습니다.");
         // 체력 변경 시 옵저버들에게 알림
         NotifyObservers();
+        StartCoroutine(ColorChange(Color.green));
     }
 
 
@@ -425,6 +444,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         else //쉴드가 없을경우
         {
             nowHP -= damage;
+            StartCoroutine((ColorChange(Color.red)));
         }
 
         if (nowHP <= 0) //죽음처리
@@ -708,5 +728,4 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     {
         return (Summon)this.MemberwiseClone();
     }
-
 }

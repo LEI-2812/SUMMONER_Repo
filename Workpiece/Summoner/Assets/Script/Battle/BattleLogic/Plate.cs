@@ -13,10 +13,11 @@ public class Plate : MonoBehaviour,
 {
     //plate를 프리팹시켜서 넣을것.
     private bool isInSummon = false; // 현재 소환수가 있는지 여부
-    [SerializeField]private Summon currentSummon;   // 플레이트 위에 있는 소환수
-    [SerializeField]private GameObject statePanel;  // 상태 패널 (On/Off)
+    [SerializeField] private Summon currentSummon;   // 플레이트 위에 있는 소환수
+    [SerializeField] private GameObject statePanel;  // 상태 패널 (On/Off)
     [SerializeField] private StatePanel statePanelScript; // 상태 패널에 소환수 정보를 업데이트하는 스크립트
     [SerializeField] private Image summonImg;
+    [SerializeField] private Transform spawnTransform;
 
     private Image plateImage; // 자기 자신의 Image 컴포넌트
     private Color originalColor;
@@ -56,30 +57,11 @@ public class Plate : MonoBehaviour,
             }
 
             // 소환수 프리팹을 클론하여 생성
-            Summon summonClone = Instantiate(summon);
+            Summon summonClone = Instantiate(summon, spawnTransform.localPosition ,spawnTransform.rotation);
  
             // 클론을 현재 플레이트의 자식으로 배치
             summonClone.transform.SetParent(this.transform, false);
-            summonClone.transform.localPosition = Vector3.zero;  // 필요한 경우 위치 초기화
-
-            // 클론의 이미지 투명도 설정 (완전히 투명하게)
-            if (summonClone.getImage() != null)
-            {
-                Color cloneColor = summonClone.getImage().color;
-                cloneColor.a = 0.0f;  // 클론의 알파 값을 0으로 설정하여 투명하게 만듦
-                summonClone.getImage().color = cloneColor;
-            }
-
-            // 플레이트의 summonImg에 소환수의 이미지 설정
-            if (summonImg != null && summonClone.getImage() != null && summonClone.getImage().sprite != null)
-            {
-                summonImg.sprite = summonClone.getImage().sprite; // summonImg에 소환수 이미지 설정
-
-                // summonImg의 투명도를 1로 설정하여 완전히 보이게
-                Color plateColor = summonImg.color;
-                plateColor.a = 1.0f;  // 알파 값을 1로 설정 (완전 불투명)
-                summonImg.color = plateColor;
-            }
+            //summonClone.transform.localPosition = Vector3.zero;  // 필요한 경우 위치 초기화
 
             // 클론된 소환수를 currentSummon으로 설정
             currentSummon = summonClone;
@@ -119,14 +101,6 @@ public class Plate : MonoBehaviour,
     {
         if (isInSummon)
         {
-            if (summonImg != null)
-            {
-                summonImg.sprite = null; // 이미지를 비움
-                Color color = summonImg.color;
-                color.a = 0f; // 완전히 투명하게 설정
-                summonImg.color = color;
-            }
-
             currentSummon = null; // 소환수 연결 해제
             isInSummon = false;
             Debug.Log("소환수 제거.");
@@ -144,17 +118,17 @@ public class Plate : MonoBehaviour,
         currentSummon.transform.SetParent(this.transform, false);
         currentSummon.transform.localPosition = Vector3.zero; // 위치 초기화
 
-        // 소환수 이미지 설정 (초기화 없이 그대로 사용)
-        if (summon.getImage() != null)
-        {
-            if (summonImg != null && summon.getImage().sprite != null)
-            {
-                summonImg.sprite = summon.getImage().sprite;
-                Color plateColor = summonImg.color;
-                plateColor.a = 1.0f; // 완전 불투명
-                summonImg.color = plateColor;
-            }
-        }
+        //// 소환수 이미지 설정 (초기화 없이 그대로 사용)
+        //if (summon.getImage() != null)
+        //{
+        //    if (summonImg != null && summon.getImage().sprite != null)
+        //    {
+        //        summonImg.sprite = summon.getImage().sprite;
+        //        Color plateColor = summonImg.color;
+        //        plateColor.a = 1.0f; // 완전 불투명
+        //        summonImg.color = plateColor;
+        //    }
+        //}
 
         Debug.Log($"소환수 {summon.getSummonName()} 이(가) 새 위치로 이동했습니다.");
     }
