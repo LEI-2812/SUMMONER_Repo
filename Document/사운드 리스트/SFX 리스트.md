@@ -15,7 +15,7 @@
 - Fight 폴더
   - Attack : 모든 몹에 대하여 공격 시
   - Hitted : 모든 몹에 대하여 피격 시
-  - Status Hit : 모든 몹에 대하여 상태이상 피격 시
+  - Down Hit : 모든 몹에 대하여 상태이상 피격 시
   - Up Attack : 모든 몹에 대하여 아군 강화, 치유, 보호막 공격 시
   - Clear : Alert_Clear 출력 시
   - Fail : Alert_Fail 출력 시
