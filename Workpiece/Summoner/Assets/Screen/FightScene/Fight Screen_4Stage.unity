@@ -8453,6 +8453,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1545898996}
     m_Modifications:
+    - target: {fileID: 2526962561360333561, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: summon
+      value: 
+      objectReference: {fileID: 5960568070116890051, guid: daceb49291e617948a072a85699e6272, type: 3}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 5491859847190021652, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -9903,6 +9915,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1545898996}
     m_Modifications:
+    - target: {fileID: 2526962561360333561, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: summon
+      value: 
+      objectReference: {fileID: 6006135561973635161, guid: 8fd297f85265bc04894ce80f6e81ac6c, type: 3}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: summonImg
       value: 
@@ -21726,6 +21750,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1545898996}
     m_Modifications:
+    - target: {fileID: 2526962561360333561, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: summon
+      value: 
+      objectReference: {fileID: 1712392830363715930, guid: 90097dbc557a1854191dac4f46b78a46, type: 3}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: summonImg
       value: 

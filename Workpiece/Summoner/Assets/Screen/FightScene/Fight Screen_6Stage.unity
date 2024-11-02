@@ -7482,6 +7482,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1545898996}
     m_Modifications:
+    - target: {fileID: 2526962561360333561, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: summon
+      value: 
+      objectReference: {fileID: 5091724618932704684, guid: d3bcd2f130775e243a6678d60797559b, type: 3}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 5491859847190021652, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -14922,7 +14934,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 4759675766602627025, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: d067c81337a094e6693e5b078c13de80, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -18731,6 +18743,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1545898996}
     m_Modifications:
+    - target: {fileID: 2526962561360333561, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: summon
+      value: 
+      objectReference: {fileID: 8549275133440041068, guid: e40edda8095726c4085f00ac81879052, type: 3}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: summonImg
       value: 
@@ -21722,6 +21746,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1545898996}
     m_Modifications:
+    - target: {fileID: 2526962561360333561, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: summon
+      value: 
+      objectReference: {fileID: 4539207676563251665, guid: 0742304be4be2ec42acdc85ae66b8eea, type: 3}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: summonImg
       value: 

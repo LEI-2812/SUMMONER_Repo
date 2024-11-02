@@ -61,8 +61,10 @@ public class Plate : MonoBehaviour,
  
             // 클론을 현재 플레이트의 자식으로 배치
             summonClone.transform.SetParent(this.transform, false);
-            //summonClone.transform.localPosition = Vector3.zero;  // 필요한 경우 위치 초기화
-
+            if (spawnTransform.localPosition == null)
+            {
+                summonClone.transform.localPosition = Vector3.zero;  // 필요한 경우 위치 초기화
+            }
             // 클론된 소환수를 currentSummon으로 설정
             currentSummon = summonClone;
             isInSummon = true;
