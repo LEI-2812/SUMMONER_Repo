@@ -38,8 +38,6 @@ public class StatePanel: MonoBehaviour, stateObserver
         this.stateSummon = stateSummon;
         stateSummon.AddObserver(this); // 옵저버로 등록
 
-        // 체력바를 초기 설정
-        UpdateHealthSlider();
 
         // 소환수의 이미지를 패널에 설정
         if (summonImage != null && stateSummon != null && stateSummon.getImage() != null)
@@ -69,7 +67,9 @@ public class StatePanel: MonoBehaviour, stateObserver
             SpecialAttackButton.image.sprite = stateSummon.specialAttackSprite; // 특수 공격 스프라이트 설정
         }
 
-        StateUpdate();
+        UpdateHealthSlider();
+        StateUpdate(); // 상태 업데이트 강제 호출
+        Debug.Log("슬라이더 바 상태: " + HPSlider.value);
     }
 
 

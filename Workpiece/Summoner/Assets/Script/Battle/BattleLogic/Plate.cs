@@ -87,7 +87,7 @@ public class Plate : MonoBehaviour,
             if (isResummon)
             {
                 currentSummon.setIsAttack(isAttack); //이전 소환수의 공격상태를 받아온다.
-                statePanelScript.setStatePanel(summon,false);
+                statePanelScript.setStatePanel(currentSummon, false);
             }
 
             Debug.Log($"소환수 {summonClone.getSummonName()} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
