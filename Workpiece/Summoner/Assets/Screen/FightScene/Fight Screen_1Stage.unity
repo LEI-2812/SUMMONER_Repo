@@ -5182,7 +5182,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -7486461387043459178, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: 6c414ab7c61564346bb59d72ad2e754a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -12449,7 +12449,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -7486461387043459178, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: 6c414ab7c61564346bb59d72ad2e754a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -12710,7 +12710,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -7486461387043459178, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: 6c414ab7c61564346bb59d72ad2e754a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -15952,7 +15952,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 4759675766602627025, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: 6f723020a91294cdfb5e7bca7ccb8ca1, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -18019,7 +18019,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -7486461387043459178, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: 6c414ab7c61564346bb59d72ad2e754a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -19797,7 +19797,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -7486461387043459178, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: 6c414ab7c61564346bb59d72ad2e754a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -22024,7 +22024,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -7486461387043459178, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: 6c414ab7c61564346bb59d72ad2e754a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0

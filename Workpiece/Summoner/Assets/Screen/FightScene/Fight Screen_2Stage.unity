@@ -8449,6 +8449,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1545898996}
     m_Modifications:
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5491859847190021652, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -19594,6 +19602,14 @@ PrefabInstance:
       propertyPath: summon
       value: 
       objectReference: {fileID: 1750558109740812656, guid: bf542230506a74c42b2451b8d3bc631f, type: 3}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: summonImg
       value: 
@@ -21735,6 +21751,14 @@ PrefabInstance:
       propertyPath: summon
       value: 
       objectReference: {fileID: 1760420319589789094, guid: 8fd706c78e2922046af9ec2e55c582ca, type: 3}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3387548503586862205, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: summonImg
       value: 

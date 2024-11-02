@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1229946154538200436}
   - component: {fileID: 6386049030523729004}
   - component: {fileID: 3619127772477133430}
+  - component: {fileID: 220235728180235226}
   m_Layer: 0
   m_Name: DarkDragon
   m_TagString: Untagged
@@ -36,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 155, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1229946154538200436
 CanvasRenderer:
@@ -62,7 +63,7 @@ MonoBehaviour:
   sprites:
   - {fileID: 1787854662, guid: bb8377c37e567a34d9808eceb850e529, type: 3}
   - {fileID: 1787854662, guid: bb8377c37e567a34d9808eceb850e529, type: 3}
-  animator: {fileID: 0}
+  animator: {fileID: 220235728180235226}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
   attackPower: 0
@@ -99,3 +100,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &220235728180235226
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436934086063799255}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b3e7d9dc2f4a4c04ebded560539f7053, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
