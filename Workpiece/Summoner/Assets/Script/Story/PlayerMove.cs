@@ -17,6 +17,10 @@ public class PlayerMove : MonoBehaviour
     [Header("interRaction 컨트롤러")]
     [SerializeField] private InteractionController interactionController; // InteractionEvent 연결
 
+    [Header("플레이어 소리")]
+    [SerializeField] private AudioSource walkSound;
+    [SerializeField] private AudioSource effectSound;
+
 
     void Update()
     {
@@ -50,6 +54,9 @@ public class PlayerMove : MonoBehaviour
         isMoving = true;
         interactionController.stopNextDialogue();
         playerAni.Play("PlayerWalk");
+       
+        walkSound.loop = true;
+        walkSound.Play();        
     }
 
     // 캐릭터를 목표 위치로 이동시키는 메서드
@@ -66,7 +73,10 @@ public class PlayerMove : MonoBehaviour
             isMoving = false;
             playerAni.Play("Idle");
             interactionController.startNextDialogue();
-        }
+
+            walkSound.loop = false;
+            walkSound.Stop();
+        }              
     }
 
     public void playConfuseAni()
@@ -84,6 +94,7 @@ public class PlayerMove : MonoBehaviour
     public void playBlueAni()
     {
         playerAni.Play("PlayerBlue");
+        effectSound.Play();
         interactionController.stopNextDialogue();
         Invoke("stopBlueAni", 1.2f);
     }
@@ -97,6 +108,7 @@ public class PlayerMove : MonoBehaviour
     public void playYellowAni()
     {
         playerAni.Play("PlayerYellow");
+        effectSound.Play();
         interactionController.stopNextDialogue();
         Invoke("stopYellowAni", 1.2f);
     }

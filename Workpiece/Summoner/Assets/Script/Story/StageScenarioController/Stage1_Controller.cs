@@ -17,10 +17,10 @@ public class Stage1_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     private int scenarioFlowCount = 0; //대사 카운트
 
     //플레이어 애니메이션
-    [SerializeField]private Animator playerAni;
+    [SerializeField] private Animator playerAni;
 
     [Header("컨트롤러")]
-    [SerializeField]private InteractionController interactionController;
+    [SerializeField] private InteractionController interactionController;
     [SerializeField] private PlayerMove playerMove;
 
     private int isSameDialgueIndex = -1;
