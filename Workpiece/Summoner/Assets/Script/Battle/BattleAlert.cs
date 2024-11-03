@@ -12,6 +12,10 @@ public class BattleAlert : MonoBehaviour
     public GameObject alertFail; // 전투 패배 알림창
     public Alert FailResult; // 전투 패배 알림 결과
 
+    [Header("효과음")]
+    [SerializeField] private AudioSource clearSound;
+    [SerializeField] private AudioSource failSound;
+
     private StageController stageController;
 
     private void Start()
@@ -27,7 +31,7 @@ public class BattleAlert : MonoBehaviour
     public void clearAlert(int stageNum)
     {
         alertClear.SetActive(true);
-
+        clearSound.Play();
         ClearResult.ResetAlert();
         StartCoroutine(WaitForAlertResult(alertClear, ClearResult, (result) => {
             if (result) // 처음부터 다시하기
@@ -47,7 +51,7 @@ public class BattleAlert : MonoBehaviour
     public void failAlert(int stageNum)
     {
         alertFail.SetActive(true);
-
+        failSound.Play();
         FailResult.ResetAlert();
         StartCoroutine(WaitForAlertResult(alertFail, FailResult, (result) => {
             if (result) // 처음부터 다시하기

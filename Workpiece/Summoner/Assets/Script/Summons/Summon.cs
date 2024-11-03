@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,7 +34,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     protected double shield = 0; //쉴드량
     private double initialShield; // 초기 쉴드 양
     protected bool onceInvincibility = false;
-
     public bool isAttack = true; // 상태이상중 공격가능 여부
 
     private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //상태이상
@@ -65,16 +65,34 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         attackStrategy.Attack(this, targetPlates, selectedPlateIndex, 0); // 일반 공격 수행
         animator.SetTrigger("attack");
         
-        StartCoroutine(ColorChange(Color.black));
+        StartCoroutine(ColorChange(1)); // 검정색
         
         // 해당 공격에 쿨타임 적용
         attackStrategy.ApplyCooldown();
         isAttack = false;
     }
 
-    IEnumerator ColorChange(Color color)    // 색이 변했다가 돌아옴
-    {  
-        image.color = color;
+    IEnumerator ColorChange(int color)    // 색이 변했다가 돌아옴
+    {
+        switch (color)
+        {
+            case 1: // 검정색
+                image.color = new Color(0f, 0f, 0f); // #000000
+                break;
+            case 2: // 빨강색
+                image.color = new Color(1f, 0.431f, 0.431f); // #FF6E6E
+                break;
+            case 3: // 보라색
+                image.color = new Color(0.639f, 0.192f, 0.839f); // #A331D6
+                break;
+            case 4: // 초록색
+                image.color = new Color(0.192f, 0.835f, 0.318f); // #31D551
+                break;
+            default:
+                image.color = Color.white; // 기본값 설정
+                break;
+
+        }
 
         yield return new WaitForSeconds(1f);
 
@@ -90,7 +108,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         }
 
         var specialAttack = specialAttackStrategies[SpecialAttackArrayIndex];
-        animator.SetTrigger("attack");
+        
         if (specialAttack == null || specialAttack.getCurrentCooldown() > 0)
         {
             Debug.Log("특수 스킬이 쿨타임 중입니다.");
@@ -99,7 +117,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
         // 공격 수행
         specialAttack.Attack(this, targetPlates, selectedPlateIndex, SpecialAttackArrayIndex);
-
+        animator.SetTrigger("attack");
+        StartCoroutine(ColorChange(1)); // 검정색
         // 해당 공격에 쿨타임 적용
         specialAttack.ApplyCooldown();
         isAttack = false;
@@ -122,6 +141,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 else
                 {
                     // 새로운 중독 상태이상 추가
+                    StartCoroutine(ColorChange(3)); // 보라색
                     activeStatusEffects.Add(statusEffect);
                     statusEffect.ApplyStatus(this);  // 즉시 효과 적용 //데미지를 받음
                     NotifyObservers(); // 상태 적용 후 알림
@@ -137,6 +157,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 else
                 {
                     // 새로운 화상 상태이상 추가
+                    StartCoroutine(ColorChange(3)); // 보라색
                     activeStatusEffects.Add(statusEffect);
                     statusEffect.ApplyStatus(this);  // 즉시 효과 적용
                     NotifyObservers(); // 상태 적용 후 알림
@@ -176,6 +197,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 else
                 {
                     // 새로운 저주 상태이상 추가
+                    StartCoroutine(ColorChange(3)); // 보라색
                     activeStatusEffects.Add(statusEffect);
                     if (statusEffect.shouldApplyOnce())
                     {
@@ -195,6 +217,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 else
                 {
                     // 새로운 스턴 상태이상 추가
+                    StartCoroutine(ColorChange(3)); // 보라색
                     activeStatusEffects.Add(statusEffect);
                     statusEffect.ApplyStatus(this);  // 즉시 효과 적용
                     NotifyObservers(); // 상태 적용 후 알림
@@ -417,7 +440,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         Debug.Log($"{summonName}이(가) {healAmount}만큼 체력을 회복했습니다.");
         // 체력 변경 시 옵저버들에게 알림
         NotifyObservers();
-        StartCoroutine(ColorChange(Color.green));
+        animator.SetTrigger("hitted");
+        StartCoroutine(ColorChange(4)); // 초록색
     }
 
 
@@ -452,7 +476,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         else //쉴드가 없을경우
         {
             nowHP -= damage;
-            StartCoroutine((ColorChange(Color.red)));
+            animator.SetTrigger("hitted");
+            StartCoroutine((ColorChange(2)));   // 빨간 색
         }
 
         if (nowHP <= 0) //죽음처리
