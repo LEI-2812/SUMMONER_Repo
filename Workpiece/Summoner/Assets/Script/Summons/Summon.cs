@@ -253,6 +253,14 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                     takeDamage(effect.damagePerTurn); // 피해 적용
                 }
 
+                // 흡혈 상태일 경우 회복 처리
+                if (effect.statusType == StatusType.LifeDrain && effect.getAttacker() != null)
+                {
+                    double healAmount = effect.damagePerTurn; // 흡혈 데미지만큼 회복
+                    Debug.Log($"{effect.getAttacker()}이(가) {effect.statusType} 상태로 인해 {healAmount}만큼 회복합니다.");
+                    effect.getAttacker().Heal(effect.damagePerTurn);
+                }
+
                 // 지속시간 감소
                 effect.effectTime--;
 

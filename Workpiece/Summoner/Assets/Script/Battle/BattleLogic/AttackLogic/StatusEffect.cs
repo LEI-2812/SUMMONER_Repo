@@ -96,6 +96,15 @@ public class StatusEffect
         this.originAttack = originAttack;
     }
 
+    public Summon getAttacker()
+    {
+        return attacker;
+    }
+    public void setAttacker(Summon summon)
+    {
+        attacker = summon;
+    }
+
     public bool shouldApplyOnce()
     {
         return damagePerTurn > 0 && !applyOnce;

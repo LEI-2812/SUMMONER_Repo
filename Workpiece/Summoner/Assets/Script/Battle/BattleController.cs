@@ -85,16 +85,18 @@ public class BattleController : MonoBehaviour
 
         if (isPlayer) //플레이어
         {
-            if (!IsValidPlateIndex(selectedPlateIndex, plateController.getEnermyPlates().Count))
-            {
-                Debug.Log("유효한 적의 플레이트 인덱스가 선택되지 않았습니다.");
-                return;
-            }
-
+            //아군 버프에 대한 것일경우
             if (targetedAttack.isBenefitEffect(targetedAttack))
             {
                 attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 아군 플레이트에 이로운 효과
                 Debug.Log($"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
+                return;
+            }
+            //공격에 대한 것일경우
+            if (!IsValidPlateIndex(selectedPlateIndex, plateController.getEnermyPlates().Count))
+            {
+                Debug.Log("유효한 적의 플레이트 인덱스가 선택되지 않았습니다.");
+                return;
             }
             else
             {
@@ -104,16 +106,16 @@ public class BattleController : MonoBehaviour
         }
         else //적
         {
-            if (!IsValidPlateIndex(selectedPlateIndex, plateController.getPlayerPlates().Count))
-            {
-                Debug.Log("유효한 플레이어의 플레이트 인덱스가 선택되지 않았습니다.");
-                return;
-            }
-
             if (targetedAttack.isBenefitEffect(targetedAttack))
             {
                 attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 이로운 효과
                 Debug.Log($"적이 선택한 적의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
+                return;
+            }
+            if (!IsValidPlateIndex(selectedPlateIndex, plateController.getPlayerPlates().Count))
+            {
+                Debug.Log("유효한 플레이어의 플레이트 인덱스가 선택되지 않았습니다.");
+                return;
             }
             else
             {
