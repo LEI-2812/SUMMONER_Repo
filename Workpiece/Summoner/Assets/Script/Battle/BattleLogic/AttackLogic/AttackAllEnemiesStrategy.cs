@@ -11,6 +11,8 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
     private int cooltime;
     private int currentCooldown;
     private int statusTime; //지속시간
+
+
     public AttackAllEnemiesStrategy(StatusType statusType, double damage, int cooltime, int statusTime=0)
     {
         this.statusType = statusType;

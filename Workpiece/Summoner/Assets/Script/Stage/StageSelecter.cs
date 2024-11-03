@@ -25,6 +25,16 @@ public class StageSelecter : MonoBehaviour
         ButtonInteractivity(7);
     }
 
+    public void stageLoader(int stage)
+    {
+        Debug.Log("버튼 클릭");
+        audioSource.Play();
+        // 현재 플레이 중인 스테이지를 "playingStage"로 저장
+        PlayerPrefs.SetInt("playingStage", stage);
+        PlayerPrefs.Save();
+        SendStage(stage);
+    }
+
     public void SendStage(int stage)    // 스테이지 선택 화면에서 보낼 씬(스토리 + 전투)
     {
         switch (stage)

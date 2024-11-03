@@ -24,6 +24,9 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     [SerializeField] private PlayerMove playerMove;
     [SerializeField] private FoxMove foxMove;
 
+    [Header("효과음")]
+    [SerializeField] private AudioSource angrySound;
+
     private int isSameDialgueIndex = -1;
 
     void Awake() //여기에서 오브젝트들의 초기 설정을 해준다.
@@ -87,6 +90,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
                 Debug.Log(scenarioFlowCount);
                 //  (소환수 '여우'가 화를 낸다.)
                 showAngryEffect();
+                angrySound.Play();
                 offDialgueBox();
                 break;
             case 7:
