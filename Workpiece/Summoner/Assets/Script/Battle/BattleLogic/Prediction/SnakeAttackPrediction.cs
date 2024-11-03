@@ -32,6 +32,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             if (isEnermyCountOverTwo(enermyPlates)) //적이 2마리 이상인가?
             {
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적이 2마리 이상");
                 if (AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 모두 50%이상");
@@ -40,9 +41,9 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 적의 체력이 모두 50%가 아님");
                 }
-                if (hasMonsterWithMoreThan4Attacks(enermyPlates)) //몬스터 중 공격의 개수가 4개 이상인 몹이 존재하는가?
+                if (hasMonsterWithMoreThan3Attacks(enermyPlates)) //몬스터 중 공격의 개수가 3개 이상인 몹이 존재하는가?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 몬스터중 공격이 4개 이상인 몹이 있는가");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 몬스터중 공격이 3개 이상인 몹이 있는가");
                 }
             }
             else //1마리 일때
@@ -110,12 +111,12 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 적 중에 공격 개수가 4개 이상인 소환수가 있는지 확인하는 메소드
-    public bool hasMonsterWithMoreThan4Attacks(List<Plate> enermyPlates)
+    public bool hasMonsterWithMoreThan3Attacks(List<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
             Summon enermySummon = plate.getCurrentSummon();
-            if (enermySummon != null && enermySummon.getSpecialAttackCount() >= 4)
+            if (enermySummon != null && enermySummon.getSpecialAttackCount() >= 3)
             {
                 return true;
             }

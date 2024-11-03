@@ -132,14 +132,14 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
             // 일반 공격 확률을 증가시키고, 특수 공격 확률을 그만큼 감소
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률이 {AttackChange*100}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"일반 공격 확률이 {AttackChange}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
             // 특수 공격 확률을 증가시키고, 일반 공격 확률을 그만큼 감소
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"특수 공격 확률이 {AttackChange * 100}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"특수 공격 확률이 {AttackChange}% 증가하였습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         return currentProbabilities;
     }

@@ -346,29 +346,50 @@ public class EnermyAlgorithm : MonoBehaviour
 
         if (plateController.getPlayerSummonCount() >= 2) //소환수가 2마리 이상 존재하는가?
         {
-            for (int i = 0; i < attackStrategy.Length; i++)
+            int index = get30PercentDifferentHP(plateController.getPlayerPlates());
+            if (index != -1) //소환수들중 체력차이가 30%이상 차이나는 소환수가 있는가? 있을경우 체력이 높은쪽의 인덱스 반환
             {
-                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                Debug.Log("소환수2마리 이상중 30%이상인 인덱스: " + index);
+                for (int i = 0; i < attackStrategy.Length; i++)
                 {
-                    continue;
+                    if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                    {
+                        continue;
+                    }
+                    if (attackStrategy[i].getStatusType() == StatusType.LifeDrain) //흡혈 공격인지 검사
+                    {
+                        battleController.SpecialAttackLogic(attacker, index, i);
+                        Debug.Log($"{attacker.getSummonName()}가 특수 흡혈 공격을 실행했습니다.");
+                        return;
+                    }
                 }
-                if (attackStrategy[i].getStatusType() == StatusType.Upgrade) //강화 공격인지 검사
+            }
+            else
+            {
+                for (int i = 0; i < attackStrategy.Length; i++)
                 {
-                    battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.getSummonName()}가 특수 강화 공격을 실행했습니다.");
-                    return;
-                }
-                else if (attackStrategy[i].getStatusType() == StatusType.Burn) //화상 공격인지 검사
-                {
-                    battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.getSummonName()}가 특수 화상 공격을 실행했습니다.");
-                    return;
-                }
-                else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is AttackAllEnemiesStrategy) //화상 공격인지 검사
-                {
-                    battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.getSummonName()}가 특수 전체 공격을 실행했습니다.");
-                    return;
+                    if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                    {
+                        continue;
+                    }
+                    if (attackStrategy[i].getStatusType() == StatusType.Upgrade) //강화 공격인지 검사
+                    {
+                        battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
+                        Debug.Log($"{attacker.getSummonName()}가 특수 강화 공격을 실행했습니다.");
+                        return;
+                    }
+                    else if (attackStrategy[i].getStatusType() == StatusType.Burn) //화상 공격인지 검사
+                    {
+                        battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
+                        Debug.Log($"{attacker.getSummonName()}가 특수 화상 공격을 실행했습니다.");
+                        return;
+                    }
+                    else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is AttackAllEnemiesStrategy) //전체 공격인지 검사
+                    {
+                        battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
+                        Debug.Log($"{attacker.getSummonName()}가 특수 전체 공격을 실행했습니다.");
+                        return;
+                    }
                 }
             }
         }
@@ -400,22 +421,7 @@ public class EnermyAlgorithm : MonoBehaviour
                 }
             }
         }
-        if (get30PercentDifferentHP(attacker,plateController.getPlayerPlates()) != -1) //소환수중 다른 소환수와 체력이 30%이상 차이 나는 몹이 존재하는가?
-        {
-            for (int i = 0; i < attackStrategy.Length; i++)
-            {
-                if (attacker.isSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
-                {
-                    continue;
-                }
-                if (attackStrategy[i].getStatusType() == StatusType.LifeDrain) //저주 공격인지 검사
-                {
-                    battleController.SpecialAttackLogic(attacker, get30PercentDifferentHP(attacker, plateController.getPlayerPlates()), i);
-                    Debug.Log($"{attacker.getSummonName()}가 특수 저주 공격을 실행했습니다.");
-                    return;
-                }
-            }
-        }
+        
 
 
         randomValue = UnityEngine.Random.Range(0f, 100f); // 0에서 100 사이의 무작위 값
@@ -449,35 +455,91 @@ public class EnermyAlgorithm : MonoBehaviour
         return false; // 중급 이상인 소환수가 없으면 false 반환
     }
 
-
-
-    private int get30PercentDifferentHP(Summon attacker, List<Plate> targetPlates)
+    private int get30PercentDifferentHP(List<Plate> playerplates)
     {
-        double attackerHealthRatio = (double)attacker.getNowHP() / attacker.getMaxHP();
+        if (playerplates.Count < 2) return -1;
 
-        for (int i = 0; i < targetPlates.Count; i++)
+        int highestHealthIndex = -1;
+        double highestHealth = double.MinValue;
+
+        // 1. 가장 현재 체력이 높은 소환수 찾기
+        for (int i = 0; i < playerplates.Count; i++)
         {
-            Summon enermySummon = targetPlates[i].getCurrentSummon();
-            if (enermySummon != null)
-            {
-                double enermyHealthRatio = (double)enermySummon.getNowHP() / enermySummon.getMaxHP();
+            Summon currentSummon = playerplates[i].getCurrentSummon();
+            if (currentSummon == null) continue;
 
-                // 체력 차이가 30% 이상인 경우 인덱스 반환
-                if (Math.Abs(attackerHealthRatio - enermyHealthRatio) >= 0.3)
-                {
-                    return i;
-                }
+            if (currentSummon.getNowHP() > highestHealth)
+            {
+                highestHealth = currentSummon.getNowHP();
+                highestHealthIndex = i;
+            }
+        }
+
+        // 가장 높은 체력의 소환수를 찾지 못한 경우
+        if (highestHealthIndex == -1) return -1;
+
+        // 2. 나머지 소환수들 사이에서 가장 높은 체력보다 30% 낮은 소환수 찾기
+        for (int i = 0; i < playerplates.Count; i++)
+        {
+            if (i == highestHealthIndex) continue; // 가장 높은 체력의 소환수는 비교에서 제외
+
+            Summon compareSummon = playerplates[i].getCurrentSummon();
+            if (compareSummon == null) continue;
+
+            // 체력 비교: 가장 높은 소환수의 체력보다 30% 낮은지 체크
+            if (compareSummon.getNowHP() <= highestHealth * 0.7)
+            {
+                // 조건을 만족하면 가장 높은 체력의 소환수 인덱스를 반환
+                return highestHealthIndex;
             }
         }
 
         return -1; // 조건을 만족하는 소환수가 없으면 -1 반환
     }
 
+    private int getLowestMonsterIndex(List<Plate> enermyPlates)
+    {
+        int lowestIndex=-1;
+
+        for(int i = 0; i<enermyPlates.Count; i++)
+        {
+
+        }
+
+        return lowestIndex;
+    }
+
+    //private int get30PercentDifferentHP(Summon attacker, List<Plate> targetPlates)
+    //{
+    //    double attackerHealthRatio = (double)attacker.getNowHP() / attacker.getMaxHP();
+
+    //    for (int i = 0; i < targetPlates.Count; i++)
+    //    {
+    //        Summon enermySummon = targetPlates[i].getCurrentSummon();
+    //        if (enermySummon != null)
+    //        {
+    //            double enermyHealthRatio = (double)enermySummon.getNowHP() / enermySummon.getMaxHP();
+
+    //            // 체력 차이가 30% 이상인 경우 인덱스 반환
+    //            if (Math.Abs(attackerHealthRatio - enermyHealthRatio) >= 0.3)
+    //            {
+    //                return i;
+    //            }
+    //        }
+    //    }
+
+    //    return -1; // 조건을 만족하는 소환수가 없으면 -1 반환
+    //}
+
 
     private bool canReactSpecialAttack(AttackProbability attackProbability)
     {
         // 0에서 100 사이의 랜덤 값을 생성
         float randomValue = UnityEngine.Random.Range(0f, 100f);
+        if(randomValue < attackProbability.specialAttackProbability)
+        {
+            Debug.Log("특수공격확률 당첨");
+        }
 
         // 특수 공격 확률이 랜덤 값보다 크면 true 반환 (특수 공격 선택)
         return randomValue < attackProbability.specialAttackProbability;
