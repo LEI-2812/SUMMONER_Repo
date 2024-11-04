@@ -42,6 +42,9 @@ public class BattleAlert : MonoBehaviour
             else // 다음 스테이지로
             {
                 Debug.Log("다음 스테이지로 이동합니다." + (stageNum + 1));
+                PlayerPrefs.SetInt("savedStage", stageNum + 1);
+                PlayerPrefs.SetInt("playingStage", stageNum + 1);
+                PlayerPrefs.Save();
                 stageController.SendStage(stageNum + 1);
             }
         }));
