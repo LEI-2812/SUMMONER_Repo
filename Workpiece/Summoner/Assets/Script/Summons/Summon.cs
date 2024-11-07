@@ -21,6 +21,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 {
     [SerializeField] private Image image; //이미지
     [SerializeField] private Sprite[] sprites; // 스프라이트 모음
+    [SerializeField] private GameObject shieldImage;
     [SerializeField] private Animator animator;
 
     [Header("효과음")]
@@ -487,6 +488,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 shield = 0;
                 nowHP -= remainingDamage;
                 animator.SetTrigger("hitted");
+                shieldImage.SetActive(false);
                 Debug.Log("쉴드가 파괴됨. 남은 체력: " + nowHP);
             }
         }
@@ -551,6 +553,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
             initialShield = shieldAmount;
         }
         shield += shieldAmount;
+        shieldImage.SetActive(true);
         Debug.Log("쉴드 부여. 현재 쉴드: " + shield);
         NotifyObservers();
     }
