@@ -5848,6 +5848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 637407121}
+  rectTr: {fileID: 637407122}
   playerAni: {fileID: 637407126}
   interactionController: {fileID: 1102135335}
   walkSound: {fileID: 637407131}
@@ -6149,7 +6150,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 4759675766602627025, guid: 44714e3b084d4f64b8ccb5af3496bee0, type: 2}
   m_audioClip: {fileID: 8300000, guid: 55e01f38ab4084f14b8ee0ae8d77b5b4, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.2
+  m_Volume: 0
   m_Pitch: 1
   Loop: 1
   Mute: 0
