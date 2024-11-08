@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class StageController : MonoBehaviour
 {
-    public int stageNum;  //스테이지 번호 받기
+    public int stageNum;  //현재 플레이할 스테이지 번호 받기
 
 
     [Header("버튼 클릭음")]
