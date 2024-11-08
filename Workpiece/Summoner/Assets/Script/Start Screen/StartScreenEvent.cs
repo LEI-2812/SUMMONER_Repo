@@ -17,6 +17,7 @@ public class StartScreenEvent : MonoBehaviour
     [Header("메인씬 이어서 버튼")]
     public GameObject loadAlert;
     public Alert loadAlertResult;
+    public Button loadButton;
 
     [Header("메인씬 설정버튼")]
     public Button settingBtn;
@@ -46,8 +47,6 @@ public class StartScreenEvent : MonoBehaviour
         else{ Debug.LogError("Setting 버튼이 연결되지 않았습니다."); }
         newAlert.SetActive(false);
         loadAlert.SetActive(false);
-        int savedStageValue = PlayerPrefs.GetInt("savedStage");
-        Debug.Log("savedStage 값 : " + savedStageValue);
     }
 
     //새게임
@@ -62,17 +61,17 @@ public class StartScreenEvent : MonoBehaviour
         StartCoroutine(WaitForAlertResult(newAlert, newAlertResult, (result) => {
             if (result)
             {               
-                // Yes 버튼 클릭 시 로직
-                PlayerPrefs.DeleteAll();
-                PlayerPrefs.SetInt("savedStage", 1); // 스테이지 진행 상황 초기화
-                PlayerPrefs.Save();
                 if (stageController == null)
                 {
                     Debug.LogError("checkStage가 null입니다. 올바르게 설정되었는지 확인하세요.");
+                    return;
                 }
                 else
                 {
-                    stageController.setStageNum(0);
+                    stageController.setStageNum(1);
+                    PlayerPrefs.DeleteAll();
+                    PlayerPrefs.SetInt("savedStage", 1); // 스테이지 진행 상황 초기화
+                    PlayerPrefs.Save();
                 }
                 Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
                 SceneManager.LoadScene("Pro_Epi Screen");
@@ -88,6 +87,8 @@ public class StartScreenEvent : MonoBehaviour
     //이어하기
     public void StartSavedStage() 
     {
+        loadButton.interactable = PlayerPrefs.GetInt("savedStage") >= 1;
+
         audioSource.Play();
         loadAlert.SetActive(true); // 알림창 활성화
 
@@ -97,12 +98,8 @@ public class StartScreenEvent : MonoBehaviour
         StartCoroutine(WaitForAlertResult(loadAlert, loadAlertResult, (result) => {
             if (result)
             {
-                // Yes 버튼 클릭 시 로직
-                // Debug.Log("저장된 스테이지 " + savedStage + "로 이동");
-                Debug.Log("저장된 스테이지로 이동");
-                PlayerPrefs.GetInt("savedStage"); // 현재 진행 상황 받아오기
-                // 예시: 저장된 스테이지로 씬 로드
-                //SceneManager.LoadScene("Stage" + savedStage);
+                stageController.setStageNum(PlayerPrefs.GetInt("savedStage")); //현재 Prefs에 저장된 값으로 값을 설정
+                SceneManager.LoadScene("Stage Select Screen");
             }
             else
             {

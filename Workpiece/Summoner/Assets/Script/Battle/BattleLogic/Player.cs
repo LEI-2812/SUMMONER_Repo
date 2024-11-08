@@ -49,7 +49,7 @@ public class Player : Character
         summonButtonText = summonButton.GetComponentInChildren<TextMeshProUGUI>();
         reSummonButtonText = reSummonButton.GetComponentInChildren<TextMeshProUGUI>();
         battleAlert = GetComponent<BattleAlert>();
-        stageNum = PlayerPrefs.GetInt("playingStage");
+        stageNum = PlayerPrefs.GetInt("savedStage");
         clearTurn = turnController.GetClearTurn();
         ResetPlayerSetting();
     }
@@ -157,7 +157,7 @@ public class Player : Character
     public void OnAttackBtnClick() //일반공격
     {
         Summon attackSummon = battleController.attackStart(0); //공격할 소환수를 받아온다.
-        if (!attackSummon.getIsAttack()) {
+        if (!attackSummon.getIsAttack() || attackSummon.IsStun()) {
             Debug.Log("공격할 수 없습니다. ");
             failSound.Play();
             return; 
@@ -187,7 +187,7 @@ public class Player : Character
     public void OnSpecialAttackBtnClick() //특수공격
     {
         Summon attackSummon = battleController.attackStart(0); // 공격할 소환수를 가져옴
-        if (!attackSummon.getIsAttack() && attackSummon.IsStun())
+        if (!attackSummon.getIsAttack() || attackSummon.IsStun())
         {
             Debug.Log("공격할 수 없습니다. ");
             failSound.Play();
