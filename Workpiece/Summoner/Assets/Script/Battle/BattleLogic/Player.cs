@@ -252,79 +252,130 @@ public class Player : Character
     {
         battleController.setIsAttaking(true); // 공격 시작
         summonController.OnDarkBackground(true); // 배경 어둡게 처리
-        plateController.DownTransparencyForWhoPlate(true); //아군 소환수 투명화
-        selectedPlateIndex = -1; //선택한 플레이트 초기화
-        // 적의 플레이트 선택을 기다림
+        plateController.DownTransparencyForWhoPlate(true); // 아군 소환수 투명화
+        selectedPlateIndex = -1; // 선택한 플레이트 초기화
+
         Debug.Log("적의 플레이트를 선택하는 중입니다...");
+
         // 선택된 플레이트가 없을 때까지 기다림
         while (selectedPlateIndex < 0)
         {
+            // 공격이 활성화된 상태에서 마우스 클릭 감지
             if (battleController.getIsAttaking())
             {
-
+                // 플레이트 선택 시 루프 탈출
                 if (selectedPlateIndex >= 0)
                 {
                     Debug.Log($"적의 플레이트 {selectedPlateIndex}가 선택되었습니다.");
-                    break; // while 루프 탈출
+                    break;
+                }
+
+                // 마우스 클릭 위치가 플레이트 외부일 때 선택 취소
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Vector2 mousePosition = Input.mousePosition;
+                    bool clickedOutside = true;
+
+                    foreach (var plate in plateController.getEnermyPlates())
+                    {
+                        RectTransform plateRect = plate.GetComponent<RectTransform>();
+                        if (RectTransformUtility.RectangleContainsScreenPoint(plateRect, mousePosition))
+                        {
+                            clickedOutside = false;
+                            break;
+                        }
+                    }
+
+                    if (clickedOutside)
+                    {
+                        Debug.Log("적 플레이트 외부 클릭으로 선택 취소");
+                        summonController.OnDarkBackground(false); // 배경 복원
+                        battleController.setIsAttaking(false); // 공격 상태 해제
+                        yield break; // 코루틴 종료
+                    }
                 }
             }
 
             yield return null; // 한 프레임 대기
         }
 
-        // 적의 플레이트가 선택된 후 공격 수행
+        // 선택된 플레이트로 공격 수행
         if (selectedPlateIndex >= 0)
         {
             Debug.Log($"공격을 준비 중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");
-            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true); // true: 플레이어 공격
-            summonController.OnDarkBackground(false); // 공격 후 배경 복원
-            selectedPlateIndex = -1; //선택했던 플레이트 되돌리기
+            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true);
+            summonController.OnDarkBackground(false); // 배경 복원
+            selectedPlateIndex = -1; // 선택한 플레이트 초기화
         }
         else
         {
             Debug.LogError("공격할 적의 플레이트 인덱스가 유효하지 않습니다.");
         }
-
     }
 
-    //아군 플레이트 선택
     private IEnumerator WaitForPlayerPlateSelection(Summon attackSummon, int SpecialAttackArrayIndex)
     {
         battleController.setIsAttaking(true); // 공격 시작
         summonController.OnDarkBackground(true); // 배경 어둡게 처리
-        plateController.DownTransparencyForWhoPlate(false); //적 소환수 투명화
-        selectedPlateIndex = -1; //선택한 플레이트 초기화
-        // 아군의 플레이트 선택을 기다림
+        plateController.DownTransparencyForWhoPlate(false); // 적 소환수 투명화
+        selectedPlateIndex = -1; // 선택한 플레이트 초기화
+
         Debug.Log("아군의 플레이트를 선택하는 중입니다...");
+
         // 선택된 플레이트가 없을 때까지 기다림
         while (selectedPlateIndex < 0)
         {
+            // 공격이 활성화된 상태에서 마우스 클릭 감지
             if (battleController.getIsAttaking())
             {
-
+                // 플레이트 선택 시 루프 탈출
                 if (selectedPlateIndex >= 0)
                 {
                     Debug.Log($"아군의 플레이트 {selectedPlateIndex}가 선택되었습니다.");
-                    break; // while 루프 탈출
+                    break;
+                }
+
+                // 마우스 클릭 위치가 플레이트 외부일 때 선택 취소
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Vector2 mousePosition = Input.mousePosition;
+                    bool clickedOutside = true;
+
+                    foreach (var plate in plateController.getPlayerPlates())
+                    {
+                        RectTransform plateRect = plate.GetComponent<RectTransform>();
+                        if (RectTransformUtility.RectangleContainsScreenPoint(plateRect, mousePosition))
+                        {
+                            clickedOutside = false;
+                            break;
+                        }
+                    }
+
+                    if (clickedOutside)
+                    {
+                        Debug.Log("플레이트 외부 클릭으로 선택 취소");
+                        summonController.OnDarkBackground(false); // 배경 복원
+                        battleController.setIsAttaking(false); // 공격 상태 해제
+                        yield break; // 코루틴 종료
+                    }
                 }
             }
 
             yield return null; // 한 프레임 대기
         }
 
-        // 아군의 플레이트가 선택된 후 로직 수행
+        // 선택한 플레이트로 로직 수행
         if (selectedPlateIndex >= 0)
         {
             Debug.Log($"아군에게 버프를 준비중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");
-            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true); // true: 플레이어 공격
-            summonController.OnDarkBackground(false); // 공격 후 배경 복원
-            selectedPlateIndex = -1; //선택했던 플레이트 되돌리기
+            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true);
+            summonController.OnDarkBackground(false); // 배경 복원
+            selectedPlateIndex = -1; // 선택한 플레이트 초기화
         }
         else
         {
             Debug.LogError("아군의 플레이트 인덱스가 유효하지 않습니다.");
         }
-
     }
 
     public void SetHasSummonedThisTurn(bool value) //이번턴에 소환했는지 여부
