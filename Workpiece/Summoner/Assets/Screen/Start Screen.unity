@@ -2249,6 +2249,7 @@ MonoBehaviour:
   newAlertResult: {fileID: 626992377}
   loadAlert: {fileID: 1051069145}
   loadAlertResult: {fileID: 1051069150}
+  loadButton: {fileID: 959661037}
   settingBtn: {fileID: 629438704}
   audioSource: {fileID: 214920139}
 --- !u!82 &214920139

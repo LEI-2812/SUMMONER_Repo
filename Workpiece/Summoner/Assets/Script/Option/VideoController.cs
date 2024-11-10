@@ -34,23 +34,29 @@ public class VideoController : MonoBehaviour
 
     void Awake()
     {
+        // 저장된 해상도와 화면 모드 불러오기
+        int savedResolutionIndex = PlayerPrefs.GetInt("resolutionIndex", 0);
+        int savedScreenModeIndex = PlayerPrefs.GetInt("screenModeIndex", 0);
+
         // 해상도 토글 초기화
         for (int i = 0; i < resolutionToggles.Count; i++)
         {
-            int index = i; // 로컬 변수로 인덱스 저장
+            int index = i;
             resolutionToggles[i].onValueChanged.AddListener(delegate { OnToggleChanged(resolutionToggles, index, true); });
+
+            // 저장된 해상도 인덱스를 기준으로 초기화
+            resolutionToggles[i].isOn = (i == savedResolutionIndex);
         }
 
         // 화면 설정 토글 초기화
         for (int i = 0; i < screenModeToggles.Count; i++)
         {
-            int index = i; // 로컬 변수로 인덱스 저장
+            int index = i;
             screenModeToggles[i].onValueChanged.AddListener(delegate { OnToggleChanged(screenModeToggles, index, false); });
-        }
 
-        // 초기값 설정 (예: 첫 번째 토글 활성화)
-        if (resolutionToggles.Count > 0) resolutionToggles[0].isOn = true;
-        if (screenModeToggles.Count > 0) screenModeToggles[0].isOn = true;
+            // 저장된 화면 모드 인덱스를 기준으로 초기화
+            screenModeToggles[i].isOn = (i == savedScreenModeIndex);
+        }
     }
 
     // 토글이 변경될 때 호출되는 메소드
@@ -59,7 +65,6 @@ public class VideoController : MonoBehaviour
         audioSource.Play();
         if (toggles[index].isOn)
         {
-            // 해당 인덱스 제외한 나머지 토글을 비활성화
             for (int i = 0; i < toggles.Count; i++)
             {
                 if (i != index)
@@ -68,15 +73,18 @@ public class VideoController : MonoBehaviour
                 }
             }
 
-            // 선택된 설정 적용
+            // 설정 저장 및 적용
             if (isResolution)
             {
                 SetResolution(resolutions[index].x, resolutions[index].y);
+                PlayerPrefs.SetInt("resolutionIndex", index);  // 해상도 인덱스 저장
             }
             else
             {
                 SetScreenMode(screenModes[index]);
+                PlayerPrefs.SetInt("screenModeIndex", index);  // 화면 모드 인덱스 저장
             }
+            PlayerPrefs.Save();
         }
     }
 

@@ -22,16 +22,14 @@ public class StageSelecter : MonoBehaviour
     private void Start()
     {
         int stageNum = stageController.getStageNum();
-        ButtonInteractivity(7);
+        ButtonInteractivity(stageNum);
     }
 
     public void stageLoader(int stage)
     {
         Debug.Log("버튼 클릭");
         audioSource.Play();
-        // 현재 플레이 중인 스테이지를 "playingStage"로 저장
-        PlayerPrefs.SetInt("playingStage", stage);
-        PlayerPrefs.Save();
+        stageController.setStageNum(stage); //현재 스테이지 정보를 컨트롤러에 저장
         SendStage(stage);
     }
 

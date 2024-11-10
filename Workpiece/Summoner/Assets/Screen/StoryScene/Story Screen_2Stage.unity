@@ -5437,6 +5437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 637407121}
+  rectTr: {fileID: 637407122}
   playerAni: {fileID: 637407126}
   interactionController: {fileID: 1102135335}
   walkSound: {fileID: 637407132}

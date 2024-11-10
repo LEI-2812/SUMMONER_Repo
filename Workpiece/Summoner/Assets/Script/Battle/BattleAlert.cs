@@ -37,13 +37,12 @@ public class BattleAlert : MonoBehaviour
             if (result) // 처음부터 다시하기
             {
                 Debug.Log("전투를 다시 시작합니다.");
-                stageController.SendFightStage(stageNum);
+                stageController.SendFightStage(stageController.getStageNum()); //스테이지 컨트롤러의 값으로 시작
             }
             else // 다음 스테이지로
             {
-                Debug.Log("다음 스테이지로 이동합니다." + (stageNum + 1));
-                PlayerPrefs.SetInt("savedStage", stageNum + 1);
-                PlayerPrefs.SetInt("playingStage", stageNum + 1);
+                Debug.Log("다음 스테이지 " + (stageNum + 1)+ " 로 이동합니다.");
+                PlayerPrefs.SetInt("savedStage", stageNum + 1); //다음스테이지 번호 저장
                 PlayerPrefs.Save();
                 stageController.SendStage(stageNum + 1);
             }

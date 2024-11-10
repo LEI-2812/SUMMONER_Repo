@@ -10,6 +10,7 @@ public class PlayerMove : MonoBehaviour
 
     [Header("시나리오씬 플레이어")]
     [SerializeField] private GameObject player;
+    [SerializeField] private RectTransform rectTr;
 
     [Header("애니메이터")]
     [SerializeField] private Animator playerAni; // 플레이어 애니메이터
@@ -31,11 +32,12 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-
     // 목표 위치와 이동 속도를 설정하는 메서드
     public void CharacterMove(float distance, float speed)
-    {       
-        targetPosition = player.transform.position + new Vector3(distance, 0f, 0f);
+    {
+        // UI의 실질적 위치를 나타내는 transform은 RectTransform이다!
+        float targetX = rectTr.anchoredPosition.x + distance;
+        targetPosition = new Vector3(targetX, rectTr.anchoredPosition.y, 0f);
         moveSpeed = speed;
 
         // 이동 방향에 따라 캐릭터의 방향 전환
@@ -65,10 +67,10 @@ public class PlayerMove : MonoBehaviour
         if (!isMoving) return;
 
         // 현재 위치에서 목표 위치까지 일정한 속도로 이동
-        player.transform.position = Vector3.MoveTowards(player.transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        rectTr.anchoredPosition = Vector3.MoveTowards(rectTr.anchoredPosition, targetPosition, moveSpeed * Time.deltaTime);
 
         // 목표 위치에 도달하면 이동 중지
-        if (Vector3.Distance(player.transform.position, targetPosition) < 0.01f)
+        if (Vector3.Distance(rectTr.anchoredPosition, targetPosition) < 0.01f)
         {
             isMoving = false;
             playerAni.Play("Idle");
