@@ -6,12 +6,13 @@ using UnityEngine;
 public class StoryStage : MonoBehaviour
 {
     [Header("스토리 스테이지 번호입력")]
-    [SerializeField]private int storyNum;  //스테이지 번호 받기
+    [SerializeField] public int storyNum;  //스테이지 번호 받기
     private int x = 0;
     private int y = 0;
 
     public void checkStage() // 스테이지 번호별로 출력할 스토리 다르게 설정
     {
+        
         switch (storyNum)
         {
             case 0: // 프롤로그 대사 시작, 끝값 지정
