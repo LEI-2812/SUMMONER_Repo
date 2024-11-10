@@ -143,6 +143,15 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
                 changeImage.ShowImage();
             }
         }
+        if (SceneManager.GetActiveScene().name == "Pro_Epi Screen 1")
+        {
+            Debug.Log("클릭 이벤트 발생");
+            if (isDialogueActive && !isStory)
+            {
+                ShowNextLine();
+                changeImage.ShowImage();
+            }
+        }
     }
 
     public int getCurrentDialogueIndex()

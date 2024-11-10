@@ -30,6 +30,8 @@ public class StageSelecter : MonoBehaviour
         Debug.Log("버튼 클릭");
         audioSource.Play();
         stageController.setStageNum(stage); //현재 스테이지 정보를 컨트롤러에 저장
+        PlayerPrefs.SetInt("playingStage", stage);
+        PlayerPrefs.Save();
         SendStage(stage);
     }
 

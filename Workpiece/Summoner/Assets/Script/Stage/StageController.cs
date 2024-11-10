@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class StageController : MonoBehaviour
 {
     public int stageNum;  //현재 플레이할 스테이지 번호 받기
-
+    public StoryStage storystage;
 
     [Header("버튼 클릭음")]
     [SerializeField] private AudioSource audioSource;
@@ -139,8 +139,10 @@ public class StageController : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
-
-
+    public void SendEpilogue()
+    {
+        SceneManager.LoadScene("Pro_Epi Screen 1");
+    }
     public int getStageNum()
     {
         return stageNum;

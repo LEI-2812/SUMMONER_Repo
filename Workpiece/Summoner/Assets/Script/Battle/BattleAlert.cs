@@ -41,10 +41,18 @@ public class BattleAlert : MonoBehaviour
             }
             else // 다음 스테이지로
             {
-                Debug.Log("다음 스테이지 " + (stageNum + 1)+ " 로 이동합니다.");
-                PlayerPrefs.SetInt("savedStage", stageNum + 1); //다음스테이지 번호 저장
-                PlayerPrefs.Save();
-                stageController.SendStage(stageNum + 1);
+                if (stageNum == 7)
+                {
+                    Debug.Log("에필로그로 이동합니다.");
+                    stageController.SendEpilogue();
+                }
+                else
+                {
+                    Debug.Log("다음 스테이지 " + (stageNum + 1) + " 로 이동합니다.");
+                    PlayerPrefs.SetInt("savedStage", stageNum + 1); //다음스테이지 번호 저장
+                    PlayerPrefs.Save();
+                    stageController.SendStage(stageNum + 1);
+                }
             }
         }));
     }
