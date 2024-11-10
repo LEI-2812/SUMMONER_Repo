@@ -43,7 +43,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     protected bool onceInvincibility = false;
     public bool isAttack = true; // 상태이상중 공격가능 여부
 
-    private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //상태이상
+    [Header("상태이상")]
+    [SerializeField] private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //상태이상
     protected IAttackStrategy attackStrategy;
     protected IAttackStrategy[] specialAttackStrategies;
 
@@ -54,6 +55,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     {
         image = GetComponent<Image>();
         nowHP = maxHP;
+    }
+
+    void Update()
+    {
+        ApplyStatusEffectBlink();
     }
 
     public void SetSprite(int index)
@@ -411,6 +417,59 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         }
     }
 
+    private void SetColorByStatus(StatusType statusType)
+    {
+        switch (statusType)
+        {
+            case StatusType.Burn:
+                image.color = new Color(1f, 0.3f, 0.3f); // 붉은색 (Burn)
+                break;
+            case StatusType.Poison:
+                image.color = new Color(0.3f, 1f, 0.3f); // 녹색 (Poison)
+                break;
+            case StatusType.Stun:
+                image.color = new Color(0.2f, 0.2f, 0.2f); // 검은색 (Stun)
+                break;
+            case StatusType.LifeDrain:
+                image.color = new Color(1f, 1f, 0.5f); // 노란색 (흡혈)
+                break;
+            default:
+                image.color = Color.white; // 기본 색상
+                break;
+        }
+    }
+
+
+    private int currentEffectIndex = 0;
+    private float blinkTimer = 0f;
+    private float blinkInterval = 1f; // 색상 변경 간격
+    private void ApplyStatusEffectBlink()
+    {
+        if (activeStatusEffects.Count == 0)
+        {
+            image.color = Color.white; // 상태이상이 없으면 기본 색으로 설정
+            return;
+        }
+
+        if (activeStatusEffects.Count == 1)
+        {
+            // 상태이상이 1개일 때는 해당 색상을 유지
+            SetColorByStatus(activeStatusEffects[0].statusType);
+        }
+        else
+        {
+            // 상태이상이 여러 개일 때는 일정 간격으로 색상 변경
+            blinkTimer += Time.deltaTime;
+
+            if (blinkTimer >= blinkInterval)
+            {
+                blinkTimer = 0f;
+                currentEffectIndex = (currentEffectIndex + 1) % activeStatusEffects.Count;
+                SetColorByStatus(activeStatusEffects[currentEffectIndex].statusType);
+            }
+        }
+    }
+
 
 
     public bool getIsAttack()
@@ -489,6 +548,10 @@ public class Summon : MonoBehaviour, UpdateStateObserver
                 nowHP -= remainingDamage;
                 animator.SetTrigger("hitted");
                 shieldImage.SetActive(false);
+
+                // 쉴드가 파괴될 때 Shield 상태 제거
+                var shieldEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == StatusType.Shield);
+                RemoveExpiredEffects(new List<StatusEffect> { shieldEffect });
                 Debug.Log("쉴드가 파괴됨. 남은 체력: " + nowHP);
             }
         }
@@ -513,7 +576,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         // 체력 변경 시 옵저버들에게 알림
         NotifyObservers();
     }
-
 
     // 소환수 초기화 메서드
     public virtual void summonInitialize()

@@ -17,6 +17,7 @@ public enum StatusType
     OnceInvincibility //1È¸ ¹«Àû
 }
 
+[System.Serializable]
 public class StatusEffect
 {
     public StatusType statusType { get; private set; }
