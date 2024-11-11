@@ -23,6 +23,7 @@ public class StageSelecter : MonoBehaviour
     {
         int stageNum = stageController.getStageNum();
         ButtonInteractivity(stageNum);
+        //ButtonInteractivity(7);
     }
 
     public void stageLoader(int stage)

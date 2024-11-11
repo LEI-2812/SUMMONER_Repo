@@ -2477,7 +2477,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 508d81cf1f0d026429f9bb5833e07502, type: 3}
   - {fileID: 21300000, guid: 6da78eacc12b2394092b352fd777e80a, type: 3}
   targetImage: {fileID: 430804887}
-  interactionController: {fileID: 900800007}
 --- !u!1 &451068846
 GameObject:
   m_ObjectHideFlags: 0
@@ -5902,14 +5901,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 8eade286c75b4ae49839add0ea2d5f09, type: 3}
   - {fileID: 21300000, guid: 508d81cf1f0d026429f9bb5833e07502, type: 3}
   - {fileID: 21300000, guid: 6da78eacc12b2394092b352fd777e80a, type: 3}
-  - {fileID: 21300000, guid: 6cde5c08fcd44a04eab2a7409714cacd, type: 3}
-  - {fileID: 21300000, guid: f7910c002d9d1e8419a9828ae24f91cc, type: 3}
-  - {fileID: 21300000, guid: b0feba29e72465542a0be868c5d356c8, type: 3}
-  - {fileID: 21300000, guid: bc6a977c5c179764f91da354a25830bc, type: 3}
-  - {fileID: 21300000, guid: c2f36ff770254c94581206701ae66d2a, type: 3}
-  - {fileID: 21300000, guid: 7c8c1ad20bce5a545a469f62bcbb424b, type: 3}
   targetImage: {fileID: 430804887}
-  interactionController: {fileID: 900800007}
 --- !u!114 &900800015
 MonoBehaviour:
   m_ObjectHideFlags: 0
