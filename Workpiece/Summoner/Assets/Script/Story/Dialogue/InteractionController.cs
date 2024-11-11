@@ -134,7 +134,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         // 현재 씬 이름이 "Pro_Epi Screen"일 때만 클릭 이벤트 처리
-        if (SceneManager.GetActiveScene().name == "Pro_Epi Screen")
+        if (SceneManager.GetActiveScene().name == "Prologue Screen")
         {
             Debug.Log("클릭 이벤트 발생");
             if (isDialogueActive && !isStory)
@@ -143,7 +143,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
                 changeImage.ShowImage();
             }
         }
-        if (SceneManager.GetActiveScene().name == "Pro_Epi Screen 1")
+        if (SceneManager.GetActiveScene().name == "Epilogue Screen")
         {
             Debug.Log("클릭 이벤트 발생");
             if (isDialogueActive && !isStory)

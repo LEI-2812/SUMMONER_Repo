@@ -74,7 +74,7 @@ public class StartScreenEvent : MonoBehaviour
                     PlayerPrefs.Save();
                 }
                 Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
-                SceneManager.LoadScene("Pro_Epi Screen");
+                SceneManager.LoadScene("Prologue Screen");
             }
             else
             {

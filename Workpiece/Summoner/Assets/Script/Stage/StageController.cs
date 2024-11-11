@@ -141,7 +141,7 @@ public class StageController : MonoBehaviour
 
     public void SendEpilogue()
     {
-        SceneManager.LoadScene("Pro_Epi Screen 1");
+        SceneManager.LoadScene("Epilogue Screen");
     }
     public int getStageNum()
     {
