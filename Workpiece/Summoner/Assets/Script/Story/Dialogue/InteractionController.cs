@@ -108,42 +108,36 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     // 대화 종료 메서드
     public void EndDialogue()
     {
-        //characterName.text = "";  공백 대화창이 하나 나와서 없애고 바로 전투 씬으로 보냄
-        //dialogueContext.text = "";
         isDialogueActive = false;
         Debug.Log("대화가 종료되었습니다.");
 
-        switch (storyStage.getStoryNum())
+        fadeController.RegisterCallback(() =>
         {
-            case 0:
-                Debug.Log("프롤로그");
-                SceneManager.LoadScene("Stage Select Screen"); //프롤로그 이후 출력
-                break;
-            case 8:
-                Debug.Log("에필로그");
-                SceneManager.LoadScene("Thank Screen"); //에필로그 이후 출력
-                break;
-            default:
-                Debug.Log("이도저도 아닌");
-                fadeController.FadeOut();
-                goToFightScreen();
-                break;
-        }
+            switch (storyStage.getStoryNum())
+            {
+                case 0:
+                    Debug.Log("프롤로그");
+                    SceneManager.LoadScene("Stage Select Screen");
+                    break;
+                case 8:
+                    Debug.Log("에필로그");
+                    SceneManager.LoadScene("Thank Screen");
+                    break;
+                default:
+                    Debug.Log("이도저도 아닌");
+                    goToFightScreen();
+                    break;
+            }
+        });
+
+        // 페이드 아웃 실행
+        fadeController.FadeOut();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         // 현재 씬 이름이 "Pro_Epi Screen"일 때만 클릭 이벤트 처리
-        if (SceneManager.GetActiveScene().name == "Prologue Screen")
-        {
-            Debug.Log("클릭 이벤트 발생");
-            if (isDialogueActive && !isStory)
-            {
-                ShowNextLine();
-                changeImage.ShowImage();
-            }
-        }
-        if (SceneManager.GetActiveScene().name == "Epilogue Screen")
+        if ((SceneManager.GetActiveScene().name == "Prologue Screen") || (SceneManager.GetActiveScene().name == "Epilogue Screen"))
         {
             Debug.Log("클릭 이벤트 발생");
             if (isDialogueActive && !isStory)
