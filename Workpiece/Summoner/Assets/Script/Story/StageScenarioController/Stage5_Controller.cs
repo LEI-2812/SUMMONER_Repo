@@ -60,7 +60,7 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
                 Debug.Log(scenarioFlowCount);
                 //  (오른쪽으로 걸어간다.)
                 offDialgueBox();
-                playerMove.CharacterMove(980f, 400f);
+                playerMove.CharacterMove(700f, 400f);
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);

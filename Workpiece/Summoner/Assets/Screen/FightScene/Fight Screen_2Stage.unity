@@ -3100,7 +3100,7 @@ MonoBehaviour:
   - {fileID: 6965631153138215153, guid: 06d16d61d0745f9478bc61eee3e048ee, type: 3}
   - {fileID: 1378068078022664671, guid: df28165c19b62ce458b9c0d62950ce08, type: 3}
   - {fileID: 6433092605041983929, guid: dcd000ee8afad7440ae5efea0c2f5283, type: 3}
-  - {fileID: 1760420319589789094, guid: 8fd706c78e2922046af9ec2e55c582ca, type: 3}
+  - {fileID: 5587979153400695691, guid: f160c72833f9d27418af9c7e3b1c8334, type: 3}
   - {fileID: 1190882339284521166, guid: dff2b5038caad10488ae21b2d2ed5eb7, type: 3}
   takeSummonPanel: {fileID: 1196271517}
   selectSummonPanels:
