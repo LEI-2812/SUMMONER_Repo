@@ -43,6 +43,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     protected bool onceInvincibility = false;
     public bool isAttack = true; // 상태이상중 공격가능 여부
 
+    private bool attakingMotion = false;
+
     [Header("상태이상")]
     [SerializeField] private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //상태이상
     protected IAttackStrategy attackStrategy;
@@ -59,12 +61,12 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
     void Update()
     {
-        ApplyStatusEffectBlink();
+        if(!attakingMotion) ApplyStatusEffectBlink();
     }
 
     public void SetSprite(int index)
     {
-        image.sprite = sprites[index];        
+        image.sprite = sprites[index];
     }
 
 
@@ -88,6 +90,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
     IEnumerator ColorChange(int color)    // 색이 변했다가 돌아옴
     {
+        //
+        attakingMotion = true;
         switch (color)
         {
             case 1: // 검정색
@@ -111,6 +115,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         yield return new WaitForSeconds(1f);
 
         image.color = Color.white;
+        attakingMotion = false;
     }
 
     public virtual void SpecialAttack(List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
