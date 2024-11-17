@@ -25,7 +25,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     [SerializeField] private Animator animator;
 
     [Header("È¿°úÀ½")]
-    [SerializeField] private AudioSource attackSound;
+    [SerializeField] public AudioSource attackSound;
     [SerializeField] private AudioSource downHitSound;
     [SerializeField] private AudioSource upAttackSound;
 
