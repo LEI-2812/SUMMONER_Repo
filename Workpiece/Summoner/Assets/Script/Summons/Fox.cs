@@ -8,9 +8,9 @@ public class Fox : Summon
     public override void summonInitialize()
     {
         summonName = "Fox"; //이름 Fox
-        maxHP = 200; //최대체력 200
+        maxHP = 250; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
-        attackPower = 15; //일반공격
+        attackPower = 35; //일반공격
         summonRank = SummonRank.Low; // 하급 소환수
         summonType = SummonType.Fox;
         ApplayMultiple(multiple);

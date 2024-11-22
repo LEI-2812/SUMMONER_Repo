@@ -14,9 +14,9 @@ public class Rabbit : Summon
     public override void summonInitialize()
     {
         summonName = "Rabbit";
-        maxHP = 250;
+        maxHP = 300;
         nowHP = maxHP;
-        attackPower = 20; //일반공격
+        attackPower = 37; //일반공격
         summonRank = SummonRank.Medium; // 중급 소환수
         summonType = SummonType.Rabbit;
 
