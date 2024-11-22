@@ -8,7 +8,7 @@ public class Eagle : Summon
     public override void summonInitialize()
     {
         summonName = "Eagle";
-        maxHP = 400;
+        maxHP = 350;
         nowHP = maxHP;
         attackPower = 45; //일반공격
         summonRank = SummonRank.High; // 상급 소환수

@@ -9,12 +9,12 @@ public class Cat : Summon
     public override void summonInitialize()
     {
         summonName = "Cat";
-        maxHP = 100;
+        maxHP = 250;
         nowHP = maxHP;
-        attackPower = 15; //일반공격
+        attackPower = 30; //일반공격
         summonRank = SummonRank.Low; // 하급 소환수
         summonType = SummonType.Cat;
-        heavyAttakPower = 20;
+        heavyAttakPower = 40;
 
         ApplayMultiple(multiple);
 

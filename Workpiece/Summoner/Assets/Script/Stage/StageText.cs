@@ -11,6 +11,10 @@ public class StageText : MonoBehaviour
     {
         // PlayerPrefs에서 savedStage 값 불러오기
         int savedStageValue = PlayerPrefs.GetInt("savedStage", 0); // 기본값 0
+        if(savedStageValue > 7)
+        {
+            PlayerPrefs.SetInt("savedStage", 7);
+        }
 
         // 패널에 savedStage 값을 표시
         stageText.text = "<b>[" + savedStageValue.ToString() + " 스테이지 : " + ShowTextSavedStage(savedStageValue) + "]</b>" +

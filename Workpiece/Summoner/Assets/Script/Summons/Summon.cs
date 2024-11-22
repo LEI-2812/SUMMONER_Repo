@@ -288,12 +288,51 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     }
 
     // 데미지를 주는 상태이상 업데이트 메소드 (예: Poison, Burn 등)
+    //public void UpdateDamageStatusEffects()
+    //{
+    //    List<StatusEffect> expiredEffects = new List<StatusEffect>();
+
+    //    foreach (var effect in activeStatusEffects)
+    //    {
+    //        if (effect != null && effect.effectTime > 0)
+    //        {
+    //            // 데미지 주는 상태 확인 및 처리
+    //            if (effect.damagePerTurn > 0 && effect.statusType != StatusType.Upgrade && effect.statusType != StatusType.Curse)
+    //            {
+    //                Debug.Log($"{summonName}이(가) {effect.statusType} 상태로 인해 {effect.damagePerTurn} 데미지를 입습니다. 남은 상태이상시간: {effect.effectTime} 턴");
+    //                takeDamage(effect.damagePerTurn); // 피해 적용
+    //            }
+
+    //            // 흡혈 상태일 경우 회복 처리
+    //            if (effect.statusType == StatusType.LifeDrain && effect.getAttacker() != null)
+    //            {
+    //                double healAmount = effect.damagePerTurn; // 흡혈 데미지만큼 회복
+    //                Debug.Log($"{effect.getAttacker()}이(가) {effect.statusType} 상태로 인해 {healAmount}만큼 회복합니다.");
+    //                effect.getAttacker().Heal(effect.damagePerTurn);
+    //            }
+
+    //            // 지속시간 감소
+    //            effect.effectTime--;
+
+    //            // 상태가 만료될 경우 만료 리스트에 추가
+    //            if (effect.effectTime <= 0)
+    //            {
+    //                expiredEffects.Add(effect);
+    //            }
+    //        }
+    //    }
+
+    //    RemoveExpiredEffects(expiredEffects);
+    //}
     public void UpdateDamageStatusEffects()
     {
         List<StatusEffect> expiredEffects = new List<StatusEffect>();
 
-        foreach (var effect in activeStatusEffects)
+        // 역순으로 리스트 순회
+        for (int i = activeStatusEffects.Count - 1; i >= 0; i--)
         {
+            var effect = activeStatusEffects[i];
+
             if (effect != null && effect.effectTime > 0)
             {
                 // 데미지 주는 상태 확인 및 처리
@@ -322,7 +361,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
             }
         }
 
-        RemoveExpiredEffects(expiredEffects);
+        RemoveExpiredEffects(expiredEffects); // 만료된 효과 제거
     }
 
     // 스턴 상태 업데이트 메소드

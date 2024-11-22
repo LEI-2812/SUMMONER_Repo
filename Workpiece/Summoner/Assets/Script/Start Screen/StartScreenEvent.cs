@@ -29,6 +29,7 @@ public class StartScreenEvent : MonoBehaviour
 
     void Start()
     {
+        PlayerPrefs.SetInt("savedStage", 7);
         stageController = FindObjectOfType<StageController>();
         // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
         menuCanvas = GameObject.Find("MenuCanvas");
@@ -47,6 +48,9 @@ public class StartScreenEvent : MonoBehaviour
         else{ Debug.LogError("Setting 버튼이 연결되지 않았습니다."); }
         newAlert.SetActive(false);
         loadAlert.SetActive(false);
+
+        //이어하기 활성화 여부
+        ActiveSavedBtn();
     }
 
     //새게임
@@ -107,6 +111,15 @@ public class StartScreenEvent : MonoBehaviour
                 loadAlert.SetActive(false);
             }
         }));
+    }
+
+    private void ActiveSavedBtn()
+    {
+        int savedStage = PlayerPrefs.GetInt("savedStage");
+        if(savedStage < 1)
+        {
+            loadButton.gameObject.SetActive(false);
+        }
     }
 
     //설정창 끄기 키기

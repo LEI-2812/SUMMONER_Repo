@@ -8,10 +8,10 @@ public class Wolf : Summon
     public override void summonInitialize()
     {
         summonName = "Wolf";
-        maxHP = 300;
+        maxHP = 350;
         nowHP = maxHP;
         attackPower = 50; //일반공격
-        heavyAttakPower = 25;
+        heavyAttakPower = 30;
         summonRank = SummonRank.High; // 중급 소환수
         summonType = SummonType.Wolf;
         ApplayMultiple(multiple);
