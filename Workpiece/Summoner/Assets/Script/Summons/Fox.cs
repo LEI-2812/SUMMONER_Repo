@@ -17,7 +17,7 @@ public class Fox : Summon
 
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Upgrade, 0.2, 3, 1) };//공격력 강화, 20% 상승, 쿨타임 3턴 //지속시간 1턴
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Upgrade, 0.3, 3, 1) };//공격력 강화, 20% 상승, 쿨타임 3턴 //지속시간 1턴
 
     }
 

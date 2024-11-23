@@ -52,7 +52,7 @@ public class Cat : Summon
 
         
         double originAttackPower = attackPower;
-        attackPower = 20;
+        attackPower = heavyAttakPower;
         // 공격 수행
         specialAttack.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
 

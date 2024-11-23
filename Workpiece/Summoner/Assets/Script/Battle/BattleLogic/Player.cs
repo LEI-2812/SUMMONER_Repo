@@ -36,12 +36,12 @@ public class Player : Character
     [SerializeField] private BattleController battleController;
     [SerializeField] private PlateController plateController;
 
-    BattleAlert battleAlert;
+    public BattleAlert battleAlert;
 
     private int selectedPlateIndex = -1;
     private int stageNum;
-    private int currentTurn;
-    private int clearTurn;
+    public int currentTurn;
+    public int clearTurn;
     private bool hasSummonedThisTurn;
 
     private void Awake()
