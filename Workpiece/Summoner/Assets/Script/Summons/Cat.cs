@@ -33,36 +33,6 @@ public class Cat : Summon
         heavyAttakPower = (int)(heavyAttakPower * multiple);
     }
 
-    //일반 공격과 특수공격이 같은 방식의 경우 데미지가 attackPower로 들어가는 로직이기 때문에 잠깐 SpecialPower로 하고 되돌리게
-    public override void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
-    {
-        if (SpecialAttackArrayIndex < 0 || SpecialAttackArrayIndex >= specialAttackStrategies.Length)
-        {
-            Debug.Log("유효하지 않은 특수 공격 인덱스입니다.");
-            return;
-        }
-
-        var specialAttack = specialAttackStrategies[SpecialAttackArrayIndex];
-
-        if (specialAttack == null || specialAttack.getCurrentCooldown() > 0)
-        {
-            Debug.Log("특수 스킬이 쿨타임 중입니다.");
-            return;
-        }
-
-        
-        double originAttackPower = attackPower;
-        attackPower = heavyAttakPower;
-        // 공격 수행
-        specialAttack.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
-
-        // 해당 공격에 쿨타임 적용
-        specialAttack.ApplyCooldown();
-        attackPower = originAttackPower;
-        isAttack = false;
-    }
-
-
     public override void die()
     {
         base.die();
