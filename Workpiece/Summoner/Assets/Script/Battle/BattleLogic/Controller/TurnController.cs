@@ -17,8 +17,12 @@ public class TurnController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI turnCountText;
     [SerializeField] private TextMeshProUGUI turnClearText;
 
+    StageController stageController;
+
     void Start()
     {
+        stageController = FindAnyObjectByType<StageController>();
+
         currentTurn = Turn.PlayerTurn; // 첫 번째 턴은 플레이어 턴으로 시작
         turnCount = 1;
         UpdateTurnCountUI();
@@ -42,6 +46,13 @@ public class TurnController : MonoBehaviour
             }
 
             player.getPlateController().CompactEnermyPlates(); //앞당기기
+
+            // 승리 조건
+            if (enermy.getEnermyAttackController().getPlateController().IsEnermyPlateClear() && (player.clearTurn >= player.currentTurn))
+            {
+                Debug.Log("승리!");
+                player.battleAlert.clearAlert(stageController.stageNum);
+            }
 
 
             foreach (var summon in player.getPlateController().getPlayerSummons())
