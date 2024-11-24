@@ -25,6 +25,34 @@ public class Cat : Summon
 
     }
 
+    public override void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
+    {
+        if (SpecialAttackArrayIndex < 0 || SpecialAttackArrayIndex >= specialAttackStrategies.Length)
+        {
+            Debug.Log("유효하지 않은 특수 공격 인덱스입니다.");
+            return;
+        }
+
+        var specialAttack = specialAttackStrategies[SpecialAttackArrayIndex];
+
+        if (specialAttack == null || specialAttack.getCurrentCooldown() > 0)
+        {
+            Debug.Log("특수 스킬이 쿨타임 중입니다.");
+            return;
+        }
+
+
+        double originAttackPower = attackPower;
+        attackPower = heavyAttakPower;
+
+        specialAttack.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
+        animator.SetTrigger("attack");
+        StartCoroutine(ColorChange(1)); // 검정색
+        specialAttack.ApplyCooldown();
+        attackPower = originAttackPower;
+        isAttack = false;
+    }
+
     public override void ApplayMultiple(double multiple)
     {
         maxHP = (int)(maxHP * multiple);

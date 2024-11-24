@@ -10,7 +10,7 @@ public class BattleController : MonoBehaviour
 
     [SerializeField] private StatePanel statePanel;
 
-    private bool isAttacking = false; //공격중인이 판별
+    public bool isAttacking = false; //공격중인이 판별
 
     private PlateController plateController;
 

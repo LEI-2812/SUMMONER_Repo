@@ -84,6 +84,9 @@ public class Player : Character
 
     public void OnSummonBtnClick()
     {
+        //공격중이거나 소환(재소환포함)중에는 클릭안되게
+        if (summonController.isSummoning || battleController.getIsAttaking()) return;
+
         if (hasSummonedThisTurn)
         {
             failSound.Play();
@@ -120,6 +123,10 @@ public class Player : Character
     //플레이어는 버튼 클릭을 통해서만 턴종료를 시킨다.
     public void PlayerTurnOverBtn() //버튼에 넣을 메소드
     {
+        //공격중이거나 소환(재소환포함)중에는 클릭안되게
+        if (summonController.isSummoning || battleController.getIsAttaking()) return;
+
+
         // 플레이어 턴일 때만 턴 종료 가능
         if (turnController.getCurrentTurn() == TurnController.Turn.PlayerTurn)
         {
@@ -136,6 +143,9 @@ public class Player : Character
 
     public void OnReSummonBtnClick() //재소환 버튼 클릭
     {
+        //공격중이거나 소환(재소환포함)중에는 클릭안되게
+        if (summonController.isSummoning || battleController.getIsAttaking()) return;
+
         if (mana >= usedMana) {
             if (summonController.StartResummon())
             { //재소환 시작
@@ -156,6 +166,9 @@ public class Player : Character
 
     public void OnAttackBtnClick() //일반공격
     {
+        //공격중이거나 소환(재소환포함)중에는 클릭안되게
+        if (summonController.isSummoning || battleController.getIsAttaking()) return;
+
         Summon attackSummon = battleController.attackStart(0); //공격할 소환수를 받아온다.
         if (!attackSummon.getIsAttack() || attackSummon.IsStun()) {
             Debug.Log("공격할 수 없습니다. ");
@@ -186,6 +199,9 @@ public class Player : Character
 
     public void OnSpecialAttackBtnClick() //특수공격
     {
+        //공격중이거나 소환(재소환포함)중에는 클릭안되게
+        if (summonController.isSummoning || battleController.getIsAttaking()) return;
+
         Summon attackSummon = battleController.attackStart(0); // 공격할 소환수를 가져옴
         if (!attackSummon.getIsAttack() || attackSummon.IsStun())
         {
@@ -210,6 +226,7 @@ public class Player : Character
             // TargetedAttackStrategy를 사용하는지 확인
             if (attackStrategy is TargetedAttackStrategy targetedAttack)
             {
+                battleController.setIsAttaking(true);
                 StatusType attackStatusType = targetedAttack.getStatusType();
                 clickSound.Play();
                 if (attackStatusType == StatusType.Heal || attackStatusType == StatusType.Upgrade || attackStatusType == StatusType.Shield) //타겟중에 힐일경우

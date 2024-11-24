@@ -8,7 +8,7 @@ public class SummonController : MonoBehaviour
 
     [SerializeField] private GameObject darkBackground; // 재소환 배경 처리할 판넬 (반투명)
 
-    private bool isSummoning = false; // 재소환 중인지 확인하는 변수
+    public bool isSummoning = false; // 재소환 중인지 확인하는 변수
 
     [Header("플레이어")]
     [SerializeField] private Player player;
