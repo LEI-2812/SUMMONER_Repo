@@ -25,11 +25,8 @@ public class StartScreenEvent : MonoBehaviour
     [Header("효과음 사운드")]
     public AudioSource audioSource;
 
-    private Setting setting;
-
     void Start()
     {
-        PlayerPrefs.SetInt("savedStage", 7);
         stageController = FindObjectOfType<StageController>();
         // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
         menuCanvas = GameObject.Find("MenuCanvas");
@@ -76,6 +73,7 @@ public class StartScreenEvent : MonoBehaviour
                     PlayerPrefs.DeleteAll();
                     PlayerPrefs.SetInt("savedStage", 1); // 스테이지 진행 상황 초기화
                     PlayerPrefs.Save();
+                    Debug.Log($"저장된 스테이지 번호: {PlayerPrefs.GetInt("savedStage")}");
                 }
                 Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
                 SceneManager.LoadScene("Prologue Screen");
@@ -97,6 +95,7 @@ public class StartScreenEvent : MonoBehaviour
         loadAlert.SetActive(true); // 알림창 활성화
 
         int savedStage = LoadStage();
+        Debug.Log($"저장된 스테이지 번호: {savedStage}");
         loadAlertResult.ResetAlert();
 
         StartCoroutine(WaitForAlertResult(loadAlert, loadAlertResult, (result) => {

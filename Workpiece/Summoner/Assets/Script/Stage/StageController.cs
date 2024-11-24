@@ -20,7 +20,7 @@ public class StageController : MonoBehaviour
     }
     void Start()
     {
-        //int stageNumber = PlayerPrefs.GetInt("savedStage");
+        int stageNumber = PlayerPrefs.GetInt("savedStage");
         Debug.Log("savedStage 값 : " + stageNum);
     }
 
@@ -44,7 +44,7 @@ public class StageController : MonoBehaviour
         Debug.Log("버튼 클릭");
         audioSource.Play();
         // 현재 플레이 중인 스테이지를 "playingStage"로 저장
-        PlayerPrefs.SetInt("playingStage", stage);
+        PlayerPrefs.SetInt("savedStage", stage);
         PlayerPrefs.Save();
         SendStage(stage);
     }
@@ -56,30 +56,37 @@ public class StageController : MonoBehaviour
             case 1:
                 SendStory(stage);
                 Summon.multiple = 1;
+                SaveStage(1);
                 break;
             case 2:
                 SendStory(stage);
                 Summon.multiple = 1;
+                SaveStage(2);
                 break;
             case 3:
                 SendStory(stage);
                 Summon.multiple = 1.2;
+                SaveStage(3);
                 break;
             case 4:
                 SendFight(stage);
                 Summon.multiple = 1.2;
+                SaveStage(4);
                 break;
             case 5:
                 SendStory(stage);
                 Summon.multiple = 1.5;
+                SaveStage(5);
                 break;
             case 6:
                 SendFight(stage);
                 Summon.multiple = 1.5;
+                SaveStage(6);
                 break;
             case 7:
                 SendStory(stage);
                 Summon.multiple = 2.5;
+                SaveStage(7);
                 break;
             // 필요한 스테이지만큼 추가
             default:

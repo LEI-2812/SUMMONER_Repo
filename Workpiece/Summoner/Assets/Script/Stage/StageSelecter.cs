@@ -43,30 +43,37 @@ public class StageSelecter : MonoBehaviour
             case 1:
                 Summon.multiple = 1;
                 SendStory(stage);
+                stageController.SaveStage(1);
                 break;
             case 2:
                 Summon.multiple = 1;
                 SendStory(stage);
+                stageController.SaveStage(2);
                 break;
             case 3:
                 Summon.multiple = 1.2;
                 SendStory(stage);
+                stageController.SaveStage(3);
                 break;
             case 4:
                 Summon.multiple = 1.2;
                 SendFight(stage);
+                stageController.SaveStage(4);
                 break;
             case 5:
                 Summon.multiple = 1.5;
                 SendStory(stage);
+                stageController.SaveStage(5);
                 break;
             case 6:
                 Summon.multiple = 1.5;
                 SendFight(stage);
+                stageController.SaveStage(6);
                 break;
             case 7:
                 Summon.multiple = 2.5;
                 SendStory(stage);
+                stageController.SaveStage(7);
                 break;
             // 필요한 스테이지만큼 추가
             default:
