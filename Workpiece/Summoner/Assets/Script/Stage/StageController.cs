@@ -63,23 +63,23 @@ public class StageController : MonoBehaviour
                 break;
             case 3:
                 SendStory(stage);
-                Summon.multiple = 1.5;
+                Summon.multiple = 1.2;
                 break;
             case 4:
                 SendFight(stage);
-                Summon.multiple = 1.5;
+                Summon.multiple = 1.2;
                 break;
             case 5:
                 SendStory(stage);
-                Summon.multiple = 2;
+                Summon.multiple = 1.5;
                 break;
             case 6:
                 SendFight(stage);
-                Summon.multiple = 2;
+                Summon.multiple = 1.5;
                 break;
             case 7:
                 SendStory(stage);
-                Summon.multiple = 4;
+                Summon.multiple = 2.5;
                 break;
             // 필요한 스테이지만큼 추가
             default:

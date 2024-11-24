@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +17,6 @@ public class EnermyAttackController : MonoBehaviour
         plateController = enermyAlgorithm.getPlateController();
     }
 
-
     public void EnermyAttackStart(List<AttackPrediction> playerAttackPredictionsList)
     {
         List<Plate> enermyPlate = plateController.getEnermyPlates();
@@ -24,6 +24,7 @@ public class EnermyAttackController : MonoBehaviour
         for (int index = 0; index < plateController.getEnermySummonCount(); index++) //적이 순차적으로 공격준비
         {
             Summon attackingSummon = enermyPlate[index].getCurrentSummon(); //플레이트에 소환수를 차례로 가져와서
+
             // 소환수가 스턴 상태인지 확인
             if (attackingSummon.IsStun())
             {
@@ -51,6 +52,11 @@ public class EnermyAttackController : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator WaitForEnemyAttacking()
+    {
+        yield return new WaitForSeconds(1f); // 1초 대기
     }
 
     //화상, 흡혈, 독성에 대해서는 힐스킬이 있을경우 힐사용

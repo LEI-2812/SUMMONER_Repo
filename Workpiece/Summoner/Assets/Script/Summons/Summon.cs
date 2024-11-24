@@ -19,10 +19,10 @@ public enum SummonType
 
 public class Summon : MonoBehaviour, UpdateStateObserver
 {
-    [SerializeField] private Image image; //이미지
-    [SerializeField] private Sprite[] sprites; // 스프라이트 모음
-    [SerializeField] private GameObject shieldImage;
-    [SerializeField] private Animator animator;
+    [SerializeField] protected Image image; //이미지
+    [SerializeField] protected Sprite[] sprites; // 스프라이트 모음
+    [SerializeField] protected GameObject shieldImage;
+    [SerializeField] protected Animator animator;
 
     [Header("효과음")]
     [SerializeField] public AudioSource attackSound;
@@ -88,7 +88,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         isAttack = false;
     }
 
-    IEnumerator ColorChange(int color)    // 색이 변했다가 돌아옴
+    protected IEnumerator ColorChange(int color)    // 색이 변했다가 돌아옴
     {
         //
         attakingMotion = true;

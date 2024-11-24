@@ -15,8 +15,8 @@ public class Enermy : Character
 
     BattleAlert battleAlert;
 
-    private int stageNum;
-    private int currentTurn;
+    //private int stageNum;
+    //private int currentTurn;
 
     private void Awake()
     {
