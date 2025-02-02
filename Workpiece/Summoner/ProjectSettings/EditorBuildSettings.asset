@@ -59,4 +59,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Screen/Epilogue Screen.unity
     guid: 84a1ae02318a26c4bbea87415c047125
+  - enabled: 1
+    path: Assets/Screen/HUD.unity
+    guid: 320b9d6cafc4f2f428af897736ee2dd8
   m_configObjects: {}

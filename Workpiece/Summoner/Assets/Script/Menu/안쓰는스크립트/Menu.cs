@@ -25,6 +25,12 @@ public class Menu : MonoBehaviour
 
     [Space]
 
+    [Header("스킵하시겠습니까? 창")]
+    public GameObject alertSkip;    // 스킵 창 띄울 오브젝트
+    public Alert alertSkipResult;
+
+    [Space]
+
     [Header("게임종료")]
     [SerializeField] private GameObject toQuit; //나가기 알림창
     [SerializeField] private Alert toQuitResult; //나가기 Alert 로직
@@ -42,7 +48,6 @@ public class Menu : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // 이 오브젝트를 씬 전환 시 파괴하지 않도록 설정
         }
         else
         {
@@ -121,12 +126,14 @@ public class Menu : MonoBehaviour
         }));
     }
 
-    // 설정창 가져오기 - 다만 현재는 메인화면에서 한번 설정창을 켜야 가져올 수 있음
+
+    // 설정창 가져오기
     public void openSettingCanvas()
     {
         setting.openOption();
         menuClick.Play();
     }
+
     
     private IEnumerator WaitForAlertResult(GameObject alertObject, Alert alertScript, System.Action<bool> callback)
     {
