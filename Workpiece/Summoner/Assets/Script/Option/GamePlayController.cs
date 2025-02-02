@@ -14,6 +14,12 @@ public class GamePlayController : MonoBehaviour
     [Header("버튼 클릭음")]
     [SerializeField] private AudioSource audioSource;
 
+    private void Start()
+    {
+        // PlayerPrefs에서 이전 설정 불러오기
+        isStorySkip.isOn = PlayerPrefs.GetInt("IsStorySkip", 0) == 1;
+        isOnlyMouse.isOn = PlayerPrefs.GetInt("IsOnlyMouse", 0) == 1;
+    }
 
     private void Update()
     {
@@ -29,12 +35,16 @@ public class GamePlayController : MonoBehaviour
 
     public void storySkip()
     {
+        audioSource.Play();
         if (isStorySkip.isOn)
         {
             Debug.Log("스토리를 스킵합니다.");
         }
         else
             Debug.Log("스킵하지않습니다.");
+        // 설정 저장
+        PlayerPrefs.SetInt("IsStorySkip", isStorySkip.isOn ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     public void onlyUseMouse()
@@ -45,6 +55,10 @@ public class GamePlayController : MonoBehaviour
         }
         else
             Debug.Log("키보드 & 마우스 사용가능");
+
+        // 설정 저장
+        PlayerPrefs.SetInt("IsOnlyMouse", isOnlyMouse.isOn ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     public void onClickSound()

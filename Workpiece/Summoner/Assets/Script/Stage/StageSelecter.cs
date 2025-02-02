@@ -14,13 +14,10 @@ public class StageSelecter : MonoBehaviour
 
     private StageController stageController;
 
-    private void Awake()
-    {
-        stageController = FindObjectOfType<StageController>();
-    }
 
     private void Start()
     {
+        stageController = FindObjectOfType<StageController>();
         int stageNum = stageController.getStageNum();
         ButtonInteractivity(stageNum);
         //ButtonInteractivity(7);
