@@ -12,20 +12,16 @@ public class Story : MonoBehaviour
 
     [SerializeField] private AudioSource skipSound;
 
-    private Setting setting;  // SettingMenuController의 인스턴스를 참조
+    private HUDManager hudManager;
+
     private string playingStage;   // 플레이 중인 스테이지 번호
 
     private void Start()
     {
+        hudManager = FindObjectOfType<HUDManager>();
         skipAlertHandler = FindObjectOfType<SkipAlertHandler>();
         if (skipAlertHandler == null) { Debug.LogWarning("스킵할당안됨"); }
-        // Setting 싱글톤 인스턴스를 참조
-        setting = Setting.instance;
-
-        if (setting == null)
-        {
-            Debug.LogWarning("SettingMenuController 인스턴스가 존재하지 않습니다.");
-        }
+ 
 
         playingStage = PlayerPrefs.GetInt("playingStage", 1).ToString();
         Debug.Log("현재 플레이 스테이지 : " + playingStage);
@@ -44,20 +40,22 @@ public class Story : MonoBehaviour
 
     public void isSkipActive() // Setting의 스킵 토글에 따라 스킵버튼 활성화 여부 동작 메소드
     {
-        if (setting != null)
+        if (hudManager != null)
         {
-            if (setting.GetGamePlayController().getIsStorySkip())
+            if (hudManager.settingController.isStorySkip.isOn)
             {
+                Debug.Log("활성화됨");
                 SkipBtn.SetActive(true);
             }
             else
             {
+                Debug.Log("비활성화됨");
                 SkipBtn.SetActive(false);
             }
         }
         else
         {
-            Debug.LogWarning("셋팅이 할당안됨");
+            Debug.LogWarning("HUDManager가 할당안됨");
         }
     }
 

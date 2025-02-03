@@ -5,21 +5,26 @@ using UnityEngine.UI;
 
 public class GamePlayController : MonoBehaviour
 {
+    public static GamePlayController instance;
+
     [Header("스토리 스킵툴팁")]
-    [SerializeField] private Toggle isStorySkip;
+    public Toggle isStorySkip;
 
     [Header("마우스만 사용가능 툴팁")]
-    [SerializeField] private Toggle isOnlyMouse;
+    public Toggle isOnlyMouse;
 
     [Header("버튼 클릭음")]
-    [SerializeField] private AudioSource audioSource;
+    public AudioSource audioSource;
 
-    private void Start()
+    private void Awake()
     {
+
         // PlayerPrefs에서 이전 설정 불러오기
         isStorySkip.isOn = PlayerPrefs.GetInt("IsStorySkip", 0) == 1;
         isOnlyMouse.isOn = PlayerPrefs.GetInt("IsOnlyMouse", 0) == 1;
     }
+
+
 
     private void Update()
     {
@@ -65,12 +70,4 @@ public class GamePlayController : MonoBehaviour
     {
         audioSource.Play();
     }
-
-    public bool getIsStorySkip() { return isStorySkip.isOn; }
-
-    public void setIsStorySkip(bool isSkip) { this.isStorySkip.isOn = isSkip; }
-
-    public bool getIsOnlyMouse() { return isOnlyMouse.isOn; }
-
-    public void setIsOnlyMouse(bool isMouse) { this.isOnlyMouse.isOn = isMouse; }
 }
