@@ -3,10 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class MenuLoader : MonoBehaviour
 {
-    // Start is called before the first frame update
+   [SerializeField] private static bool isHUDLoaded = false;
+
     void Awake()
     {
-        SceneManager.LoadScene("Screen/HUD", LoadSceneMode.Additive);
+        Debug.Log(isHUDLoaded);
+        if (!isHUDLoaded)
+        {
+            SceneManager.LoadScene("Screen/HUD", LoadSceneMode.Additive);
+            isHUDLoaded = true; // HUD가 로드되었음을 표시
+        }
     }
 
 }

@@ -20,8 +20,9 @@ public class AudioController : MonoBehaviour
     private float bgmVolume = 1f;
     private float sfxVolume = 1f;
 
-    void Start()
+    void Awake()
     {
+
         // 슬라이더 이벤트 등록
         masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
         bgmVolumeSlider.onValueChanged.AddListener(SetBGMVolume);
@@ -58,7 +59,7 @@ public class AudioController : MonoBehaviour
     }
 
     // 실제 적용할 볼륨 계산
-    private void ApplyVolumes()
+    public void ApplyVolumes()
     {
         // 마스터 볼륨 비율에 따라 개별 볼륨 조정
         float adjustedBGMVolume = bgmVolume * masterVolume;

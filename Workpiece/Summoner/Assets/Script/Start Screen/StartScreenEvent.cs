@@ -161,12 +161,6 @@ public class StartScreenEvent : MonoBehaviour
         Application.Quit(); //빌드해야 작동함.
     }
 
-
-
-    //그 외 로직들
-
-    //여기 있었던 SaveStage() StageController.cs로 옮김
-
     //스테이지 로드   추후 저장된 스테이지 불러오기 가능 시 알림창 yes 버튼에 적용
     public int LoadStage()
     {

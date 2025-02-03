@@ -34,6 +34,7 @@ public class VideoController : MonoBehaviour
 
     void Awake()
     {
+
         // 저장된 해상도와 화면 모드 불러오기
         int savedResolutionIndex = PlayerPrefs.GetInt("resolutionIndex", 0);
         int savedScreenModeIndex = PlayerPrefs.GetInt("screenModeIndex", 0);

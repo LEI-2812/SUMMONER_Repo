@@ -15,10 +15,6 @@ public class Setting : MonoBehaviour
     [Header("설정창(비디오,오디오,게임플레이) 버튼")]
     public List<Button> buttons;
 
-    [Header("설정 컨트롤러")]
-    [SerializeField] private AudioController audioController;
-    [SerializeField] private VideoController videoController;
-    [SerializeField] private GamePlayController gamePlayController;
 
     [Header("버튼 클릭음")]
     [SerializeField] private AudioSource audioSource;
@@ -118,12 +114,4 @@ public class Setting : MonoBehaviour
     }
 
 
-    // AudioController를 가져오는 메소드
-    public AudioController GetAudioController() { return audioController; }
-
-    // VideoController를 가져오는 메소드
-    public VideoController GetVideoController() { return videoController; }
-
-    // GamePlayController를 가져오는 메소드
-    public GamePlayController GetGamePlayController() { return gamePlayController; }
 }

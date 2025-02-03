@@ -338,8 +338,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce73e9dab229134d95d4cd0cddb67ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alertSkip: {fileID: 0}
-  alertSkipResult: {fileID: 0}
   SkipBtn: {fileID: 1391477646}
   skipSound: {fileID: 268141390}
 --- !u!82 &268141390
@@ -1068,7 +1066,6 @@ GameObject:
   - component: {fileID: 644011323}
   - component: {fileID: 644011322}
   - component: {fileID: 644011325}
-  - component: {fileID: 644011326}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1246,18 +1243,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &644011326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 644011321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba50ae12dad578c4fbae9ca5b802973e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &664063332
 GameObject:
   m_ObjectHideFlags: 0
