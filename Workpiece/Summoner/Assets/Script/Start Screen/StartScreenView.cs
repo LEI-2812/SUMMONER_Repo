@@ -69,7 +69,8 @@ public class StartScreenView : MonoBehaviour
                 }
                 else
                 {
-                    stageController.setStageNum(1);
+                    const int newGameStartStage = 1;
+                    stageController.setStageNum(newGameStartStage);
 
                     // 새 게임은 진행 데이터만 초기화하고, 옵션 설정값은 유지한다.
                     if (GameSaveController.instance == null)
@@ -79,7 +80,7 @@ public class StartScreenView : MonoBehaviour
                     }
 
                     GameSaveController.instance.StartNewGame();
-                    Debug.Log($"저장된 스테이지 번호: {GameSaveController.instance.GetGameSave().savedStage}");
+                    Debug.Log($"저장된 스테이지 번호: {newGameStartStage}");
                 }
                 Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
                 SceneManager.LoadScene("Prologue Screen");

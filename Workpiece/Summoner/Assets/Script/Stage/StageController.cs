@@ -15,15 +15,7 @@ public class StageController : MonoBehaviour
 
     private void Awake()
     {
-        // 저장 컨트롤러가 있으면 저장 시스템 기준으로 진행 스테이지를 읽는다.
-        // 단독 실행처럼 컨트롤러가 없을 때는 기존 PlayerPrefs 값을 fallback으로 사용한다.
-        if (GameSaveController.instance != null)
-        {
-            stageNum = GameSaveController.instance.GetGameSave().savedStage;
-            return;
-        }
-
-        stageNum = PlayerPrefs.GetInt("savedStage");
+        stageNum = GameSaveController.GetGameSaveOrDefault().savedStage;
     }
     void Start()
     {

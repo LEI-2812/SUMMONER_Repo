@@ -2331,7 +2331,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 626992377}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -4030,7 +4030,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1051069150}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -4163,7 +4163,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1051069150}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -4563,7 +4563,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 626992377}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:

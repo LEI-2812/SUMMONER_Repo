@@ -1506,7 +1506,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 360782460}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -4267,7 +4267,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2115878287}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -5396,7 +5396,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1527674637}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -6077,7 +6077,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1727548682}
-        m_TargetAssemblyTypeName: Setting, Assembly-CSharp
+        m_TargetAssemblyTypeName: SettingPanelView, Assembly-CSharp
         m_MethodName: openOption
         m_Mode: 1
         m_Arguments:
@@ -6605,7 +6605,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 360782460}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -8863,7 +8863,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 618725096}
-        m_TargetAssemblyTypeName: GamePlayController, Assembly-CSharp
+        m_TargetAssemblyTypeName: GameplaySettingView, Assembly-CSharp
         m_MethodName: onClickSound
         m_Mode: 1
         m_Arguments:
@@ -9804,7 +9804,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2136668028}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -10184,7 +10184,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 759323657}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -12196,7 +12196,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2115878287}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -12462,7 +12462,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 618725096}
-        m_TargetAssemblyTypeName: GamePlayController, Assembly-CSharp
+        m_TargetAssemblyTypeName: GameplaySettingView, Assembly-CSharp
         m_MethodName: storySkip
         m_Mode: 1
         m_Arguments:
@@ -12733,7 +12733,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1527674637}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -13263,7 +13263,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 759323657}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -14959,7 +14959,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2136668028}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:

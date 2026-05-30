@@ -42,6 +42,18 @@ public class GameSaveController : MonoBehaviour
         return currentSaveData.Clone();
     }
 
+    // 씬에 GameSaveController가 아직 없을 때도 기존 저장값을 읽을 수 있게 한다.
+    // PlayerPrefs 직접 접근은 PlayerPrefsSaveStore 안으로만 모은다.
+    public static GameSaveData GetGameSaveOrDefault()
+    {
+        if (instance != null)
+        {
+            return instance.GetGameSave();
+        }
+
+        return new PlayerPrefsSaveStore().LoadGameSave();
+    }
+
     // 새 게임 시작 상태로 진행 데이터를 초기화하고 저장한다.
     public void StartNewGame()
     {

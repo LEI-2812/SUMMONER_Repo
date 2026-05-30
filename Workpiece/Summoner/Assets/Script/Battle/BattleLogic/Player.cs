@@ -49,7 +49,7 @@ public class Player : Character
         summonButtonText = summonButton.GetComponentInChildren<TextMeshProUGUI>();
         reSummonButtonText = reSummonButton.GetComponentInChildren<TextMeshProUGUI>();
         battleResultAlertView = GetComponent<BattleResultAlertView>();
-        stageNum = PlayerPrefs.GetInt("playingStage");
+        stageNum = GameSaveController.GetGameSaveOrDefault().playingStage;
         clearTurn = turnController.GetClearTurn();
         ResetPlayerSetting();
     }

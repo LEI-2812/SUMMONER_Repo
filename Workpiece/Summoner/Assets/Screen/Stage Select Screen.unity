@@ -2614,7 +2614,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 393685410}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -3730,7 +3730,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 22108468}
-        m_TargetAssemblyTypeName: StageSelecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
         m_MethodName: stageLoader
         m_Mode: 3
         m_Arguments:
@@ -4166,7 +4166,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 193391848}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -4668,7 +4668,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 22108468}
-        m_TargetAssemblyTypeName: StageSelecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
         m_MethodName: stageLoader
         m_Mode: 3
         m_Arguments:
@@ -5123,7 +5123,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 22108468}
-        m_TargetAssemblyTypeName: StageSelecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
         m_MethodName: stageLoader
         m_Mode: 3
         m_Arguments:
@@ -6987,7 +6987,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 22108468}
-        m_TargetAssemblyTypeName: StageSelecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
         m_MethodName: stageLoader
         m_Mode: 3
         m_Arguments:
@@ -8102,7 +8102,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 22108468}
-        m_TargetAssemblyTypeName: StageSelecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
         m_MethodName: stageLoader
         m_Mode: 3
         m_Arguments:
@@ -9506,7 +9506,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 193391848}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -10463,7 +10463,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 393685410}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -11178,7 +11178,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 22108468}
-        m_TargetAssemblyTypeName: StageSelecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
         m_MethodName: stageLoader
         m_Mode: 3
         m_Arguments:
@@ -11398,7 +11398,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 22108468}
-        m_TargetAssemblyTypeName: StageSelecter, Assembly-CSharp
+        m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
         m_MethodName: stageLoader
         m_Mode: 3
         m_Arguments:
