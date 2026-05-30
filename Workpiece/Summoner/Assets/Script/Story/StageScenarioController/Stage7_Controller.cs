@@ -8,15 +8,15 @@ using UnityEngine.UI;
 
 public class Stage7_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandler
 {
-    [Header("Ç¥ÇöÇÒ ¿ÀºêÁ§Æ®µé")]
+    [Header("í‘œí˜„í•  ì˜¤ë¸Œì íŠ¸ë“¤")]
     public GameObject dialogueBox;
 
-    private int scenarioFlowCount = 0; //´ë»ç Ä«¿îÆ®
+    private int scenarioFlowCount = 0; //ëŒ€ì‚¬ ì¹´ìš´íŠ¸
 
-    //ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌ¼Ç
+    //í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´ì…˜
     [SerializeField] private Animator playerAni;
 
-    [Header("ÄÁÆ®·Ñ·¯")]
+    [Header("ì»¨íŠ¸ë¡¤ëŸ¬")]
     [SerializeField] private InteractionController interactionController;
     [SerializeField] private PlayerMove playerMove;
 
@@ -29,7 +29,7 @@ public class Stage7_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     void Update()
     {
-        // À¯ÀúÀÇ ÀÔ·ÂÀ¸·Î ´ë»ç ³Ñ±â±â (¿¹: ½ºÆäÀÌ½º¹Ù)
+        // ìœ ì €ì˜ ì…ë ¥ìœ¼ë¡œ ëŒ€ì‚¬ ë„˜ê¸°ê¸° (ì˜ˆ: ìŠ¤í˜ì´ìŠ¤ë°”)
         if (Input.GetKeyDown(KeyCode.Space))
         {
             OnClickDialogue();
@@ -38,7 +38,7 @@ public class Stage7_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     public void scenarioFlow()
     {
-        if (checkCSVDialogueID()) //´ÙÀ½ ´ë»çÀÇ ID°¡ ÀÌÀü ID¿Í °°À¸¸é ±×³É ´ë»ç¸¸ Ãâ·Â½ÃÅ´.
+        if (checkCSVDialogueID()) //ë‹¤ìŒ ëŒ€ì‚¬ì˜ IDê°€ ì´ì „ IDì™€ ê°™ìœ¼ë©´ ê·¸ëƒ¥ ëŒ€ì‚¬ë§Œ ì¶œë ¥ì‹œí‚´.
         {
             return;
         }
@@ -47,83 +47,83 @@ public class Stage7_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         {
             case 1: //  50 ~ 58
                 Debug.Log(scenarioFlowCount);
-                //  (¿À¸¥ÂÊÀ¸·Î Á¶½É½º·´°Ô ÀÌµ¿ÇÑ´Ù.)
+                //  (ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì¡°ì‹¬ìŠ¤ëŸ½ê²Œ ì´ë™í•œë‹¤.)
                 offDialgueBox();
                 playerMove.CharacterMove(700f, 400f);
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
-                //  *¼Ò±Ù¼Ò±Ù* µå·¡°ïÀÌ ÀÌ ÀÚ½ÄÀÎ°¡º»µ¥.
+                //  *ì†Œê·¼ì†Œê·¼* ë“œë˜ê³¤ì´ ì´ ìì‹ì¸ê°€ë³¸ë°.
                 onDialgueBox();
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
-                //  ´©±º°¡, ³» ÀáÀ» ±ú¿î ÀÚ´Â.
+                //  ëˆ„êµ°ê°€, ë‚´ ì ì„ ê¹¨ìš´ ìëŠ”.
                 break;
             case 4:
                 Debug.Log(scenarioFlowCount);
-                /*  ¾î, ¾È³ç.
-                 *  ³­ ±×³É ³Ê¶û ¾ê±âÇÏ·¯ ¿Â °Çµ¥.
+                /*  ì–´, ì•ˆë…•.
+                 *  ë‚œ ê·¸ëƒ¥ ë„ˆë‘ ì–˜ê¸°í•˜ëŸ¬ ì˜¨ ê±´ë°.
                  */
                 break;
             case 5:
                 Debug.Log(scenarioFlowCount);
-                /*  ³­ ÀÎ°£ µûÀ§¶û ¾ê±âÇÏÁö ¾Ê´Â´Ù.
-                 *  ³Í º¸³ª¸¶³ª ³ª¿Í ½Î¿ì±â À§ÇØ ¿©±â±îÁö ¿Â °ÍÀÌ°ÚÁö.
+                /*  ë‚œ ì¸ê°„ ë”°ìœ„ë‘ ì–˜ê¸°í•˜ì§€ ì•ŠëŠ”ë‹¤.
+                 *  ë„Œ ë³´ë‚˜ë§ˆë‚˜ ë‚˜ì™€ ì‹¸ìš°ê¸° ìœ„í•´ ì—¬ê¸°ê¹Œì§€ ì˜¨ ê²ƒì´ê² ì§€.
                  */
                 break;
             case 6:
                 Debug.Log(scenarioFlowCount);
-                /*  ¸Â±ä ÇÑµ¥, ³­ ÁÁ°ÔÁÁ°Ô ÇØ°áÇÏ°í ½Í°Åµç. ³ªµµ ¿©±â¼­ Á×°í ½ÍÀº »ı°¢Àº ´õ´õ¿í ¾ø°í.
-                 *  ³Î Á×ÀÏ »ı°¢Àº ¾ø¾î.
-                 *  ±×³É ½ÉÀåÀÇ º¸¼® ÇÏ³ª¸é µÅ. ¾îÂ÷ÇÇ ³Í ±×°Å ÇÏ³ª ¾ø´Ù°í Á×Áö ¾ÊÀİ¾Æ.
+                /*  ë§ê¸´ í•œë°, ë‚œ ì¢‹ê²Œì¢‹ê²Œ í•´ê²°í•˜ê³  ì‹¶ê±°ë“ . ë‚˜ë„ ì—¬ê¸°ì„œ ì£½ê³  ì‹¶ì€ ìƒê°ì€ ë”ë”ìš± ì—†ê³ .
+                 *  ë„ ì£½ì¼ ìƒê°ì€ ì—†ì–´.
+                 *  ê·¸ëƒ¥ ì‹¬ì¥ì˜ ë³´ì„ í•˜ë‚˜ë©´ ë¼. ì–´ì°¨í”¼ ë„Œ ê·¸ê±° í•˜ë‚˜ ì—†ë‹¤ê³  ì£½ì§€ ì•Šì–ì•„.
                  */ 
                 break;
             case 7:
                 Debug.Log(scenarioFlowCount);
-                /*  ÇÏ, ³» ½ÉÀåÀ» ´Ş¶ó°í?
-                 *  ±×·² ¼ø ¾øÁö.
-                 *  ¾ø¾îµµ Á×Áø ¾ÊÁö¸¸, ±×·¸´Ù°í ³Ê¸¦ ÀÌ·¸°Ô ¼ø¼øÈ÷ º¸³»ÁÙ ¼ö´Â ¾ø´Ù.
-                 *  ÀÚ, ¾î¼­ ´ıº­¶ó!
+                /*  í•˜, ë‚´ ì‹¬ì¥ì„ ë‹¬ë¼ê³ ?
+                 *  ê·¸ëŸ´ ìˆœ ì—†ì§€.
+                 *  ì—†ì–´ë„ ì£½ì§„ ì•Šì§€ë§Œ, ê·¸ë ‡ë‹¤ê³  ë„ˆë¥¼ ì´ë ‡ê²Œ ìˆœìˆœíˆ ë³´ë‚´ì¤„ ìˆ˜ëŠ” ì—†ë‹¤.
+                 *  ì, ì–´ì„œ ë¤ë²¼ë¼!
                  */
                 break;
             case 8:
                 Debug.Log(scenarioFlowCount);
-                /*  (ÀÌ°Å ¾ß´Ü³µ³×.)
-                 *  ½±°Ô ÇØ°áÇÒ ¼ö ÀÖ¾ú´Âµ¥, ³×°¡ ÀÚÃÊÇÑ °Å¾ß. ³­ ¸ğ¸¥´Ù?
+                /*  (ì´ê±° ì•¼ë‹¨ë‚¬ë„¤.)
+                 *  ì‰½ê²Œ í•´ê²°í•  ìˆ˜ ìˆì—ˆëŠ”ë°, ë„¤ê°€ ìì´ˆí•œ ê±°ì•¼. ë‚œ ëª¨ë¥¸ë‹¤?
                  */
                 break;
             case 9:
                 Debug.Log(scenarioFlowCount);
-                /*  ¾îµğ¼­ ÇÏÂúÀº ¹Ì¹° µûÀ§°¡ Àß³­ µíÀÌ Áö²¬ÀÌÁö?
-                 *  ³Ê¾ß¸»·Î ¿À´Ã ¿©±â¼­ Á×À» ÁØºñÇØ¶ó!
+                /*  ì–´ë””ì„œ í•˜ì°®ì€ ë¯¸ë¬¼ ë”°ìœ„ê°€ ì˜ë‚œ ë“¯ì´ ì§€ê»„ì´ì§€?
+                 *  ë„ˆì•¼ë§ë¡œ ì˜¤ëŠ˜ ì—¬ê¸°ì„œ ì£½ì„ ì¤€ë¹„í•´ë¼!
                  */
                 break;
         }
     }
 
-    // ´ë»ç ID¸¦ ºñ±³ÇÏ´Â ¸Ş¼Òµå
+    // ëŒ€ì‚¬ IDë¥¼ ë¹„êµí•˜ëŠ” ë©”ì†Œë“œ
     private bool checkCSVDialogueID()
     {
-        // InteractionController¿¡¼­ ÇöÀç ´ë»ç CSV ID °¡Á®¿À±â
+        // InteractionControllerì—ì„œ í˜„ì¬ ëŒ€ì‚¬ CSV ID ê°€ì ¸ì˜¤ê¸°
         int currentDialogueIndex = interactionController.getCurrentDialogueIndex();
 
-        // ÇöÀç ´ë»çÀÇ ID°¡ ÀÌÀü ´ë»çÀÇ ID¿Í °°À¸¸é ´ë»ç¸¸ ÁøÇàÇÏ°í Á¾·á
+        // í˜„ì¬ ëŒ€ì‚¬ì˜ IDê°€ ì´ì „ ëŒ€ì‚¬ì˜ IDì™€ ê°™ìœ¼ë©´ ëŒ€ì‚¬ë§Œ ì§„í–‰í•˜ê³  ì¢…ë£Œ
         if (currentDialogueIndex == isSameDialgueIndex)
         {
             //interactionController.ShowNextLine();
             return true;
         }
-        // ´ë»çÀÇ ID°¡ º¯°æµÈ °æ¿ì¸¸ ÀÌµ¿ Ã³¸®
-        isSameDialgueIndex = currentDialogueIndex; // ÀÌÀü ´ë»ç ID ¾÷µ¥ÀÌÆ®
-        // ½ºÀ§Ä¡¹® ½ÇÇà Àü scenarioFlow Áõ°¡
+        // ëŒ€ì‚¬ì˜ IDê°€ ë³€ê²½ëœ ê²½ìš°ë§Œ ì´ë™ ì²˜ë¦¬
+        isSameDialgueIndex = currentDialogueIndex; // ì´ì „ ëŒ€ì‚¬ ID ì—…ë°ì´íŠ¸
+        // ìŠ¤ìœ„ì¹˜ë¬¸ ì‹¤í–‰ ì „ scenarioFlow ì¦ê°€
         nextScenarioFlow();
 
         return false;
     }
     private void nextScenarioFlow()
     {
-        scenarioFlowCount++; //´ÙÀ½ ´ë»ç ¹× ½Ã³ª¸®¿À ÁøÇàÀ» À§ÇØ °ª ¿Ã¸®±â
+        scenarioFlowCount++; //ë‹¤ìŒ ëŒ€ì‚¬ ë° ì‹œë‚˜ë¦¬ì˜¤ ì§„í–‰ì„ ìœ„í•´ ê°’ ì˜¬ë¦¬ê¸°
     }
     private void onDialgueBox()
     {
@@ -135,7 +135,7 @@ public class Stage7_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         dialogueBox.SetActive(false);
     }
     public void OnClickDialogue()
-    {   //ÇÃ·¹ÀÌ¾î°¡ ¿òÁ÷ÀÌÁö ¾Ê´Â »óÈ²ÀÏ¶§¸¸ Å¬¸¯ Çã¿ë
+    {   //í”Œë ˆì´ì–´ê°€ ì›€ì§ì´ì§€ ì•ŠëŠ” ìƒí™©ì¼ë•Œë§Œ í´ë¦­ í—ˆìš©
         if (!playerMove.getIsMoving())
         {
             interactionController.ShowNextLine();

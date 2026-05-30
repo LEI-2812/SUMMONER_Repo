@@ -8,39 +8,39 @@ using UnityEngine.UI;
 
 public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandler
 {
-    [Header("Ç¥ÇöÇÒ ¿ÀºêÁ§Æ®µé")]
+    [Header("í‘œí˜„í•  ì˜¤ë¸Œì íŠ¸ë“¤")]
     public GameObject bangImage;
     public GameObject dialogueBox;
 
-    private int scenarioFlowCount = 0; //´ë»ç Ä«¿îÆ®
+    private int scenarioFlowCount = 0; //ëŒ€ì‚¬ ì¹´ìš´íŠ¸
 
-    //ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌ¼Ç
+    //í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´ì…˜
     [SerializeField] private Animator playerAni;
 
-    [Header("ÄÁÆ®·Ñ·¯")]
+    [Header("ì»¨íŠ¸ë¡¤ëŸ¬")]
     [SerializeField] private InteractionController interactionController;
     [SerializeField] private PlayerMove playerMove;
     [SerializeField] private EnemyMove enemyMove;
 
-    [Header("»ç¿îµå")]
+    [Header("ì‚¬ìš´ë“œ")]
     [SerializeField] private AudioClip bangSound;
     [SerializeField] private AudioSource audioSource;
 
     private int isSameDialgueIndex = -1;
 
-    void Awake() //¿©±â¿¡¼­ ¿ÀºêÁ§Æ®µéÀÇ ÃÊ±â ¼³Á¤À» ÇØÁØ´Ù.
+    void Awake() //ì—¬ê¸°ì—ì„œ ì˜¤ë¸Œì íŠ¸ë“¤ì˜ ì´ˆê¸° ì„¤ì •ì„ í•´ì¤€ë‹¤.
     {
         bangImage.SetActive(false);
     }
 
-    void Start() //Start¿¡¼­ Ã³À½ ½ÇÇàÇÒ ¸Ş¼Òµå³ª ¿ÀºêÁ§Æ®¸¦ ÁöÁ¤ÇØÁÖµµ·Ï ÇÑ´Ù.
+    void Start() //Startì—ì„œ ì²˜ìŒ ì‹¤í–‰í•  ë©”ì†Œë“œë‚˜ ì˜¤ë¸Œì íŠ¸ë¥¼ ì§€ì •í•´ì£¼ë„ë¡ í•œë‹¤.
     {
         scenarioFlow();
     }
 
     void Update()
     {
-        // À¯ÀúÀÇ ÀÔ·ÂÀ¸·Î ´ë»ç ³Ñ±â±â (¿¹: ½ºÆäÀÌ½º¹Ù)
+        // ìœ ì €ì˜ ì…ë ¥ìœ¼ë¡œ ëŒ€ì‚¬ ë„˜ê¸°ê¸° (ì˜ˆ: ìŠ¤í˜ì´ìŠ¤ë°”)
         if (Input.GetKeyDown(KeyCode.Space))
         {
             OnClickDialogue();
@@ -49,7 +49,7 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     public void scenarioFlow()
     {
-        if (checkCSVDialogueID()) //´ÙÀ½ ´ë»çÀÇ ID°¡ ÀÌÀü ID¿Í °°À¸¸é ±×³É ´ë»ç¸¸ Ãâ·Â½ÃÅ´.
+        if (checkCSVDialogueID()) //ë‹¤ìŒ ëŒ€ì‚¬ì˜ IDê°€ ì´ì „ IDì™€ ê°™ìœ¼ë©´ ê·¸ëƒ¥ ëŒ€ì‚¬ë§Œ ì¶œë ¥ì‹œí‚´.
         {
             return;
         }
@@ -58,25 +58,25 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         {
             case 1: // 42 ~ 49
                 Debug.Log(scenarioFlowCount);
-                //  (¿À¸¥ÂÊÀ¸·Î °É¾î°£´Ù.)
+                //  (ì˜¤ë¥¸ìª½ìœ¼ë¡œ ê±¸ì–´ê°„ë‹¤.)
                 offDialgueBox();
                 playerMove.CharacterMove(700f, 400f);
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
-                //  ½½½½ ±æÀÌ ÇèÇØÁö³×. ÀÌÂëÀÌ Áß°£°è ½ÃÀÛÁöÁ¡ÀÌ¶ó°í ÇÏ´øµ¥.
+                //  ìŠ¬ìŠ¬ ê¸¸ì´ í—˜í•´ì§€ë„¤. ì´ì¯¤ì´ ì¤‘ê°„ê³„ ì‹œì‘ì§€ì ì´ë¼ê³  í•˜ë˜ë°.
                 onDialgueBox();
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
-                //  (¹«¾ğ°¡ ¶³¾îÁö´Â ¼Ò¸®°¡ ³­´Ù.)
+                //  (ë¬´ì–¸ê°€ ë–¨ì–´ì§€ëŠ” ì†Œë¦¬ê°€ ë‚œë‹¤.)
                 playBangSound();
                 showBangEffect();
                 offDialgueBox();
                 break;
             case 4:
                 Debug.Log(scenarioFlowCount);
-                //  ¹¹¾ß, ´©±¸¾ß!
+                //  ë­ì•¼, ëˆ„êµ¬ì•¼!
                 onDialgueBox();               
                 break;
             case 5:
@@ -85,67 +85,67 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
                 break;
             case 6:
                 Debug.Log(scenarioFlowCount);
-                //  ¾Æ¹«µµ ¾ø´Â °Ç°¡..?
+                //  ì•„ë¬´ë„ ì—†ëŠ” ê±´ê°€..?
                 break;
             case 7:
                 Debug.Log(scenarioFlowCount);
-                //  (¿À¸¥ÂÊ¿¡¼­ °©ÀÚ±â Àû ÇÑ ¸íÀÌ Æ¢¾î³ª¿Â´Ù.)
+                //  (ì˜¤ë¥¸ìª½ì—ì„œ ê°‘ìê¸° ì  í•œ ëª…ì´ íŠ€ì–´ë‚˜ì˜¨ë‹¤.)
                 enemyMove.CharacterMove(-600f, 550f);
                 offDialgueBox();
                 break;
             case 8:
                 Debug.Log(scenarioFlowCount);
-                //  ¿ì¿Ó! ÇÏ±Ş ¾Ç¸¶ÀÎ°¡? ¸¸¸¸Ä¡ ¾Ê°Ú´Âµ¥..
+                //  ìš°ì™“! í•˜ê¸‰ ì•…ë§ˆì¸ê°€? ë§Œë§Œì¹˜ ì•Šê² ëŠ”ë°..
                 onDialgueBox();
                 break;
         }
     }
 
 
-    // ´ë»ç ID¸¦ ºñ±³ÇÏ´Â ¸Ş¼Òµå
+    // ëŒ€ì‚¬ IDë¥¼ ë¹„êµí•˜ëŠ” ë©”ì†Œë“œ
     private bool checkCSVDialogueID()
     {
-        // InteractionController¿¡¼­ ÇöÀç ´ë»ç CSV ID °¡Á®¿À±â
+        // InteractionControllerì—ì„œ í˜„ì¬ ëŒ€ì‚¬ CSV ID ê°€ì ¸ì˜¤ê¸°
         int currentDialogueIndex = interactionController.getCurrentDialogueIndex();
 
-        // ÇöÀç ´ë»çÀÇ ID°¡ ÀÌÀü ´ë»çÀÇ ID¿Í °°À¸¸é ´ë»ç¸¸ ÁøÇàÇÏ°í Á¾·á
+        // í˜„ì¬ ëŒ€ì‚¬ì˜ IDê°€ ì´ì „ ëŒ€ì‚¬ì˜ IDì™€ ê°™ìœ¼ë©´ ëŒ€ì‚¬ë§Œ ì§„í–‰í•˜ê³  ì¢…ë£Œ
         if (currentDialogueIndex == isSameDialgueIndex)
         {
             //interactionController.ShowNextLine();
             return true;
         }
-        // ´ë»çÀÇ ID°¡ º¯°æµÈ °æ¿ì¸¸ ÀÌµ¿ Ã³¸®
-        isSameDialgueIndex = currentDialogueIndex; // ÀÌÀü ´ë»ç ID ¾÷µ¥ÀÌÆ®
-        // ½ºÀ§Ä¡¹® ½ÇÇà Àü scenarioFlow Áõ°¡
+        // ëŒ€ì‚¬ì˜ IDê°€ ë³€ê²½ëœ ê²½ìš°ë§Œ ì´ë™ ì²˜ë¦¬
+        isSameDialgueIndex = currentDialogueIndex; // ì´ì „ ëŒ€ì‚¬ ID ì—…ë°ì´íŠ¸
+        // ìŠ¤ìœ„ì¹˜ë¬¸ ì‹¤í–‰ ì „ scenarioFlow ì¦ê°€
         nextScenarioFlow();
 
         return false;
     }
-    public void showBangEffect() //ConfuseÈ¿°ú
+    public void showBangEffect() //Confuseíš¨ê³¼
     {
-        // È¥¶õ ÀÌ¹ÌÁö È°¼ºÈ­ ¹× ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // í˜¼ë€ ì´ë¯¸ì§€ í™œì„±í™” ë° ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         bangImage.SetActive(true);
-        interactionController.stopNextDialogue(); //¿©±â¼­ ¾Ë¾Æ¼­ ´ë»ç¸¦ ¸ØÃß°ÔÇÔ
+        interactionController.stopNextDialogue(); //ì—¬ê¸°ì„œ ì•Œì•„ì„œ ëŒ€ì‚¬ë¥¼ ë©ˆì¶”ê²Œí•¨
 
         Invoke("endBangEffect", 1f);
     }
     private void endBangEffect()
     {
-        // È¥¶õ ÀÌ¹ÌÁö ºñÈ°¼ºÈ­ ¹× Ä³¸¯ÅÍ »óÅÂ ÃÊ±âÈ­
+        // í˜¼ë€ ì´ë¯¸ì§€ ë¹„í™œì„±í™” ë° ìºë¦­í„° ìƒíƒœ ì´ˆê¸°í™”
         bangImage.SetActive(false);
-        interactionController.startNextDialogue(); //Idle·Î µ¹¾Æ¿À°í ´ÙÀ½ ´ë»ç¸¦ ÀÌ¾î°¥ ¼ö ÀÖ°Ô ¼³Á¤
+        interactionController.startNextDialogue(); //Idleë¡œ ëŒì•„ì˜¤ê³  ë‹¤ìŒ ëŒ€ì‚¬ë¥¼ ì´ì–´ê°ˆ ìˆ˜ ìˆê²Œ ì„¤ì •
     }
     private void playBangSound()
     {
         if (audioSource != null && bangSound != null)
         {
-            audioSource.PlayOneShot(bangSound); // È¿°úÀ½À» ÇÑ ¹ø Àç»ı
+            audioSource.PlayOneShot(bangSound); // íš¨ê³¼ìŒì„ í•œ ë²ˆ ì¬ìƒ
         }
     }
 
     private void nextScenarioFlow()
     {
-        scenarioFlowCount++; //´ÙÀ½ ´ë»ç ¹× ½Ã³ª¸®¿À ÁøÇàÀ» À§ÇØ °ª ¿Ã¸®±â
+        scenarioFlowCount++; //ë‹¤ìŒ ëŒ€ì‚¬ ë° ì‹œë‚˜ë¦¬ì˜¤ ì§„í–‰ì„ ìœ„í•´ ê°’ ì˜¬ë¦¬ê¸°
     }
     private void onDialgueBox()
     {
@@ -157,7 +157,7 @@ public class Stage5_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         dialogueBox.SetActive(false);
     }
     public void OnClickDialogue()
-    {   //ÇÃ·¹ÀÌ¾î°¡ ¿òÁ÷ÀÌÁö ¾Ê´Â »óÈ²ÀÏ¶§¸¸ Å¬¸¯ Çã¿ë
+    {   //í”Œë ˆì´ì–´ê°€ ì›€ì§ì´ì§€ ì•ŠëŠ” ìƒí™©ì¼ë•Œë§Œ í´ë¦­ í—ˆìš©
         if (!playerMove.getIsMoving())
         {
             interactionController.ShowNextLine();

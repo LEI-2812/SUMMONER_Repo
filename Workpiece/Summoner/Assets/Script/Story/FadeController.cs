@@ -1,78 +1,78 @@
 using System;
 using System.Collections;
 using UnityEngine;
-public class FadeController : MonoBehaviour // Panel ºÒÅõ¸íµµ Á¶ÀıÇØ ÆäÀÌµåÀÎ or ÆäÀÌµå¾Æ¿ô
+public class FadeController : MonoBehaviour // Panel ë¶ˆíˆ¬ëª…ë„ ì¡°ì ˆí•´ í˜ì´ë“œì¸ or í˜ì´ë“œì•„ì›ƒ
 {
     public bool isFadeIn; // true=FadeIn, false=FadeOut
-    public GameObject panel; // ºÒÅõ¸íµµ¸¦ Á¶ÀıÇÒ Panel ¿ÀºêÁ§Æ®
-    private Action onCompleteCallback; // FadeIn ¶Ç´Â FadeOut ´ÙÀ½¿¡ ÁøÇàÇÒ ÇÔ¼ö
+    public GameObject panel; // ë¶ˆíˆ¬ëª…ë„ë¥¼ ì¡°ì ˆí•  Panel ì˜¤ë¸Œì íŠ¸
+    private Action onCompleteCallback; // FadeIn ë˜ëŠ” FadeOut ë‹¤ìŒì— ì§„í–‰í•  í•¨ìˆ˜
 
     void Start()
     {
         if (!panel)
         {
-            Debug.LogError("Panel ¿ÀºêÁ§Æ®¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError("Panel ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
             throw new MissingComponentException();
         }
 
-        if (isFadeIn) // Fade In Mode -> ¹Ù·Î ÄÚ·çÆ¾ ½ÃÀÛ
+        if (isFadeIn) // Fade In Mode -> ë°”ë¡œ ì½”ë£¨í‹´ ì‹œì‘
         {
-            panel.SetActive(true); // Panel È°¼ºÈ­
+            panel.SetActive(true); // Panel í™œì„±í™”
             StartCoroutine(CoFadeIn());
         }
         else
         {
-            panel.SetActive(false); // Panel ºñÈ°¼ºÈ­
+            panel.SetActive(false); // Panel ë¹„í™œì„±í™”
         }
     }
 
     public void FadeOut()
     {
-        panel.SetActive(true); // Panel È°¼ºÈ­
-        Debug.Log("FadeCanvasController_ Fade Out ½ÃÀÛ");
+        panel.SetActive(true); // Panel í™œì„±í™”
+        Debug.Log("FadeCanvasController_ Fade Out ì‹œì‘");
         StartCoroutine(CoFadeOut());
-        Debug.Log("FadeCanvasController_ Fade Out ³¡");
+        Debug.Log("FadeCanvasController_ Fade Out ë");
     }
 
     IEnumerator CoFadeIn()
     {
-        float elapsedTime = 0f; // ´©Àû °æ°ú ½Ã°£
-        float fadedTime = 0.5f; // ÃÑ ¼Ò¿ä ½Ã°£
+        float elapsedTime = 0f; // ëˆ„ì  ê²½ê³¼ ì‹œê°„
+        float fadedTime = 0.5f; // ì´ ì†Œìš” ì‹œê°„
 
         while (elapsedTime <= fadedTime)
         {
             panel.GetComponent<CanvasRenderer>().SetAlpha(Mathf.Lerp(1f, 0f, elapsedTime / fadedTime));
 
             elapsedTime += Time.deltaTime;
-            Debug.Log("Fade In Áß...");
+            Debug.Log("Fade In ì¤‘...");
             yield return null;
         }
-        Debug.Log("Fade In ³¡");
-        panel.SetActive(false); // PanelÀ» ºñÈ°¼ºÈ­
-        onCompleteCallback?.Invoke(); // ÀÌÈÄ¿¡ ÇØ¾ß ÇÏ´Â ´Ù¸¥ ¾×¼ÇÀÌ ÀÖ´Â °æ¿ì(nullÀÌ ¾Æ´Ô) ÁøÇàÇÑ´Ù
+        Debug.Log("Fade In ë");
+        panel.SetActive(false); // Panelì„ ë¹„í™œì„±í™”
+        onCompleteCallback?.Invoke(); // ì´í›„ì— í•´ì•¼ í•˜ëŠ” ë‹¤ë¥¸ ì•¡ì…˜ì´ ìˆëŠ” ê²½ìš°(nullì´ ì•„ë‹˜) ì§„í–‰í•œë‹¤
         yield break;
     }
 
     IEnumerator CoFadeOut()
     {
-        float elapsedTime = 0f; // ´©Àû °æ°ú ½Ã°£
-        float fadedTime = 0.5f; // ÃÑ ¼Ò¿ä ½Ã°£
+        float elapsedTime = 0f; // ëˆ„ì  ê²½ê³¼ ì‹œê°„
+        float fadedTime = 0.5f; // ì´ ì†Œìš” ì‹œê°„
 
         while (elapsedTime <= fadedTime)
         {
             panel.GetComponent<CanvasRenderer>().SetAlpha(Mathf.Lerp(0f, 1f, elapsedTime / fadedTime));
 
             elapsedTime += Time.deltaTime;
-            Debug.Log("Fade Out Áß...");
+            Debug.Log("Fade Out ì¤‘...");
             yield return null;
         }
 
-        Debug.Log("Fade Out ³¡");
-        onCompleteCallback?.Invoke(); // ÀÌÈÄ¿¡ ÇØ¾ß ÇÏ´Â ´Ù¸¥ ¾×¼ÇÀÌ ÀÖ´Â °æ¿ì(nullÀÌ ¾Æ´Ô) ÁøÇàÇÑ´Ù
+        Debug.Log("Fade Out ë");
+        onCompleteCallback?.Invoke(); // ì´í›„ì— í•´ì•¼ í•˜ëŠ” ë‹¤ë¥¸ ì•¡ì…˜ì´ ìˆëŠ” ê²½ìš°(nullì´ ì•„ë‹˜) ì§„í–‰í•œë‹¤
         yield break;
     }
 
-    public void RegisterCallback(Action callback) // ´Ù¸¥ ½ºÅ©¸³Æ®¿¡¼­ Äİ¹é ¾×¼Ç µî·ÏÇÏ±â À§ÇØ »ç¿ë
+    public void RegisterCallback(Action callback) // ë‹¤ë¥¸ ìŠ¤í¬ë¦½íŠ¸ì—ì„œ ì½œë°± ì•¡ì…˜ ë“±ë¡í•˜ê¸° ìœ„í•´ ì‚¬ìš©
     {
         onCompleteCallback = callback;
     }

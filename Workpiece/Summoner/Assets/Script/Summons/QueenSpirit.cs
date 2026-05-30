@@ -7,19 +7,19 @@ public class QueenSpirit : Summon
 
     private void Awake()
     {
-        summonName = "QueenSpirit"; //ÀÌ¸§ Á¤·É¿©¿Õ
-        maxHP = 400; //ÃÖ´ëÃ¼·Â 400
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 100; //ÀÏ¹İ°ø°İ
+        summonName = "QueenSpirit"; //ì´ë¦„ ì •ë ¹ì—¬ì™•
+        maxHP = 400; //ìµœëŒ€ì²´ë ¥ 400
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 100; //ì¼ë°˜ê³µê²©
         heavyAttakPower = 140;
-        summonRank = SummonRank.Special; // Æ¯±Ş ¼ÒÈ¯¼ö
+        summonRank = SummonRank.Special; // íŠ¹ê¸‰ ì†Œí™˜ìˆ˜
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
         specialAttackStrategies = new IAttackStrategy[] {
-            new AttackAllEnemiesStrategy(StatusType.None, 70, 0), //ÀüÃ¼°ø°İ µ¥¹ÌÁö 70
-            new AttackAllEnemiesStrategy(StatusType.Heal, 0.2, 3), //¾Æ±º ÀüÃ¼ 20% È¸º¹ ÄğÅ¸ÀÓ 3ÅÏ
-            new TargetedAttackStrategy(StatusType.Stun,0,3,1) //´ë»ó¿¡°Ô È¥¶õ, ÄğÅ¸ÀÓ 3ÅÏ, Áö¼Ó½Ã°£ 1ÅÏ
+            new AttackAllEnemiesStrategy(StatusType.None, 70, 0), //ì „ì²´ê³µê²© ë°ë¯¸ì§€ 70
+            new AttackAllEnemiesStrategy(StatusType.Heal, 0.2, 3), //ì•„êµ° ì „ì²´ 20% íšŒë³µ ì¿¨íƒ€ì„ 3í„´
+            new TargetedAttackStrategy(StatusType.Stun,0,3,1) //ëŒ€ìƒì—ê²Œ í˜¼ë€, ì¿¨íƒ€ì„ 3í„´, ì§€ì†ì‹œê°„ 1í„´
         };
     }
 

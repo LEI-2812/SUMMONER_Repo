@@ -11,17 +11,17 @@ public class Cat : Summon
         summonName = "Cat";
         maxHP = 250;
         nowHP = maxHP;
-        attackPower = 30; //ÀÏ¹İ°ø°İ
-        summonRank = SummonRank.Low; // ÇÏ±Ş ¼ÒÈ¯¼ö
+        attackPower = 30; //ì¼ë°˜ê³µê²©
+        summonRank = SummonRank.Low; // í•˜ê¸‰ ì†Œí™˜ìˆ˜
         summonType = SummonType.Cat;
         heavyAttakPower = 40;
 
         ApplayMultiple(multiple);
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower ,1);
-        // Æ¯¼ö °ø°İ: ÀüÃ¼ Àû °ø°İ
-        specialAttackStrategies = new IAttackStrategy[] { new ClosestEnemyAttackStrategy(StatusType.None, heavyAttakPower, 1) }; //±ÙÁ¢°ø°İ, 20µ¥¹ÌÁö, ÄğÅ¸ÀÓ1ÅÏ
+        // íŠ¹ìˆ˜ ê³µê²©: ì „ì²´ ì  ê³µê²©
+        specialAttackStrategies = new IAttackStrategy[] { new ClosestEnemyAttackStrategy(StatusType.None, heavyAttakPower, 1) }; //ê·¼ì ‘ê³µê²©, 20ë°ë¯¸ì§€, ì¿¨íƒ€ì„1í„´
 
     }
 
@@ -29,7 +29,7 @@ public class Cat : Summon
     {
         if (SpecialAttackArrayIndex < 0 || SpecialAttackArrayIndex >= specialAttackStrategies.Length)
         {
-            Debug.Log("À¯È¿ÇÏÁö ¾ÊÀº Æ¯¼ö °ø°İ ÀÎµ¦½ºÀÔ´Ï´Ù.");
+            Debug.Log("ìœ íš¨í•˜ì§€ ì•Šì€ íŠ¹ìˆ˜ ê³µê²© ì¸ë±ìŠ¤ì…ë‹ˆë‹¤.");
             return;
         }
 
@@ -37,7 +37,7 @@ public class Cat : Summon
 
         if (specialAttack == null || specialAttack.getCurrentCooldown() > 0)
         {
-            Debug.Log("Æ¯¼ö ½ºÅ³ÀÌ ÄğÅ¸ÀÓ ÁßÀÔ´Ï´Ù.");
+            Debug.Log("íŠ¹ìˆ˜ ìŠ¤í‚¬ì´ ì¿¨íƒ€ì„ ì¤‘ì…ë‹ˆë‹¤.");
             return;
         }
 
@@ -47,7 +47,7 @@ public class Cat : Summon
 
         specialAttack.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
         animator.SetTrigger("attack");
-        StartCoroutine(ColorChange(1)); // °ËÁ¤»ö
+        StartCoroutine(ColorChange(1)); // ê²€ì •ìƒ‰
         specialAttack.ApplyCooldown();
         attackPower = originAttackPower;
         isAttack = false;
@@ -57,7 +57,7 @@ public class Cat : Summon
     {
         maxHP = (int)(maxHP * multiple);
         nowHP = maxHP;
-        attackPower = (int)(attackPower * multiple); //ÀÏ¹İ°ø°İ
+        attackPower = (int)(attackPower * multiple); //ì¼ë°˜ê³µê²©
         heavyAttakPower = (int)(heavyAttakPower * multiple);
     }
 

@@ -8,29 +8,29 @@ using UnityEngine.SceneManagement;
 
 public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandler
 {
-    [Header("Ç¥ÇöÇÒ ¿ÀºêÁ§Æ®µé")]
+    [Header("í‘œí˜„í•  ì˜¤ë¸Œì íŠ¸ë“¤")]
     public GameObject bangImage;
     public GameObject confusebubbleImage;
     public GameObject dialogueBox;
 
-    private int scenarioFlowCount = 0; //´ë»ç Ä«¿îÆ®
+    private int scenarioFlowCount = 0; //ëŒ€ì‚¬ ì¹´ìš´íŠ¸
 
-    //ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌ¼Ç
+    //í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´ì…˜
     [SerializeField] private Animator playerAni;
 
-    [Header("ÄÁÆ®·Ñ·¯")]
+    [Header("ì»¨íŠ¸ë¡¤ëŸ¬")]
     [SerializeField] private InteractionController interactionController;
     [SerializeField] private PlayerMove playerMove;
 
     private int isSameDialgueIndex = -1;
-    void Awake() //¿©±â¿¡¼­ ¿ÀºêÁ§Æ®µéÀÇ ÃÊ±â ¼³Á¤À» ÇØÁØ´Ù.
+    void Awake() //ì—¬ê¸°ì—ì„œ ì˜¤ë¸Œì íŠ¸ë“¤ì˜ ì´ˆê¸° ì„¤ì •ì„ í•´ì¤€ë‹¤.
     {
-        // ´À³¦Ç¥ µé¾î°¥ °÷, ¹Ì¸® ºñÈ°¼ºÈ­
+        // ëŠë‚Œí‘œ ë“¤ì–´ê°ˆ ê³³, ë¯¸ë¦¬ ë¹„í™œì„±í™”
         bangImage.SetActive(false);
         confusebubbleImage.SetActive(false);
     }
 
-    void Start() //Start¿¡¼­ Ã³À½ ½ÇÇàÇÒ ¸Ş¼Òµå³ª ¿ÀºêÁ§Æ®¸¦ ÁöÁ¤ÇØÁÖµµ·Ï ÇÑ´Ù.
+    void Start() //Startì—ì„œ ì²˜ìŒ ì‹¤í–‰í•  ë©”ì†Œë“œë‚˜ ì˜¤ë¸Œì íŠ¸ë¥¼ ì§€ì •í•´ì£¼ë„ë¡ í•œë‹¤.
     {
         scenarioFlow();
     }
@@ -45,7 +45,7 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     public void scenarioFlow()
     {
-        if (checkCSVDialogueID()) //´ÙÀ½ ´ë»çÀÇ ID°¡ ÀÌÀü ID¿Í °°À¸¸é ±×³É ´ë»ç¸¸ Ãâ·Â½ÃÅ´.
+        if (checkCSVDialogueID()) //ë‹¤ìŒ ëŒ€ì‚¬ì˜ IDê°€ ì´ì „ IDì™€ ê°™ìœ¼ë©´ ê·¸ëƒ¥ ëŒ€ì‚¬ë§Œ ì¶œë ¥ì‹œí‚´.
         {
             return;
         }
@@ -54,92 +54,92 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         {
             case 1: // 28 ~ 33
                 Debug.Log(scenarioFlowCount);
-                /*  (¿ÊÀ» ÅöÅö ÅĞ¸ç)
-                 *  »ı°¢º¸´Ù ¼ÒÈ¯¼ö°¡ ¾àÇÏÀİ¾Æ?
+                /*  (ì˜·ì„ íˆ­íˆ­ í„¸ë©°)
+                 *  ìƒê°ë³´ë‹¤ ì†Œí™˜ìˆ˜ê°€ ì•½í•˜ì–ì•„?
                  */
                 showConfuseEffect();
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
-                //  ÀÌ·¸°Ô ÈûÀ» ¸ø Ãß´Âµ¥ µå·¡°ïÀ» ¾î¶»°Ô Àâ¾Æ, ¸»µµ ¾È µÇ´Â ¼Ò¸®¸¦ ÇÏ°í ÀÖ¾î!                
+                //  ì´ë ‡ê²Œ í˜ì„ ëª» ì¶”ëŠ”ë° ë“œë˜ê³¤ì„ ì–´ë–»ê²Œ ì¡ì•„, ë§ë„ ì•ˆ ë˜ëŠ” ì†Œë¦¬ë¥¼ í•˜ê³  ìˆì–´!                
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
-                /*  (¹Ù´Ú¿¡ ¶³¾îÁø º¸¼®À» Áİ´Â´Ù.)
-                 *  ÀÌ°Ç Á¤¼ö º¸¼®?
-                 *  ¸ó½ºÅÍµéÀÌ ¸¸µé¾î³½ °Ç°¡?
+                /*  (ë°”ë‹¥ì— ë–¨ì–´ì§„ ë³´ì„ì„ ì¤ëŠ”ë‹¤.)
+                 *  ì´ê±´ ì •ìˆ˜ ë³´ì„?
+                 *  ëª¬ìŠ¤í„°ë“¤ì´ ë§Œë“¤ì–´ë‚¸ ê±´ê°€?
                  */
                 showBangEffect();
                 break;
             case 4:
                 Debug.Log(scenarioFlowCount);
-                //Èì, ÀÌ°É·Î ¸¶·ÂÀ» Á» ´õ °­·ÂÇÏ°Ô ¸¸µé ¼ö ÀÖ°Ú´Âµ¥.
+                //í , ì´ê±¸ë¡œ ë§ˆë ¥ì„ ì¢€ ë” ê°•ë ¥í•˜ê²Œ ë§Œë“¤ ìˆ˜ ìˆê² ëŠ”ë°.
                 break;
             case 5:
                 Debug.Log(scenarioFlowCount);
-                //  ¿©±â¼­ PlayerYellow() ani ÇÑ¹ø¸¸ ½ÇÇàÇÏ°í ´Ù½Ã idle »óÅÂ·Î º¹±Í
+                //  ì—¬ê¸°ì„œ PlayerYellow() ani í•œë²ˆë§Œ ì‹¤í–‰í•˜ê³  ë‹¤ì‹œ idle ìƒíƒœë¡œ ë³µê·€
                 offDialgueBox();
                 showYellowEffect();
                 break;
             case 6:
                 Debug.Log(scenarioFlowCount);
-                /*  ÀÌ Á¤µµ¸é ´ÙÀ½ ÀûÀ» »ó´ëÇÒ ¼ö´Â ÀÖ°Ú¾î.
-                 *  µå·¡°ïÀ» ÀâÀ» Á¤µµ´Â ¾ÈµÇÁö¸¸.
+                /*  ì´ ì •ë„ë©´ ë‹¤ìŒ ì ì„ ìƒëŒ€í•  ìˆ˜ëŠ” ìˆê² ì–´.
+                 *  ë“œë˜ê³¤ì„ ì¡ì„ ì •ë„ëŠ” ì•ˆë˜ì§€ë§Œ.
                  */
                 onDialgueBox();
                 break;
         }
     }
 
-    // ´ë»ç ID¸¦ ºñ±³ÇÏ´Â ¸Ş¼Òµå
+    // ëŒ€ì‚¬ IDë¥¼ ë¹„êµí•˜ëŠ” ë©”ì†Œë“œ
     private bool checkCSVDialogueID()
     {
-        // InteractionController¿¡¼­ ÇöÀç ´ë»ç CSV ID °¡Á®¿À±â
+        // InteractionControllerì—ì„œ í˜„ì¬ ëŒ€ì‚¬ CSV ID ê°€ì ¸ì˜¤ê¸°
         int currentDialogueIndex = interactionController.getCurrentDialogueIndex();
 
-        // ÇöÀç ´ë»çÀÇ ID°¡ ÀÌÀü ´ë»çÀÇ ID¿Í °°À¸¸é ´ë»ç¸¸ ÁøÇàÇÏ°í Á¾·á
+        // í˜„ì¬ ëŒ€ì‚¬ì˜ IDê°€ ì´ì „ ëŒ€ì‚¬ì˜ IDì™€ ê°™ìœ¼ë©´ ëŒ€ì‚¬ë§Œ ì§„í–‰í•˜ê³  ì¢…ë£Œ
         if (currentDialogueIndex == isSameDialgueIndex)
         {
             //interactionController.ShowNextLine();
             return true;
         }
-        // ´ë»çÀÇ ID°¡ º¯°æµÈ °æ¿ì¸¸ ÀÌµ¿ Ã³¸®
-        isSameDialgueIndex = currentDialogueIndex; // ÀÌÀü ´ë»ç ID ¾÷µ¥ÀÌÆ®
-        // ½ºÀ§Ä¡¹® ½ÇÇà Àü scenarioFlow Áõ°¡
+        // ëŒ€ì‚¬ì˜ IDê°€ ë³€ê²½ëœ ê²½ìš°ë§Œ ì´ë™ ì²˜ë¦¬
+        isSameDialgueIndex = currentDialogueIndex; // ì´ì „ ëŒ€ì‚¬ ID ì—…ë°ì´íŠ¸
+        // ìŠ¤ìœ„ì¹˜ë¬¸ ì‹¤í–‰ ì „ scenarioFlow ì¦ê°€
         nextScenarioFlow();
 
         return false;
     }
 
-    public void showConfuseEffect() //ConfuseÈ¿°ú
+    public void showConfuseEffect() //Confuseíš¨ê³¼
     {
-        // È¥¶õ ÀÌ¹ÌÁö È°¼ºÈ­ ¹× ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // í˜¼ë€ ì´ë¯¸ì§€ í™œì„±í™” ë° ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         confusebubbleImage.SetActive(true);
-        interactionController.stopNextDialogue(); //¿©±â¼­ ¾Ë¾Æ¼­ ´ë»ç¸¦ ¸ØÃß°ÔÇÔ
+        interactionController.stopNextDialogue(); //ì—¬ê¸°ì„œ ì•Œì•„ì„œ ëŒ€ì‚¬ë¥¼ ë©ˆì¶”ê²Œí•¨
 
-        // 2ÃÊ ÈÄ¿¡ `endConfuseEffect` ¸Ş¼­µå È£Ãâ
+        // 2ì´ˆ í›„ì— `endConfuseEffect` ë©”ì„œë“œ í˜¸ì¶œ
         Invoke("endConfuseEffect", 1.5f);
     }
     private void endConfuseEffect()
     {
-        // È¥¶õ ÀÌ¹ÌÁö ºñÈ°¼ºÈ­ ¹× Ä³¸¯ÅÍ »óÅÂ ÃÊ±âÈ­
+        // í˜¼ë€ ì´ë¯¸ì§€ ë¹„í™œì„±í™” ë° ìºë¦­í„° ìƒíƒœ ì´ˆê¸°í™”
         confusebubbleImage.SetActive(false);
-        interactionController.startNextDialogue(); //Idle·Î µ¹¾Æ¿À°í ´ÙÀ½ ´ë»ç¸¦ ÀÌ¾î°¥ ¼ö ÀÖ°Ô ¼³Á¤
+        interactionController.startNextDialogue(); //Idleë¡œ ëŒì•„ì˜¤ê³  ë‹¤ìŒ ëŒ€ì‚¬ë¥¼ ì´ì–´ê°ˆ ìˆ˜ ìˆê²Œ ì„¤ì •
     }
 
-    public void showBangEffect() //ConfuseÈ¿°ú
+    public void showBangEffect() //Confuseíš¨ê³¼
     {
-        // È¥¶õ ÀÌ¹ÌÁö È°¼ºÈ­ ¹× ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // í˜¼ë€ ì´ë¯¸ì§€ í™œì„±í™” ë° ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         bangImage.SetActive(true);
-        interactionController.stopNextDialogue(); //¿©±â¼­ ¾Ë¾Æ¼­ ´ë»ç¸¦ ¸ØÃß°ÔÇÔ
+        interactionController.stopNextDialogue(); //ì—¬ê¸°ì„œ ì•Œì•„ì„œ ëŒ€ì‚¬ë¥¼ ë©ˆì¶”ê²Œí•¨
 
         Invoke("endBangEffect", 1f);
     }
     private void endBangEffect()
     {
-        // È¥¶õ ÀÌ¹ÌÁö ºñÈ°¼ºÈ­ ¹× Ä³¸¯ÅÍ »óÅÂ ÃÊ±âÈ­
+        // í˜¼ë€ ì´ë¯¸ì§€ ë¹„í™œì„±í™” ë° ìºë¦­í„° ìƒíƒœ ì´ˆê¸°í™”
         bangImage.SetActive(false);
-        interactionController.startNextDialogue(); //Idle·Î µ¹¾Æ¿À°í ´ÙÀ½ ´ë»ç¸¦ ÀÌ¾î°¥ ¼ö ÀÖ°Ô ¼³Á¤
+        interactionController.startNextDialogue(); //Idleë¡œ ëŒì•„ì˜¤ê³  ë‹¤ìŒ ëŒ€ì‚¬ë¥¼ ì´ì–´ê°ˆ ìˆ˜ ìˆê²Œ ì„¤ì •
     }
 
     public void showYellowEffect()
@@ -149,7 +149,7 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     private void nextScenarioFlow()
     {
-        scenarioFlowCount++; //´ÙÀ½ ´ë»ç ¹× ½Ã³ª¸®¿À ÁøÇàÀ» À§ÇØ °ª ¿Ã¸®±â
+        scenarioFlowCount++; //ë‹¤ìŒ ëŒ€ì‚¬ ë° ì‹œë‚˜ë¦¬ì˜¤ ì§„í–‰ì„ ìœ„í•´ ê°’ ì˜¬ë¦¬ê¸°
     }
     private void onDialgueBox()
     {
@@ -158,12 +158,12 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     private void offDialgueBox()
     {
-        Debug.Log("´ë»çÃ¢ ²ô±â");
+        Debug.Log("ëŒ€ì‚¬ì°½ ë„ê¸°");
         dialogueBox.SetActive(false);
     }
 
     public void OnClickDialogue()
-    {   //ÇÃ·¹ÀÌ¾î°¡ ¿òÁ÷ÀÌÁö ¾Ê´Â »óÈ²ÀÏ¶§¸¸ Å¬¸¯ Çã¿ë
+    {   //í”Œë ˆì´ì–´ê°€ ì›€ì§ì´ì§€ ì•ŠëŠ” ìƒí™©ì¼ë•Œë§Œ í´ë¦­ í—ˆìš©
         if (!playerMove.getIsMoving())
         {
             interactionController.ShowNextLine();

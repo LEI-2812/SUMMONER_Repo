@@ -7,16 +7,16 @@ public class WaterSpirit : Summon
 
     private void Awake()
     {
-        summonName = "WaterSpirit"; //ÀÌ¸§ ¹°Á¤·É
-        maxHP = 350; //ÃÖ´ëÃ¼·Â 350
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 70; //ÀÏ¹İ°ø°İ 70
-        heavyAttakPower = 120; //°­°ø°İ
-        summonRank = SummonRank.Normal; // ÀÏ¹İ ¼ÒÈ¯¼ö
+        summonName = "WaterSpirit"; //ì´ë¦„ ë¬¼ì •ë ¹
+        maxHP = 350; //ìµœëŒ€ì²´ë ¥ 350
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 70; //ì¼ë°˜ê³µê²© 70
+        heavyAttakPower = 120; //ê°•ê³µê²©
+        summonRank = SummonRank.Normal; // ì¼ë°˜ ì†Œí™˜ìˆ˜
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//½¯µå
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//ì‰´ë“œ
     }
 
 

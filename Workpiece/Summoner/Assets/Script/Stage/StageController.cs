@@ -1,55 +1,63 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StageController : MonoBehaviour
 {
-    public int stageNum;  //ÇöÀç ÇÃ·¹ÀÌÇÒ ½ºÅ×ÀÌÁö ¹øÈ£ ¹Ş±â
+    public int stageNum;  // í˜„ì¬ í”Œë ˆì´í•  ìŠ¤í…Œì´ì§€ ë²ˆí˜¸ ë°›ê¸°
     public StoryStage storystage;
 
-    [Header("¹öÆ° Å¬¸¯À½")]
+    [Header("ë²„íŠ¼ í´ë¦­ìŒ")]
     [SerializeField] private AudioSource audioSource;
 
     private void Awake()
     {
+        // ì €ì¥ ì»¨íŠ¸ë¡¤ëŸ¬ê°€ ìˆìœ¼ë©´ ì €ì¥ ì‹œìŠ¤í…œ ê¸°ì¤€ìœ¼ë¡œ ì§„í–‰ ìŠ¤í…Œì´ì§€ë¥¼ ì½ëŠ”ë‹¤.
+        // ë‹¨ë… ì‹¤í–‰ì²˜ëŸ¼ ì»¨íŠ¸ë¡¤ëŸ¬ê°€ ì—†ì„ ë•ŒëŠ” ê¸°ì¡´ PlayerPrefs ê°’ì„ fallbackìœ¼ë¡œ ì‚¬ìš©í•œë‹¤.
+        if (GameSaveController.instance != null)
+        {
+            stageNum = GameSaveController.instance.GetGameSave().savedStage;
+            return;
+        }
+
         stageNum = PlayerPrefs.GetInt("savedStage");
     }
     void Start()
     {
-        int stageNumber = PlayerPrefs.GetInt("savedStage");
-        Debug.Log("savedStage °ª : " + stageNum);
+        Debug.Log("savedStage ê°’: " + stageNum);
     }
 
-    // PlayerPrefs·Î ½ºÅ×ÀÌÁö ÁøÇà Á¤µµ ÀúÀå
-    void SaveStage()
-    {
-        PlayerPrefs.SetInt("savedStage", stageNum);
-        PlayerPrefs.Save();
-    }
-
-    //½ºÅ×ÀÌÁö ÀúÀå (¸Å ½ºÅ×ÀÌÁö Å¬¸®¾î¸¶´Ù È£ÃâÇÏ¸éµÊ.)
+    // ìŠ¤í…Œì´ì§€ ì§„í–‰ë„ ì €ì¥ì€ ì €ì¥ ì‹œìŠ¤í…œì„ í†µí•´ ì²˜ë¦¬í•œë‹¤.
     public void SaveStage(int stageNumber)
     {
-        // "savedStage"¶ó´Â Å°·Î ½ºÅ×ÀÌÁö ¹øÈ£¸¦ ÀúÀåÇÕ´Ï´Ù.
-        PlayerPrefs.SetInt("savedStage", stageNumber);
-        PlayerPrefs.Save(); // ÀúÀåÀ» °­Á¦ ½ÇÇàÇÕ´Ï´Ù.
+        if (GameSaveController.instance == null)
+        {
+            Debug.LogError("GameSaveControllerê°€ StageController ì”¬ì— ì—†ìŠµë‹ˆë‹¤.");
+            return;
+        }
+
+        GameSaveController.instance.SaveClearedStage(stageNumber);
     }
 
     public void stageLoader(int stage)
     {
-        Debug.Log("¹öÆ° Å¬¸¯");
+        Debug.Log("ë²„íŠ¼ í´ë¦­");
         audioSource.Play();
-        // ÇöÀç ÇÃ·¹ÀÌ ÁßÀÎ ½ºÅ×ÀÌÁö¸¦ "playingStage"·Î ÀúÀå
-        PlayerPrefs.SetInt("savedStage", stage);
-        PlayerPrefs.Save();
+        // í˜„ì¬ í”Œë ˆì´ ì¤‘ì¸ ìŠ¤í…Œì´ì§€ë„ ì €ì¥ ì‹œìŠ¤í…œì„ í†µí•´ ê¸°ë¡í•œë‹¤.
+        if (GameSaveController.instance == null)
+        {
+            Debug.LogError("GameSaveControllerê°€ StageController ì”¬ì— ì—†ìŠµë‹ˆë‹¤.");
+            return;
+        }
+
+        GameSaveController.instance.SavePlayingStage(stage);
         SendStage(stage);
     }
 
-    public void SendStage(int stage)    // ½ºÅ×ÀÌÁö ¼±ÅÃ È­¸é¿¡¼­ º¸³¾ ¾À(½ºÅä¸® + ÀüÅõ)
+    public void SendStage(int stage)    // ìŠ¤í…Œì´ì§€ ì„ íƒ í™”ë©´ì—ì„œ ë³´ë‚¼ ì”¬(ìŠ¤í† ë¦¬ + ì „íˆ¬)
     {
         switch (stage)
         {
@@ -88,13 +96,13 @@ public class StageController : MonoBehaviour
                 Summon.multiple = 2.5;
                 SaveStage(7);
                 break;
-            // ÇÊ¿äÇÑ ½ºÅ×ÀÌÁö¸¸Å­ Ãß°¡
+            // í•„ìš”í•œ ìŠ¤í…Œì´ì§€ë§Œí¼ ì¶”ê°€
             default:
-                Debug.Log("Àß¸øµÈ ½ºÅ×ÀÌÁöÀÔ´Ï´Ù.");
+                Debug.Log("ì˜ëª»ëœ ìŠ¤í…Œì´ì§€ì…ë‹ˆë‹¤.");
                 break;
         }
     }
-    public void SendFightStage(int stage)   // ½Â¸®/ÆĞ¹èÃ¢¿¡¼­ º¸³¾ ¾À(¿ÀÁ÷ ÀüÅõ)
+    public void SendFightStage(int stage)   // ìŠ¹ë¦¬/íŒ¨ë°°ì°½ì—ì„œ ë³´ë‚¼ ì”¬(ì˜¤ì§ ì „íˆ¬)
     {
         switch (stage)
         {
@@ -112,7 +120,7 @@ public class StageController : MonoBehaviour
                 break;
             case 4:
                 SendFight(stage);
-                Summon.multiple = 1.5;                
+                Summon.multiple = 1.5;
                 break;
             case 5:
                 SendFight(stage);
@@ -126,9 +134,9 @@ public class StageController : MonoBehaviour
                 SendFight(stage);
                 Summon.multiple = 4;
                 break;
-            // ÇÊ¿äÇÑ ½ºÅ×ÀÌÁö¸¸Å­ Ãß°¡
+            // í•„ìš”í•œ ìŠ¤í…Œì´ì§€ë§Œí¼ ì¶”ê°€
             default:
-                Debug.Log("Àß¸øµÈ ½ºÅ×ÀÌÁöÀÔ´Ï´Ù.");
+                Debug.Log("ì˜ëª»ëœ ìŠ¤í…Œì´ì§€ì…ë‹ˆë‹¤.");
                 break;
         }
     }

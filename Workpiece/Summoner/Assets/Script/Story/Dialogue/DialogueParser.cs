@@ -7,48 +7,48 @@ public class DialogueParser : MonoBehaviour
 {
     public Dialogue[] Parse(string CSV_FileName)
     {
-        List<Dialogue> dialogueList = new List<Dialogue>(); // Dialogue ¸®½ºÆ®
-        TextAsset csvData = Resources.Load<TextAsset>(CSV_FileName); // CSV ÆÄÀÏ °¡Á®¿È
+        List<Dialogue> dialogueList = new List<Dialogue>(); // Dialogue ë¦¬ìŠ¤íŠ¸
+        TextAsset csvData = Resources.Load<TextAsset>(CSV_FileName); // CSV íŒŒì¼ ê°€ì ¸ì˜´
 
-        string[] data = csvData.text.Split(new char[] { '\n' }); // Çà¸¶´Ù ÀĞ±â
-        Dialogue currentDialogue = null; // ÇöÀç ´ëÈ­¸¦ ÀúÀåÇÒ º¯¼ö
-        List<string> contextList = new List<string>(); // ´ë»ç¸¦ ³ÖÀ» ¸®½ºÆ®
+        string[] data = csvData.text.Split(new char[] { '\n' }); // í–‰ë§ˆë‹¤ ì½ê¸°
+        Dialogue currentDialogue = null; // í˜„ì¬ ëŒ€í™”ë¥¼ ì €ì¥í•  ë³€ìˆ˜
+        List<string> contextList = new List<string>(); // ëŒ€ì‚¬ë¥¼ ë„£ì„ ë¦¬ìŠ¤íŠ¸
 
-        for (int i = 1; i < data.Length; i++) // csv ÆÄÀÏ ÀüÃ¼¸¦ ÀĞ´Â´Ù
+        for (int i = 1; i < data.Length; i++) // csv íŒŒì¼ ì „ì²´ë¥¼ ì½ëŠ”ë‹¤
         {
-            if (string.IsNullOrWhiteSpace(data[i])) continue; // ºó ÁÙ °Ç³Ê¶Ü
+            if (string.IsNullOrWhiteSpace(data[i])) continue; // ë¹ˆ ì¤„ ê±´ë„ˆëœ€
 
-            string[] row = data[i].Split(new char[] { ',' }, 3); // Ã³À½ µÎ ºÎºĞ¸¸ ºĞ¸®ÇÏ°í ³ª¸ÓÁö´Â ´ë»ç·Î ÇÕÄ§
+            string[] row = data[i].Split(new char[] { ',' }, 3); // ì²˜ìŒ ë‘ ë¶€ë¶„ë§Œ ë¶„ë¦¬í•˜ê³  ë‚˜ë¨¸ì§€ëŠ” ëŒ€ì‚¬ë¡œ í•©ì¹¨
 
-            if (!string.IsNullOrEmpty(row[0])) // ID°¡ ÀÖ´Â °æ¿ì, »õ·Î¿î ´ë»ç ½ÃÀÛ
+            if (!string.IsNullOrEmpty(row[0])) // IDê°€ ìˆëŠ” ê²½ìš°, ìƒˆë¡œìš´ ëŒ€ì‚¬ ì‹œì‘
             {
-                // ÇöÀç ´ë»ç°¡ ÀÖÀ¸¸é ¸®½ºÆ®¿¡ Ãß°¡
+                // í˜„ì¬ ëŒ€ì‚¬ê°€ ìˆìœ¼ë©´ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
                 if (currentDialogue != null)
                 {
                     currentDialogue.context = contextList.ToArray();
                     dialogueList.Add(currentDialogue);
                 }
 
-                // »õ·Î¿î Dialogue »ı¼º
+                // ìƒˆë¡œìš´ Dialogue ìƒì„±
                 currentDialogue = new Dialogue();
-                currentDialogue.name = row[1]; // Ä³¸¯ÅÍ ÀÌ¸§ ¼³Á¤
-                contextList = new List<string>(); // ´ë»ç ¸®½ºÆ® ÃÊ±âÈ­
+                currentDialogue.name = row[1]; // ìºë¦­í„° ì´ë¦„ ì„¤ì •
+                contextList = new List<string>(); // ëŒ€ì‚¬ ë¦¬ìŠ¤íŠ¸ ì´ˆê¸°í™”
 
-                // ´ë»ç ºÎºĞÀ» Ãß°¡
+                // ëŒ€ì‚¬ ë¶€ë¶„ì„ ì¶”ê°€
                 if (row.Length > 2)
                 {
                     string combinedContext = Regex.Replace(row[2].Trim(), "^\\s*\"|\"\\s*$", "");
                     contextList.Add(combinedContext);
                 }
             }
-            else if (currentDialogue != null && row.Length > 2) // ID°¡ ¾øÀ¸¸é ÀÌÀü ´ë»ç¿¡ ÀÌ¾î¼­ Ãß°¡
+            else if (currentDialogue != null && row.Length > 2) // IDê°€ ì—†ìœ¼ë©´ ì´ì „ ëŒ€ì‚¬ì— ì´ì–´ì„œ ì¶”ê°€
             {
                 string combinedContext = Regex.Replace(row[2].Trim(), "^\\s*\"|\"\\s*$", "");
                 contextList.Add(combinedContext);
             }
         }
 
-        // ¸¶Áö¸· ´ë»ç Ãß°¡
+        // ë§ˆì§€ë§‰ ëŒ€ì‚¬ ì¶”ê°€
         if (currentDialogue != null)
         {
             currentDialogue.context = contextList.ToArray();

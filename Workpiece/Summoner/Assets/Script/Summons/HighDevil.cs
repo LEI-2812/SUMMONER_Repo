@@ -6,26 +6,26 @@ public class HighDevil : Summon
 {
     private void Awake()
     {
-        summonName = "HighDevil"; //ÀÌ¸§ ÇÏ±Ş¾Ç¸¶
-        maxHP = 1000; //ÃÖ´ëÃ¼·Â 200
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 200; //ÀÏ¹İ°ø°İ
+        summonName = "HighDevil"; //ì´ë¦„ í•˜ê¸‰ì•…ë§ˆ
+        maxHP = 1000; //ìµœëŒ€ì²´ë ¥ 200
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 200; //ì¼ë°˜ê³µê²©
         heavyAttakPower = 250;
-        summonRank = SummonRank.Special; //ÀÏ¹İ Àû ¸ó½ºÅÍ
+        summonRank = SummonRank.Special; //ì¼ë°˜ ì  ëª¬ìŠ¤í„°
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        // Æ¯¼ö °ø°İ: Å¸°Ù ÁöÁ¤ °ø°İ
+        // íŠ¹ìˆ˜ ê³µê²©: íƒ€ê²Ÿ ì§€ì • ê³µê²©
         specialAttackStrategies = new IAttackStrategy[] {
-            new AttackAllEnemiesStrategy(StatusType.None, 140,0), //ÀüÃ¼°ø°İ 140
-            new TargetedAttackStrategy(StatusType.None,230,0) //Å¸°Ù°ø°İ 230
+            new AttackAllEnemiesStrategy(StatusType.None, 140,0), //ì „ì²´ê³µê²© 140
+            new TargetedAttackStrategy(StatusType.None,230,0) //íƒ€ê²Ÿê³µê²© 230
         };
 
     }
 
     private void Start()
     {
-        Debug.Log("³²Àº Ã¼·Â: " + nowHP);
+        Debug.Log("ë‚¨ì€ ì²´ë ¥: " + nowHP);
     }
 
 

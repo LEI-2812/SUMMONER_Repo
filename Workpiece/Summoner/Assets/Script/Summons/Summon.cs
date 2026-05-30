@@ -2,14 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 public enum SummonRank
 {
-    Low, Medium, High, //¾Æ±º ¼ÒÈ¯¼ö
-    Normal, Special, Boss //Àû ¼ÒÈ¯¼ö
+    Low, Medium, High, //ì•„êµ° ì†Œí™˜ìˆ˜
+    Normal, Special, Boss //ì  ì†Œí™˜ìˆ˜
 }
 
 public enum SummonType
@@ -19,34 +18,34 @@ public enum SummonType
 
 public class Summon : MonoBehaviour, UpdateStateObserver
 {
-    [SerializeField] protected Image image; //ÀÌ¹ÌÁö
-    [SerializeField] protected Sprite[] sprites; // ½ºÇÁ¶óÀÌÆ® ¸ğÀ½
+    [SerializeField] protected Image image; //ì´ë¯¸ì§€
+    [SerializeField] protected Sprite[] sprites; // ìŠ¤í”„ë¼ì´íŠ¸ ëª¨ìŒ
     [SerializeField] protected GameObject shieldImage;
     [SerializeField] protected Animator animator;
 
-    [Header("È¿°úÀ½")]
+    [Header("íš¨ê³¼ìŒ")]
     [SerializeField] public AudioSource attackSound;
     [SerializeField] private AudioSource downHitSound;
     [SerializeField] private AudioSource upAttackSound;
 
-    protected string summonName; //ÀÌ¸§
-    public Sprite normalAttackSprite; // ÀÏ¹İ °ø°İ ½ºÇÁ¶óÀÌÆ®
-    public Sprite specialAttackSprite; // Æ¯¼ö °ø°İ ½ºÇÁ¶óÀÌÆ®
-    public double attackPower; //ÀÏ¹İ°ø°İ
-    public double heavyAttakPower; //°­ °ø°İ·Â
-    protected SummonRank summonRank; //µî±Ş
+    protected string summonName; //ì´ë¦„
+    public Sprite normalAttackSprite; // ì¼ë°˜ ê³µê²© ìŠ¤í”„ë¼ì´íŠ¸
+    public Sprite specialAttackSprite; // íŠ¹ìˆ˜ ê³µê²© ìŠ¤í”„ë¼ì´íŠ¸
+    public double attackPower; //ì¼ë°˜ê³µê²©
+    public double heavyAttakPower; //ê°• ê³µê²©ë ¥
+    protected SummonRank summonRank; //ë“±ê¸‰
     protected SummonType summonType;
-    protected double maxHP; //ÃÖ´ëÃ¼·Â
-    public double nowHP; //ÇöÀç Ã¼·Â
-    protected double shield = 0; //½¯µå·®
-    private double initialShield; // ÃÊ±â ½¯µå ¾ç
+    protected double maxHP; //ìµœëŒ€ì²´ë ¥
+    public double nowHP; //í˜„ì¬ ì²´ë ¥
+    protected double shield = 0; //ì‰´ë“œëŸ‰
+    private double initialShield; // ì´ˆê¸° ì‰´ë“œ ì–‘
     protected bool onceInvincibility = false;
-    public bool isAttack = true; // »óÅÂÀÌ»óÁß °ø°İ°¡´É ¿©ºÎ
+    public bool isAttack = true; // ìƒíƒœì´ìƒì¤‘ ê³µê²©ê°€ëŠ¥ ì—¬ë¶€
 
     private bool attakingMotion = false;
 
-    [Header("»óÅÂÀÌ»ó")]
-    [SerializeField] private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //»óÅÂÀÌ»ó
+    [Header("ìƒíƒœì´ìƒ")]
+    [SerializeField] private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); //ìƒíƒœì´ìƒ
     protected IAttackStrategy attackStrategy;
     protected IAttackStrategy[] specialAttackStrategies;
 
@@ -74,40 +73,40 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     {
         if (attackStrategy == null || attackStrategy.getCurrentCooldown() > 0)
         {
-            Debug.Log("ÀÏ¹İ °ø°İÀ» ÇØ´çÅÏ¿¡ »ç¿ëÇß½À´Ï´Ù.");
+            Debug.Log("ì¼ë°˜ ê³µê²©ì„ í•´ë‹¹í„´ì— ì‚¬ìš©í–ˆìŠµë‹ˆë‹¤.");
             return;
         }
-        attackStrategy.Attack(this, targetPlates, selectedPlateIndex, 0); // ÀÏ¹İ °ø°İ ¼öÇà
+        attackStrategy.Attack(this, targetPlates, selectedPlateIndex, 0); // ì¼ë°˜ ê³µê²© ìˆ˜í–‰
         animator.SetTrigger("attack");
         attackSound.Play();
         
-        StartCoroutine(ColorChange(1)); // °ËÁ¤»ö
+        StartCoroutine(ColorChange(1)); // ê²€ì •ìƒ‰
         
-        // ÇØ´ç °ø°İ¿¡ ÄğÅ¸ÀÓ Àû¿ë
+        // í•´ë‹¹ ê³µê²©ì— ì¿¨íƒ€ì„ ì ìš©
         attackStrategy.ApplyCooldown();
         isAttack = false;
     }
 
-    protected IEnumerator ColorChange(int color)    // »öÀÌ º¯Çß´Ù°¡ µ¹¾Æ¿È
+    protected IEnumerator ColorChange(int color)    // ìƒ‰ì´ ë³€í–ˆë‹¤ê°€ ëŒì•„ì˜´
     {
         //
         attakingMotion = true;
         switch (color)
         {
-            case 1: // °ËÁ¤»ö
+            case 1: // ê²€ì •ìƒ‰
                 image.color = new Color(0f, 0f, 0f); // #000000
                 break;
-            case 2: // »¡°­»ö
+            case 2: // ë¹¨ê°•ìƒ‰
                 image.color = new Color(1f, 0.431f, 0.431f); // #FF6E6E
                 break;
-            case 3: // º¸¶ó»ö
+            case 3: // ë³´ë¼ìƒ‰
                 image.color = new Color(0.639f, 0.192f, 0.839f); // #A331D6
                 break;
-            case 4: // ÃÊ·Ï»ö
+            case 4: // ì´ˆë¡ìƒ‰
                 image.color = new Color(0.192f, 0.835f, 0.318f); // #31D551
                 break;
             default:
-                image.color = Color.white; // ±âº»°ª ¼³Á¤
+                image.color = Color.white; // ê¸°ë³¸ê°’ ì„¤ì •
                 break;
 
         }
@@ -122,7 +121,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     {
         if (SpecialAttackArrayIndex < 0 || SpecialAttackArrayIndex >= specialAttackStrategies.Length)
         {
-            Debug.Log("À¯È¿ÇÏÁö ¾ÊÀº Æ¯¼ö °ø°İ ÀÎµ¦½ºÀÔ´Ï´Ù.");
+            Debug.Log("ìœ íš¨í•˜ì§€ ì•Šì€ íŠ¹ìˆ˜ ê³µê²© ì¸ë±ìŠ¤ì…ë‹ˆë‹¤.");
             return;
         }
 
@@ -130,164 +129,164 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         
         if (specialAttack == null || specialAttack.getCurrentCooldown() > 0)
         {
-            Debug.Log("Æ¯¼ö ½ºÅ³ÀÌ ÄğÅ¸ÀÓ ÁßÀÔ´Ï´Ù.");
+            Debug.Log("íŠ¹ìˆ˜ ìŠ¤í‚¬ì´ ì¿¨íƒ€ì„ ì¤‘ì…ë‹ˆë‹¤.");
             return;
         }
 
-        // °ø°İ ¼öÇà
+        // ê³µê²© ìˆ˜í–‰
         specialAttack.Attack(this, targetPlates, selectedPlateIndex, SpecialAttackArrayIndex);
         animator.SetTrigger("attack");
-        StartCoroutine(ColorChange(1)); // °ËÁ¤»ö
-        // ÇØ´ç °ø°İ¿¡ ÄğÅ¸ÀÓ Àû¿ë
+        StartCoroutine(ColorChange(1)); // ê²€ì •ìƒ‰
+        // í•´ë‹¹ ê³µê²©ì— ì¿¨íƒ€ì„ ì ìš©
         specialAttack.ApplyCooldown();
         isAttack = false;
     }
 
-    // »óÅÂÀÌ»ó Àû¿ë ¸Ş¼Òµå (¿©·¯ »óÅÂÀÌ»ó Áßº¹ Çã¿ë) //µ¤¾î¾º¾îÁö´Â ·ÎÁ÷
+    // ìƒíƒœì´ìƒ ì ìš© ë©”ì†Œë“œ (ì—¬ëŸ¬ ìƒíƒœì´ìƒ ì¤‘ë³µ í—ˆìš©) //ë®ì–´ì”Œì–´ì§€ëŠ” ë¡œì§
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
-        var existingEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == statusEffect.statusType); //ÀÌ¹Ì °°Àº »óÅÂÀÌ»óÀÌ ÀÖ´ÂÁö °¡Á®¿È
+        var existingEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == statusEffect.statusType); //ì´ë¯¸ ê°™ì€ ìƒíƒœì´ìƒì´ ìˆëŠ”ì§€ ê°€ì ¸ì˜´
 
-        // »óÅÂÀÌ»ó Å¸ÀÔ¿¡ µû¶ó ·ÎÁ÷À» ´Ù¸£°Ô Ã³¸®
+        // ìƒíƒœì´ìƒ íƒ€ì…ì— ë”°ë¼ ë¡œì§ì„ ë‹¤ë¥´ê²Œ ì²˜ë¦¬
         switch (statusEffect.statusType)
         {
             case StatusType.Poison:
                 if (existingEffect != null)
                 {
-                    // Áßµ¶ »óÅÂ°¡ ÀÌ¹Ì ÀÖÀ¸¸é Áö¼Ó½Ã°£°ú ÇÇÇØ·®À» °»½Å
-                    Debug.Log($"{summonName}Àº ÀÌ¹Ì Áßµ¶ »óÅÂÀÔ´Ï´Ù.");
+                    // ì¤‘ë… ìƒíƒœê°€ ì´ë¯¸ ìˆìœ¼ë©´ ì§€ì†ì‹œê°„ê³¼ í”¼í•´ëŸ‰ì„ ê°±ì‹ 
+                    Debug.Log($"{summonName}ì€ ì´ë¯¸ ì¤‘ë… ìƒíƒœì…ë‹ˆë‹¤.");
                 }
                 else
                 {
-                    // »õ·Î¿î Áßµ¶ »óÅÂÀÌ»ó Ãß°¡
-                    StartCoroutine(ColorChange(3)); // º¸¶ó»ö
+                    // ìƒˆë¡œìš´ ì¤‘ë… ìƒíƒœì´ìƒ ì¶”ê°€
+                    StartCoroutine(ColorChange(3)); // ë³´ë¼ìƒ‰
                     activeStatusEffects.Add(statusEffect);
-                    statusEffect.ApplyStatus(this);  // Áï½Ã È¿°ú Àû¿ë //µ¥¹ÌÁö¸¦ ¹ŞÀ½
-                    NotifyObservers(); // »óÅÂ Àû¿ë ÈÄ ¾Ë¸²
+                    statusEffect.ApplyStatus(this);  // ì¦‰ì‹œ íš¨ê³¼ ì ìš© //ë°ë¯¸ì§€ë¥¼ ë°›ìŒ
+                    NotifyObservers(); // ìƒíƒœ ì ìš© í›„ ì•Œë¦¼
                     downHitSound.Play();
-                    Debug.Log($"{summonName}¿¡°Ô Áßµ¶ »óÅÂÀÌ»óÀÌ Àû¿ëµÇ¾ú½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì—ê²Œ ì¤‘ë… ìƒíƒœì´ìƒì´ ì ìš©ë˜ì—ˆìŠµë‹ˆë‹¤.");
                 }
                 break;
 
             case StatusType.Burn:
                 if (existingEffect != null)
                 {
-                    Debug.Log($"{summonName}Àº ÀÌ¹Ì È­»ó »óÅÂÀÔ´Ï´Ù.");
+                    Debug.Log($"{summonName}ì€ ì´ë¯¸ í™”ìƒ ìƒíƒœì…ë‹ˆë‹¤.");
                 }
                 else
                 {
-                    // »õ·Î¿î È­»ó »óÅÂÀÌ»ó Ãß°¡
-                    StartCoroutine(ColorChange(3)); // º¸¶ó»ö
+                    // ìƒˆë¡œìš´ í™”ìƒ ìƒíƒœì´ìƒ ì¶”ê°€
+                    StartCoroutine(ColorChange(3)); // ë³´ë¼ìƒ‰
                     activeStatusEffects.Add(statusEffect);
-                    statusEffect.ApplyStatus(this);  // Áï½Ã È¿°ú Àû¿ë
-                    NotifyObservers(); // »óÅÂ Àû¿ë ÈÄ ¾Ë¸²
+                    statusEffect.ApplyStatus(this);  // ì¦‰ì‹œ íš¨ê³¼ ì ìš©
+                    NotifyObservers(); // ìƒíƒœ ì ìš© í›„ ì•Œë¦¼
                     downHitSound.Play();
-                    Debug.Log($"{summonName}¿¡°Ô È­»ó »óÅÂÀÌ»óÀÌ Àû¿ëµÇ¾ú½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì—ê²Œ í™”ìƒ ìƒíƒœì´ìƒì´ ì ìš©ë˜ì—ˆìŠµë‹ˆë‹¤.");
                 }
                 break;
 
             case StatusType.Upgrade:
                 if (existingEffect != null)
                 {
-                    Debug.Log($"{summonName}Àº ÀÌ¹Ì °­È­ »óÅÂÀÔ´Ï´Ù.");
+                    Debug.Log($"{summonName}ì€ ì´ë¯¸ ê°•í™” ìƒíƒœì…ë‹ˆë‹¤.");
                 }
                 else
                 {
-                    // ±âÁ¸ °ø°İ·ÂÀ» ÀúÀåÇÕ´Ï´Ù.
+                    // ê¸°ì¡´ ê³µê²©ë ¥ì„ ì €ì¥í•©ë‹ˆë‹¤.
                     statusEffect.setOriginAttack(this.attackPower);
-                    // »õ·Î¿î °­È­ »óÅÂÀÌ»ó Ãß°¡
+                    // ìƒˆë¡œìš´ ê°•í™” ìƒíƒœì´ìƒ ì¶”ê°€
                     activeStatusEffects.Add(statusEffect);
                     if (statusEffect.shouldApplyOnce())
                     {
-                        statusEffect.ApplyStatus(this); // ÇÑ ¹ø¸¸ Àû¿ë
-                        statusEffect.setApplyOnce(); // Àû¿ëµÈ »óÅÂ Ç¥½Ã
-                        NotifyObservers(); // »óÅÂ Àû¿ë ÈÄ ¾Ë¸²
+                        statusEffect.ApplyStatus(this); // í•œ ë²ˆë§Œ ì ìš©
+                        statusEffect.setApplyOnce(); // ì ìš©ëœ ìƒíƒœ í‘œì‹œ
+                        NotifyObservers(); // ìƒíƒœ ì ìš© í›„ ì•Œë¦¼
                         upAttackSound.Play();
                     }
 
        
-                    Debug.Log($"{summonName}ÀÇ °ø°İ·ÂÀÌ °­È­µÇ¾ú½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì˜ ê³µê²©ë ¥ì´ ê°•í™”ë˜ì—ˆìŠµë‹ˆë‹¤.");
                 }
                 break;
 
             case StatusType.Curse:
                 if (existingEffect != null)
                 {
-                    Debug.Log($"{summonName}Àº ÀÌ¹Ì ÀúÁÖ »óÅÂÀÔ´Ï´Ù.");
+                    Debug.Log($"{summonName}ì€ ì´ë¯¸ ì €ì£¼ ìƒíƒœì…ë‹ˆë‹¤.");
                 }
                 else
                 {
-                    // »õ·Î¿î ÀúÁÖ »óÅÂÀÌ»ó Ãß°¡
-                    StartCoroutine(ColorChange(3)); // º¸¶ó»ö
+                    // ìƒˆë¡œìš´ ì €ì£¼ ìƒíƒœì´ìƒ ì¶”ê°€
+                    StartCoroutine(ColorChange(3)); // ë³´ë¼ìƒ‰
                     activeStatusEffects.Add(statusEffect);
                     if (statusEffect.shouldApplyOnce())
                     {
-                        statusEffect.ApplyStatus(this); // ÇÑ ¹ø¸¸ Àû¿ë
-                        statusEffect.setApplyOnce(); // Àû¿ëµÈ »óÅÂ Ç¥½Ã
-                        NotifyObservers(); // »óÅÂ Àû¿ë ÈÄ ¾Ë¸²
+                        statusEffect.ApplyStatus(this); // í•œ ë²ˆë§Œ ì ìš©
+                        statusEffect.setApplyOnce(); // ì ìš©ëœ ìƒíƒœ í‘œì‹œ
+                        NotifyObservers(); // ìƒíƒœ ì ìš© í›„ ì•Œë¦¼
                     }
                     downHitSound.Play();
-                    Debug.Log($"{summonName}¿¡°Ô ÀúÁÖ »óÅÂÀÌ»óÀÌ Àû¿ëµÇ¾ú½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì—ê²Œ ì €ì£¼ ìƒíƒœì´ìƒì´ ì ìš©ë˜ì—ˆìŠµë‹ˆë‹¤.");
                 }
                 break;
 
             case StatusType.Stun:
                 if (existingEffect != null)
                 {
-                    Debug.Log($"{summonName}Àº ÀÌ¹Ì ½ºÅÏ »óÅÂÀÔ´Ï´Ù.");
+                    Debug.Log($"{summonName}ì€ ì´ë¯¸ ìŠ¤í„´ ìƒíƒœì…ë‹ˆë‹¤.");
                 }
                 else
                 {
-                    // »õ·Î¿î ½ºÅÏ »óÅÂÀÌ»ó Ãß°¡
-                    StartCoroutine(ColorChange(3)); // º¸¶ó»ö
+                    // ìƒˆë¡œìš´ ìŠ¤í„´ ìƒíƒœì´ìƒ ì¶”ê°€
+                    StartCoroutine(ColorChange(3)); // ë³´ë¼ìƒ‰
                     activeStatusEffects.Add(statusEffect);
-                    statusEffect.ApplyStatus(this);  // Áï½Ã È¿°ú Àû¿ë
-                    NotifyObservers(); // »óÅÂ Àû¿ë ÈÄ ¾Ë¸²
+                    statusEffect.ApplyStatus(this);  // ì¦‰ì‹œ íš¨ê³¼ ì ìš©
+                    NotifyObservers(); // ìƒíƒœ ì ìš© í›„ ì•Œë¦¼
                     downHitSound.Play();
-                    Debug.Log($"{summonName}ÀÌ(°¡) ½ºÅÏ »óÅÂ¿¡ ºüÁ³½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì´(ê°€) ìŠ¤í„´ ìƒíƒœì— ë¹ ì¡ŒìŠµë‹ˆë‹¤.");
                 }
                 break;
 
-            case StatusType.Shield: //½¯µå µ¤¾î¾º¿ì±â
+            case StatusType.Shield: //ì‰´ë“œ ë®ì–´ì”Œìš°ê¸°
                 if (existingEffect != null)
                 {
-                    shield = existingEffect.damagePerTurn; //º¸È£¸·À» ½ºÅ³ ¼öÄ¡¸¸Å­ ´Ù½Ã Ã¤¿ì±â
+                    shield = existingEffect.damagePerTurn; //ë³´í˜¸ë§‰ì„ ìŠ¤í‚¬ ìˆ˜ì¹˜ë§Œí¼ ë‹¤ì‹œ ì±„ìš°ê¸°
                     upAttackSound.Play();
-                    Debug.Log($"{summonName}ÀÇ º¸È£¸·À» µ¤¾º¿ó´Ï´Ù.");
+                    Debug.Log($"{summonName}ì˜ ë³´í˜¸ë§‰ì„ ë®ì”Œì›ë‹ˆë‹¤.");
                 }
                 else
                 {
-                    // »õ·Î¿î ½¯µå Ãß°¡
+                    // ìƒˆë¡œìš´ ì‰´ë“œ ì¶”ê°€
                     activeStatusEffects.Add(statusEffect);
-                    statusEffect.ApplyStatus(this);  // Áï½Ã È¿°ú Àû¿ë
-                    NotifyObservers(); // »óÅÂ Àû¿ë ÈÄ ¾Ë¸²
+                    statusEffect.ApplyStatus(this);  // ì¦‰ì‹œ íš¨ê³¼ ì ìš©
+                    NotifyObservers(); // ìƒíƒœ ì ìš© í›„ ì•Œë¦¼
                     upAttackSound.Play();
-                    Debug.Log($"{summonName}¿¡°Ô º¸È£¸·ÀÌ »ı°å½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì—ê²Œ ë³´í˜¸ë§‰ì´ ìƒê²¼ìŠµë‹ˆë‹¤.");
                 }
                 break;
-            case StatusType.LifeDrain: //ÈíÇ÷
+            case StatusType.LifeDrain: //í¡í˜ˆ
                 if (existingEffect != null)
                 {
-                    Debug.Log($"{summonName}Àº ÀÌ¹Ì ÈíÇ÷ ´çÇÏ°íÀÖ½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì€ ì´ë¯¸ í¡í˜ˆ ë‹¹í•˜ê³ ìˆìŠµë‹ˆë‹¤.");
                 }
                 else
                 {
-                    StartCoroutine(ColorChange(3)); // º¸¶ó»ö
+                    StartCoroutine(ColorChange(3)); // ë³´ë¼ìƒ‰
                     activeStatusEffects.Add(statusEffect);
-                    statusEffect.ApplyStatus(this);  // Áï½Ã È¿°ú Àû¿ë
-                    NotifyObservers(); // »óÅÂ Àû¿ë ÈÄ ¾Ë¸²
+                    statusEffect.ApplyStatus(this);  // ì¦‰ì‹œ íš¨ê³¼ ì ìš©
+                    NotifyObservers(); // ìƒíƒœ ì ìš© í›„ ì•Œë¦¼
                     downHitSound.Play();
-                    Debug.Log($"{summonName}ÀÌ ÈíÇ÷ ´çÇÕ´Ï´Ù.");
+                    Debug.Log($"{summonName}ì´ í¡í˜ˆ ë‹¹í•©ë‹ˆë‹¤.");
                 }
                 break;
 
             default:
-                Debug.Log($"{summonName}¿¡°Ô ¾Ë ¼ö ¾ø´Â »óÅÂÀÌ»óÀÌ Àû¿ëµÇ¾ú½À´Ï´Ù.");
+                Debug.Log($"{summonName}ì—ê²Œ ì•Œ ìˆ˜ ì—†ëŠ” ìƒíƒœì´ìƒì´ ì ìš©ë˜ì—ˆìŠµë‹ˆë‹¤.");
                 break;
         }
     }
 
-    // µ¥¹ÌÁö¸¦ ÁÖ´Â »óÅÂÀÌ»ó ¾÷µ¥ÀÌÆ® ¸Ş¼Òµå (¿¹: Poison, Burn µî)
+    // ë°ë¯¸ì§€ë¥¼ ì£¼ëŠ” ìƒíƒœì´ìƒ ì—…ë°ì´íŠ¸ ë©”ì†Œë“œ (ì˜ˆ: Poison, Burn ë“±)
     //public void UpdateDamageStatusEffects()
     //{
     //    List<StatusEffect> expiredEffects = new List<StatusEffect>();
@@ -296,25 +295,25 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     //    {
     //        if (effect != null && effect.effectTime > 0)
     //        {
-    //            // µ¥¹ÌÁö ÁÖ´Â »óÅÂ È®ÀÎ ¹× Ã³¸®
+    //            // ë°ë¯¸ì§€ ì£¼ëŠ” ìƒíƒœ í™•ì¸ ë° ì²˜ë¦¬
     //            if (effect.damagePerTurn > 0 && effect.statusType != StatusType.Upgrade && effect.statusType != StatusType.Curse)
     //            {
-    //                Debug.Log($"{summonName}ÀÌ(°¡) {effect.statusType} »óÅÂ·Î ÀÎÇØ {effect.damagePerTurn} µ¥¹ÌÁö¸¦ ÀÔ½À´Ï´Ù. ³²Àº »óÅÂÀÌ»ó½Ã°£: {effect.effectTime} ÅÏ");
-    //                takeDamage(effect.damagePerTurn); // ÇÇÇØ Àû¿ë
+    //                Debug.Log($"{summonName}ì´(ê°€) {effect.statusType} ìƒíƒœë¡œ ì¸í•´ {effect.damagePerTurn} ë°ë¯¸ì§€ë¥¼ ì…ìŠµë‹ˆë‹¤. ë‚¨ì€ ìƒíƒœì´ìƒì‹œê°„: {effect.effectTime} í„´");
+    //                takeDamage(effect.damagePerTurn); // í”¼í•´ ì ìš©
     //            }
 
-    //            // ÈíÇ÷ »óÅÂÀÏ °æ¿ì È¸º¹ Ã³¸®
+    //            // í¡í˜ˆ ìƒíƒœì¼ ê²½ìš° íšŒë³µ ì²˜ë¦¬
     //            if (effect.statusType == StatusType.LifeDrain && effect.getAttacker() != null)
     //            {
-    //                double healAmount = effect.damagePerTurn; // ÈíÇ÷ µ¥¹ÌÁö¸¸Å­ È¸º¹
-    //                Debug.Log($"{effect.getAttacker()}ÀÌ(°¡) {effect.statusType} »óÅÂ·Î ÀÎÇØ {healAmount}¸¸Å­ È¸º¹ÇÕ´Ï´Ù.");
+    //                double healAmount = effect.damagePerTurn; // í¡í˜ˆ ë°ë¯¸ì§€ë§Œí¼ íšŒë³µ
+    //                Debug.Log($"{effect.getAttacker()}ì´(ê°€) {effect.statusType} ìƒíƒœë¡œ ì¸í•´ {healAmount}ë§Œí¼ íšŒë³µí•©ë‹ˆë‹¤.");
     //                effect.getAttacker().Heal(effect.damagePerTurn);
     //            }
 
-    //            // Áö¼Ó½Ã°£ °¨¼Ò
+    //            // ì§€ì†ì‹œê°„ ê°ì†Œ
     //            effect.effectTime--;
 
-    //            // »óÅÂ°¡ ¸¸·áµÉ °æ¿ì ¸¸·á ¸®½ºÆ®¿¡ Ãß°¡
+    //            // ìƒíƒœê°€ ë§Œë£Œë  ê²½ìš° ë§Œë£Œ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
     //            if (effect.effectTime <= 0)
     //            {
     //                expiredEffects.Add(effect);
@@ -328,32 +327,32 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     {
         List<StatusEffect> expiredEffects = new List<StatusEffect>();
 
-        // ¿ª¼øÀ¸·Î ¸®½ºÆ® ¼øÈ¸
+        // ì—­ìˆœìœ¼ë¡œ ë¦¬ìŠ¤íŠ¸ ìˆœíšŒ
         for (int i = activeStatusEffects.Count - 1; i >= 0; i--)
         {
             var effect = activeStatusEffects[i];
 
             if (effect != null && effect.effectTime > 0)
             {
-                // µ¥¹ÌÁö ÁÖ´Â »óÅÂ È®ÀÎ ¹× Ã³¸®
+                // ë°ë¯¸ì§€ ì£¼ëŠ” ìƒíƒœ í™•ì¸ ë° ì²˜ë¦¬
                 if (effect.damagePerTurn > 0 && effect.statusType != StatusType.Upgrade && effect.statusType != StatusType.Curse)
                 {
-                    Debug.Log($"{summonName}ÀÌ(°¡) {effect.statusType} »óÅÂ·Î ÀÎÇØ {effect.damagePerTurn} µ¥¹ÌÁö¸¦ ÀÔ½À´Ï´Ù. ³²Àº »óÅÂÀÌ»ó½Ã°£: {effect.effectTime} ÅÏ");
-                    takeDamage(effect.damagePerTurn); // ÇÇÇØ Àû¿ë
+                    Debug.Log($"{summonName}ì´(ê°€) {effect.statusType} ìƒíƒœë¡œ ì¸í•´ {effect.damagePerTurn} ë°ë¯¸ì§€ë¥¼ ì…ìŠµë‹ˆë‹¤. ë‚¨ì€ ìƒíƒœì´ìƒì‹œê°„: {effect.effectTime} í„´");
+                    takeDamage(effect.damagePerTurn); // í”¼í•´ ì ìš©
                 }
 
-                // ÈíÇ÷ »óÅÂÀÏ °æ¿ì È¸º¹ Ã³¸®
+                // í¡í˜ˆ ìƒíƒœì¼ ê²½ìš° íšŒë³µ ì²˜ë¦¬
                 if (effect.statusType == StatusType.LifeDrain && effect.getAttacker() != null)
                 {
-                    double healAmount = effect.damagePerTurn; // ÈíÇ÷ µ¥¹ÌÁö¸¸Å­ È¸º¹
-                    Debug.Log($"{effect.getAttacker()}ÀÌ(°¡) {effect.statusType} »óÅÂ·Î ÀÎÇØ {healAmount}¸¸Å­ È¸º¹ÇÕ´Ï´Ù.");
+                    double healAmount = effect.damagePerTurn; // í¡í˜ˆ ë°ë¯¸ì§€ë§Œí¼ íšŒë³µ
+                    Debug.Log($"{effect.getAttacker()}ì´(ê°€) {effect.statusType} ìƒíƒœë¡œ ì¸í•´ {healAmount}ë§Œí¼ íšŒë³µí•©ë‹ˆë‹¤.");
                     effect.getAttacker().Heal(effect.damagePerTurn);
                 }
 
-                // Áö¼Ó½Ã°£ °¨¼Ò
+                // ì§€ì†ì‹œê°„ ê°ì†Œ
                 effect.effectTime--;
 
-                // »óÅÂ°¡ ¸¸·áµÉ °æ¿ì ¸¸·á ¸®½ºÆ®¿¡ Ãß°¡
+                // ìƒíƒœê°€ ë§Œë£Œë  ê²½ìš° ë§Œë£Œ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
                 if (effect.effectTime <= 0)
                 {
                     expiredEffects.Add(effect);
@@ -361,10 +360,10 @@ public class Summon : MonoBehaviour, UpdateStateObserver
             }
         }
 
-        RemoveExpiredEffects(expiredEffects); // ¸¸·áµÈ È¿°ú Á¦°Å
+        RemoveExpiredEffects(expiredEffects); // ë§Œë£Œëœ íš¨ê³¼ ì œê±°
     }
 
-    // ½ºÅÏ »óÅÂ ¾÷µ¥ÀÌÆ® ¸Ş¼Òµå
+    // ìŠ¤í„´ ìƒíƒœ ì—…ë°ì´íŠ¸ ë©”ì†Œë“œ
     public void UpdateStunAndCurseStatus()
     {
         List<StatusEffect> expiredEffects = new List<StatusEffect>();
@@ -373,17 +372,17 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         {
             if (effect != null && (effect.statusType == StatusType.Stun || effect.statusType == StatusType.Curse))
             {
-                // ½ºÅÏ »óÅÂ´Â °ø°İ ºÒ°¡´ÉÇÏ°Ô ¼³Á¤
+                // ìŠ¤í„´ ìƒíƒœëŠ” ê³µê²© ë¶ˆê°€ëŠ¥í•˜ê²Œ ì„¤ì •
                 if (effect.statusType == StatusType.Stun)
                 {
                     setIsAttack(false);
-                    Debug.Log($"{summonName}Àº ½ºÅÏ°ú ÀúÁÖ »óÅÂ·Î °ø°İÇÒ ¼ö ¾ø½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì€ ìŠ¤í„´ê³¼ ì €ì£¼ ìƒíƒœë¡œ ê³µê²©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
                 }
 
-                // Áö¼Ó½Ã°£ °¨¼Ò
+                // ì§€ì†ì‹œê°„ ê°ì†Œ
                 effect.effectTime--;
 
-                // »óÅÂ°¡ ¸¸·áµÉ °æ¿ì ¸¸·á ¸®½ºÆ®¿¡ Ãß°¡
+                // ìƒíƒœê°€ ë§Œë£Œë  ê²½ìš° ë§Œë£Œ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
                 if (effect.effectTime <= 0)
                 {
                     expiredEffects.Add(effect);
@@ -394,7 +393,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         RemoveExpiredEffects(expiredEffects);
     }
 
-    // °­È­ »óÅÂ ¾÷µ¥ÀÌÆ® ¸Ş¼Òµå
+    // ê°•í™” ìƒíƒœ ì—…ë°ì´íŠ¸ ë©”ì†Œë“œ
     public void UpdateUpgradeStatus()
     {
         List<StatusEffect> expiredEffects = new List<StatusEffect>();
@@ -403,14 +402,14 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         {
             if (effect != null && effect.statusType == StatusType.Upgrade)
             {
-                // °­È­´Â Áö¼Ó½Ã°£¸¸ °ü¸®ÇÏ¸ç, µ¥¹ÌÁö¸¦ ÁÖÁö ¾ÊÀ½
+                // ê°•í™”ëŠ” ì§€ì†ì‹œê°„ë§Œ ê´€ë¦¬í•˜ë©°, ë°ë¯¸ì§€ë¥¼ ì£¼ì§€ ì•ŠìŒ
                 effect.effectTime--;
 
-                // »óÅÂ°¡ ¸¸·áµÉ °æ¿ì ¸¸·á ¸®½ºÆ®¿¡ Ãß°¡
+                // ìƒíƒœê°€ ë§Œë£Œë  ê²½ìš° ë§Œë£Œ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
                 if (effect.effectTime <= 0)
                 {
-                    Debug.Log("°ø°İ·Âº¹¿ø");
-                    attackPower = effect.getOriginAttack(); // ¿ø·¡ °ø°İ·ÂÀ¸·Î º¹¿ø
+                    Debug.Log("ê³µê²©ë ¥ë³µì›");
+                    attackPower = effect.getOriginAttack(); // ì›ë˜ ê³µê²©ë ¥ìœ¼ë¡œ ë³µì›
                     expiredEffects.Add(effect);
                 }
             }
@@ -419,30 +418,30 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         RemoveExpiredEffects(expiredEffects);
     }
 
-    // ¸¸·áµÈ »óÅÂÀÌ»ó Á¦°Å ¸Ş¼Òµå
+    // ë§Œë£Œëœ ìƒíƒœì´ìƒ ì œê±° ë©”ì†Œë“œ
     private void RemoveExpiredEffects(List<StatusEffect> expiredEffects)
     {
         foreach (var expired in expiredEffects)
         {
             activeStatusEffects.Remove(expired);
-            Debug.Log($"{summonName}ÀÇ {expired.statusType} »óÅÂÀÌ»óÀÌ Á¾·áµÇ¾ú½À´Ï´Ù.");
+            Debug.Log($"{summonName}ì˜ {expired.statusType} ìƒíƒœì´ìƒì´ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
 
-            // ½ºÅÏ ÇØÁ¦ ½Ã °ø°İ °¡´ÉÇÏµµ·Ï ¼³Á¤
+            // ìŠ¤í„´ í•´ì œ ì‹œ ê³µê²© ê°€ëŠ¥í•˜ë„ë¡ ì„¤ì •
             if (expired.statusType == StatusType.Stun)
             {
                 setIsAttack(true);
-                Debug.Log($"{summonName}ÀÇ ½ºÅÏÀÌ ÇØÁ¦µÇ¾ú½À´Ï´Ù. °ø°İ °¡´É.");
+                Debug.Log($"{summonName}ì˜ ìŠ¤í„´ì´ í•´ì œë˜ì—ˆìŠµë‹ˆë‹¤. ê³µê²© ê°€ëŠ¥.");
             }
-            NotifyObservers(); // »óÅÂ Àû¿ë ÈÄ ¾Ë¸²
+            NotifyObservers(); // ìƒíƒœ ì ìš© í›„ ì•Œë¦¼
         }
     }
 
 
 
-    // Æ¯¼ö °ø°İ ÄğÅ¸ÀÓ ¾÷µ¥ÀÌÆ® ¸Ş¼Òµå
+    // íŠ¹ìˆ˜ ê³µê²© ì¿¨íƒ€ì„ ì—…ë°ì´íŠ¸ ë©”ì†Œë“œ
     public void UpdateSpecialAttackCooldowns()
     {
-        if (specialAttackStrategies == null) return; // ¹è¿­ÀÌ nullÀÎ °æ¿ì Ã¼Å©
+        if (specialAttackStrategies == null) return; // ë°°ì—´ì´ nullì¸ ê²½ìš° ì²´í¬
 
         foreach (var specialAttack in specialAttackStrategies)
         {
@@ -450,12 +449,12 @@ public class Summon : MonoBehaviour, UpdateStateObserver
             {
                 if (specialAttack.getCurrentCooldown() > 0)
                 {
-                    specialAttack.ReduceCooldown(); // ÄğÅ¸ÀÓ °¨¼Ò
-                    Debug.Log($"{summonName}ÀÇ {specialAttack.GetType().Name} ½ºÅ³ÀÇ ³²Àº ÄğÅ¸ÀÓ: {specialAttack.getCurrentCooldown()} ÅÏ");
+                    specialAttack.ReduceCooldown(); // ì¿¨íƒ€ì„ ê°ì†Œ
+                    Debug.Log($"{summonName}ì˜ {specialAttack.GetType().Name} ìŠ¤í‚¬ì˜ ë‚¨ì€ ì¿¨íƒ€ì„: {specialAttack.getCurrentCooldown()} í„´");
                 }
                 else
                 {
-                    Debug.Log($"{summonName}ÀÇ {specialAttack.GetType().Name} ½ºÅ³ ÄğÅ¸ÀÓÀÌ Á¾·áµÇ¾ú½À´Ï´Ù.");
+                    Debug.Log($"{summonName}ì˜ {specialAttack.GetType().Name} ìŠ¤í‚¬ ì¿¨íƒ€ì„ì´ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
                 }
             }
         }
@@ -466,19 +465,19 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         switch (statusType)
         {
             case StatusType.Burn:
-                image.color = new Color(1f, 0.3f, 0.3f); // ºÓÀº»ö (Burn)
+                image.color = new Color(1f, 0.3f, 0.3f); // ë¶‰ì€ìƒ‰ (Burn)
                 break;
             case StatusType.Poison:
-                image.color = new Color(0.3f, 1f, 0.3f); // ³ì»ö (Poison)
+                image.color = new Color(0.3f, 1f, 0.3f); // ë…¹ìƒ‰ (Poison)
                 break;
             case StatusType.Stun:
-                image.color = new Color(0.2f, 0.2f, 0.2f); // °ËÀº»ö (Stun)
+                image.color = new Color(0.2f, 0.2f, 0.2f); // ê²€ì€ìƒ‰ (Stun)
                 break;
             case StatusType.LifeDrain:
-                image.color = new Color(1f, 1f, 0.5f); // ³ë¶õ»ö (ÈíÇ÷)
+                image.color = new Color(1f, 1f, 0.5f); // ë…¸ë€ìƒ‰ (í¡í˜ˆ)
                 break;
             default:
-                image.color = Color.white; // ±âº» »ö»ó
+                image.color = Color.white; // ê¸°ë³¸ ìƒ‰ìƒ
                 break;
         }
     }
@@ -486,23 +485,23 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
     private int currentEffectIndex = 0;
     private float blinkTimer = 0f;
-    private float blinkInterval = 1f; // »ö»ó º¯°æ °£°İ
+    private float blinkInterval = 1f; // ìƒ‰ìƒ ë³€ê²½ ê°„ê²©
     private void ApplyStatusEffectBlink()
     {
         if (activeStatusEffects.Count == 0)
         {
-            image.color = Color.white; // »óÅÂÀÌ»óÀÌ ¾øÀ¸¸é ±âº» »öÀ¸·Î ¼³Á¤
+            image.color = Color.white; // ìƒíƒœì´ìƒì´ ì—†ìœ¼ë©´ ê¸°ë³¸ ìƒ‰ìœ¼ë¡œ ì„¤ì •
             return;
         }
 
         if (activeStatusEffects.Count == 1)
         {
-            // »óÅÂÀÌ»óÀÌ 1°³ÀÏ ¶§´Â ÇØ´ç »ö»óÀ» À¯Áö
+            // ìƒíƒœì´ìƒì´ 1ê°œì¼ ë•ŒëŠ” í•´ë‹¹ ìƒ‰ìƒì„ ìœ ì§€
             SetColorByStatus(activeStatusEffects[0].statusType);
         }
         else
         {
-            // »óÅÂÀÌ»óÀÌ ¿©·¯ °³ÀÏ ¶§´Â ÀÏÁ¤ °£°İÀ¸·Î »ö»ó º¯°æ
+            // ìƒíƒœì´ìƒì´ ì—¬ëŸ¬ ê°œì¼ ë•ŒëŠ” ì¼ì • ê°„ê²©ìœ¼ë¡œ ìƒ‰ìƒ ë³€ê²½
             blinkTimer += Time.deltaTime;
 
             if (blinkTimer >= blinkInterval)
@@ -534,20 +533,20 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     public void UpgradeAttackPower(double multiplier)
     {
         attackPower *= (1 + multiplier);
-        attackPower = Math.Floor(attackPower); // ¼Ò¼öÁ¡ ¾Æ·¡¸¦ ¹ö¸²
+        attackPower = Math.Floor(attackPower); // ì†Œìˆ˜ì  ì•„ë˜ë¥¼ ë²„ë¦¼
 
-        attackPower = (int)attackPower; // doubleÀ» int·Î º¯È¯
-        Debug.Log($"{summonName}ÀÇ °ø°İ·ÂÀÌ {multiplier * 100}% °­È­ µÇ¾ú½À´Ï´Ù. ÇöÀç °ø°İ·Â: {attackPower}");
+        attackPower = (int)attackPower; // doubleì„ intë¡œ ë³€í™˜
+        Debug.Log($"{summonName}ì˜ ê³µê²©ë ¥ì´ {multiplier * 100}% ê°•í™” ë˜ì—ˆìŠµë‹ˆë‹¤. í˜„ì¬ ê³µê²©ë ¥: {attackPower}");
     }
 
     public void Cursed(double curse)
     {
         attackPower *= (1 - curse);
-        Debug.Log($"{summonName}ÀÇ °ø°İ·ÂÀÌ {curse * 100}% ´Ù¿î µÇ¾ú½À´Ï´Ù. ÇöÀç °ø°İ·Â: {attackPower}");
+        Debug.Log($"{summonName}ì˜ ê³µê²©ë ¥ì´ {curse * 100}% ë‹¤ìš´ ë˜ì—ˆìŠµë‹ˆë‹¤. í˜„ì¬ ê³µê²©ë ¥: {attackPower}");
     }
 
 
-    // Ã¼·Â È¸º¹
+    // ì²´ë ¥ íšŒë³µ
     public void Heal(double healAmount)
     {
         nowHP += healAmount;
@@ -555,121 +554,121 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         {
             nowHP = maxHP;
         }
-        Debug.Log($"{summonName}ÀÌ(°¡) {healAmount}¸¸Å­ Ã¼·ÂÀ» È¸º¹Çß½À´Ï´Ù.");
-        // Ã¼·Â º¯°æ ½Ã ¿ÉÀú¹öµé¿¡°Ô ¾Ë¸²
+        Debug.Log($"{summonName}ì´(ê°€) {healAmount}ë§Œí¼ ì²´ë ¥ì„ íšŒë³µí–ˆìŠµë‹ˆë‹¤.");
+        // ì²´ë ¥ ë³€ê²½ ì‹œ ì˜µì €ë²„ë“¤ì—ê²Œ ì•Œë¦¼
         NotifyObservers();
         animator.SetTrigger("hitted");
-        StartCoroutine(ColorChange(4)); // ÃÊ·Ï»ö
+        StartCoroutine(ColorChange(4)); // ì´ˆë¡ìƒ‰
         upAttackSound.Play();
     }
 
 
-    public virtual void takeDamage(double damage) //µ¥¹ÌÁö ÀÔ±â
+    public virtual void takeDamage(double damage) //ë°ë¯¸ì§€ ì…ê¸°
     {
-        damage = (int)damage; //µ¥¹ÌÁöÀÇ ¼Ò¼ıÁ¡ Á¦°Å
-        damage = Math.Floor(damage); // ¼Ò¼öÁ¡ ¾Æ·¡¸¦ ¹ö¸²
+        damage = (int)damage; //ë°ë¯¸ì§€ì˜ ì†Œìˆ«ì  ì œê±°
+        damage = Math.Floor(damage); // ì†Œìˆ˜ì  ì•„ë˜ë¥¼ ë²„ë¦¼
 
         if (onceInvincibility)
         {
             onceInvincibility = false;
-            Debug.Log("1È¸ ¹«Àûº¸È£¸·À¸·Î °ø°İÀ» º¸È£Çß½À´Ï´Ù.");
+            Debug.Log("1íšŒ ë¬´ì ë³´í˜¸ë§‰ìœ¼ë¡œ ê³µê²©ì„ ë³´í˜¸í–ˆìŠµë‹ˆë‹¤.");
             return;
         }
-        if (shield > 0) //½¯µå°¡ ÀÖÀ»¶§ µ¥¹ÌÁö ¹Ş°Ô
+        if (shield > 0) //ì‰´ë“œê°€ ìˆì„ë•Œ ë°ë¯¸ì§€ ë°›ê²Œ
         {
             if (shield >= damage)
             {
-                // ½¯µå°¡ µ¥¹ÌÁö¸¦ ¸ğµÎ ¸·¾ÆÁÜ
+                // ì‰´ë“œê°€ ë°ë¯¸ì§€ë¥¼ ëª¨ë‘ ë§‰ì•„ì¤Œ
                 shield -= damage;
                 animator.SetTrigger("hitted");
-                Debug.Log("½¯µå·Î ÇÇÇØ ¹æ¾î. ³²Àº ½¯µå: " + shield);
+                Debug.Log("ì‰´ë“œë¡œ í”¼í•´ ë°©ì–´. ë‚¨ì€ ì‰´ë“œ: " + shield);
             }
             else
             {
-                // ½¯µå°¡ ÀÏºÎ¸¸ ¸·°í ³ª¸ÓÁö´Â Ã¼·Â¿¡ Àû¿ë
+                // ì‰´ë“œê°€ ì¼ë¶€ë§Œ ë§‰ê³  ë‚˜ë¨¸ì§€ëŠ” ì²´ë ¥ì— ì ìš©
                 double remainingDamage = damage - shield;
                 shield = 0;
                 nowHP -= remainingDamage;
                 animator.SetTrigger("hitted");
                 shieldImage.SetActive(false);
 
-                // ½¯µå°¡ ÆÄ±«µÉ ¶§ Shield »óÅÂ Á¦°Å
+                // ì‰´ë“œê°€ íŒŒê´´ë  ë•Œ Shield ìƒíƒœ ì œê±°
                 var shieldEffect = activeStatusEffects.FirstOrDefault(e => e.statusType == StatusType.Shield);
                 RemoveExpiredEffects(new List<StatusEffect> { shieldEffect });
-                Debug.Log("½¯µå°¡ ÆÄ±«µÊ. ³²Àº Ã¼·Â: " + nowHP);
+                Debug.Log("ì‰´ë“œê°€ íŒŒê´´ë¨. ë‚¨ì€ ì²´ë ¥: " + nowHP);
             }
         }
-        else //½¯µå°¡ ¾øÀ»°æ¿ì
+        else //ì‰´ë“œê°€ ì—†ì„ê²½ìš°
         {
             nowHP -= damage;
             animator.SetTrigger("hitted");
-            StartCoroutine((ColorChange(2)));   // »¡°£ »ö
+            StartCoroutine((ColorChange(2)));   // ë¹¨ê°„ ìƒ‰
         }
 
-        if (nowHP <= 0) //Á×À½Ã³¸®
+        if (nowHP <= 0) //ì£½ìŒì²˜ë¦¬
         {
-            nowHP = 0;  // Ã¼·ÂÀ» 0 ÀÌÇÏ·Î ³»¸®Áö ¾ÊÀ½
+            nowHP = 0;  // ì²´ë ¥ì„ 0 ì´í•˜ë¡œ ë‚´ë¦¬ì§€ ì•ŠìŒ
             Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
-            die();  // »ç¸Á Ã³¸®
+            die();  // ì‚¬ë§ ì²˜ë¦¬
         }
         else
         {
             Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
         }
 
-        // Ã¼·Â º¯°æ ½Ã ¿ÉÀú¹öµé¿¡°Ô ¾Ë¸²
+        // ì²´ë ¥ ë³€ê²½ ì‹œ ì˜µì €ë²„ë“¤ì—ê²Œ ì•Œë¦¼
         NotifyObservers();
     }
 
-    // ¼ÒÈ¯¼ö ÃÊ±âÈ­ ¸Ş¼­µå
+    // ì†Œí™˜ìˆ˜ ì´ˆê¸°í™” ë©”ì„œë“œ
     public virtual void summonInitialize()
     {
         NotifyObservers();
     }
 
-    public static double multiple=5; //¹è¼ö¼³Á¤
+    public static double multiple=5; //ë°°ìˆ˜ì„¤ì •
     public virtual void ApplayMultiple(double m) {
         maxHP = (int)(maxHP * m);
         nowHP = maxHP;
-        attackPower = (int)(attackPower * m); // ÀÏ¹İ°ø°İ ¹è¼ö Àû¿ë
-        heavyAttakPower = (int)(heavyAttakPower * m); // °­°ø°İ ¹è¼ö Àû¿ë
+        attackPower = (int)(attackPower * m); // ì¼ë°˜ê³µê²© ë°°ìˆ˜ ì ìš©
+        heavyAttakPower = (int)(heavyAttakPower * m); // ê°•ê³µê²© ë°°ìˆ˜ ì ìš©
     }
 
 
     public virtual void die()
     {
-        Debug.Log($"{summonName} °¡ Ã¼·ÂÀÌ ¼Ò¸ğµÇ¾î »ç¶óÁı´Ï´Ù.");
-        // Plate¿¡¼­ ¼ÒÈ¯¼ö¸¦ Á¦°ÅÇÏ±â À§ÇØ ¼ÒÈ¯¼ö¸¦ ¹èÄ¡ÇÑ Plate¸¦ °¡Á®¿È
-        Plate plate = GetComponentInParent<Plate>(); // ¼ÒÈ¯¼ö°¡ ¼ÓÇÑ ºÎ¸ğ Plate °¡Á®¿À±â
+        Debug.Log($"{summonName} ê°€ ì²´ë ¥ì´ ì†Œëª¨ë˜ì–´ ì‚¬ë¼ì§‘ë‹ˆë‹¤.");
+        // Plateì—ì„œ ì†Œí™˜ìˆ˜ë¥¼ ì œê±°í•˜ê¸° ìœ„í•´ ì†Œí™˜ìˆ˜ë¥¼ ë°°ì¹˜í•œ Plateë¥¼ ê°€ì ¸ì˜´
+        Plate plate = GetComponentInParent<Plate>(); // ì†Œí™˜ìˆ˜ê°€ ì†í•œ ë¶€ëª¨ Plate ê°€ì ¸ì˜¤ê¸°
         if (plate != null)
         {
-            plate.RemoveSummon(); // ¼ÒÈ¯¼ö Á¦°Å
+            plate.RemoveSummon(); // ì†Œí™˜ìˆ˜ ì œê±°
         }
 
-        // ¼ÒÈ¯¼ö ¿ÀºêÁ§Æ® »èÁ¦
-        Destroy(gameObject); // ¼ÒÈ¯¼ö ¿ÀºêÁ§Æ®¸¦ ¾À¿¡¼­ Á¦°Å
+        // ì†Œí™˜ìˆ˜ ì˜¤ë¸Œì íŠ¸ ì‚­ì œ
+        Destroy(gameObject); // ì†Œí™˜ìˆ˜ ì˜¤ë¸Œì íŠ¸ë¥¼ ì”¬ì—ì„œ ì œê±°
 
     }
 
 
     public void AddShield(double shieldAmount)
     {
-        if (shield == 0) // ÇöÀç ½¯µå°¡ 0ÀÏ ¶§¸¸ ÃÊ±âÈ­
+        if (shield == 0) // í˜„ì¬ ì‰´ë“œê°€ 0ì¼ ë•Œë§Œ ì´ˆê¸°í™”
         {
             initialShield = shieldAmount;
         }
         shield += shieldAmount;
         shieldImage.SetActive(true);
-        Debug.Log("½¯µå ºÎ¿©. ÇöÀç ½¯µå: " + shield);
+        Debug.Log("ì‰´ë“œ ë¶€ì—¬. í˜„ì¬ ì‰´ë“œ: " + shield);
         NotifyObservers();
     }
     public double getShield()
     {
-        return shield; // ÇöÀç ½¯µå °ªÀ» ¹İÈ¯
+        return shield; // í˜„ì¬ ì‰´ë“œ ê°’ì„ ë°˜í™˜
     }
     public double GetInitialShield()
     {
-        return initialShield; // ÃÊ±â ½¯µå ¾çÀ» ¹İÈ¯
+        return initialShield; // ì´ˆê¸° ì‰´ë“œ ì–‘ì„ ë°˜í™˜
     }
 
     public string getSummonName(){ 
@@ -716,7 +715,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     {
         return maxHP;
     }
-    // nowHP °ü·Ã ¸Ş¼­µå
+    // nowHP ê´€ë ¨ ë©”ì„œë“œ
     public void setNowHP(double hp)
     {
         this.nowHP = hp;
@@ -727,7 +726,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         return nowHP;
     }
 
-    // attackPower °ü·Ã ¸Ş¼­µå
+    // attackPower ê´€ë ¨ ë©”ì„œë“œ
     public void setAttackPower(double power)
     {
         this.attackPower = power;
@@ -758,7 +757,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     }
 
 
-    //Æ¯¼ö°ø°İÀÌ ÄğÅ¸ÀÓÀÎÁö
+    //íŠ¹ìˆ˜ê³µê²©ì´ ì¿¨íƒ€ì„ì¸ì§€
     public bool isSpecialAttackCool(IAttackStrategy specialAttack)
     {
         if (specialAttack!= null && specialAttack.getCurrentCooldown() > 0)
@@ -773,7 +772,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     {
         List<StatusType> statusTypes = new List<StatusType>();
 
-        // activeStatusEffects ¸®½ºÆ®ÀÇ °¢ StatusEffect¿¡¼­ statusTypeÀ» °¡Á®¿Í Ãß°¡
+        // activeStatusEffects ë¦¬ìŠ¤íŠ¸ì˜ ê° StatusEffectì—ì„œ statusTypeì„ ê°€ì ¸ì™€ ì¶”ê°€
         foreach (StatusEffect effect in activeStatusEffects)
         {
             statusTypes.Add(effect.statusType);
@@ -784,54 +783,54 @@ public class Summon : MonoBehaviour, UpdateStateObserver
 
     public bool IsCursed()
     {
-        // activeStatusEffects ¸®½ºÆ®¸¦ ÇÏ³ª¾¿ ¼øÈ¸
+        // activeStatusEffects ë¦¬ìŠ¤íŠ¸ë¥¼ í•˜ë‚˜ì”© ìˆœíšŒ
         foreach (StatusEffect effect in activeStatusEffects)
         {
-            // °¢ »óÅÂÀÌ»óÀÇ »óÅÂ Å¸ÀÔÀÌ StatusType.CurseÀÎÁö È®ÀÎ
+            // ê° ìƒíƒœì´ìƒì˜ ìƒíƒœ íƒ€ì…ì´ StatusType.Curseì¸ì§€ í™•ì¸
             if (effect.statusType == StatusType.Curse)
             {
-                // Curse »óÅÂ°¡ ¹ß°ßµÇ¸é true ¹İÈ¯
+                // Curse ìƒíƒœê°€ ë°œê²¬ë˜ë©´ true ë°˜í™˜
                 return true;
             }
         }
 
-        // Curse »óÅÂ°¡ ¾øÀ¸¸é false ¹İÈ¯
+        // Curse ìƒíƒœê°€ ì—†ìœ¼ë©´ false ë°˜í™˜
         return false;
     }
 
     public bool IsStun()
     {
-        // activeStatusEffects ¸®½ºÆ®¸¦ ÇÏ³ª¾¿ ¼øÈ¸
+        // activeStatusEffects ë¦¬ìŠ¤íŠ¸ë¥¼ í•˜ë‚˜ì”© ìˆœíšŒ
         foreach (StatusEffect effect in activeStatusEffects)
         {
-            // °¢ »óÅÂÀÌ»óÀÇ »óÅÂ Å¸ÀÔÀÌ StatusType.Stun È®ÀÎ
+            // ê° ìƒíƒœì´ìƒì˜ ìƒíƒœ íƒ€ì…ì´ StatusType.Stun í™•ì¸
             if (effect.statusType == StatusType.Stun)
             {
-                // Stun »óÅÂ°¡ ¹ß°ßµÇ¸é true ¹İÈ¯
+                // Stun ìƒíƒœê°€ ë°œê²¬ë˜ë©´ true ë°˜í™˜
                 return true;
             }
         }
 
-        // Stun »óÅÂ°¡ ¾øÀ¸¸é false ¹İÈ¯
+        // Stun ìƒíƒœê°€ ì—†ìœ¼ë©´ false ë°˜í™˜
         return false;
     }
 
-    public bool IsCooltime() //ÄğÅ¸ÀÓÀÎÁö È®ÀÎ
+    public bool IsCooltime() //ì¿¨íƒ€ì„ì¸ì§€ í™•ì¸
     {
-        // ¸ÕÀú Æ¯¼ö °ø°İ Àü·« ¹è¿­ÀÌ ÀÖ´ÂÁö È®ÀÎ
+        // ë¨¼ì € íŠ¹ìˆ˜ ê³µê²© ì „ëµ ë°°ì—´ì´ ìˆëŠ”ì§€ í™•ì¸
         if (specialAttackStrategies == null || specialAttackStrategies.Length == 0)
         {
-            Debug.Log("Æ¯¼ö °ø°İÀÌ ¾ø½À´Ï´Ù.");
+            Debug.Log("íŠ¹ìˆ˜ ê³µê²©ì´ ì—†ìŠµë‹ˆë‹¤.");
             return false;
         }
 
-        // °¢ Æ¯¼ö °ø°İ Àü·«¿¡ ´ëÇØ ÄğÅ¸ÀÓ ¿©ºÎ È®ÀÎ
+        // ê° íŠ¹ìˆ˜ ê³µê²© ì „ëµì— ëŒ€í•´ ì¿¨íƒ€ì„ ì—¬ë¶€ í™•ì¸
         foreach (var specialAttack in specialAttackStrategies)
         {
             if (specialAttack != null && specialAttack.getCurrentCooldown() > 0)
             {
-                // ÇÏ³ª¶óµµ ÄğÅ¸ÀÓ ÁßÀÎ Àü·«ÀÌ ÀÖÀ¸¸é true ¹İÈ¯
-                Debug.Log($"{summonName}ÀÇ {specialAttack.GetType().Name} ½ºÅ³ÀÌ ÄğÅ¸ÀÓ ÁßÀÔ´Ï´Ù.");
+                // í•˜ë‚˜ë¼ë„ ì¿¨íƒ€ì„ ì¤‘ì¸ ì „ëµì´ ìˆìœ¼ë©´ true ë°˜í™˜
+                Debug.Log($"{summonName}ì˜ {specialAttack.GetType().Name} ìŠ¤í‚¬ì´ ì¿¨íƒ€ì„ ì¤‘ì…ë‹ˆë‹¤.");
                 return true;
             }
         }
@@ -842,7 +841,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
     {
         List<IAttackStrategy> availableSpecialAttacks = new List<IAttackStrategy>();
 
-        // Æ¯¼ö °ø°İ Áß ÄğÅ¸ÀÓÀÌ ¾ø´Â °ø°İÀ» ÇÊÅÍ¸µÇÏ¿© Ãß°¡
+        // íŠ¹ìˆ˜ ê³µê²© ì¤‘ ì¿¨íƒ€ì„ì´ ì—†ëŠ” ê³µê²©ì„ í•„í„°ë§í•˜ì—¬ ì¶”ê°€
         foreach (IAttackStrategy specialAttack in specialAttackStrategies)
         {
             if (specialAttack != null && specialAttack.getCurrentCooldown() == 0)
@@ -879,7 +878,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver
         }
     }
 
-    public Summon Clone() //÷Àº º¹»ç
+    public Summon Clone() //ì–‰ì€ ë³µì‚¬
     {
         return (Summon)this.MemberwiseClone();
     }

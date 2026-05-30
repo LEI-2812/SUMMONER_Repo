@@ -6,18 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class InteractionController : MonoBehaviour, IPointerClickHandler
 {
-    [Header("Ä³¸¯ÅÍÀÌ¸§ ÅØ½ºÆ®")]
+    [Header("ìºë¦­í„°ì´ë¦„ í…ìŠ¤íŠ¸")]
     public Text characterName;
     public Text dialogueContext;
 
-    [SerializeField] private InteractionEvent interactionEvent; // InteractionEvent ¿¬°á
+    [SerializeField] private InteractionEvent interactionEvent; // InteractionEvent ì—°ê²°
 
-    private Dialogue[] currentDialogues; // ÇöÀç ÁøÇà ÁßÀÎ ´ëÈ­
-    private int currentDialogueIndex = 0; // ÇöÀç ÁøÇà ÁßÀÎ Dialogue ÀÎµ¦½º(CSVÀÇ ID¼ø¼­)
-    private int currentDialogueLineIndex = 0; // ÇöÀç ÁøÇà ÁßÀÎ DialogueÀÇ ´ë»ç ÀÎµ¦½º
-    private bool isDialogueActive = false; // ´ëÈ­ ÁøÇà »óÅÂ Ã¼Å©
+    private Dialogue[] currentDialogues; // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ ëŒ€í™”
+    private int currentDialogueIndex = 0; // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ Dialogue ì¸ë±ìŠ¤(CSVì˜ IDìˆœì„œ)
+    private int currentDialogueLineIndex = 0; // í˜„ì¬ ì§„í–‰ ì¤‘ì¸ Dialogueì˜ ëŒ€ì‚¬ ì¸ë±ìŠ¤
+    private bool isDialogueActive = false; // ëŒ€í™” ì§„í–‰ ìƒíƒœ ì²´í¬
 
-    private bool isStory; //½ºÅä¸®°¡ ÁøÇàÁßÀÎÁö È®ÀÎ
+    private bool isStory; //ìŠ¤í† ë¦¬ê°€ ì§„í–‰ì¤‘ì¸ì§€ í™•ì¸
     private StoryStage storyStage;
     public FadeController fadeController;
 
@@ -32,114 +32,114 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     void Start()
     {
 
-        // ÃÊ±âÈ­
+        // ì´ˆê¸°í™”
         characterName.text = "";
         dialogueContext.text = "";
 
-        // ½ÃÀÛÇÏÀÚ¸¶ÀÚ ´ëÈ­¸¦ ½ÃÀÛ
+        // ì‹œì‘í•˜ìë§ˆì ëŒ€í™”ë¥¼ ì‹œì‘
         StartDialogue();
     }
 
-    // ´ëÈ­ ½ÃÀÛ ¸Ş¼­µå
+    // ëŒ€í™” ì‹œì‘ ë©”ì„œë“œ
     public void StartDialogue()
     {
-        if (isDialogueActive) return; // ÀÌ¹Ì ´ëÈ­ ÁßÀÌ¸é Áßº¹ ½ÇÇà ¹æÁö
-        currentDialogues = interactionEvent.getDialogue(); // ´ë»ç¸¦ °¡Á®¿Â´Ù.
-        if (currentDialogues == null || currentDialogues.Length == 0) // ´ë»ç°¡ ¾øÀ¸¸é Á¾·á
+        if (isDialogueActive) return; // ì´ë¯¸ ëŒ€í™” ì¤‘ì´ë©´ ì¤‘ë³µ ì‹¤í–‰ ë°©ì§€
+        currentDialogues = interactionEvent.getDialogue(); // ëŒ€ì‚¬ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
+        if (currentDialogues == null || currentDialogues.Length == 0) // ëŒ€ì‚¬ê°€ ì—†ìœ¼ë©´ ì¢…ë£Œ
         {
-            Debug.LogWarning("´ëÈ­ ³»¿ëÀÌ ¾ø½À´Ï´Ù.");
+            Debug.LogWarning("ëŒ€í™” ë‚´ìš©ì´ ì—†ìŠµë‹ˆë‹¤.");
             return;
         }
 
-        currentDialogueIndex = 0; // Ä³¸¯ÅÍ ´ë»ç ÃÊ±âÈ­
-        currentDialogueLineIndex = 0; // ´ë»ç ÀÎµ¦½º ÃÊ±âÈ­
+        currentDialogueIndex = 0; // ìºë¦­í„° ëŒ€ì‚¬ ì´ˆê¸°í™”
+        currentDialogueLineIndex = 0; // ëŒ€ì‚¬ ì¸ë±ìŠ¤ ì´ˆê¸°í™”
         isDialogueActive = true;
-        ShowNextLine(); // Ã¹ ¹øÂ° ´ë»ç Ãâ·Â
+        ShowNextLine(); // ì²« ë²ˆì§¸ ëŒ€ì‚¬ ì¶œë ¥
     }
 
-    // ´ÙÀ½ ´ë»ç¸¦ º¸¿©ÁÖ´Â ¸Ş¼­µå
+    // ë‹¤ìŒ ëŒ€ì‚¬ë¥¼ ë³´ì—¬ì£¼ëŠ” ë©”ì„œë“œ
     public void ShowNextLine()
     {
 
-        if (!isDialogueActive || isStory) return; // ´ëÈ­°¡ ÁøÇà ÁßÀÌ ¾Æ´Ï¸é ½ÇÇà ¾È ÇÔ
+        if (!isDialogueActive || isStory) return; // ëŒ€í™”ê°€ ì§„í–‰ ì¤‘ì´ ì•„ë‹ˆë©´ ì‹¤í–‰ ì•ˆ í•¨
 
-        // ÇöÀç Ä³¸¯ÅÍÀÇ ´ë»ç Ãâ·Â
+        // í˜„ì¬ ìºë¦­í„°ì˜ ëŒ€ì‚¬ ì¶œë ¥
         if (currentDialogueIndex < currentDialogues.Length)
         {
-            Dialogue currentDialogue = currentDialogues[currentDialogueIndex]; //ÀĞ¾îµéÀÏ Dialogue¸¦ °¡Á®¿Â´Ù.
+            Dialogue currentDialogue = currentDialogues[currentDialogueIndex]; //ì½ì–´ë“¤ì¼ Dialogueë¥¼ ê°€ì ¸ì˜¨ë‹¤.
 
-            // ÇöÀç Ä³¸¯ÅÍÀÇ ¸ğµç ´ë»ç¸¦ Ãâ·ÂÇß´Ù¸é ´ÙÀ½ Ä³¸¯ÅÍ(CSVÀÇ ID)·Î ³Ñ¾î°¨
+            // í˜„ì¬ ìºë¦­í„°ì˜ ëª¨ë“  ëŒ€ì‚¬ë¥¼ ì¶œë ¥í–ˆë‹¤ë©´ ë‹¤ìŒ ìºë¦­í„°(CSVì˜ ID)ë¡œ ë„˜ì–´ê°
             if (currentDialogueLineIndex >= currentDialogue.context.Length)
             {
-                currentDialogueLineIndex = 0; // ´ë»ç ÀÎµ¦½º ÃÊ±âÈ­
-                currentDialogueIndex++; // ´ÙÀ½ Ä³¸¯ÅÍ·Î ÀÌµ¿
-                ShowNextLine(); // ´ÙÀ½ Ä³¸¯ÅÍ ´ë»ç Ãâ·Â
+                currentDialogueLineIndex = 0; // ëŒ€ì‚¬ ì¸ë±ìŠ¤ ì´ˆê¸°í™”
+                currentDialogueIndex++; // ë‹¤ìŒ ìºë¦­í„°ë¡œ ì´ë™
+                ShowNextLine(); // ë‹¤ìŒ ìºë¦­í„° ëŒ€ì‚¬ ì¶œë ¥
                 return;
             }
 
-            // ÇöÀç Ä³¸¯ÅÍÀÇ ´ë»ç Ãâ·Â
+            // í˜„ì¬ ìºë¦­í„°ì˜ ëŒ€ì‚¬ ì¶œë ¥
             characterName.text = currentDialogue.name;
 
-            // ÇöÀç ´ë»ç¿¡ ÀÌ¾îºÙÀÌ±â ±â´É Ãß°¡
+            // í˜„ì¬ ëŒ€ì‚¬ì— ì´ì–´ë¶™ì´ê¸° ê¸°ëŠ¥ ì¶”ê°€
             string combinedDialogue = "";
             
             for (int i = 0; i <= currentDialogueLineIndex; i++)
             {
-                if (i % 2 == 0) //3¹øÂ° ´ë»ç¸¶´Ù ÀÌ¾îºÙÀÏ ´ë»ç¸¦ ÃÊ±âÈ­½ÃÅ²´Ù.
+                if (i % 2 == 0) //3ë²ˆì§¸ ëŒ€ì‚¬ë§ˆë‹¤ ì´ì–´ë¶™ì¼ ëŒ€ì‚¬ë¥¼ ì´ˆê¸°í™”ì‹œí‚¨ë‹¤.
                     combinedDialogue = "";
 
                 combinedDialogue += currentDialogue.context[i];
                
                 if (i < currentDialogueLineIndex)
                 {
-                    combinedDialogue += "\n"; // ´ë»ç¸¦ ÇÕÄ¥ ¶§ µé¿©¾²±â·Î Ãß°¡
+                    combinedDialogue += "\n"; // ëŒ€ì‚¬ë¥¼ í•©ì¹  ë•Œ ë“¤ì—¬ì“°ê¸°ë¡œ ì¶”ê°€
                 }
             }
 
-            dialogueContext.text = combinedDialogue; // ÇÕÃÄÁø ´ë»ç Ãâ·Â
-            currentDialogueLineIndex++; // ´ÙÀ½ ´ë»ç·Î ÀÌµ¿
+            dialogueContext.text = combinedDialogue; // í•©ì³ì§„ ëŒ€ì‚¬ ì¶œë ¥
+            currentDialogueLineIndex++; // ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ì´ë™
         }
         else
         {
-            EndDialogue(); // ¸ğµç ´ë»ç°¡ ³¡³ª¸é ´ëÈ­ Á¾·á
+            EndDialogue(); // ëª¨ë“  ëŒ€ì‚¬ê°€ ëë‚˜ë©´ ëŒ€í™” ì¢…ë£Œ
         }
     }
 
-    // ´ëÈ­ Á¾·á ¸Ş¼­µå
+    // ëŒ€í™” ì¢…ë£Œ ë©”ì„œë“œ
     public void EndDialogue()
     {
         isDialogueActive = false;
-        Debug.Log("´ëÈ­°¡ Á¾·áµÇ¾ú½À´Ï´Ù.");
+        Debug.Log("ëŒ€í™”ê°€ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
 
         fadeController.RegisterCallback(() =>
         {
             switch (storyStage.getStoryNum())
             {
                 case 0:
-                    Debug.Log("ÇÁ·Ñ·Î±×");
+                    Debug.Log("í”„ë¡¤ë¡œê·¸");
                     SceneManager.LoadScene("Stage Select Screen");
                     break;
                 case 8:
-                    Debug.Log("¿¡ÇÊ·Î±×");
+                    Debug.Log("ì—í•„ë¡œê·¸");
                     SceneManager.LoadScene("Thank Screen");
                     break;
                 default:
-                    Debug.Log("ÀÌµµÀúµµ ¾Æ´Ñ");
+                    Debug.Log("ì´ë„ì €ë„ ì•„ë‹Œ");
                     goToFightScreen();
                     break;
             }
         });
 
-        // ÆäÀÌµå ¾Æ¿ô ½ÇÇà
+        // í˜ì´ë“œ ì•„ì›ƒ ì‹¤í–‰
         fadeController.FadeOut();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // ÇöÀç ¾À ÀÌ¸§ÀÌ "Pro_Epi Screen"ÀÏ ¶§¸¸ Å¬¸¯ ÀÌº¥Æ® Ã³¸®
+        // í˜„ì¬ ì”¬ ì´ë¦„ì´ "Pro_Epi Screen"ì¼ ë•Œë§Œ í´ë¦­ ì´ë²¤íŠ¸ ì²˜ë¦¬
         if ((SceneManager.GetActiveScene().name == "Prologue Screen") || (SceneManager.GetActiveScene().name == "Epilogue Screen"))
         {
-            Debug.Log("Å¬¸¯ ÀÌº¥Æ® ¹ß»ı");
+            Debug.Log("í´ë¦­ ì´ë²¤íŠ¸ ë°œìƒ");
             if (isDialogueActive && !isStory)
             {
                 ShowNextLine();
@@ -165,12 +165,12 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
     public void startNextDialogue()
     {
-        isStory = false; // ÀÌµ¿ÀÌ ³¡³ª¸é InteractionController¿¡¼­ ´ë»ç ÁøÇàÀ» Çã¿ë
+        isStory = false; // ì´ë™ì´ ëë‚˜ë©´ InteractionControllerì—ì„œ ëŒ€ì‚¬ ì§„í–‰ì„ í—ˆìš©
     }
 
     public void stopNextDialogue()
     {
-        isStory = true; // ÀÌµ¿ÀÌ ³¡³ª¸é InteractionController¿¡¼­ ´ë»ç ÁøÇàÀ» Çã¿ë
+        isStory = true; // ì´ë™ì´ ëë‚˜ë©´ InteractionControllerì—ì„œ ëŒ€ì‚¬ ì§„í–‰ì„ í—ˆìš©
     }
 
     private void goToFightScreen()

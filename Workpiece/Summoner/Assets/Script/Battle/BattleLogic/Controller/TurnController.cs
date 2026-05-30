@@ -10,7 +10,7 @@ public class TurnController : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private Enermy enermy;
     public enum Turn { PlayerTurn, EnermyTurn }
-    private Turn currentTurn; // ÇöÀç ÅÏÀ» ³ªÅ¸³»´Â º¯¼ö
+    private Turn currentTurn; // í˜„ì¬ í„´ì„ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜
     private int turnCount;
     [SerializeField] private int clearTurn;
 
@@ -23,58 +23,58 @@ public class TurnController : MonoBehaviour
     {
         stageController = FindAnyObjectByType<StageController>();
 
-        currentTurn = Turn.PlayerTurn; // Ã¹ ¹øÂ° ÅÏÀº ÇÃ·¹ÀÌ¾î ÅÏÀ¸·Î ½ÃÀÛ
+        currentTurn = Turn.PlayerTurn; // ì²« ë²ˆì§¸ í„´ì€ í”Œë ˆì´ì–´ í„´ìœ¼ë¡œ ì‹œì‘
         turnCount = 1;
         UpdateTurnCountUI();
         SetClearCountUI();
         StartTurn();
     }
 
-    public void StartTurn() //ÇØ´ç ÇÃ·¹ÀÌ¾îÀÇ ÅÏ ½ÃÀÛ
+    public void StartTurn() //í•´ë‹¹ í”Œë ˆì´ì–´ì˜ í„´ ì‹œì‘
     {
-        if (currentTurn == Turn.PlayerTurn)  // ÇÃ·¹ÀÌ¾î ÅÏÀÏ °æ¿ì
+        if (currentTurn == Turn.PlayerTurn)  // í”Œë ˆì´ì–´ í„´ì¼ ê²½ìš°
         {
-            // Àû ¼ÒÈ¯¼ö »óÅÂ ¾÷µ¥ÀÌÆ® ¹× µ¥¹ÌÁö Ã³¸®
+            // ì  ì†Œí™˜ìˆ˜ ìƒíƒœ ì—…ë°ì´íŠ¸ ë° ë°ë¯¸ì§€ ì²˜ë¦¬
             var enermyPlates = enermy.getEnermyAttackController().getPlateController().getEnermySummons();
 
-            // »óÅÂ ¾÷µ¥ÀÌÆ®¸¦ ¸ÕÀú ÁøÇà
+            // ìƒíƒœ ì—…ë°ì´íŠ¸ë¥¼ ë¨¼ì € ì§„í–‰
             foreach (var summon in enermyPlates)
             {
-                summon.UpdateDamageStatusEffects(); // µ¥¹ÌÁö¸¦ ÁÖ´Â »óÅÂÀÌ»ó ¾÷µ¥ÀÌÆ®
-                summon.UpdateStunAndCurseStatus();  // ½ºÅÏ ¹× ÀúÁÖ »óÅÂ ¾÷µ¥ÀÌÆ®
-                summon.getAttackStrategy().ReduceCooldown(); // ÀÏ¹İ °ø°İ ÄğÅ¸ÀÓ °¨¼Ò
+                summon.UpdateDamageStatusEffects(); // ë°ë¯¸ì§€ë¥¼ ì£¼ëŠ” ìƒíƒœì´ìƒ ì—…ë°ì´íŠ¸
+                summon.UpdateStunAndCurseStatus();  // ìŠ¤í„´ ë° ì €ì£¼ ìƒíƒœ ì—…ë°ì´íŠ¸
+                summon.getAttackStrategy().ReduceCooldown(); // ì¼ë°˜ ê³µê²© ì¿¨íƒ€ì„ ê°ì†Œ
             }
 
-            player.getPlateController().CompactEnermyPlates(); //¾Õ´ç±â±â
+            player.getPlateController().CompactEnermyPlates(); //ì•ë‹¹ê¸°ê¸°
 
-            // ½Â¸® Á¶°Ç
+            // ìŠ¹ë¦¬ ì¡°ê±´
             if (enermy.getEnermyAttackController().getPlateController().IsEnermyPlateClear() && (player.clearTurn >= player.currentTurn))
             {
-                Debug.Log("½Â¸®!");
-                player.battleAlert.clearAlert(stageController.stageNum);
+                Debug.Log("ìŠ¹ë¦¬!");
+                player.battleResultAlertView.ShowClearResultAlert(stageController.stageNum);
             }
 
 
             foreach (var summon in player.getPlateController().getPlayerSummons())
             {
-                summon.UpdateSpecialAttackCooldowns(); // Æ¯¼ö °ø°İ ÄğÅ¸ÀÓ ¾÷µ¥ÀÌÆ®
+                summon.UpdateSpecialAttackCooldowns(); // íŠ¹ìˆ˜ ê³µê²© ì¿¨íƒ€ì„ ì—…ë°ì´íŠ¸
             }
 
             player.startTurn();
         }
-        else if (currentTurn == Turn.EnermyTurn)  // ÀûÀÇ ÅÏÀÏ °æ¿ì
+        else if (currentTurn == Turn.EnermyTurn)  // ì ì˜ í„´ì¼ ê²½ìš°
         {
-            // Àû ÅÏ ½ÃÀÛ½Ã ¾Æ±º ¼ÒÈ¯¼ö »óÅÂÀÌ»ó ¹× ÄğÅ¸ÀÓ ¾÷µ¥ÀÌÆ®
+            // ì  í„´ ì‹œì‘ì‹œ ì•„êµ° ì†Œí™˜ìˆ˜ ìƒíƒœì´ìƒ ë° ì¿¨íƒ€ì„ ì—…ë°ì´íŠ¸
             foreach (var summon in player.getPlateController().getPlayerSummons())
             {
-                summon.UpdateDamageStatusEffects(); // µ¥¹ÌÁö¸¦ ÁÖ´Â »óÅÂÀÌ»ó ¾÷µ¥ÀÌÆ®
-                summon.UpdateStunAndCurseStatus(); // ½ºÅÏ ¹× ÀúÁÖ »óÅÂ ¾÷µ¥ÀÌÆ®
-                summon.getAttackStrategy().ReduceCooldown(); // ÀÏ¹İ °ø°İ ÄğÅ¸ÀÓ °¨¼Ò
+                summon.UpdateDamageStatusEffects(); // ë°ë¯¸ì§€ë¥¼ ì£¼ëŠ” ìƒíƒœì´ìƒ ì—…ë°ì´íŠ¸
+                summon.UpdateStunAndCurseStatus(); // ìŠ¤í„´ ë° ì €ì£¼ ìƒíƒœ ì—…ë°ì´íŠ¸
+                summon.getAttackStrategy().ReduceCooldown(); // ì¼ë°˜ ê³µê²© ì¿¨íƒ€ì„ ê°ì†Œ
             }
 
             foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
             {
-                summon.UpdateSpecialAttackCooldowns(); // Æ¯¼ö °ø°İ ÄğÅ¸ÀÓ ¾÷µ¥ÀÌÆ®
+                summon.UpdateSpecialAttackCooldowns(); // íŠ¹ìˆ˜ ê³µê²© ì¿¨íƒ€ì„ ì—…ë°ì´íŠ¸
             }
 
             enermy.startTurn();
@@ -85,43 +85,43 @@ public class TurnController : MonoBehaviour
     {
         if (currentTurn == Turn.PlayerTurn)
         {
-            // ´ÙÀ½ ÅÏÀ» ÀûÀÇ ÅÏÀ¸·Î ¼³Á¤
+            // ë‹¤ìŒ í„´ì„ ì ì˜ í„´ìœ¼ë¡œ ì„¤ì •
             currentTurn = Turn.EnermyTurn;
 
-            // Àû ÅÏ ½ÃÀÛ½Ã ¾Æ±º ¼ÒÈ¯¼ö »óÅÂÀÌ»ó ¹× ÄğÅ¸ÀÓ ¾÷µ¥ÀÌÆ®
+            // ì  í„´ ì‹œì‘ì‹œ ì•„êµ° ì†Œí™˜ìˆ˜ ìƒíƒœì´ìƒ ë° ì¿¨íƒ€ì„ ì—…ë°ì´íŠ¸
             foreach (var summon in player.getPlateController().getPlayerSummons())
             {
-                summon.UpdateUpgradeStatus(); //°­È­ »óÅÂ ¾÷µ¥ÀÌÆ®
+                summon.UpdateUpgradeStatus(); //ê°•í™” ìƒíƒœ ì—…ë°ì´íŠ¸
             }
 
-            // ÇÃ·¹ÀÌ¾î ÅÏÀÌ ³¡³ª¸é ÅÏ Ä«¿îÆ®¸¦ Áõ°¡½ÃÅ°Áö ¾Ê°í ¹Ù·Î Àû ÅÏ ½ÃÀÛ
+            // í”Œë ˆì´ì–´ í„´ì´ ëë‚˜ë©´ í„´ ì¹´ìš´íŠ¸ë¥¼ ì¦ê°€ì‹œí‚¤ì§€ ì•Šê³  ë°”ë¡œ ì  í„´ ì‹œì‘
             StartTurn();
         }
         else if (currentTurn == Turn.EnermyTurn)
         {
 
-            // Àû ÅÏÀÌ ³¡³­ ÈÄ ÅÏ Ä«¿îÆ®¸¦ Áõ°¡½ÃÅ°°í ÇÃ·¹ÀÌ¾î ÅÏ ½ÃÀÛ
+            // ì  í„´ì´ ëë‚œ í›„ í„´ ì¹´ìš´íŠ¸ë¥¼ ì¦ê°€ì‹œí‚¤ê³  í”Œë ˆì´ì–´ í„´ ì‹œì‘
             currentTurn = Turn.PlayerTurn;
-            turnCount++; // Àû ÅÏÀÌ ³¡³ª¸é ÅÏ Ä«¿îÆ®¸¦ Áõ°¡½ÃÅ´
+            turnCount++; // ì  í„´ì´ ëë‚˜ë©´ í„´ ì¹´ìš´íŠ¸ë¥¼ ì¦ê°€ì‹œí‚´
             UpdateTurnCountUI();
             player.AddMana();
 
-            //Àû ÅÏ ³¡³¯¶§ Àû ÇÃ·¹ÀÌÆ®ÀÇ °­È­¸¦ Ç°
+            //ì  í„´ ëë‚ ë•Œ ì  í”Œë ˆì´íŠ¸ì˜ ê°•í™”ë¥¼ í’ˆ
             foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
             {
-                summon.UpdateUpgradeStatus(); //°­È­ »óÅÂ ¾÷µ¥ÀÌÆ®
+                summon.UpdateUpgradeStatus(); //ê°•í™” ìƒíƒœ ì—…ë°ì´íŠ¸
             }
 
-            // ÇÃ·¹ÀÌ¾î ÅÏÀÌ ³¡³¯ ¶§ È¥¶õ »óÅÂ°¡ ¾Æ´Ñ ¼ÒÈ¯¼öµéÀÇ °ø°İ °¡´É ¿©ºÎ¸¦ ¼³Á¤
+            // í”Œë ˆì´ì–´ í„´ì´ ëë‚  ë•Œ í˜¼ë€ ìƒíƒœê°€ ì•„ë‹Œ ì†Œí™˜ìˆ˜ë“¤ì˜ ê³µê²© ê°€ëŠ¥ ì—¬ë¶€ë¥¼ ì„¤ì •
             foreach (var summon in player.getPlateController().getPlayerSummons())
             {
-                if (!summon.IsStun()) // ½ºÅÏ »óÅÂ°¡ ¾Æ´Ñ °æ¿ì
+                if (!summon.IsStun()) // ìŠ¤í„´ ìƒíƒœê°€ ì•„ë‹Œ ê²½ìš°
                 {
-                    summon.setIsAttack(true); // °ø°İ °¡´ÉÇÏ°Ô ¼³Á¤
+                    summon.setIsAttack(true); // ê³µê²© ê°€ëŠ¥í•˜ê²Œ ì„¤ì •
                 }
             }
 
-            Debug.Log("ÇöÀç ÅÏ: " + turnCount);
+            Debug.Log("í˜„ì¬ í„´: " + turnCount);
 
             StartTurn();
         }

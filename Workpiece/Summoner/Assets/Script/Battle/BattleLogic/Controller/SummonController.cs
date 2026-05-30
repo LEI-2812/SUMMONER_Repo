@@ -4,39 +4,39 @@ using UnityEngine;
 
 public class SummonController : MonoBehaviour
 {
-    public static SummonController Instance; // ½Ì±ÛÅæ
+    public static SummonController Instance; // ì‹±ê¸€í†¤
 
-    [SerializeField] private GameObject darkBackground; // Àç¼ÒÈ¯ ¹è°æ Ã³¸®ÇÒ ÆÇ³Ú (¹İÅõ¸í)
+    [SerializeField] private GameObject darkBackground; // ì¬ì†Œí™˜ ë°°ê²½ ì²˜ë¦¬í•  íŒë„¬ (ë°˜íˆ¬ëª…)
 
-    public bool isSummoning = false; // Àç¼ÒÈ¯ ÁßÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
+    public bool isSummoning = false; // ì¬ì†Œí™˜ ì¤‘ì¸ì§€ í™•ì¸í•˜ëŠ” ë³€ìˆ˜
 
-    [Header("ÇÃ·¹ÀÌ¾î")]
+    [Header("í”Œë ˆì´ì–´")]
     [SerializeField] private Player player;
-   //[SerializeField] private List<Plate> playerPlates; // ÇÃ·¹ÀÌ¾î°¡ »ç¿ëÇÒ ÇÃ·¹ÀÌÆ® ¸ñ·Ï
+   //[SerializeField] private List<Plate> playerPlates; // í”Œë ˆì´ì–´ê°€ ì‚¬ìš©í•  í”Œë ˆì´íŠ¸ ëª©ë¡
 
-    [Header("ÀÏ¹İ ¼ÒÈ¯ °ü·Ã ¿ÀºêÁ§Æ®")]
-    public List<Summon> summons; // ÀÎ½ºÆåÅÍ¿¡ ³ÖÀ» ¼ÒÈ¯¼ö ¿ÀºêÁ§Æ®µé
+    [Header("ì¼ë°˜ ì†Œí™˜ ê´€ë ¨ ì˜¤ë¸Œì íŠ¸")]
+    public List<Summon> summons; // ì¸ìŠ¤í™í„°ì— ë„£ì„ ì†Œí™˜ìˆ˜ ì˜¤ë¸Œì íŠ¸ë“¤
     public GameObject takeSummonPanel;
-    [SerializeField] private List<PickSummonPanel> selectSummonPanels; // ÆĞ³Î¿¡ ¶ç¿ï ¼ÒÈ¯¼ö
+    [SerializeField] private List<PickSummonPanelView> selectSummonPanels; // íŒ¨ë„ì— ë„ìš¸ ì†Œí™˜ìˆ˜
 
-    [Header("Àç¼ÒÈ¯ °ü·Ã ¿ÀºêÁ§Æ®")]
+    [Header("ì¬ì†Œí™˜ ê´€ë ¨ ì˜¤ë¸Œì íŠ¸")]
     public GameObject reTakeSummonPanel;
-    [SerializeField] private List<PickSummonPanel> ReselectSummonPanels; // ÆĞ³Î¿¡ ¶ç¿ï ¼ÒÈ¯¼ö
-    private int selectedPlateIndex = -1; // ¼ÒÈ¯½ÃÅ³ ÇÃ·¹ÀÌÆ® ¹øÈ£
+    [SerializeField] private List<PickSummonPanelView> ReselectSummonPanels; // íŒ¨ë„ì— ë„ìš¸ ì†Œí™˜ìˆ˜
+    private int selectedPlateIndex = -1; // ì†Œí™˜ì‹œí‚¬ í”Œë ˆì´íŠ¸ ë²ˆí˜¸
 
-    [Header("(¿ÜºÎ ¿ÀºêÁ§Æ®)ÄÁÆ®·Ñ·¯")]
+    [Header("(ì™¸ë¶€ ì˜¤ë¸Œì íŠ¸)ì»¨íŠ¸ë¡¤ëŸ¬")]
     [SerializeField] private PlateController plateController;
 
-    [Header("È¿°úÀ½")]
+    [Header("íš¨ê³¼ìŒ")]
     [SerializeField] private AudioSource clickSound;
 
-    [Header("¼ÒÈ¯¼ö ÇÁ¸®ÆÕ ¸ñ·Ï")]
-    private Summon selectedSummon; // ¼±ÅÃµÈ ¼ÒÈ¯¼ö
+    [Header("ì†Œí™˜ìˆ˜ í”„ë¦¬íŒ¹ ëª©ë¡")]
+    private Summon selectedSummon; // ì„ íƒëœ ì†Œí™˜ìˆ˜
 
 
     private void Awake()
     {
-        // ½Ì±ÛÅæ ÆĞÅÏ ±¸Çö
+        // ì‹±ê¸€í†¤ íŒ¨í„´ êµ¬í˜„
         if (Instance == null)
         {
             Instance = this;
@@ -47,7 +47,7 @@ public class SummonController : MonoBehaviour
         }
     }
 
-    // ÀÏ¹İ ¹× Àç¼ÒÈ¯À» Ã³¸®ÇÏ´Â ¸Ş¼­µå
+    // ì¼ë°˜ ë° ì¬ì†Œí™˜ì„ ì²˜ë¦¬í•˜ëŠ” ë©”ì„œë“œ
     public void StartSummon(int plateIndex, bool isResummon)
     {
 
@@ -64,7 +64,7 @@ public class SummonController : MonoBehaviour
         }
     }
 
-    // ¼ÒÈ¯ ÄÚ·çÆ¾ (ÀÏ¹İ ¼ÒÈ¯ ·ÎÁ÷)
+    // ì†Œí™˜ ì½”ë£¨í‹´ (ì¼ë°˜ ì†Œí™˜ ë¡œì§)
     private IEnumerator TakeSummonSelection(int plateIndex)
     {
         while (selectedSummon == null)
@@ -72,21 +72,21 @@ public class SummonController : MonoBehaviour
             yield return null;
         }
 
-        if (selectedSummon != null) //3°³Áß¿¡ °í¸¥°Í
+        if (selectedSummon != null) //3ê°œì¤‘ì— ê³ ë¥¸ê²ƒ
         {
             plateController.getPlayerPlates()[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: false);
-            player.SetHasSummonedThisTurn(true); // ÇÃ·¹ÀÌ¾î°¡ ¼ÒÈ¯ÇßÀ½À» ¾Ë¸²
-            Debug.Log($"ÇÃ·¹ÀÌÆ® {plateIndex}¿¡ ¼ÒÈ¯ ¿Ï·á.");
+            player.SetHasSummonedThisTurn(true); // í”Œë ˆì´ì–´ê°€ ì†Œí™˜í–ˆìŒì„ ì•Œë¦¼
+            Debug.Log($"í”Œë ˆì´íŠ¸ {plateIndex}ì— ì†Œí™˜ ì™„ë£Œ.");
         }
 
-        // Àç¼ÒÈ¯ ÁøÇà Áß Ç¥½Ã¿Í ¹é±×¶ó¿îµå Á¾·á
+        // ì¬ì†Œí™˜ ì§„í–‰ ì¤‘ í‘œì‹œì™€ ë°±ê·¸ë¼ìš´ë“œ ì¢…ë£Œ
         isSummoning = false;
         darkBackground.SetActive(false);
         plateController.ResetPlayerPlateHighlight();
        
     }
 
-    // Àç¼ÒÈ¯ ÄÚ·çÆ¾ (Àç¼ÒÈ¯ ·ÎÁ÷)
+    // ì¬ì†Œí™˜ ì½”ë£¨í‹´ (ì¬ì†Œí™˜ ë¡œì§)
     private IEnumerator ReSummonSelection(int plateIndex)
     {
         while (selectedSummon == null)
@@ -97,14 +97,14 @@ public class SummonController : MonoBehaviour
         if (selectedSummon != null)
         {
             plateController.getPlayerPlates()[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: true);
-            player.SetHasSummonedThisTurn(true); // ÇÃ·¹ÀÌ¾î°¡ ¼ÒÈ¯ÇßÀ½À» ¾Ë¸²
-            Debug.Log($"ÇÃ·¹ÀÌÆ® {plateIndex}¿¡ Àç¼ÒÈ¯ ¿Ï·á.");
+            player.SetHasSummonedThisTurn(true); // í”Œë ˆì´ì–´ê°€ ì†Œí™˜í–ˆìŒì„ ì•Œë¦¼
+            Debug.Log($"í”Œë ˆì´íŠ¸ {plateIndex}ì— ì¬ì†Œí™˜ ì™„ë£Œ.");
         }
 
-        // Àç¼ÒÈ¯ ¿Ï·á ÈÄ ¸ğµç ÇÃ·¹ÀÌÆ®¸¦ ´Ù½Ã º¸ÀÌ°Ô ÇÔ
+        // ì¬ì†Œí™˜ ì™„ë£Œ í›„ ëª¨ë“  í”Œë ˆì´íŠ¸ë¥¼ ë‹¤ì‹œ ë³´ì´ê²Œ í•¨
         plateController.ShowAllPlates();
 
-        // Àç¼ÒÈ¯ ÁøÇà Áß Ç¥½Ã¿Í ¹é±×¶ó¿îµå Á¾·á
+        // ì¬ì†Œí™˜ ì§„í–‰ ì¤‘ í‘œì‹œì™€ ë°±ê·¸ë¼ìš´ë“œ ì¢…ë£Œ
         isSummoning = false;
         darkBackground.SetActive(false);
 
@@ -112,12 +112,12 @@ public class SummonController : MonoBehaviour
 
     }
 
-    //Â÷·Ê·Î Àç¼ÒÈ¯ ·ÎÁ÷
+    //ì°¨ë¡€ë¡œ ì¬ì†Œí™˜ ë¡œì§
     public bool StartResummon()
     {
         if (plateController.getPlayerPlates()[0].getCurrentSummon() == null && plateController.getPlayerPlates()[1].getCurrentSummon() == null && plateController.getPlayerPlates()[2].getCurrentSummon() == null)
         {
-            Debug.Log("ÇÃ·¹ÀÌÆ®¿¡ ¼ÒÈ¯¼ö°¡ ¾ø½À´Ï´Ù.");
+            Debug.Log("í”Œë ˆì´íŠ¸ì— ì†Œí™˜ìˆ˜ê°€ ì—†ìŠµë‹ˆë‹¤.");
             return false;
         }
 
@@ -125,41 +125,41 @@ public class SummonController : MonoBehaviour
         return true;
     }
 
-    //¼ÒÈ¯¼ö°¡ ÀÖ´Â ÇÃ·¹ÀÌÆ®¸¸ °­Á¶
+    //ì†Œí™˜ìˆ˜ê°€ ìˆëŠ” í”Œë ˆì´íŠ¸ë§Œ ê°•ì¡°
     private void ReSummonPanelOpenAndHighlight()
     {
-        // Àç¼ÒÈ¯ ÁøÇà Áß Ç¥½Ã¿Í ¹é±×¶ó¿îµå È°¼ºÈ­
+        // ì¬ì†Œí™˜ ì§„í–‰ ì¤‘ í‘œì‹œì™€ ë°±ê·¸ë¼ìš´ë“œ í™œì„±í™”
         isSummoning = true;
         darkBackground.SetActive(true);
 
-        // PlateController¿¡¼­ ¼ÒÈ¯¼ö°¡ ÀÖ´Â ÇÃ·¹ÀÌÆ®¸¸ °­Á¶
+        // PlateControllerì—ì„œ ì†Œí™˜ìˆ˜ê°€ ìˆëŠ” í”Œë ˆì´íŠ¸ë§Œ ê°•ì¡°
         plateController.HighlightPlayerPlates();
     }
 
-    //Àç¼ÒÈ¯ ÁßÀÏ¶§ ÇÃ·¹ÀÌÆ® Å¬¸¯½Ã ÀÌ ¸Ş¼Òµå°¡ È£ÃâµÊ. ¼±ÅÃÇÑ ÇÃ·¹ÀÌÆ®ÀÇ ¹øÈ£¸¦ °¡Á®¿È
+    //ì¬ì†Œí™˜ ì¤‘ì¼ë•Œ í”Œë ˆì´íŠ¸ í´ë¦­ì‹œ ì´ ë©”ì†Œë“œê°€ í˜¸ì¶œë¨. ì„ íƒí•œ í”Œë ˆì´íŠ¸ì˜ ë²ˆí˜¸ë¥¼ ê°€ì ¸ì˜´
     public void SelectPlate(Plate plate)
     {
         for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
         {
             if (plateController.getPlayerPlates()[i] == plate)
             {
-                selectedPlateIndex = i; //¼±ÅÃÇÑ ÇÃ·¹ÀÌÆ®ÀÇ ¹øÈ£¸¦ ³Ö´Â´Ù.
+                selectedPlateIndex = i; //ì„ íƒí•œ í”Œë ˆì´íŠ¸ì˜ ë²ˆí˜¸ë¥¼ ë„£ëŠ”ë‹¤.
                 ResummonSelectStart();
                 break;
             }
         }
         clickSound.Play();
-        Debug.Log($"ÇÃ·¹ÀÌÆ® {selectedPlateIndex}°¡ ¼±ÅÃµÇ¾ú½À´Ï´Ù.");
+        Debug.Log($"í”Œë ˆì´íŠ¸ {selectedPlateIndex}ê°€ ì„ íƒë˜ì—ˆìŠµë‹ˆë‹¤.");
     }
 
-    //Àç¼ÒÈ¯ ½ÃÅ³ ÇÃ·¹ÀÌÆ®¿¡ ³ÖÀ» ¼ÒÈ¯¼ö¸¦ ¼±ÅÃÇÏ´Â ¿ÀºêÁ§Æ® È°¼ºÈ­
-    public void ResummonSelectStart() //Àç¼ÒÈ¯ ¼ÒÈ¯¼ö ¼±ÅÃ½ÃÀÛ
+    //ì¬ì†Œí™˜ ì‹œí‚¬ í”Œë ˆì´íŠ¸ì— ë„£ì„ ì†Œí™˜ìˆ˜ë¥¼ ì„ íƒí•˜ëŠ” ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
+    public void ResummonSelectStart() //ì¬ì†Œí™˜ ì†Œí™˜ìˆ˜ ì„ íƒì‹œì‘
     {
-        reTakeSummonPanel.SetActive(true); //¼±ÅÃÇÒ ÆÇ³ÚµéÀ» È°¼ºÈ­½ÃÅ²´Ù.
-        StartSummon(selectedPlateIndex, true); //¼ÒÈ¯À» ½ÃÀÛ(¼±ÅÃÇÑ ÀÎµ¦½º¿Í Àç¼ÒÈ¯¿©ºÎ¸¦ trueÇÏ¿© È£Ãâ)
+        reTakeSummonPanel.SetActive(true); //ì„ íƒí•  íŒë„¬ë“¤ì„ í™œì„±í™”ì‹œí‚¨ë‹¤.
+        StartSummon(selectedPlateIndex, true); //ì†Œí™˜ì„ ì‹œì‘(ì„ íƒí•œ ì¸ë±ìŠ¤ì™€ ì¬ì†Œí™˜ì—¬ë¶€ë¥¼ trueí•˜ì—¬ í˜¸ì¶œ)
     }
 
-    //ÀÏ¹İ½Ã ¼ÒÈ¯ÇÒ ¼ÒÈ¯¼ö ¼±ÅÃ
+    //ì¼ë°˜ì‹œ ì†Œí™˜í•  ì†Œí™˜ìˆ˜ ì„ íƒ
     public void randomTakeSummon()
     {
         takeSummonPanel.SetActive(true);
@@ -179,7 +179,7 @@ public class SummonController : MonoBehaviour
         selectedSummon = null;
     }
 
-    //Àç¼ÒÈ¯½Ã ¼ÒÈ¯½ÃÅ³ ¼ÒÈ¯¼ö ¼±ÅÃ
+    //ì¬ì†Œí™˜ì‹œ ì†Œí™˜ì‹œí‚¬ ì†Œí™˜ìˆ˜ ì„ íƒ
     private void randomReTakeSummon()
     {
         plateController.HideAllPlates();
@@ -200,16 +200,16 @@ public class SummonController : MonoBehaviour
         selectedSummon = null;
     }
 
-    // 3¸¶¸®ÀÇ ¼ÒÈ¯¼ö¸¦ È®·ü¿¡ µû¶ó ¼±ÅÃÇÏ´Â ¸Ş¼Òµå
+    // 3ë§ˆë¦¬ì˜ ì†Œí™˜ìˆ˜ë¥¼ í™•ë¥ ì— ë”°ë¼ ì„ íƒí•˜ëŠ” ë©”ì†Œë“œ
     private List<Summon> SummonRandomly()
     {
-        List<Summon> selectedSummons = new List<Summon>(); // ¼ÒÈ¯ ÆÇ³Ú¿¡ º¸ÀÌ°Ô ÇÒ ¼ÒÈ¯¼öµé
+        List<Summon> selectedSummons = new List<Summon>(); // ì†Œí™˜ íŒë„¬ì— ë³´ì´ê²Œ í•  ì†Œí™˜ìˆ˜ë“¤
 
-        // 3¸¶¸®ÀÇ ¼ÒÈ¯¼ö¸¦ ¼±ÅÃÇÒ ¶§±îÁö ¹İº¹
+        // 3ë§ˆë¦¬ì˜ ì†Œí™˜ìˆ˜ë¥¼ ì„ íƒí•  ë•Œê¹Œì§€ ë°˜ë³µ
         while (selectedSummons.Count < 3)
         {
             Summon summon = SelectSummonByRank();
-            if (summon != null && !selectedSummons.Contains(summon)) // Áßº¹ ¹æÁö
+            if (summon != null && !selectedSummons.Contains(summon)) // ì¤‘ë³µ ë°©ì§€
             {
                 selectedSummons.Add(summon);
             }
@@ -218,26 +218,26 @@ public class SummonController : MonoBehaviour
         return selectedSummons;
     }
 
-    // µî±Ş¿¡ µû¸¥ È®·ü·Î ¼ÒÈ¯¼ö¸¦ »ÌÀ½
+    // ë“±ê¸‰ì— ë”°ë¥¸ í™•ë¥ ë¡œ ì†Œí™˜ìˆ˜ë¥¼ ë½‘ìŒ
     private Summon SelectSummonByRank()
     {
         float randomValue = Random.Range(0f, 100f);
 
         Summon summon = null;
-        if (randomValue <= 50) // Low µî±Ş (50%)
+        if (randomValue <= 50) // Low ë“±ê¸‰ (50%)
         {
             summon = GetSummonByRank(SummonRank.Low);
         }
-        else if (randomValue <= 85) // Medium µî±Ş (35%)
+        else if (randomValue <= 85) // Medium ë“±ê¸‰ (35%)
         {
             summon = GetSummonByRank(SummonRank.Medium);
         }
-        else // High µî±Ş (15%)
+        else // High ë“±ê¸‰ (15%)
         {
             summon = GetSummonByRank(SummonRank.High);
         }
 
-        // ÇØ´ç µî±ŞÀÇ ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é ´Ù¸¥ µî±ŞÀ¸·Î ´ëÃ¼
+        // í•´ë‹¹ ë“±ê¸‰ì˜ ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ ë‹¤ë¥¸ ë“±ê¸‰ìœ¼ë¡œ ëŒ€ì²´
         if (summon == null)
         {
             summon = GetSummonByRank(SummonRank.Low) ?? GetSummonByRank(SummonRank.Medium) ?? GetSummonByRank(SummonRank.High);
@@ -246,12 +246,12 @@ public class SummonController : MonoBehaviour
         return summon;
     }
 
-    // Æ¯Á¤ µî±ŞÀÇ ¼ÒÈ¯¼ö Áß ÇÏ³ª¸¦ ¹«ÀÛÀ§·Î ¼±ÅÃÇÏ´Â ¸Ş¼Òµå
+    // íŠ¹ì • ë“±ê¸‰ì˜ ì†Œí™˜ìˆ˜ ì¤‘ í•˜ë‚˜ë¥¼ ë¬´ì‘ìœ„ë¡œ ì„ íƒí•˜ëŠ” ë©”ì†Œë“œ
     private Summon GetSummonByRank(SummonRank rank)
     {
         List<Summon> availableSummons = new List<Summon>();
 
-        // ¼ÒÈ¯¼ö ¸®½ºÆ®¿¡¼­ ÇØ´ç µî±ŞÀÇ ¼ÒÈ¯¼öµé¸¸ ÇÊÅÍ¸µ
+        // ì†Œí™˜ìˆ˜ ë¦¬ìŠ¤íŠ¸ì—ì„œ í•´ë‹¹ ë“±ê¸‰ì˜ ì†Œí™˜ìˆ˜ë“¤ë§Œ í•„í„°ë§
         foreach (Summon summon in summons)
         {
             if (summon.getSummonRank() == rank)
@@ -260,35 +260,35 @@ public class SummonController : MonoBehaviour
             }
         }
 
-        // ÇØ´ç µî±ŞÀÇ ¼ÒÈ¯¼ö°¡ Á¸ÀçÇÒ °æ¿ì, ±× Áß¿¡¼­ ¹«ÀÛÀ§·Î ÇÏ³ª ¼±ÅÃ
+        // í•´ë‹¹ ë“±ê¸‰ì˜ ì†Œí™˜ìˆ˜ê°€ ì¡´ì¬í•  ê²½ìš°, ê·¸ ì¤‘ì—ì„œ ë¬´ì‘ìœ„ë¡œ í•˜ë‚˜ ì„ íƒ
         if (availableSummons.Count > 0)
         {
             int randomIndex = Random.Range(0, availableSummons.Count);
             return availableSummons[randomIndex];
         }
 
-        return null; // ÇØ´ç µî±ŞÀÇ ¼ÒÈ¯¼ö°¡ ¾øÀ» °æ¿ì null ¹İÈ¯
+        return null; // í•´ë‹¹ ë“±ê¸‰ì˜ ì†Œí™˜ìˆ˜ê°€ ì—†ì„ ê²½ìš° null ë°˜í™˜
     }
 
 
-    // ¼ÒÈ¯ ÁßÀÎÁö È®ÀÎ
+    // ì†Œí™˜ ì¤‘ì¸ì§€ í™•ì¸
     public bool IsSummoning()
     {
         return isSummoning;
     }
 
-    // ¼ÒÈ¯¼ö ¼±ÅÃ
+    // ì†Œí™˜ìˆ˜ ì„ íƒ
     public void OnSelectSummon(Summon summon)
     {
         selectedSummon = summon;
-        Debug.Log($"{selectedSummon.getSummonName()} ¼ÒÈ¯¼ö¸¦ ¼±ÅÃÇß½À´Ï´Ù.");
-        // ¼ÒÈ¯¼ö°¡ ÀÖ´Â ÇÃ·¹ÀÌÆ®¸¸ °­Á¶ ¹× Åõ¸íµµ µÇµ¹¸®±â
+        Debug.Log($"{selectedSummon.getSummonName()} ì†Œí™˜ìˆ˜ë¥¼ ì„ íƒí–ˆìŠµë‹ˆë‹¤.");
+        // ì†Œí™˜ìˆ˜ê°€ ìˆëŠ” í”Œë ˆì´íŠ¸ë§Œ ê°•ì¡° ë° íˆ¬ëª…ë„ ë˜ëŒë¦¬ê¸°
         for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
         {
             if (plateController.getPlayerPlates()[i].getIsInSummon())
             {
-                plateController.getPlayerPlates()[i].Unhighlight(); //»ö»ó µÇµ¹¸®±â
-                plateController.getPlayerPlates()[i].SetSummonImageTransparency(1.0f); //Åõ¸íµµ µÇµ¹¸®±â
+                plateController.getPlayerPlates()[i].Unhighlight(); //ìƒ‰ìƒ ë˜ëŒë¦¬ê¸°
+                plateController.getPlayerPlates()[i].SetSummonImageTransparency(1.0f); //íˆ¬ëª…ë„ ë˜ëŒë¦¬ê¸°
             }
         }
         takeSummonPanel.SetActive(false);
@@ -296,7 +296,7 @@ public class SummonController : MonoBehaviour
         clickSound.Play();
     }
 
-    // ¾îµÓ°Ô ¹è°æ È°¼ºÈ­
+    // ì–´ë‘¡ê²Œ ë°°ê²½ í™œì„±í™”
     public void OnDarkBackground(bool onOff)
     {
         darkBackground.SetActive(onOff);
@@ -309,12 +309,12 @@ public class SummonController : MonoBehaviour
 
     public int GetPlayerPlateIndex(Plate selectedPlate)
     {
-        return plateController.getPlayerPlates().IndexOf(selectedPlate);  // ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ® ¸®½ºÆ®¿¡¼­ ÀÎµ¦½º Ã£±â
+        return plateController.getPlayerPlates().IndexOf(selectedPlate);  // í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì¸ë±ìŠ¤ ì°¾ê¸°
     }
 
     public int GetEnermyPlateIndex(Plate selectedPlate)
     {
-        return plateController.getEnermyPlates().IndexOf(selectedPlate);  // ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ® ¸®½ºÆ®¿¡¼­ ÀÎµ¦½º Ã£±â
+        return plateController.getEnermyPlates().IndexOf(selectedPlate);  // í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì¸ë±ìŠ¤ ì°¾ê¸°
     }
 
     public void setPlayerSelectedIndex(int index)

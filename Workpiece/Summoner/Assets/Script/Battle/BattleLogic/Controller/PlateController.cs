@@ -10,14 +10,14 @@ public class PlateController : MonoBehaviour
 
     private List<Plate> plates = new List<Plate>();
 
-    // [Header("(¿ÜºÎ ¿ÀºêÁ§Æ®)ÄÁÆ®·Ñ·¯")]
+    // [Header("(ì™¸ë¶€ ì˜¤ë¸Œì íŠ¸)ì»¨íŠ¸ë¡¤ëŸ¬")]
 
     private void Awake()
     {
         InitializePlates();
     }
 
-    // ÇÃ·¹ÀÌ¾îÀÇ ÇÃ·¹ÀÌÆ®¿¡ ÀÖ´Â ¸ğµç ¼ÒÈ¯¼öµéÀ» ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // í”Œë ˆì´ì–´ì˜ í”Œë ˆì´íŠ¸ì— ìˆëŠ” ëª¨ë“  ì†Œí™˜ìˆ˜ë“¤ì„ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public List<Summon> getPlayerSummons()
     {
         List<Summon> playerSummons = new List<Summon>();
@@ -32,7 +32,7 @@ public class PlateController : MonoBehaviour
         return playerSummons;
     }
 
-    // ÀûÀÇ ÇÃ·¹ÀÌÆ®¿¡ ÀÖ´Â ¸ğµç ¼ÒÈ¯¼öµéÀ» ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ì ì˜ í”Œë ˆì´íŠ¸ì— ìˆëŠ” ëª¨ë“  ì†Œí™˜ìˆ˜ë“¤ì„ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public List<Summon> getEnermySummons()
     {
         List<Summon> enermySummons = new List<Summon>();
@@ -47,13 +47,13 @@ public class PlateController : MonoBehaviour
         return enermySummons;
     }
 
-    //Àû ÇÃ·¹ÀÌÆ®¿¡ ¼ÒÈ¯¼ö°¡ Á¸ÀçÇÏ´ÂÁö
+    //ì  í”Œë ˆì´íŠ¸ì— ì†Œí™˜ìˆ˜ê°€ ì¡´ì¬í•˜ëŠ”ì§€
     public bool IsEnermyPlateClear()
     {
-        foreach (Plate plate in enermyPlates) //ÇÃ·¹ÀÌÆ®¸¦ ¼øÈ¯
+        foreach (Plate plate in enermyPlates) //í”Œë ˆì´íŠ¸ë¥¼ ìˆœí™˜
         {
-            Summon summon = plate.getCurrentSummon(); //ÇÃ·¹ÀÌÆ®¸¶´Ù ¼ÒÈ¯¼ö¸¦ °¡Á®¿Â´Ù
-            if (summon != null) //¸¸¾à ¼ÒÈ¯¼ö°¡ ÇÏ³ª¶óµµ ÀÖ´Ù¸é true¸¦ ¹İÈ¯
+            Summon summon = plate.getCurrentSummon(); //í”Œë ˆì´íŠ¸ë§ˆë‹¤ ì†Œí™˜ìˆ˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤
+            if (summon != null) //ë§Œì•½ ì†Œí™˜ìˆ˜ê°€ í•˜ë‚˜ë¼ë„ ìˆë‹¤ë©´ trueë¥¼ ë°˜í™˜
             {
                 return false;
             }
@@ -64,10 +64,10 @@ public class PlateController : MonoBehaviour
 
     public bool IsPlayerPlateClear()
     {
-        foreach (Plate plate in playerPlates) //ÇÃ·¹ÀÌÆ®¸¦ ¼øÈ¯
+        foreach (Plate plate in playerPlates) //í”Œë ˆì´íŠ¸ë¥¼ ìˆœí™˜
         {
-            Summon summon = plate.getCurrentSummon(); //ÇÃ·¹ÀÌÆ®¸¶´Ù ¼ÒÈ¯¼ö¸¦ °¡Á®¿Â´Ù
-            if (summon != null) //¸¸¾à ¼ÒÈ¯¼ö°¡ ÇÏ³ª¶óµµ ÀÖ´Ù¸é true¸¦ ¹İÈ¯
+            Summon summon = plate.getCurrentSummon(); //í”Œë ˆì´íŠ¸ë§ˆë‹¤ ì†Œí™˜ìˆ˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤
+            if (summon != null) //ë§Œì•½ ì†Œí™˜ìˆ˜ê°€ í•˜ë‚˜ë¼ë„ ìˆë‹¤ë©´ trueë¥¼ ë°˜í™˜
             {
                 return false;
             }
@@ -76,24 +76,24 @@ public class PlateController : MonoBehaviour
         return true;
     }
 
-    // Àû ¼ÒÈ¯¼öÀÇ ºó ÇÃ·¹ÀÌÆ®¸¦ ¾Õ´ç±â´Â ·ÎÁ÷
+    // ì  ì†Œí™˜ìˆ˜ì˜ ë¹ˆ í”Œë ˆì´íŠ¸ë¥¼ ì•ë‹¹ê¸°ëŠ” ë¡œì§
     public void CompactEnermyPlates()
     {
-        int nextAvailableIndex = 0; // Ã¤¿ö¾ß ÇÒ ÀÎµ¦½º À§Ä¡
+        int nextAvailableIndex = 0; // ì±„ì›Œì•¼ í•  ì¸ë±ìŠ¤ ìœ„ì¹˜
 
         for (int i = 0; i < enermyPlates.Count; i++)
         {
             Summon summon = enermyPlates[i].getCurrentSummon();
             if (summon != null)
             {
-                // ¸¸¾à ÇöÀç ÀÎµ¦½º¿Í nextAvailableIndex°¡ ´Ù¸£¸é ¼ÒÈ¯¼ö¸¦ ¾ÕÀ¸·Î ¿Å±ä´Ù.
+                // ë§Œì•½ í˜„ì¬ ì¸ë±ìŠ¤ì™€ nextAvailableIndexê°€ ë‹¤ë¥´ë©´ ì†Œí™˜ìˆ˜ë¥¼ ì•ìœ¼ë¡œ ì˜®ê¸´ë‹¤.
                 if (i != nextAvailableIndex)
                 {
-                    // ÇöÀç ¼ÒÈ¯¼ö¸¦ nextAvailableIndex À§Ä¡·Î Á÷Á¢ ÀÌµ¿
+                    // í˜„ì¬ ì†Œí™˜ìˆ˜ë¥¼ nextAvailableIndex ìœ„ì¹˜ë¡œ ì§ì ‘ ì´ë™
                     enermyPlates[nextAvailableIndex].DirectMoveSummon(summon);
-                    enermyPlates[i].RemoveSummon(); // ¿ø·¡ À§Ä¡ÀÇ ¼ÒÈ¯¼ö¸¦ Á¦°Å
+                    enermyPlates[i].RemoveSummon(); // ì›ë˜ ìœ„ì¹˜ì˜ ì†Œí™˜ìˆ˜ë¥¼ ì œê±°
                 }
-                nextAvailableIndex++; // ´ÙÀ½ À§Ä¡·Î ÀÌµ¿
+                nextAvailableIndex++; // ë‹¤ìŒ ìœ„ì¹˜ë¡œ ì´ë™
             }
         }
     }
@@ -125,87 +125,87 @@ public class PlateController : MonoBehaviour
 
 
 
-    // ÇÃ·¹ÀÌ¾îÀÇ ¼ÒÈ¯¼ö°¡ ÀÖ´Â ÇÃ·¹ÀÌÆ®¸¸ °­Á¶ ¹× Åõ¸íµµ ¼³Á¤
+    // í”Œë ˆì´ì–´ì˜ ì†Œí™˜ìˆ˜ê°€ ìˆëŠ” í”Œë ˆì´íŠ¸ë§Œ ê°•ì¡° ë° íˆ¬ëª…ë„ ì„¤ì •
     public void HighlightPlayerPlates()
     {
-        // ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ®¸¸ °­Á¶
+        // í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ë§Œ ê°•ì¡°
         for (int i = 0; i < playerPlates.Count; i++)
         {
             if (playerPlates[i].getCurrentSummon() != null)
             {
-                playerPlates[i].Highlight(); // ³ë¶õ»öÀ¸·Î °­Á¶
-                playerPlates[i].SetSummonImageTransparency(0.5f); // ¼ÒÈ¯¼ö´Â Åõ¸íµµ Á¶Àı
+                playerPlates[i].Highlight(); // ë…¸ë€ìƒ‰ìœ¼ë¡œ ê°•ì¡°
+                playerPlates[i].SetSummonImageTransparency(0.5f); // ì†Œí™˜ìˆ˜ëŠ” íˆ¬ëª…ë„ ì¡°ì ˆ
             }
         }
 
-        // Àû ÇÃ·¹ÀÌÆ®´Â ¼û±â±â
+        // ì  í”Œë ˆì´íŠ¸ëŠ” ìˆ¨ê¸°ê¸°
         HideEnemyPlates();
     }
 
-    // °­Á¶¸¦ ÇØÁ¦ÇÏ°í Åõ¸íµµ¸¦ ±âº»°ªÀ¸·Î µÇµ¹¸®±â
+    // ê°•ì¡°ë¥¼ í•´ì œí•˜ê³  íˆ¬ëª…ë„ë¥¼ ê¸°ë³¸ê°’ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°
     public void ResetPlayerPlateHighlight()
     {
         for (int i = 0; i < playerPlates.Count; i++)
         {
             if (playerPlates[i].getCurrentSummon() != null)
             {
-                playerPlates[i].Unhighlight(); // °­Á¶ ÇØÁ¦
-                playerPlates[i].SetSummonImageTransparency(1.0f); // Åõ¸íµµ ±âº»°ªÀ¸·Î µÇµ¹¸®±â
+                playerPlates[i].Unhighlight(); // ê°•ì¡° í•´ì œ
+                playerPlates[i].SetSummonImageTransparency(1.0f); // íˆ¬ëª…ë„ ê¸°ë³¸ê°’ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°
             }
         }
 
-        // Àû ÇÃ·¹ÀÌÆ®¸¦ ´Ù½Ã º¸ÀÌ°Ô ÇÏ±â
+        // ì  í”Œë ˆì´íŠ¸ë¥¼ ë‹¤ì‹œ ë³´ì´ê²Œ í•˜ê¸°
         ShowEnemyPlates();
     }
 
-    // ÀûÀÇ ÇÃ·¹ÀÌÆ®¸¦ ¼û±â´Â ¸Ş¼­µå
+    // ì ì˜ í”Œë ˆì´íŠ¸ë¥¼ ìˆ¨ê¸°ëŠ” ë©”ì„œë“œ
     public void HideEnemyPlates()
     {
         foreach (Plate plate in enermyPlates)
         {
-            plate.gameObject.SetActive(false); // Àû ÇÃ·¹ÀÌÆ®¸¦ ºñÈ°¼ºÈ­
+            plate.gameObject.SetActive(false); // ì  í”Œë ˆì´íŠ¸ë¥¼ ë¹„í™œì„±í™”
         }
     }
 
-    // ÀûÀÇ ÇÃ·¹ÀÌÆ®¸¦ ´Ù½Ã º¸ÀÌ°Ô ÇÏ´Â ¸Ş¼­µå
+    // ì ì˜ í”Œë ˆì´íŠ¸ë¥¼ ë‹¤ì‹œ ë³´ì´ê²Œ í•˜ëŠ” ë©”ì„œë“œ
     private void ShowEnemyPlates()
     {
         foreach (Plate plate in enermyPlates)
         {
-            plate.gameObject.SetActive(true); // Àû ÇÃ·¹ÀÌÆ®¸¦ È°¼ºÈ­
+            plate.gameObject.SetActive(true); // ì  í”Œë ˆì´íŠ¸ë¥¼ í™œì„±í™”
         }
     }
 
-    // ÇÃ·¹ÀÌ¾îÀÇ ¼ÒÈ¯¼ö°¡ ÀÖ´Â ÇÃ·¹ÀÌÆ®¸¸ °­Á¶ ¹× Åõ¸íµµ ¼³Á¤
+    // í”Œë ˆì´ì–´ì˜ ì†Œí™˜ìˆ˜ê°€ ìˆëŠ” í”Œë ˆì´íŠ¸ë§Œ ê°•ì¡° ë° íˆ¬ëª…ë„ ì„¤ì •
     public void HighlightEnermyPlates()
     {
-        // ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ®¸¸ °­Á¶
+        // í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ë§Œ ê°•ì¡°
         for (int i = 0; i < enermyPlates.Count; i++)
         {
             if (enermyPlates[i].getCurrentSummon() != null)
             {
-                enermyPlates[i].Highlight(); // ³ë¶õ»öÀ¸·Î °­Á¶
-                enermyPlates[i].SetSummonImageTransparency(0.5f); // ¼ÒÈ¯¼ö´Â Åõ¸íµµ Á¶Àı
+                enermyPlates[i].Highlight(); // ë…¸ë€ìƒ‰ìœ¼ë¡œ ê°•ì¡°
+                enermyPlates[i].SetSummonImageTransparency(0.5f); // ì†Œí™˜ìˆ˜ëŠ” íˆ¬ëª…ë„ ì¡°ì ˆ
             }
         }
 
-        // Àû ÇÃ·¹ÀÌÆ®´Â ¼û±â±â
+        // ì  í”Œë ˆì´íŠ¸ëŠ” ìˆ¨ê¸°ê¸°
         HidePlayerPlates();
     }
 
-    // °­Á¶¸¦ ÇØÁ¦ÇÏ°í Åõ¸íµµ¸¦ ±âº»°ªÀ¸·Î µÇµ¹¸®±â
+    // ê°•ì¡°ë¥¼ í•´ì œí•˜ê³  íˆ¬ëª…ë„ë¥¼ ê¸°ë³¸ê°’ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°
     public void ResetEnermyPlateHighlight()
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
             if (enermyPlates[i].getCurrentSummon() != null)
             {
-                enermyPlates[i].Unhighlight(); // °­Á¶ ÇØÁ¦
-                enermyPlates[i].SetSummonImageTransparency(1.0f); // Åõ¸íµµ ±âº»°ªÀ¸·Î µÇµ¹¸®±â
+                enermyPlates[i].Unhighlight(); // ê°•ì¡° í•´ì œ
+                enermyPlates[i].SetSummonImageTransparency(1.0f); // íˆ¬ëª…ë„ ê¸°ë³¸ê°’ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°
             }
         }
 
-        // Àû ÇÃ·¹ÀÌÆ®¸¦ ´Ù½Ã º¸ÀÌ°Ô ÇÏ±â
+        // ì  í”Œë ˆì´íŠ¸ë¥¼ ë‹¤ì‹œ ë³´ì´ê²Œ í•˜ê¸°
         ShowPlayerPlates();
     }
 
@@ -215,21 +215,21 @@ public class PlateController : MonoBehaviour
         ResetEnermyPlateHighlight();
     }
 
-    // ÀûÀÇ ÇÃ·¹ÀÌÆ®¸¦ ¼û±â´Â ¸Ş¼­µå
+    // ì ì˜ í”Œë ˆì´íŠ¸ë¥¼ ìˆ¨ê¸°ëŠ” ë©”ì„œë“œ
     public void HidePlayerPlates()
     {
         foreach (Plate plate in playerPlates)
         {
-            plate.gameObject.SetActive(false); // Àû ÇÃ·¹ÀÌÆ®¸¦ ºñÈ°¼ºÈ­
+            plate.gameObject.SetActive(false); // ì  í”Œë ˆì´íŠ¸ë¥¼ ë¹„í™œì„±í™”
         }
     }
 
-    // ÀûÀÇ ÇÃ·¹ÀÌÆ®¸¦ ´Ù½Ã º¸ÀÌ°Ô ÇÏ´Â ¸Ş¼­µå
+    // ì ì˜ í”Œë ˆì´íŠ¸ë¥¼ ë‹¤ì‹œ ë³´ì´ê²Œ í•˜ëŠ” ë©”ì„œë“œ
     private void ShowPlayerPlates()
     {
         foreach (Plate plate in playerPlates)
         {
-            plate.gameObject.SetActive(true); // Àû ÇÃ·¹ÀÌÆ®¸¦ È°¼ºÈ­
+            plate.gameObject.SetActive(true); // ì  í”Œë ˆì´íŠ¸ë¥¼ í™œì„±í™”
         }
     }
 
@@ -237,7 +237,7 @@ public class PlateController : MonoBehaviour
     {
         foreach (Plate plate in plates)
         {
-            plate.gameObject.SetActive(false); // Àû ÇÃ·¹ÀÌÆ®¸¦ ºñÈ°¼ºÈ­
+            plate.gameObject.SetActive(false); // ì  í”Œë ˆì´íŠ¸ë¥¼ ë¹„í™œì„±í™”
         }
     }
 
@@ -245,50 +245,50 @@ public class PlateController : MonoBehaviour
     {
         foreach (Plate plate in plates)
         {
-            plate.gameObject.SetActive(true); // Àû ÇÃ·¹ÀÌÆ®¸¦ ºñÈ°¼ºÈ­
+            plate.gameObject.SetActive(true); // ì  í”Œë ˆì´íŠ¸ë¥¼ ë¹„í™œì„±í™”
         }
     }
 
-    public int getClosestPlayerPlatesIndex(Summon attackingSummon) //ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ®Áß °¡Àå °¡±îÀÌ ÀÖ´Â ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯
+    public int getClosestPlayerPlatesIndex(Summon attackingSummon) //í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ì¤‘ ê°€ì¥ ê°€ê¹Œì´ ìˆëŠ” ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜
     {
         for (int i = 0; i < playerPlates.Count; i++)
         {
             Summon currentSummon = playerPlates[i].getCurrentSummon();
-            if (currentSummon != null && currentSummon != attackingSummon) // ÇöÀç ¼ÒÈ¯¼ö°¡ Á¸ÀçÇÏ°í, °ø°İÇÏ´Â ¼ÒÈ¯¼ö¿Í °°Áö ¾ÊÀº °æ¿ì
+            if (currentSummon != null && currentSummon != attackingSummon) // í˜„ì¬ ì†Œí™˜ìˆ˜ê°€ ì¡´ì¬í•˜ê³ , ê³µê²©í•˜ëŠ” ì†Œí™˜ìˆ˜ì™€ ê°™ì§€ ì•Šì€ ê²½ìš°
             {
                 return i;
             }
         }
 
-        return -1; // °ø°İÇÒ ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ê³µê²©í•  ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
     public int getClosestPlayerPlateIndex()
     {
-        List<Plate> playerPlates = getPlayerPlates(); // playerPlates ¸®½ºÆ®¸¦ °¡Á®¿È
+        List<Plate> playerPlates = getPlayerPlates(); // playerPlates ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì˜´
         for (int i = 0; i < playerPlates.Count; i++)
         {
             Summon playerSummon = playerPlates[i].getCurrentSummon();
             if (playerSummon != null)
             {
-                return i; // °¡Àå °¡±î¿î(Ã¹ ¹øÂ°·Î ¹ß°ßµÈ) ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º ¹İÈ¯
+                return i; // ê°€ì¥ ê°€ê¹Œìš´(ì²« ë²ˆì§¸ë¡œ ë°œê²¬ëœ) ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ ë°˜í™˜
             }
         }
-        return -1; // ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
-    public int getClosestEnermyPlatesIndex(Summon attackingSummon) //Àû ÇÃ·¹ÀÌÆ®Áß °¡Àå °¡±îÀÌ ÀÖ´Â ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯
+    public int getClosestEnermyPlatesIndex(Summon attackingSummon) //ì  í”Œë ˆì´íŠ¸ì¤‘ ê°€ì¥ ê°€ê¹Œì´ ìˆëŠ” ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜
     {
         for (int i = 0; i < playerPlates.Count; i++)
         {
             Summon currentSummon = playerPlates[i].getCurrentSummon();
-            if (currentSummon != null && currentSummon != attackingSummon) // ÇöÀç ¼ÒÈ¯¼ö°¡ Á¸ÀçÇÏ°í, °ø°İÇÏ´Â ¼ÒÈ¯¼ö¿Í °°Áö ¾ÊÀº °æ¿ì
+            if (currentSummon != null && currentSummon != attackingSummon) // í˜„ì¬ ì†Œí™˜ìˆ˜ê°€ ì¡´ì¬í•˜ê³ , ê³µê²©í•˜ëŠ” ì†Œí™˜ìˆ˜ì™€ ê°™ì§€ ì•Šì€ ê²½ìš°
             {
                 return i;
             }
         }
 
-        return -1; // °ø°İÇÒ ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ê³µê²©í•  ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
     public int getPlayerSummonCount()
@@ -297,7 +297,7 @@ public class PlateController : MonoBehaviour
 
         foreach (Plate plate in playerPlates)
         {
-            if (plate.getCurrentSummon() != null) // ÇÃ·¹ÀÌÆ®¿¡ ¼ÒÈ¯¼ö°¡ ÀÖ´Â °æ¿ì¸¸ Ä«¿îÆ®
+            if (plate.getCurrentSummon() != null) // í”Œë ˆì´íŠ¸ì— ì†Œí™˜ìˆ˜ê°€ ìˆëŠ” ê²½ìš°ë§Œ ì¹´ìš´íŠ¸
             {
                 summonCount++;
             }
@@ -312,7 +312,7 @@ public class PlateController : MonoBehaviour
 
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null) // ÇÃ·¹ÀÌÆ®¿¡ ¼ÒÈ¯¼ö°¡ ÀÖ´Â °æ¿ì¸¸ Ä«¿îÆ®
+            if (plate.getCurrentSummon() != null) // í”Œë ˆì´íŠ¸ì— ì†Œí™˜ìˆ˜ê°€ ìˆëŠ” ê²½ìš°ë§Œ ì¹´ìš´íŠ¸
             {
                 summonCount++;
             }
@@ -323,29 +323,29 @@ public class PlateController : MonoBehaviour
 
 
 
-    // Æ¯Á¤ ÇÃ·¹ÀÌÆ®ÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // íŠ¹ì • í”Œë ˆì´íŠ¸ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int GetPlateIndex(Plate plate)
     {
-        // ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ®¿¡¼­ Å½»ö
+        // í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ì—ì„œ íƒìƒ‰
         int index = playerPlates.IndexOf(plate);
         if (index != -1)
         {
-            return index; // ÇØ´ç ÇÃ·¹ÀÌÆ®ÀÇ ÀÎµ¦½º ¹İÈ¯
+            return index; // í•´ë‹¹ í”Œë ˆì´íŠ¸ì˜ ì¸ë±ìŠ¤ ë°˜í™˜
         }
 
-        // Àû ÇÃ·¹ÀÌÆ®¿¡¼­ Å½»ö
+        // ì  í”Œë ˆì´íŠ¸ì—ì„œ íƒìƒ‰
         index = enermyPlates.IndexOf(plate);
         if (index != -1)
         {
-            return index; // ÇØ´ç ÇÃ·¹ÀÌÆ®ÀÇ ÀÎµ¦½º ¹İÈ¯
+            return index; // í•´ë‹¹ í”Œë ˆì´íŠ¸ì˜ ì¸ë±ìŠ¤ ë°˜í™˜
         }
 
-        return -1; // ÇÃ·¹ÀÌÆ®°¡ ¸ñ·Ï¿¡ ¾øÀ» °æ¿ì -1 ¹İÈ¯
+        return -1; // í”Œë ˆì´íŠ¸ê°€ ëª©ë¡ì— ì—†ì„ ê²½ìš° -1 ë°˜í™˜
     }
 
 
 
-    // ¾Æ±º ÇÃ·¹ÀÌÆ® Áß °¡Àå Ã¼·ÂÀÌ ³·Àº ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ì•„êµ° í”Œë ˆì´íŠ¸ ì¤‘ ê°€ì¥ ì²´ë ¥ì´ ë‚®ì€ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int getLowestHealthPlayerPlateIndex()
     {
         int lowestHealthIndex = -1;
@@ -368,7 +368,7 @@ public class PlateController : MonoBehaviour
         return lowestHealthIndex;
     }
 
-    // Àû ÇÃ·¹ÀÌÆ® Áß °¡Àå Ã¼·ÂÀÌ ³·Àº ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ì  í”Œë ˆì´íŠ¸ ì¤‘ ê°€ì¥ ì²´ë ¥ì´ ë‚®ì€ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int getLowestHealthEnermyPlateIndex()
     {
         int lowestHealthIndex = -1;
@@ -395,7 +395,7 @@ public class PlateController : MonoBehaviour
 
     private void InitializePlates()
     {
-        // playerPlates¿Í EnermyPlatesÀÇ ¿øº» ¸®½ºÆ®ÀÇ ³»¿ëÀ» plates ¸®½ºÆ®¿¡ Ãß°¡
+        // playerPlatesì™€ EnermyPlatesì˜ ì›ë³¸ ë¦¬ìŠ¤íŠ¸ì˜ ë‚´ìš©ì„ plates ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
         plates.AddRange(playerPlates);
         plates.AddRange(enermyPlates);
     }
@@ -408,13 +408,13 @@ public class PlateController : MonoBehaviour
     {
         return enermyPlates;
     }
-    // ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ® ¸®½ºÆ®¸¦ ¼³Á¤ÇÏ´Â ¸Ş¼­µå
+    // í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ ë¦¬ìŠ¤íŠ¸ë¥¼ ì„¤ì •í•˜ëŠ” ë©”ì„œë“œ
     public void setPlayerPlates(List<Plate> plates)
     {
         playerPlates = plates;
     }
 
-    // Àû ÇÃ·¹ÀÌÆ® ¸®½ºÆ®¸¦ ¼³Á¤ÇÏ´Â ¸Ş¼­µå
+    // ì  í”Œë ˆì´íŠ¸ ë¦¬ìŠ¤íŠ¸ë¥¼ ì„¤ì •í•˜ëŠ” ë©”ì„œë“œ
     public void setEnermyPlates(List<Plate> plates)
     {
         enermyPlates = plates;

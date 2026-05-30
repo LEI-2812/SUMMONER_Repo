@@ -1,0 +1,12 @@
+﻿"기능","우선순위","테스트","상태","결과","다음조치","파일"
+"소환수 뽑기","높음","후보 3개 표시","대기","아직 QA 전","소환 버튼 후 후보 확인","SummonController.cs"
+"소환수 뽑기","중간","후보 중복 방지","대기","아직 QA 전","3개 후보 중복 여부 확인","SummonController.cs"
+"소환수 뽑기","중간","등급 확률","대기","아직 QA 전","1000회 시뮬레이션 후보","SummonController.cs"
+"소환수 배치","높음","선택 후 배치","대기","아직 QA 전","PickSummonPanel 클릭 확인","PickSummonPanel.cs"
+"재소환","높음","기존 공격 가능 상태 유지","대기","아직 QA 전","재소환 전후 상태 비교","Plate.cs"
+"소환수 데이터","중간","기본 능력치 유지","대기","아직 QA 전","Cat/Rabbit 등 기존 값 비교","Summons/*.cs"
+"공격 전략","높음","대상 전략 생성","대기","아직 QA 전","Heal/Damage/All 전략 확인","AttackLogic/*.cs"
+"플레이어 예측","중간","공격 예측 목록","대기","아직 QA 전","소환수별 예측 결과 확인","Prediction/*.cs"
+"적 AI","높음","행동 결정","대기","아직 QA 전","EnemyActionDecide 후보 작성","EnermyAlgorithm.cs"
+"적 AI","높음","반응 공격","대기","아직 QA 전","Poison/Stun 대응 확인","EnermyAlgorithm.cs"
+

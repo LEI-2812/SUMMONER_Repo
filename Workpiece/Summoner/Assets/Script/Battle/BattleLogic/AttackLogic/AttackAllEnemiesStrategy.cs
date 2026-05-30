@@ -10,7 +10,7 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
     private double Damage;
     private int cooltime;
     private int currentCooldown;
-    private int statusTime; //Áö¼Ó½Ã°£
+    private int statusTime; //ì§€ì†ì‹œê°„
 
 
     public AttackAllEnemiesStrategy(StatusType statusType, double damage, int cooltime, int statusTime=0)
@@ -32,31 +32,31 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
                 switch (statusType)
                 {
                     case StatusType.None:
-                        Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}À»(¸¦) ÀüÃ¼ °ø°ÝÇÕ´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì„(ë¥¼) ì „ì²´ ê³µê²©í•©ë‹ˆë‹¤.");
                         target.takeDamage(attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage());
                         break;
                     case StatusType.Poison:
-                        double poisonDamage = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // ÃÖ´ë Ã¼·ÂÀÇ 10% µ¥¹ÌÁö
+                        double poisonDamage = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // ìµœëŒ€ ì²´ë ¥ì˜ 10% ë°ë¯¸ì§€
                         StatusEffect poisonEffect = new StatusEffect(StatusType.Poison, statusTime, poisonDamage);
                         target.ApplyStatusEffect(poisonEffect);
-                        Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}¿¡°Ô Áßµ¶ »óÅÂ¸¦ ºÎ¿©ÇÏ¿© ¸Å ÅÏ {poisonDamage} µ¥¹ÌÁö¸¦ ÀÔÈü´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì—ê²Œ ì¤‘ë… ìƒíƒœë¥¼ ë¶€ì—¬í•˜ì—¬ ë§¤ í„´ {poisonDamage} ë°ë¯¸ì§€ë¥¼ ìž…íž™ë‹ˆë‹¤.");
                         break;
                     case StatusType.Burn:
-                        double burnDamage = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // ÃÖ´ë Ã¼·ÂÀÇ 20% µ¥¹ÌÁö
+                        double burnDamage = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // ìµœëŒ€ ì²´ë ¥ì˜ 20% ë°ë¯¸ì§€
                         StatusEffect burnEffect = new StatusEffect(StatusType.Burn, statusTime, burnDamage);
                         target.ApplyStatusEffect(burnEffect);
-                        Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}¿¡°Ô È­»óÀ» ÀÔÇô ¸Å ÅÏ {burnDamage} µ¥¹ÌÁö¸¦ ÀÔÈü´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì—ê²Œ í™”ìƒì„ ìž…í˜€ ë§¤ í„´ {burnDamage} ë°ë¯¸ì§€ë¥¼ ìž…íž™ë‹ˆë‹¤.");
                         break;
                     case StatusType.Upgrade:
                         double upgradeAttackPower = attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage();
                         StatusEffect upgradeEffect = new StatusEffect(StatusType.Upgrade, statusTime, upgradeAttackPower);
                         target.ApplyStatusEffect(upgradeEffect);
-                        Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}¿¡°Ô °ø°Ý·Â {(int)(target.getAttackPower()*upgradeAttackPower)} ¸¸Å­ »ó½Â ½ÃÄ×½À´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì—ê²Œ ê³µê²©ë ¥ {(int)(target.getAttackPower()*upgradeAttackPower)} ë§Œí¼ ìƒìŠ¹ ì‹œì¼°ìŠµë‹ˆë‹¤.");
                         break;
                     case StatusType.Heal:
-                        double healAmount = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // ÃÖ´ë Ã¼·ÂÀÇ 20%¸¸Å­ È¸º¹
+                        double healAmount = target.getMaxHP() * attacker.getSpecialAttackStrategy()[SpecialAttackArrayIndex].getSpecialDamage(); // ìµœëŒ€ ì²´ë ¥ì˜ 20%ë§Œí¼ íšŒë³µ
                         target.Heal(healAmount);
-                        Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}À»(¸¦) {healAmount}¸¸Å­ Ä¡À¯Çß½À´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì„(ë¥¼) {healAmount}ë§Œí¼ ì¹˜ìœ í–ˆìŠµë‹ˆë‹¤.");
                         break;
                 }
 
@@ -88,10 +88,10 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
 
     public int getCurrentCooldown() => currentCooldown;
 
-    // ÄðÅ¸ÀÓÀ» ÃÊ±âÈ­ (½ºÅ³ »ç¿ë ÈÄ Àû¿ë)
+    // ì¿¨íƒ€ìž„ì„ ì´ˆê¸°í™” (ìŠ¤í‚¬ ì‚¬ìš© í›„ ì ìš©)
     public void ApplyCooldown() => currentCooldown = cooltime;
 
-    // ÅÏ Á¾·á ½Ã ÄðÅ¸ÀÓ °¨¼Ò
+    // í„´ ì¢…ë£Œ ì‹œ ì¿¨íƒ€ìž„ ê°ì†Œ
     public void ReduceCooldown()
     {
         if (currentCooldown > 0)

@@ -6,18 +6,18 @@ public class KingSlime : Summon
 {
     private void Awake()
     {
-        summonName = "KingSlime"; //ÀÌ¸§ ½½¶óÀÓ
-        maxHP = 250; //ÃÖ´ëÃ¼·Â 200
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 50; //ÀÏ¹İ°ø°İ
+        summonName = "KingSlime"; //ì´ë¦„ ìŠ¬ë¼ì„
+        maxHP = 250; //ìµœëŒ€ì²´ë ¥ 200
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 50; //ì¼ë°˜ê³µê²©
         heavyAttakPower = 65;
-        summonRank = SummonRank.Special; // Æ¯±Ş Àû ¸ó½ºÅÍ
+        summonRank = SummonRank.Special; // íŠ¹ê¸‰ ì  ëª¬ìŠ¤í„°
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
         specialAttackStrategies = new IAttackStrategy[] {
-            new AttackAllEnemiesStrategy(StatusType.None, 35, 1),//ÀüÃ¼°ø°İ
-            new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//½¯µå 
+            new AttackAllEnemiesStrategy(StatusType.None, 35, 1),//ì „ì²´ê³µê²©
+            new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//ì‰´ë“œ 
     }
 
 

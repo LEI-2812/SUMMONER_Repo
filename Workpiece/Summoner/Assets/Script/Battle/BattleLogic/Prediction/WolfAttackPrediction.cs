@@ -14,57 +14,57 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
     public AttackPrediction getAttackPrediction(Summon wolf, int wolfPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
-        // ±âº»°ª ¼³Á¤: ÀÏ¹İ °ø°İ 50%, Æ¯¼ö °ø°İ 50%
+        // ê¸°ë³¸ê°’ ì„¤ì •: ì¼ë°˜ ê³µê²© 50%, íŠ¹ìˆ˜ ê³µê²© 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = getClosestEnermyIndex(enermyPlates);
         AttackPrediction attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
-        if (IsEnermyCountTwoOrMore(enermyPlates)) //ÀûÀÌ 2¸¶¸® ÀÌ»óÀÎ°¡?
+        if (IsEnermyCountTwoOrMore(enermyPlates)) //ì ì´ 2ë§ˆë¦¬ ì´ìƒì¸ê°€?
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "´Á´ë ÀûÀÌ 2¸¶¸® ÀÌ»ó");
-            if (AllEnermyHealthOver50(enermyPlates)) //¸ó½ºÅÍ Ã¼·ÂÀÌ ¸ğµÎ 50% ÀÌ»óÀÎ°¡?
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "ëŠ‘ëŒ€ ì ì´ 2ë§ˆë¦¬ ì´ìƒ");
+            if (AllEnermyHealthOver50(enermyPlates)) //ëª¬ìŠ¤í„° ì²´ë ¥ì´ ëª¨ë‘ 50% ì´ìƒì¸ê°€?
             {
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "´Á´ë Àû ¸ó½ºÅÍ Ã¼·ÂÀÌ ¸ğµÎ 50% ÀÌ»ó");
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "ëŠ‘ëŒ€ ì  ëª¬ìŠ¤í„° ì²´ë ¥ì´ ëª¨ë‘ 50% ì´ìƒ");
             }
-            else if (AllEnermyHealthDown50(enermyPlates)) //¸ó½ºÅÍ Ã¼·ÂÀÌ ¸ğµÎ 50% ÀÌÇÏÀÎ°¡?
+            else if (AllEnermyHealthDown50(enermyPlates)) //ëª¬ìŠ¤í„° ì²´ë ¥ì´ ëª¨ë‘ 50% ì´í•˜ì¸ê°€?
             {
                 if (HasSpecificAvailableSpecialAttack(wolf, wolfPlateIndex, playerPlates))
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "´Á´ë Àû ¸ó½ºÅÍ Ã¼·ÂÀÌ ¸ğµÎ 50% ¾Æ·¡°í ¼ÒÈ¯¼ö Áß °ø°İÇüÀÌ µÚ¿¡ Á¸Àç");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "ëŠ‘ëŒ€ ì  ëª¬ìŠ¤í„° ì²´ë ¥ì´ ëª¨ë‘ 50% ì•„ë˜ê³  ì†Œí™˜ìˆ˜ ì¤‘ ê³µê²©í˜•ì´ ë’¤ì— ì¡´ì¬");
                 }
             }
-            else if (IsEnermyHealthDifferenceOver30(enermyPlates) != -1) //¸ó½ºÅÍ ÇÑÂÊÀÌ ´Ù¸¥ ÂÊ¿¡ºñÇØ Ã¼·ÂÀÌ 30% ÀÌ»ó ³·Àº°¡? Á¸ÀçÇÏ¸é °¡Àå ³·Àº ÀÎµ¦½º ¹İÈ¯
+            else if (IsEnermyHealthDifferenceOver30(enermyPlates) != -1) //ëª¬ìŠ¤í„° í•œìª½ì´ ë‹¤ë¥¸ ìª½ì—ë¹„í•´ ì²´ë ¥ì´ 30% ì´ìƒ ë‚®ì€ê°€? ì¡´ì¬í•˜ë©´ ê°€ì¥ ë‚®ì€ ì¸ë±ìŠ¤ ë°˜í™˜
             {
                 int lowestIndex = IsEnermyHealthDifferenceOver30(enermyPlates);
-                if (IsLowestHealthEnermyClosest(wolf, enermyPlates, lowestIndex)) //³·ÀºÂÊÀÇ ÀÎµ¦½º°¡ ±ÙÁ¢°ø°İÇÏ´Â ÀÎµ¦½º¿Í µ¿ÀÏÇÑ°¡?
+                if (IsLowestHealthEnermyClosest(wolf, enermyPlates, lowestIndex)) //ë‚®ì€ìª½ì˜ ì¸ë±ìŠ¤ê°€ ê·¼ì ‘ê³µê²©í•˜ëŠ” ì¸ë±ìŠ¤ì™€ ë™ì¼í•œê°€?
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 20f, true, "´Á´ë ³·ÀºÂÊÀ¸·Î °ø°İÇÏ´Â ÀÎµ¦½º°¡ µ¿ÀÏ");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 20f, true, "ëŠ‘ëŒ€ ë‚®ì€ìª½ìœ¼ë¡œ ê³µê²©í•˜ëŠ” ì¸ë±ìŠ¤ê°€ ë™ì¼");
                 }
                 else
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "´Á´ë ÀÏ¹İ°ø°İÀ¸·Î °ø°İÇÏ´Â ÀÎµ¦½º°¡ ºÒÀÏÄ¡");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "ëŠ‘ëŒ€ ì¼ë°˜ê³µê²©ìœ¼ë¡œ ê³µê²©í•˜ëŠ” ì¸ë±ìŠ¤ê°€ ë¶ˆì¼ì¹˜");
                 }
             }
         }
-        else if (IsEnermyCountOne(enermyPlates)) //ÀûÀÌ 1¸¶¸® ÀÎ°¡?
+        else if (IsEnermyCountOne(enermyPlates)) //ì ì´ 1ë§ˆë¦¬ ì¸ê°€?
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "´Á´ë ÀûÀÌ 1¸¶¸®»Ó");
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "ëŠ‘ëŒ€ ì ì´ 1ë§ˆë¦¬ë¿");
 
-            if (getIndexOfNormalAttackCanKill(wolf, enermyPlates) != -1) //ÀÏ¹İ °ø°İÀ¸·Î ¸ó½ºÅÍ¸¦ ¹°¸®Ä¥ ¼ö ÀÖ´Â°¡?
+            if (getIndexOfNormalAttackCanKill(wolf, enermyPlates) != -1) //ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ëª¬ìŠ¤í„°ë¥¼ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆëŠ”ê°€?
             {
                 attackIndex = getIndexOfNormalAttackCanKill(wolf, enermyPlates);
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "´Á´ë ÀÏ¹İ °ø°İÀ¸·Î Ã³Ä¡°¡´É");
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "ëŠ‘ëŒ€ ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ì²˜ì¹˜ê°€ëŠ¥");
             }
             else
             {
-                //ÀÏ¹İ °ø°İ°ú Æ¯¼ö°ø°İÁß ÇÇÇØ¸¦ ´õ ÁÙ ¼ö ÀÖ´Â °ø°İÀ» ¹İÈ¯ÇßÀ» ¶§ ÀÏ¹İ °ø°İÀÏ°æ¿ì
+                //ì¼ë°˜ ê³µê²©ê³¼ íŠ¹ìˆ˜ê³µê²©ì¤‘ í”¼í•´ë¥¼ ë” ì¤„ ìˆ˜ ìˆëŠ” ê³µê²©ì„ ë°˜í™˜í–ˆì„ ë•Œ ì¼ë°˜ ê³µê²©ì¼ê²½ìš°
                 if (getMostDamageAttack(wolf, enermyPlates) == AttackType.NormalAttack)
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "´Á´ë ÀÏ¹İ °ø°İÀÌ ´õ ¸¹Àº ÇÇÇØ¸¦ ÀÔÈû");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "ëŠ‘ëŒ€ ì¼ë°˜ ê³µê²©ì´ ë” ë§ì€ í”¼í•´ë¥¼ ì…í˜");
                 }
                 else
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "´Á´ë Æ¯¼ö°ø°İÀÌ ´õ ¸¹Àº ÇÇÇØ¸¦ ÀÔÈû");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "ëŠ‘ëŒ€ íŠ¹ìˆ˜ê³µê²©ì´ ë” ë§ì€ í”¼í•´ë¥¼ ì…í˜");
                 }
             }
         }
@@ -74,7 +74,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
 
-    // ÀûÀÇ Ã¼·ÂÀÌ ¸ğµÎ 50% ÀÌ»óÀÎÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+    // ì ì˜ ì²´ë ¥ì´ ëª¨ë‘ 50% ì´ìƒì¸ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
     public bool AllEnermyHealthOver50(List<Plate> enermyPlates)
     {
         bool hasAliveEnermy = false;
@@ -83,22 +83,22 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             Summon enermySummon = plate.getCurrentSummon();
 
-            if (enermySummon != null) // »ì¾ÆÀÖ´Â ¼ÒÈ¯¼ö¸¸ °Ë»ç
+            if (enermySummon != null) // ì‚´ì•„ìˆëŠ” ì†Œí™˜ìˆ˜ë§Œ ê²€ì‚¬
             {
-                hasAliveEnermy = true; // »ì¾ÆÀÖ´Â ¼ÒÈ¯¼ö°¡ ÀÖÀ½
+                hasAliveEnermy = true; // ì‚´ì•„ìˆëŠ” ì†Œí™˜ìˆ˜ê°€ ìˆìŒ
                 double healthRatio = (double)enermySummon.getNowHP() / enermySummon.getMaxHP();
 
-                if (healthRatio < 0.5) // Ã¼·Â ºñÀ²ÀÌ 50% ¹Ì¸¸ÀÎ °æ¿ì
+                if (healthRatio < 0.5) // ì²´ë ¥ ë¹„ìœ¨ì´ 50% ë¯¸ë§Œì¸ ê²½ìš°
                 {
-                    return false; // ÇÏ³ª¶óµµ 50% ¹Ì¸¸ÀÎ ¼ÒÈ¯¼ö°¡ ÀÖÀ¸¸é false ¹İÈ¯
+                    return false; // í•˜ë‚˜ë¼ë„ 50% ë¯¸ë§Œì¸ ì†Œí™˜ìˆ˜ê°€ ìˆìœ¼ë©´ false ë°˜í™˜
                 }
             }
         }
 
-        return hasAliveEnermy; // »ì¾ÆÀÖ´Â ¼ÒÈ¯¼ö°¡ ÀÖ°í, ¸ğµÎ 50% ÀÌ»óÀÏ °æ¿ì true ¹İÈ¯
+        return hasAliveEnermy; // ì‚´ì•„ìˆëŠ” ì†Œí™˜ìˆ˜ê°€ ìˆê³ , ëª¨ë‘ 50% ì´ìƒì¼ ê²½ìš° true ë°˜í™˜
     }
 
-    // »ì¾ÆÀÖ´Â Àû ¼ÒÈ¯¼öÀÇ Ã¼·ÂÀÌ ¸ğµÎ 50% ÀÌÇÏÀÎÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+    // ì‚´ì•„ìˆëŠ” ì  ì†Œí™˜ìˆ˜ì˜ ì²´ë ¥ì´ ëª¨ë‘ 50% ì´í•˜ì¸ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
     public bool AllEnermyHealthDown50(List<Plate> enermyPlates)
     {
         bool hasAliveEnermy = false;
@@ -109,18 +109,18 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
             if (enermySummon != null)
             {
-                hasAliveEnermy = true; // »ì¾ÆÀÖ´Â ¼ÒÈ¯¼ö°¡ Á¸ÀçÇÔÀ» È®ÀÎ
+                hasAliveEnermy = true; // ì‚´ì•„ìˆëŠ” ì†Œí™˜ìˆ˜ê°€ ì¡´ì¬í•¨ì„ í™•ì¸
                 if (enermySummon.getNowHP() / enermySummon.getMaxHP() > 0.5f)
                 {
-                    return false; // Ã¼·ÂÀÌ 50% ÃÊ°úÀÎ ¼ÒÈ¯¼ö°¡ ÀÖÀ¸¸é false ¹İÈ¯
+                    return false; // ì²´ë ¥ì´ 50% ì´ˆê³¼ì¸ ì†Œí™˜ìˆ˜ê°€ ìˆìœ¼ë©´ false ë°˜í™˜
                 }
             }
         }
 
-        return hasAliveEnermy; // »ì¾ÆÀÖ´Â ¼ÒÈ¯¼ö°¡ ¸ğµÎ 50% ÀÌÇÏÀÏ °æ¿ì true ¹İÈ¯
+        return hasAliveEnermy; // ì‚´ì•„ìˆëŠ” ì†Œí™˜ìˆ˜ê°€ ëª¨ë‘ 50% ì´í•˜ì¼ ê²½ìš° true ë°˜í™˜
     }
 
-    // ÀûÀÇ ÇöÀç Ã¼·Â Áß ´Ù¸¥ ¼ÒÈ¯¼öÀÇ Ã¼·Âº¸´Ù 30% ³·Àº ¼ÒÈ¯¼ö Áß °¡Àå Ã¼·ÂÀÌ ³·Àº ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ì ì˜ í˜„ì¬ ì²´ë ¥ ì¤‘ ë‹¤ë¥¸ ì†Œí™˜ìˆ˜ì˜ ì²´ë ¥ë³´ë‹¤ 30% ë‚®ì€ ì†Œí™˜ìˆ˜ ì¤‘ ê°€ì¥ ì²´ë ¥ì´ ë‚®ì€ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int IsEnermyHealthDifferenceOver30(List<Plate> enermyPlates)
     {
         if (enermyPlates.Count < 2) return -1;
@@ -135,15 +135,15 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
             for (int j = 0; j < enermyPlates.Count; j++)
             {
-                if (i == j) continue; // ÀÚ±â ÀÚ½ÅÀº ºñ±³ÇÏÁö ¾ÊÀ½
+                if (i == j) continue; // ìê¸° ìì‹ ì€ ë¹„êµí•˜ì§€ ì•ŠìŒ
 
                 Summon compareSummon = enermyPlates[j].getCurrentSummon();
                 if (compareSummon == null) continue;
 
-                // ÇöÀç ¼ÒÈ¯¼öÀÇ Ã¼·Â ºñÀ² °è»ê (ÀÚ±â Ã¼·Â / ºñ±³ ¸ó½ºÅÍ Ã¼·Â)
+                // í˜„ì¬ ì†Œí™˜ìˆ˜ì˜ ì²´ë ¥ ë¹„ìœ¨ ê³„ì‚° (ìê¸° ì²´ë ¥ / ë¹„êµ ëª¬ìŠ¤í„° ì²´ë ¥)
                 double healthRatio = currentSummon.getNowHP() / compareSummon.getNowHP();
 
-                // Á¶°ÇÀ» ¸¸Á·ÇÏ´Â °æ¿ì Áß¿¡¼­ °¡Àå ³·Àº Ã¼·ÂÀ» °¡Áø ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ÃßÀû
+                // ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ” ê²½ìš° ì¤‘ì—ì„œ ê°€ì¥ ë‚®ì€ ì²´ë ¥ì„ ê°€ì§„ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ì¶”ì 
                 if (healthRatio <= 0.7 && currentSummon.getNowHP() < lowestHealth)
                 {
                     lowestHealth = currentSummon.getNowHP();
@@ -152,17 +152,17 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
             }
         }
 
-        return lowestHealthIndex; // Á¶°ÇÀ» ¸¸Á·ÇÏ´Â °¡Àå ³·Àº Ã¼·ÂÀÇ ¼ÒÈ¯¼ö ÀÎµ¦½º ¹İÈ¯, ¾øÀ¸¸é -1 ¹İÈ¯
+        return lowestHealthIndex; // ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ” ê°€ì¥ ë‚®ì€ ì²´ë ¥ì˜ ì†Œí™˜ìˆ˜ ì¸ë±ìŠ¤ ë°˜í™˜, ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
 
-    //Ã¼·ÂÀÌ °¡Àå ³·Àº ¸ó½ºÅÍÀÇ ÀÎµ¦½º¸¦ °¡Á®¿Í ±ÙÁ¢ÇÑ ÀÎµ¦½º¿Í ºñ±³ÇÏ´Â ¸Ş¼Òµå
+    //ì²´ë ¥ì´ ê°€ì¥ ë‚®ì€ ëª¬ìŠ¤í„°ì˜ ì¸ë±ìŠ¤ë¥¼ ê°€ì ¸ì™€ ê·¼ì ‘í•œ ì¸ë±ìŠ¤ì™€ ë¹„êµí•˜ëŠ” ë©”ì†Œë“œ
     public bool IsLowestHealthEnermyClosest(Summon attackingSummon, List<Plate> enermyPlates, int lowestIndex)
     {
-        // Àû ¼ÒÈ¯¼ö°¡ 2°³ ¹Ì¸¸ÀÎ °æ¿ì ºñ±³ÇÒ ¼ö ¾øÀ¸¹Ç·Î false ¹İÈ¯
+        // ì  ì†Œí™˜ìˆ˜ê°€ 2ê°œ ë¯¸ë§Œì¸ ê²½ìš° ë¹„êµí•  ìˆ˜ ì—†ìœ¼ë¯€ë¡œ false ë°˜í™˜
         if (enermyPlates.Count < 2) return false;
 
-        //°¡Àå °¡±î¿î ÀÎµ¦½º ¹İÈ¯
+        //ê°€ì¥ ê°€ê¹Œìš´ ì¸ë±ìŠ¤ ë°˜í™˜
         int closetIndex = getClosestEnermyIndex(attackingSummon, enermyPlates);
 
         if (closetIndex == lowestIndex)
@@ -171,7 +171,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         return false;  
     }
 
-    // °¡Àå °¡±î¿î Àû ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ê°€ì¥ ê°€ê¹Œìš´ ì  ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int getClosestEnermyIndex(Summon attackingSummon, List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
@@ -179,54 +179,54 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
             Summon enermySummon = enermyPlates[i].getCurrentSummon();
             if (enermySummon != null && enermySummon != attackingSummon)
             {
-                return i; // Ã¹ ¹øÂ°·Î ¸¸³ª´Â À¯È¿ÇÑ Àû ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯
+                return i; // ì²« ë²ˆì§¸ë¡œ ë§Œë‚˜ëŠ” ìœ íš¨í•œ ì  ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜
             }
         }
 
-        return -1; // Àû ¼ÒÈ¯¼ö°¡ ¾ø´Â °æ¿ì -1 ¹İÈ¯
+        return -1; // ì  ì†Œí™˜ìˆ˜ê°€ ì—†ëŠ” ê²½ìš° -1 ë°˜í™˜
     }
 
 
 
-    // ÀûÀÌ 2¸¶¸® ÀÌ»óÀÎÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+    // ì ì´ 2ë§ˆë¦¬ ì´ìƒì¸ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
     public bool IsEnermyCountTwoOrMore(List<Plate> enermyPlates)
     {
         int enermyCount = 0;
 
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null) // Plate¿¡ ¼ÒÈ¯¼ö°¡ ÀÖ´ÂÁö È®ÀÎ
+            if (plate.getCurrentSummon() != null) // Plateì— ì†Œí™˜ìˆ˜ê°€ ìˆëŠ”ì§€ í™•ì¸
             {
                 enermyCount++;
-                if (enermyCount >= 2) return true; // 2¸¶¸® ÀÌ»óÀÌ¸é true ¹İÈ¯
+                if (enermyCount >= 2) return true; // 2ë§ˆë¦¬ ì´ìƒì´ë©´ true ë°˜í™˜
             }
         }
 
         return false;
     }
 
-    // ÀûÀÌ 1¸¶¸®ÀÎÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+    // ì ì´ 1ë§ˆë¦¬ì¸ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
     public bool IsEnermyCountOne(List<Plate> enermyPlates)
     {
         int enermyCount = 0;
 
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null) // Plate¿¡ ¼ÒÈ¯¼ö°¡ ÀÖ´ÂÁö È®ÀÎ
+            if (plate.getCurrentSummon() != null) // Plateì— ì†Œí™˜ìˆ˜ê°€ ìˆëŠ”ì§€ í™•ì¸
             {
                 enermyCount++;
-                if (enermyCount > 1) return false; // 2¸¶¸® ÀÌ»óÀÌ¸é false ¹İÈ¯
+                if (enermyCount > 1) return false; // 2ë§ˆë¦¬ ì´ìƒì´ë©´ false ë°˜í™˜
             }
         }
 
-        return enermyCount == 1; // ÃÖÁ¾ÀûÀ¸·Î 1¸¶¸®ÀÏ °æ¿ì true ¹İÈ¯
+        return enermyCount == 1; // ìµœì¢…ì ìœ¼ë¡œ 1ë§ˆë¦¬ì¼ ê²½ìš° true ë°˜í™˜
     }
 
 
-    // ÀÚ±â ÀÚ½ÅÀ» Á¦¿ÜÇÏ°í ÇÃ·¹ÀÌ¾îÀÇ ¼ÒÈ¯¼ö¿¡ Æ¯¼ö°ø°İÀÌ °ø°İÇüÀÎ ½ºÅ³ÀÌ ÀÖ´ÂÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+    // ìê¸° ìì‹ ì„ ì œì™¸í•˜ê³  í”Œë ˆì´ì–´ì˜ ì†Œí™˜ìˆ˜ì— íŠ¹ìˆ˜ê³µê²©ì´ ê³µê²©í˜•ì¸ ìŠ¤í‚¬ì´ ìˆëŠ”ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
     public bool HasSpecificAvailableSpecialAttack(Summon self, int wolfPlateIndex, List<Plate> playerPlates)
     {
-        // °Ë»çÇÒ Æ¯¼ö °ø°İ »óÅÂ Å¸ÀÔµé (None, Burn, Poison, LifeDrain)
+        // ê²€ì‚¬í•  íŠ¹ìˆ˜ ê³µê²© ìƒíƒœ íƒ€ì…ë“¤ (None, Burn, Poison, LifeDrain)
         StatusType[] specificStatuses = new StatusType[] { StatusType.None, StatusType.Burn, StatusType.Poison, StatusType.LifeDrain };
 
         if (wolfPlateIndex < 2)
@@ -234,18 +234,18 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
             for(int i=wolfPlateIndex+1; i< playerPlates.Count; i++)
             {
                 Summon playerSummon = playerPlates[i].getCurrentSummon();
-                // ÀÚ±â ÀÚ½ÅÀ» Á¦¿ÜÇÏ°í °Ë»ç
+                // ìê¸° ìì‹ ì„ ì œì™¸í•˜ê³  ê²€ì‚¬
                 if (playerSummon != null && playerSummon != self)
                 {
-                    // ¼ÒÈ¯¼öÀÇ »ç¿ë °¡´ÉÇÑ Æ¯¼ö °ø°İµéÀ» °¡Á®¿È
+                    // ì†Œí™˜ìˆ˜ì˜ ì‚¬ìš© ê°€ëŠ¥í•œ íŠ¹ìˆ˜ ê³µê²©ë“¤ì„ ê°€ì ¸ì˜´
                     IAttackStrategy[] availableSpecialAttacks = playerSummon.getAvailableSpecialAttacks();
 
-                    // »ç¿ë °¡´ÉÇÑ Æ¯¼ö °ø°İ Áß Æ¯Á¤ »óÅÂ°¡ ÀÖ´ÂÁö È®ÀÎ
+                    // ì‚¬ìš© ê°€ëŠ¥í•œ íŠ¹ìˆ˜ ê³µê²© ì¤‘ íŠ¹ì • ìƒíƒœê°€ ìˆëŠ”ì§€ í™•ì¸
                     foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
                     {
                         if (specialAttack != null && specificStatuses.Contains(specialAttack.getStatusType()))
                         {
-                            // Æ¯Á¤ »óÅÂ°¡ ÀÖ´Â Æ¯¼ö °ø°İÀÌ ÀÖ´Ù¸é true ¹İÈ¯
+                            // íŠ¹ì • ìƒíƒœê°€ ìˆëŠ” íŠ¹ìˆ˜ ê³µê²©ì´ ìˆë‹¤ë©´ true ë°˜í™˜
                             return true;
                         }
                     }
@@ -258,18 +258,18 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
     public AttackType getMostDamageAttack(Summon attackingSummon, List<Plate> enermyPlates)
     {
-        double maxDamage = attackingSummon.getAttackPower(); // ±âº»°ª: ÀÏ¹İ °ø°İÀÇ µ¥¹ÌÁö
+        double maxDamage = attackingSummon.getAttackPower(); // ê¸°ë³¸ê°’: ì¼ë°˜ ê³µê²©ì˜ ë°ë¯¸ì§€
 
 
-        // »ç¿ë °¡´ÉÇÑ Æ¯¼ö °ø°İ ¸ñ·Ï °¡Á®¿À±â
+        // ì‚¬ìš© ê°€ëŠ¥í•œ íŠ¹ìˆ˜ ê³µê²© ëª©ë¡ ê°€ì ¸ì˜¤ê¸°
         IAttackStrategy[] availableSpecialAttacks = attackingSummon.getAvailableSpecialAttacks();
 
-        // °¢ Æ¯¼ö °ø°İ È®ÀÎ
+        // ê° íŠ¹ìˆ˜ ê³µê²© í™•ì¸
         foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
         {
             double totalSpecialAttackDamage = 0;
 
-            // Àû ÇÃ·¹ÀÌÆ®¿¡ ÀÖ´Â ¸ğµç ¼ÒÈ¯¼ö¿¡°Ô Æ¯¼ö °ø°İ ½Ã ¿¹»ó ÇÇÇØ ÃàÀû
+            // ì  í”Œë ˆì´íŠ¸ì— ìˆëŠ” ëª¨ë“  ì†Œí™˜ìˆ˜ì—ê²Œ íŠ¹ìˆ˜ ê³µê²© ì‹œ ì˜ˆìƒ í”¼í•´ ì¶•ì 
             foreach (Plate plate in enermyPlates)
             {
                 Summon enermySummon = plate.getCurrentSummon();
@@ -279,7 +279,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
                 }
             }
 
-            // Æ¯¼ö °ø°İÀ¸·Î ÃÑ ÇÇÇØ°¡ ÀÏ¹İ °ø°İº¸´Ù Å©´Ù¸é ¾÷µ¥ÀÌÆ®
+            // íŠ¹ìˆ˜ ê³µê²©ìœ¼ë¡œ ì´ í”¼í•´ê°€ ì¼ë°˜ ê³µê²©ë³´ë‹¤ í¬ë‹¤ë©´ ì—…ë°ì´íŠ¸
             if (totalSpecialAttackDamage > maxDamage)
             {
                 maxDamage = totalSpecialAttackDamage;
@@ -290,23 +290,23 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         return AttackType.NormalAttack;
     }
 
-    // °¡Àå °¡±î¿î ÀûÀ» °ø°İÇßÀ» ¶§ ¹°¸®Ä¥ ¼ö ÀÖ´ÂÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+    // ê°€ì¥ ê°€ê¹Œìš´ ì ì„ ê³µê²©í–ˆì„ ë•Œ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆëŠ”ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
     public int getIndexOfNormalAttackCanKill(Summon wolf, List<Plate> enermyPlates)
     {
-        // °¡Àå °¡±î¿î ÀûÀÇ ÀÎµ¦½º¸¦ °¡Á®¿È
+        // ê°€ì¥ ê°€ê¹Œìš´ ì ì˜ ì¸ë±ìŠ¤ë¥¼ ê°€ì ¸ì˜´
         int closestIndex = getClosestEnermyIndex(enermyPlates);
 
         if (closestIndex != -1)
         {
             Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
-            // °¡Àå °¡±î¿î ÀûÀÇ ¼ÒÈ¯¼ö°¡ ÀÖ°í, ÀÏ¹İ °ø°İÀ¸·Î ¹°¸®Ä¥ ¼ö ÀÖ´ÂÁö È®ÀÎ
+            // ê°€ì¥ ê°€ê¹Œìš´ ì ì˜ ì†Œí™˜ìˆ˜ê°€ ìˆê³ , ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆëŠ”ì§€ í™•ì¸
             if (closestEnermySummon != null && wolf.getAttackPower() >= closestEnermySummon.getNowHP())
             {
-                return closestIndex; // °ø°İÀ¸·Î ¹°¸®Ä¥ ¼ö ÀÖÀ¸¸é ÀÎµ¦½º ¹İÈ¯
+                return closestIndex; // ê³µê²©ìœ¼ë¡œ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆìœ¼ë©´ ì¸ë±ìŠ¤ ë°˜í™˜
             }
         }
 
-        return -1; // °ø°İ °¡´ÉÇÑ ÀûÀÌ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ê³µê²© ê°€ëŠ¥í•œ ì ì´ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
 
@@ -317,29 +317,29 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
             Summon enermySummon = enermyPlates[i].getCurrentSummon();
             if (enermySummon != null)
             {
-                return i; // °¡Àå °¡±î¿î(Ã¹ ¹øÂ°·Î ¹ß°ßµÈ) Àû ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º ¹İÈ¯
+                return i; // ê°€ì¥ ê°€ê¹Œìš´(ì²« ë²ˆì§¸ë¡œ ë°œê²¬ëœ) ì  ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ ë°˜í™˜
             }
         }
-        return -1; // Àû ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ì  ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
 
-    // È®·ü °ªÀ» ¼³Á¤ÇÏ°í Á¶Á¤ÇÏ¿© ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // í™•ë¥  ê°’ì„ ì„¤ì •í•˜ê³  ì¡°ì •í•˜ì—¬ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     private AttackProbability AdjustAttackProbabilities(AttackProbability currentProbabilities, float AttackChange, bool isNormalAttack, string reason)
     {
         if (isNormalAttack)
         {
-            // ÀÏ¹İ °ø°İ È®·üÀ» Áõ°¡½ÃÅ°°í, Æ¯¼ö °ø°İ È®·üÀ» ±×¸¸Å­ °¨¼Ò
+            // ì¼ë°˜ ê³µê²© í™•ë¥ ì„ ì¦ê°€ì‹œí‚¤ê³ , íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì„ ê·¸ë§Œí¼ ê°ì†Œ
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"ÀÏ¹İ °ø°İ È®·üÀÌ {AttackChange}% Áõ°¡ÇÏ¿´½À´Ï´Ù. ÀÌÀ¯: {reason}. ÇöÀç È®·ü: ÀÏ¹İ {currentProbabilities.normalAttackProbability}%, Æ¯¼ö {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"ì¼ë°˜ ê³µê²© í™•ë¥ ì´ {AttackChange}% ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤. ì´ìœ : {reason}. í˜„ì¬ í™•ë¥ : ì¼ë°˜ {currentProbabilities.normalAttackProbability}%, íŠ¹ìˆ˜ {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
-            // Æ¯¼ö °ø°İ È®·üÀ» Áõ°¡½ÃÅ°°í, ÀÏ¹İ °ø°İ È®·üÀ» ±×¸¸Å­ °¨¼Ò
+            // íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì„ ì¦ê°€ì‹œí‚¤ê³ , ì¼ë°˜ ê³µê²© í™•ë¥ ì„ ê·¸ë§Œí¼ ê°ì†Œ
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"Æ¯¼ö °ø°İ È®·üÀÌ {AttackChange}% Áõ°¡ÇÏ¿´½À´Ï´Ù. ÀÌÀ¯: {reason}. ÇöÀç È®·ü: ÀÏ¹İ {currentProbabilities.normalAttackProbability}%, Æ¯¼ö {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì´ {AttackChange}% ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤. ì´ìœ : {reason}. í˜„ì¬ í™•ë¥ : ì¼ë°˜ {currentProbabilities.normalAttackProbability}%, íŠ¹ìˆ˜ {currentProbabilities.specialAttackProbability}%");
         }
         return currentProbabilities;
     }

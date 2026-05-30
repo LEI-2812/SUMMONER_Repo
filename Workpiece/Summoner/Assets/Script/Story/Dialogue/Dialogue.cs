@@ -5,29 +5,29 @@ using UnityEngine;
 [System.Serializable]
 public class Dialogue
 {
-    [Tooltip("Ä³¸¯ÅÍÀÌ¸§")]
+    [Tooltip("ìºë¦­í„°ì´ë¦„")]
     public string name;
 
-    [Tooltip("´ë»ç ³»¿ë")]
+    [Tooltip("ëŒ€ì‚¬ ë‚´ìš©")]
     public string[] context;
 
-    [Tooltip("ÀÌº¥Æ® ¹øÈ£")]
+    [Tooltip("ì´ë²¤íŠ¸ ë²ˆí˜¸")]
     public string number;
 
-    [Tooltip("½ºÅµ¶óÀÎ")]
+    [Tooltip("ìŠ¤í‚µë¼ì¸")]
     public string[] skipnum;
 }
 
 [System.Serializable]
 public class DialogueEvent
 {
-    //ÀÌº¥Æ® ÀÌ¸§
-    [Header("ÀÌº¥Æ® ÀÌ¸§")]
-    public string name; //¾ÈÀû¾îµµ µÊ.
+    //ì´ë²¤íŠ¸ ì´ë¦„
+    [Header("ì´ë²¤íŠ¸ ì´ë¦„")]
+    public string name; //ì•ˆì ì–´ë„ ë¨.
 
-    //csv½ÃÆ®¿¡¼­ ¸îÁÙ±îÁö ÀĞÀ»Áö ÀĞ´Â vectoer
-    [Header("csvÆÄÀÏ ½ÃÀÛÇà, ³¡Çà ÀÔ·Â")]
+    //csvì‹œíŠ¸ì—ì„œ ëª‡ì¤„ê¹Œì§€ ì½ì„ì§€ ì½ëŠ” vectoer
+    [Header("csvíŒŒì¼ ì‹œì‘í–‰, ëí–‰ ì…ë ¥")]
     public Vector2 line;
-    //Dialogueµé ³Ö±â
+    //Dialogueë“¤ ë„£ê¸°
     public Dialogue[] dialogues;
 }

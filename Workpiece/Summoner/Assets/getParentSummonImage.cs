@@ -4,27 +4,27 @@ using UnityEngine;
 using UnityEngine.UI;
 public class getParenSummontImage : MonoBehaviour
 {
-    [Header("Àû ¼ÒÈ¯¼ö ³Ö±â")]
-    [SerializeField] private Summon summon; // Àû ¼ÒÈ¯¼ö Á÷Á¢ ÇÒ´ç
-    private Plate plate; // ºÎ¸ğ Plate ÄÄÆ÷³ÍÆ®¸¦ ¹Ş±â À§ÇÑ º¯¼ö
+    [Header("ì  ì†Œí™˜ìˆ˜ ë„£ê¸°")]
+    [SerializeField] private Summon summon; // ì  ì†Œí™˜ìˆ˜ ì§ì ‘ í• ë‹¹
+    private Plate plate; // ë¶€ëª¨ Plate ì»´í¬ë„ŒíŠ¸ë¥¼ ë°›ê¸° ìœ„í•œ ë³€ìˆ˜
 
     void Awake()
     {
-        // ºÎ¸ğ ¿ÀºêÁ§Æ®¿¡ ºÙ¾î ÀÖ´Â Plate ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È
+        // ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸ì— ë¶™ì–´ ìˆëŠ” Plate ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´
         plate = GetComponent<Plate>();
 
-        // ¼ÒÈ¯¼ö°¡ Á¦´ë·Î ÇÒ´çµÇ¾ú´ÂÁö È®ÀÎ
+        // ì†Œí™˜ìˆ˜ê°€ ì œëŒ€ë¡œ í• ë‹¹ë˜ì—ˆëŠ”ì§€ í™•ì¸
         if (summon != null)
         {
-            // ºÎ¸ğ Plate¿¡ ¼ÒÈ¯¼ö¸¦ ¼³Á¤
+            // ë¶€ëª¨ Plateì— ì†Œí™˜ìˆ˜ë¥¼ ì„¤ì •
             if (plate != null)
             {
-                plate.SummonPlaceOnPlate(summon, isResummon: false); // ºÎ¸ğ Plate¿¡ ¼ÒÈ¯¼ö ¹èÄ¡
+                plate.SummonPlaceOnPlate(summon, isResummon: false); // ë¶€ëª¨ Plateì— ì†Œí™˜ìˆ˜ ë°°ì¹˜
             }
         }
         else
         {
-            Debug.Log("ÇÒ´çµÈ ¼ÒÈ¯¼ö°¡ ¾ø½À´Ï´Ù.");
+            Debug.Log("í• ë‹¹ëœ ì†Œí™˜ìˆ˜ê°€ ì—†ìŠµë‹ˆë‹¤.");
         }
     }
 

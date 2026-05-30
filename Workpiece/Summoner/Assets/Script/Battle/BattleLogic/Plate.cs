@@ -6,27 +6,27 @@ using UnityEngine.EventSystems;
 using System;
 
 public class Plate : MonoBehaviour, 
-    IPointerEnterHandler, //ÇÃ·¹ÀÌÆ®¿¡ ¸¶¿ì½º ¿Ã·ÈÀ»¶§ ÀÌº¥Æ® ÀÎÅÍÆäÀÌ½º
-    IPointerExitHandler,  //ÇÃ·¹ÀÌÆ®¿¡ ¸¶¿ì½º°¡ ¹ş¾î³´À»¶§ ÀÌº¥Æ® ÀÎÅÍÆäÀÌ½º
-    IPointerClickHandler, //ÇÃ·¹ÀÌÆ® Å¬¸¯½Ã »óÅÂÃ¢ 
+    IPointerEnterHandler, //í”Œë ˆì´íŠ¸ì— ë§ˆìš°ìŠ¤ ì˜¬ë ¸ì„ë•Œ ì´ë²¤íŠ¸ ì¸í„°í˜ì´ìŠ¤
+    IPointerExitHandler,  //í”Œë ˆì´íŠ¸ì— ë§ˆìš°ìŠ¤ê°€ ë²—ì–´ë‚«ì„ë•Œ ì´ë²¤íŠ¸ ì¸í„°í˜ì´ìŠ¤
+    IPointerClickHandler, //í”Œë ˆì´íŠ¸ í´ë¦­ì‹œ ìƒíƒœì°½
     UpdateStateObserver
 {
-    //plate¸¦ ÇÁ¸®ÆÕ½ÃÄÑ¼­ ³ÖÀ»°Í.
-    private bool isInSummon = false; // ÇöÀç ¼ÒÈ¯¼ö°¡ ÀÖ´ÂÁö ¿©ºÎ
-    [SerializeField] private Summon currentSummon;   // ÇÃ·¹ÀÌÆ® À§¿¡ ÀÖ´Â ¼ÒÈ¯¼ö
-    [SerializeField] private GameObject statePanel;  // »óÅÂ ÆĞ³Î (On/Off)
-    [SerializeField] private StatePanel statePanelScript; // »óÅÂ ÆĞ³Î¿¡ ¼ÒÈ¯¼ö Á¤º¸¸¦ ¾÷µ¥ÀÌÆ®ÇÏ´Â ½ºÅ©¸³Æ®
+    //plateë¥¼ í”„ë¦¬íŒ¹ì‹œì¼œì„œ ë„£ì„ê²ƒ.
+    private bool isInSummon = false; // í˜„ì¬ ì†Œí™˜ìˆ˜ê°€ ìˆëŠ”ì§€ ì—¬ë¶€
+    [SerializeField] private Summon currentSummon;   // í”Œë ˆì´íŠ¸ ìœ„ì— ìˆëŠ” ì†Œí™˜ìˆ˜
+    [SerializeField] private GameObject statePanel;  // ìƒíƒœ íŒ¨ë„ (On/Off)
+    [SerializeField] private SummonStatePanelView statePanelScript; // ìƒíƒœ íŒ¨ë„ì— ì†Œí™˜ìˆ˜ ì •ë³´ë¥¼ ì—…ë°ì´íŠ¸í•˜ëŠ” ìŠ¤í¬ë¦½íŠ¸
     [SerializeField] private Image summonImg;
     [SerializeField] private Transform spawnTransform;
 
-    private Image plateImage; // ÀÚ±â ÀÚ½ÅÀÇ Image ÄÄÆ÷³ÍÆ®
+    private Image plateImage; // ìê¸° ìì‹ ì˜ Image ì»´í¬ë„ŒíŠ¸
     private Color originalColor;
 
-    [Header("ÄÁÆ®·Ñ·¯µé")]
+    [Header("ì»¨íŠ¸ë¡¤ëŸ¬ë“¤")]
     [SerializeField] private SummonController summonController;
     [SerializeField] private BattleController battleController;
 
-    [Header("È¿°úÀ½")]
+    [Header("íš¨ê³¼ìŒ")]
     [SerializeField] private AudioSource clickSound;
 
     private List<stateObserver> observers = new List<stateObserver>();
@@ -34,42 +34,42 @@ public class Plate : MonoBehaviour,
     void Start()
     {
         statePanel.SetActive(false);
-        plateImage = GetComponent<Image>(); // ÀÚ½ÅÀÇ Image ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
-        originalColor = plateImage.color; // ¿ø·¡ »ö»ó ÀúÀå
+        plateImage = GetComponent<Image>(); // ìì‹ ì˜ Image ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
+        originalColor = plateImage.color; // ì›ë˜ ìƒ‰ìƒ ì €ì¥
     }
 
-    // ¼ÒÈ¯¼ö¸¦ ÇÃ·¹ÀÌÆ®¿¡ ¹èÄ¡
+    // ì†Œí™˜ìˆ˜ë¥¼ í”Œë ˆì´íŠ¸ì— ë°°ì¹˜
     public void SummonPlaceOnPlate(Summon summon, bool isResummon = false)
     {
         bool isAttack = true;
-        // ÀÌ¹Ì ¼ÒÈ¯¼ö°¡ ÀÖ¾îµµ Àç¼ÒÈ¯ÀÌ¸é ÁøÇà
+        // ì´ë¯¸ ì†Œí™˜ìˆ˜ê°€ ìˆì–´ë„ ì¬ì†Œí™˜ì´ë©´ ì§„í–‰
         if (!isInSummon || isResummon)
         {
-            // ±âÁ¸ ¼ÒÈ¯¼ö°¡ ÀÖÀ¸¸é ÆÄ±« (Àç¼ÒÈ¯ ½Ã)
+            // ê¸°ì¡´ ì†Œí™˜ìˆ˜ê°€ ìˆìœ¼ë©´ íŒŒê´´ (ì¬ì†Œí™˜ ì‹œ)
             if (currentSummon != null && isResummon)
             {
                 isAttack = currentSummon.getIsAttack();
-                // ÀÌÀü ¼ÒÈ¯¼ö¿¡¼­ ¿ÉÀú¹ö ÇØÁ¦
+                // ì´ì „ ì†Œí™˜ìˆ˜ì—ì„œ ì˜µì €ë²„ í•´ì œ
                 currentSummon.RemoveObserver(statePanelScript);
 
                 Destroy(currentSummon.gameObject);
-                Debug.Log("±âÁ¸ ¼ÒÈ¯¼ö°¡ ÆÄ±«µÇ¾ú½À´Ï´Ù.");
+                Debug.Log("ê¸°ì¡´ ì†Œí™˜ìˆ˜ê°€ íŒŒê´´ë˜ì—ˆìŠµë‹ˆë‹¤.");
             }
 
-            // ¼ÒÈ¯¼ö ÇÁ¸®ÆÕÀ» Å¬·ĞÇÏ¿© »ı¼º
+            // ì†Œí™˜ìˆ˜ í”„ë¦¬íŒ¹ì„ í´ë¡ í•˜ì—¬ ìƒì„±
             Summon summonClone = Instantiate(summon, spawnTransform.localPosition ,spawnTransform.rotation);
  
-            // Å¬·ĞÀ» ÇöÀç ÇÃ·¹ÀÌÆ®ÀÇ ÀÚ½ÄÀ¸·Î ¹èÄ¡
+            // í´ë¡ ì„ í˜„ì¬ í”Œë ˆì´íŠ¸ì˜ ìì‹ìœ¼ë¡œ ë°°ì¹˜
             summonClone.transform.SetParent(this.transform, false);
             if (spawnTransform.localPosition == null)
             {
-                summonClone.transform.localPosition = Vector3.zero;  // ÇÊ¿äÇÑ °æ¿ì À§Ä¡ ÃÊ±âÈ­
+                summonClone.transform.localPosition = Vector3.zero;  // í•„ìš”í•œ ê²½ìš° ìœ„ì¹˜ ì´ˆê¸°í™”
             }
-            // Å¬·ĞµÈ ¼ÒÈ¯¼ö¸¦ currentSummonÀ¸·Î ¼³Á¤
+            // í´ë¡ ëœ ì†Œí™˜ìˆ˜ë¥¼ currentSummonìœ¼ë¡œ ì„¤ì •
             currentSummon = summonClone;
             isInSummon = true;
 
-            // ¼ÒÈ¯¼ö ¿ÉÀú¹ö·Î µî·ÏÇÏ¿© »óÅÂ ¾÷µ¥ÀÌÆ® °¡´ÉÇÏ°Ô ¼³Á¤
+            // ì†Œí™˜ìˆ˜ ì˜µì €ë²„ë¡œ ë“±ë¡í•˜ì—¬ ìƒíƒœ ì—…ë°ì´íŠ¸ ê°€ëŠ¥í•˜ê²Œ ì„¤ì •
             if (statePanelScript != null)
             {
                 currentSummon.AddObserver(statePanelScript);
@@ -77,107 +77,107 @@ public class Plate : MonoBehaviour,
             }
             else
             {
-                Debug.LogError("statePanelScript°¡ nullÀÓ");
+                Debug.LogError("statePanelScriptê°€ nullì„");
             }
 
-            // ¼ÒÈ¯¼ö ÃÊ±âÈ­ ·ÎÁ÷ È£Ãâ (ÃÊ±â ´É·ÂÄ¡³ª ½ºÅ³ ¼³Á¤)
+            // ì†Œí™˜ìˆ˜ ì´ˆê¸°í™” ë¡œì§ í˜¸ì¶œ (ì´ˆê¸° ëŠ¥ë ¥ì¹˜ë‚˜ ìŠ¤í‚¬ ì„¤ì •)
             summonClone.summonInitialize();
 
-            // Àç¼ÒÈ¯µÈ ¼ÒÈ¯¼öÀÇ °ø°İ »óÅÂ¸¦ ºñÈ°¼ºÈ­
+            // ì¬ì†Œí™˜ëœ ì†Œí™˜ìˆ˜ì˜ ê³µê²© ìƒíƒœë¥¼ ë¹„í™œì„±í™”
             if (isResummon)
             {
-                currentSummon.setIsAttack(isAttack); //ÀÌÀü ¼ÒÈ¯¼öÀÇ °ø°İ»óÅÂ¸¦ ¹Ş¾Æ¿Â´Ù.
+                currentSummon.setIsAttack(isAttack); //ì´ì „ ì†Œí™˜ìˆ˜ì˜ ê³µê²©ìƒíƒœë¥¼ ë°›ì•„ì˜¨ë‹¤.
                 statePanelScript.setStatePanel(currentSummon, false);
             }
 
-            Debug.Log($"¼ÒÈ¯¼ö {summonClone.getSummonName()} À» {(isResummon ? "Àç¼ÒÈ¯" : "¼ÒÈ¯")}Çß½À´Ï´Ù.");
+            Debug.Log($"ì†Œí™˜ìˆ˜ {summonClone.getSummonName()} ì„ {(isResummon ? "ì¬ì†Œí™˜" : "ì†Œí™˜")}í–ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
-            Debug.Log("ÀÌ¹Ì ÀÌ ÇÃ·¹ÀÌÆ®¿¡ ¼ÒÈ¯¼ö°¡ ÀÖ½À´Ï´Ù.");
+            Debug.Log("ì´ë¯¸ ì´ í”Œë ˆì´íŠ¸ì— ì†Œí™˜ìˆ˜ê°€ ìˆìŠµë‹ˆë‹¤.");
         }
     }
 
-    // ¼ÒÈ¯¼ö°¡ »ç¸ÁÇÏ°Å³ª ÇÃ·¹ÀÌÆ®¿¡¼­ ¶°³¯ ¶§
+    // ì†Œí™˜ìˆ˜ê°€ ì‚¬ë§í•˜ê±°ë‚˜ í”Œë ˆì´íŠ¸ì—ì„œ ë– ë‚  ë•Œ
     public void RemoveSummon()
     {
         if (isInSummon)
         {
-            currentSummon = null; // ¼ÒÈ¯¼ö ¿¬°á ÇØÁ¦
+            currentSummon = null; // ì†Œí™˜ìˆ˜ ì—°ê²° í•´ì œ
             isInSummon = false;
-            Debug.Log("¼ÒÈ¯¼ö Á¦°Å.");
+            Debug.Log("ì†Œí™˜ìˆ˜ ì œê±°.");
         }
     }
     public void DirectMoveSummon(Summon summon)
     {
         if (summon == null) return;
 
-        // ÇöÀç ¼ÒÈ¯¼ö¸¦ ¼³Á¤ (ÇöÀç »óÅÂ À¯Áö)
+        // í˜„ì¬ ì†Œí™˜ìˆ˜ë¥¼ ì„¤ì • (í˜„ì¬ ìƒíƒœ ìœ ì§€)
         currentSummon = summon;
         isInSummon = true;
 
-        // ¼ÒÈ¯¼öÀÇ ºÎ¸ğ¸¦ Àç¼³Á¤ÇÏ¿© À§Ä¡ ÀÌµ¿
+        // ì†Œí™˜ìˆ˜ì˜ ë¶€ëª¨ë¥¼ ì¬ì„¤ì •í•˜ì—¬ ìœ„ì¹˜ ì´ë™
         currentSummon.transform.SetParent(this.transform, false);
-        currentSummon.transform.localPosition = Vector3.zero; // À§Ä¡ ÃÊ±âÈ­
+        currentSummon.transform.localPosition = Vector3.zero; // ìœ„ì¹˜ ì´ˆê¸°í™”
 
-        //// ¼ÒÈ¯¼ö ÀÌ¹ÌÁö ¼³Á¤ (ÃÊ±âÈ­ ¾øÀÌ ±×´ë·Î »ç¿ë)
+        //// ì†Œí™˜ìˆ˜ ì´ë¯¸ì§€ ì„¤ì • (ì´ˆê¸°í™” ì—†ì´ ê·¸ëŒ€ë¡œ ì‚¬ìš©)
         //if (summon.getImage() != null)
         //{
         //    if (summonImg != null && summon.getImage().sprite != null)
         //    {
         //        summonImg.sprite = summon.getImage().sprite;
         //        Color plateColor = summonImg.color;
-        //        plateColor.a = 1.0f; // ¿ÏÀü ºÒÅõ¸í
+        //        plateColor.a = 1.0f; // ì™„ì „ ë¶ˆíˆ¬ëª…
         //        summonImg.color = plateColor;
         //    }
         //}
 
-        Debug.Log($"¼ÒÈ¯¼ö {summon.getSummonName()} ÀÌ(°¡) »õ À§Ä¡·Î ÀÌµ¿Çß½À´Ï´Ù.");
+        Debug.Log($"ì†Œí™˜ìˆ˜ {summon.getSummonName()} ì´(ê°€) ìƒˆ ìœ„ì¹˜ë¡œ ì´ë™í–ˆìŠµë‹ˆë‹¤.");
     }
 
 
-    // ÇÃ·¹ÀÌÆ® °­Á¶ (»ö»ó º¯°æ)
+    // í”Œë ˆì´íŠ¸ ê°•ì¡° (ìƒ‰ìƒ ë³€ê²½)
     public void Highlight()
     {
-        plateImage.color = Color.yellow; // ÀÌ¹ÌÁöÀÇ »ö»óÀ» ³ë¶õ»öÀ¸·Î º¯°æ
+        plateImage.color = Color.yellow; // ì´ë¯¸ì§€ì˜ ìƒ‰ìƒì„ ë…¸ë€ìƒ‰ìœ¼ë¡œ ë³€ê²½
     }
 
-    // °­Á¶ ÇØÁ¦
+    // ê°•ì¡° í•´ì œ
     public void Unhighlight()
     {
-        plateImage.color = originalColor; // ÀÌ¹ÌÁöÀÇ »ö»óÀ» ¿ø·¡´ë·Î º¹¿ø
+        plateImage.color = originalColor; // ì´ë¯¸ì§€ì˜ ìƒ‰ìƒì„ ì›ë˜ëŒ€ë¡œ ë³µì›
     }
 
 
-    //¸¶¿ì½º ¿Ã·ÈÀ»¶§ ÀÌº¥Æ®
+    //ë§ˆìš°ìŠ¤ ì˜¬ë ¸ì„ë•Œ ì´ë²¤íŠ¸
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (currentSummon != null) //¼ÒÈ¯¼ö°¡ ÀÖÀ¸¸é
+        if (currentSummon != null) //ì†Œí™˜ìˆ˜ê°€ ìˆìœ¼ë©´
         {
-            SetSummonImageTransparency(1.0f); // Åõ¸íµµ¸¦ ³ô¿© ´õ ÁøÇÏ°Ô º¸ÀÌ°Ô
+            SetSummonImageTransparency(1.0f); // íˆ¬ëª…ë„ë¥¼ ë†’ì—¬ ë” ì§„í•˜ê²Œ ë³´ì´ê²Œ
         }
-        if (isInSummon && summonController.IsSummoning()) //¼ÒÈ¯¼ö°¡ ÇÃ·¹ÀÌÆ®¿¡ ÀÖ°í ¼ÒÈ¯Áß
+        if (isInSummon && summonController.IsSummoning()) //ì†Œí™˜ìˆ˜ê°€ í”Œë ˆì´íŠ¸ì— ìˆê³  ì†Œí™˜ì¤‘
         {
-            Highlight(); // ÇÃ·¹ÀÌÆ® °­Á¶
-            SetSummonImageTransparency(1.0f); // Åõ¸íµµ ³ôÀÌ±â
+            Highlight(); // í”Œë ˆì´íŠ¸ ê°•ì¡°
+            SetSummonImageTransparency(1.0f); // íˆ¬ëª…ë„ ë†’ì´ê¸°
         }
        
-        //Å¸°Ù°ø°İÀ» À§ÇÑ ¸¶¿ì½º È¿°ú
-        if (isInSummon && battleController.getIsAttaking()){ //°ø°İÁßÀÏ¶§
+        //íƒ€ê²Ÿê³µê²©ì„ ìœ„í•œ ë§ˆìš°ìŠ¤ íš¨ê³¼
+        if (isInSummon && battleController.getIsAttaking()){ //ê³µê²©ì¤‘ì¼ë•Œ
             if (battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Heal
                 || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Upgrade
-                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Shield)//ÈúÀÌ¸é¼­ ¾Æ±ºÇÃ·¹ÀÌÆ®¸¸ °­Á¶
-            { //ÈúÀÏ¶§
+                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Shield)//íì´ë©´ì„œ ì•„êµ°í”Œë ˆì´íŠ¸ë§Œ ê°•ì¡°
+            { //íì¼ë•Œ
                 if (IsPlayerPlate())
                 {
-                    Highlight(); // ÇÃ·¹ÀÌÆ® °­Á¶
+                    Highlight(); // í”Œë ˆì´íŠ¸ ê°•ì¡°
                 }
                 else
                 {
-                    SetSummonImageTransparency(0.5f); //Àû ÇÃ·¹ÀÌÆ® Åõ¸íµµ ³ôÀÌ±â
+                    SetSummonImageTransparency(0.5f); //ì  í”Œë ˆì´íŠ¸ íˆ¬ëª…ë„ ë†’ì´ê¸°
                 }
             }
-            else //Å¸°Ù°ø°İÀÏ¶§
+            else //íƒ€ê²Ÿê³µê²©ì¼ë•Œ
             {
                 if (IsEnermyPlate())
                 {
@@ -185,7 +185,7 @@ public class Plate : MonoBehaviour,
                 }
                 else
                 {
-                    SetSummonImageTransparency(0.5f); // Åõ¸íµµ ³ôÀÌ±â
+                    SetSummonImageTransparency(0.5f); // íˆ¬ëª…ë„ ë†’ì´ê¸°
                 }
             }
         }
@@ -193,92 +193,92 @@ public class Plate : MonoBehaviour,
     }
 
 
-    //¸¶¿ì½º°¡ ¹ş¾î³¯¶§
+    //ë§ˆìš°ìŠ¤ê°€ ë²—ì–´ë‚ ë•Œ
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (currentSummon != null && summonController.IsSummoning()) //¼ÒÈ¯¼ö°¡ ÇÃ·¹ÀÌÆ®¿¡ ÀÖ°í ¼ÒÈ¯Áß
+        if (currentSummon != null && summonController.IsSummoning()) //ì†Œí™˜ìˆ˜ê°€ í”Œë ˆì´íŠ¸ì— ìˆê³  ì†Œí™˜ì¤‘
         {
-            Unhighlight(); // °­Á¶ ÇØÁ¦
-            SetSummonImageTransparency(0.5f); // ´Ù½Ã Èå¸®°Ô
+            Unhighlight(); // ê°•ì¡° í•´ì œ
+            SetSummonImageTransparency(0.5f); // ë‹¤ì‹œ íë¦¬ê²Œ
         }
 
-        //Å¸°Ù°ø°İÀ» À§ÇÑ ¸¶¿ì½º È¿°ú
+        //íƒ€ê²Ÿê³µê²©ì„ ìœ„í•œ ë§ˆìš°ìŠ¤ íš¨ê³¼
         if (isInSummon && battleController.getIsAttaking())
         {
-            Unhighlight();// ÇÃ·¹ÀÌÆ® °­Á¶ÇØÁ¦
+            Unhighlight();// í”Œë ˆì´íŠ¸ ê°•ì¡°í•´ì œ
         }
 
     }
 
-    //ÇØ´ç ÇÃ·¹ÀÌÆ® Å¬¸¯½Ã ÀÌº¥Æ®
+    //í•´ë‹¹ í”Œë ˆì´íŠ¸ í´ë¦­ì‹œ ì´ë²¤íŠ¸
     public void OnPointerClick(PointerEventData eventData)
     {
-        // ÇÃ·¹ÀÌ¾î°¡ Àç¼ÒÈ¯ ÁßÀÌ¶ó¸é »óÅÂ ÆĞ³ÎÀ» ¶ßÁö ¾Êµµ·Ï ÇÔ
+        // í”Œë ˆì´ì–´ê°€ ì¬ì†Œí™˜ ì¤‘ì´ë¼ë©´ ìƒíƒœ íŒ¨ë„ì„ ëœ¨ì§€ ì•Šë„ë¡ í•¨
         if (summonController.IsSummoning() && isInSummon)
         {
             summonController.SelectPlate(this);
-            Unhighlight(); // °­Á¶ ÇØÁ¦
-            SetSummonImageTransparency(1.0f); //Åõ¸íµµ µÇµ¹¸®±â
+            Unhighlight(); // ê°•ì¡° í•´ì œ
+            SetSummonImageTransparency(1.0f); //íˆ¬ëª…ë„ ë˜ëŒë¦¬ê¸°
         }
 
-        //»óÅÂÃ¢ È°¼ºÈ­
+        //ìƒíƒœì°½ í™œì„±í™”
         else if (currentSummon != null && !summonController.IsSummoning() && !battleController.getIsAttaking())
         {
-            Debug.Log("Å¬¸¯µÈ ÇÃ·¹ÀÌÆ®ÀÇ ¼ÒÈ¯¼ö:" + currentSummon.getSummonName());
-            statePanel.SetActive(true); //»óÅÂ ÆĞ³Î È°¼ºÈ­
+            Debug.Log("í´ë¦­ëœ í”Œë ˆì´íŠ¸ì˜ ì†Œí™˜ìˆ˜:" + currentSummon.getSummonName());
+            statePanel.SetActive(true); //ìƒíƒœ íŒ¨ë„ í™œì„±í™”
 
-            // ÇöÀç plateÀÇ ÀÎµ¦½º¸¦ ¼³Á¤ (ÇÃ·¹ÀÌÆ® ¸®½ºÆ®¿¡¼­ ÀÚ½ÅÀ» Ã£À½)
-            int plateIndex = summonController.GetPlayerPlateIndex(this);  // GetPlateIndex ¸Ş¼Òµå¸¦ ÅëÇØ ÀÚ½ÅÀÌ ¸î ¹øÂ°ÀÎÁö È®ÀÎ
-            // BattleController¿¡ ¼±ÅÃµÈ ÇÃ·¹ÀÌÆ® ÀÎµ¦½º Àü´Ş
+            // í˜„ì¬ plateì˜ ì¸ë±ìŠ¤ë¥¼ ì„¤ì • (í”Œë ˆì´íŠ¸ ë¦¬ìŠ¤íŠ¸ì—ì„œ ìì‹ ì„ ì°¾ìŒ)
+            int plateIndex = summonController.GetPlayerPlateIndex(this);  // GetPlateIndex ë©”ì†Œë“œë¥¼ í†µí•´ ìì‹ ì´ ëª‡ ë²ˆì§¸ì¸ì§€ í™•ì¸
+            // BattleControllerì— ì„ íƒëœ í”Œë ˆì´íŠ¸ ì¸ë±ìŠ¤ ì „ë‹¬
             summonController.setPlayerSelectedIndex(plateIndex);
 
-            statePanelScript.setStatePanel(currentSummon, IsEnermyPlate()); // ÆĞ³Î¿¡ ¼ÒÈ¯¼ö Á¤º¸ Àü´Ş
+            statePanelScript.setStatePanel(currentSummon, IsEnermyPlate()); // íŒ¨ë„ì— ì†Œí™˜ìˆ˜ ì •ë³´ ì „ë‹¬
         }
 
-        // °ø°İ Áß¿¡ Å¬¸¯ÇÒ °æ¿ì
+        // ê³µê²© ì¤‘ì— í´ë¦­í•  ê²½ìš°
         if (battleController.getIsAttaking() && isInSummon && battleController)
         {
-            //ÈúÀÏ¶§
+            //íì¼ë•Œ
             if (battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Heal
                 || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Upgrade
-                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Shield) //Èú, ¾÷±×·¹ÀÌµå, ½¯µå
+                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Shield) //í, ì—…ê·¸ë ˆì´ë“œ, ì‰´ë“œ
             {
                 if (IsPlayerPlate())
                 {
-                    // ¾Æ±ºÀÇ ÇÃ·¹ÀÌÆ® ÀÎµ¦½º¸¦ °¡Á®¿È
+                    // ì•„êµ°ì˜ í”Œë ˆì´íŠ¸ ì¸ë±ìŠ¤ë¥¼ ê°€ì ¸ì˜´
                     int plateIndex = summonController.GetPlayerPlateIndex(this);
 
                     if (plateIndex >= 0)
                     {
-                        // BattleController¿¡ ¼±ÅÃµÈ ÇÃ·¹ÀÌÆ® ÀÎµ¦½º Àü´Ş
+                        // BattleControllerì— ì„ íƒëœ í”Œë ˆì´íŠ¸ ì¸ë±ìŠ¤ ì „ë‹¬
                         summonController.setPlayerSelectedIndex(plateIndex);
-                        Debug.Log($"¾Æ±ºÀÇ ÇÃ·¹ÀÌÆ® {plateIndex}°¡ ¼±ÅÃµÇ¾ú½À´Ï´Ù.");
-                        Unhighlight(); // °­Á¶ ÇØÁ¦
+                        Debug.Log($"ì•„êµ°ì˜ í”Œë ˆì´íŠ¸ {plateIndex}ê°€ ì„ íƒë˜ì—ˆìŠµë‹ˆë‹¤.");
+                        Unhighlight(); // ê°•ì¡° í•´ì œ
                     }
                     else
                     {
-                        Debug.Log("À¯È¿ÇÑ ¾Æ±ºÀÇ ÇÃ·¹ÀÌÆ®°¡ ¼±ÅÃµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+                        Debug.Log("ìœ íš¨í•œ ì•„êµ°ì˜ í”Œë ˆì´íŠ¸ê°€ ì„ íƒë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
                     }
                 }
 
             }
-            else //µ¥¹ÌÁö °ø°İÀÏ¶§
+            else //ë°ë¯¸ì§€ ê³µê²©ì¼ë•Œ
             {
-                if (IsEnermyPlate()) //Àû ÇÃ·¹ÀÌÆ®ÀÎÁö °Ë»ç
+                if (IsEnermyPlate()) //ì  í”Œë ˆì´íŠ¸ì¸ì§€ ê²€ì‚¬
                 {
-                    // ÀûÀÇ ÇÃ·¹ÀÌÆ® ÀÎµ¦½º¸¦ °¡Á®¿È
+                    // ì ì˜ í”Œë ˆì´íŠ¸ ì¸ë±ìŠ¤ë¥¼ ê°€ì ¸ì˜´
                     int plateIndex = summonController.GetEnermyPlateIndex(this);
 
                     if (plateIndex >= 0)
                     {
-                        // BattleController¿¡ ¼±ÅÃµÈ ÇÃ·¹ÀÌÆ® ÀÎµ¦½º Àü´Ş
+                        // BattleControllerì— ì„ íƒëœ í”Œë ˆì´íŠ¸ ì¸ë±ìŠ¤ ì „ë‹¬
                         summonController.setPlayerSelectedIndex(plateIndex);
-                        Debug.Log($"ÀûÀÇ ÇÃ·¹ÀÌÆ® {plateIndex}°¡ ¼±ÅÃµÇ¾ú½À´Ï´Ù.");
-                        Unhighlight(); // °­Á¶ ÇØÁ¦
+                        Debug.Log($"ì ì˜ í”Œë ˆì´íŠ¸ {plateIndex}ê°€ ì„ íƒë˜ì—ˆìŠµë‹ˆë‹¤.");
+                        Unhighlight(); // ê°•ì¡° í•´ì œ
                     }
                     else
                     {
-                        Debug.Log("À¯È¿ÇÑ ÀûÀÇ ÇÃ·¹ÀÌÆ®°¡ ¼±ÅÃµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+                        Debug.Log("ìœ íš¨í•œ ì ì˜ í”Œë ˆì´íŠ¸ê°€ ì„ íƒë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
                     }
                 }
             }
@@ -286,33 +286,33 @@ public class Plate : MonoBehaviour,
         clickSound.Play();
     }
 
-    // ¼ÒÈ¯¼ö ÀÌ¹ÌÁö Åõ¸íµµ ¼³Á¤
+    // ì†Œí™˜ìˆ˜ ì´ë¯¸ì§€ íˆ¬ëª…ë„ ì„¤ì •
     public void SetSummonImageTransparency(float alpha)
     {
         if (summonImg != null)
         {
             Color color = summonImg.color;
-            color.a = alpha; // Åõ¸íµµ ¼³Á¤
+            color.a = alpha; // íˆ¬ëª…ë„ ì„¤ì •
             summonImg.color = color;
         }
     }
 
-    // ÇöÀç ÇÃ·¹ÀÌÆ®°¡ ÀûÀÇ ÇÃ·¹ÀÌÆ®ÀÎÁö °Ë»çÇÏ´Â ¸Ş¼Òµå
+    // í˜„ì¬ í”Œë ˆì´íŠ¸ê°€ ì ì˜ í”Œë ˆì´íŠ¸ì¸ì§€ ê²€ì‚¬í•˜ëŠ” ë©”ì†Œë“œ
     public bool IsEnermyPlate()
     {
-        PlateController plateController = battleController.GetPlateController(); // summonController¸¦ ÅëÇØ PlateController¿¡ Á¢±Ù
+        PlateController plateController = battleController.GetPlateController(); // summonControllerë¥¼ í†µí•´ PlateControllerì— ì ‘ê·¼
         return plateController.getEnermyPlates().Contains(this);
     }
 
-    // ÇöÀç ÇÃ·¹ÀÌÆ®°¡ ÇÃ·¹ÀÌ¾îÀÇ ÇÃ·¹ÀÌÆ®ÀÎÁö °Ë»çÇÏ´Â ¸Ş¼Òµå
+    // í˜„ì¬ í”Œë ˆì´íŠ¸ê°€ í”Œë ˆì´ì–´ì˜ í”Œë ˆì´íŠ¸ì¸ì§€ ê²€ì‚¬í•˜ëŠ” ë©”ì†Œë“œ
     public bool IsPlayerPlate()
     {
-        PlateController plateController = battleController.GetPlateController(); // summonController¸¦ ÅëÇØ PlateController¿¡ Á¢±Ù
+        PlateController plateController = battleController.GetPlateController(); // summonControllerë¥¼ í†µí•´ PlateControllerì— ì ‘ê·¼
         return plateController.getPlayerPlates().Contains(this);
     }
 
 
-    public Summon getCurrentSummon() //ÇÃ·¹ÀÌÆ®ÀÇ ¼ÒÈ¯¼ö¸¦ ¹İÈ¯
+    public Summon getCurrentSummon() //í”Œë ˆì´íŠ¸ì˜ ì†Œí™˜ìˆ˜ë¥¼ ë°˜í™˜
     {
         return currentSummon;
     }
@@ -337,7 +337,7 @@ public class Plate : MonoBehaviour,
 
     public void NotifyObservers()
     {
-        //Debug.Log("È£Ãâ");
+        //Debug.Log("í˜¸ì¶œ");
         foreach (var observer in observers)
         {
             observer.StateUpdate();

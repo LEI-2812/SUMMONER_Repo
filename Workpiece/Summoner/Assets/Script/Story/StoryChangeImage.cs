@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class StoryChangeImage : MonoBehaviour
 {
-    [Header("ID ¼ø¼­¿¡ ¸ÂÃç¼­ ÀÌ¹ÌÁö ³Ö±â")]
-    [SerializeField] private Sprite[] spriteArray; //½ºÇÁ¶óÀÌÆ® ¹è¿­
+    [Header("ID ìˆœì„œì— ë§žì¶°ì„œ ì´ë¯¸ì§€ ë„£ê¸°")]
+    [SerializeField] private Sprite[] spriteArray; //ìŠ¤í”„ë¼ì´íŠ¸ ë°°ì—´
 
-    [Header("¹ÞÀº Sprite¸¦ ³ÖÀ» Image¿ÀºêÁ§Æ®")]
+    [Header("ë°›ì€ Spriteë¥¼ ë„£ì„ Imageì˜¤ë¸Œì íŠ¸")]
     [SerializeField] private Image targetImage;
 
-    private InteractionController interactionController; // InteractionController ÂüÁ¶
+    private InteractionController interactionController; // InteractionController ì°¸ì¡°
 
     private void Awake()
     {
@@ -20,7 +20,7 @@ public class StoryChangeImage : MonoBehaviour
 
     public void ShowImage()
     {
-        int currentDialogueIndex = interactionController.getCurrentDialogueIndex(); // currentDialogueIndex °¡Á®¿À±â
+        int currentDialogueIndex = interactionController.getCurrentDialogueIndex(); // currentDialogueIndex ê°€ì ¸ì˜¤ê¸°
         Debug.Log(currentDialogueIndex);
         
         if (currentDialogueIndex >= 0 && currentDialogueIndex < spriteArray.Length)
@@ -29,7 +29,7 @@ public class StoryChangeImage : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("À¯È¿ÇÏÁö ¾ÊÀº ÀÎµ¦½ºÀÔ´Ï´Ù.");
+            Debug.LogWarning("ìœ íš¨í•˜ì§€ ì•Šì€ ì¸ë±ìŠ¤ìž…ë‹ˆë‹¤.");
         }
     }
 }

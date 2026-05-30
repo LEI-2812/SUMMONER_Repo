@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 
 public class DatabaseManager : MonoBehaviour
 {
-    public static DatabaseManager instance; //½Ì±ÛÅæÀ¸·Î ¾îµğ¼­µç ÇÏ³ªÀÇ ¿ÀºêÁ§Æ®·Î °ü¸®ÇÏ±â À§ÇÔ
+    public static DatabaseManager instance; //ì‹±ê¸€í†¤ìœ¼ë¡œ ì–´ë””ì„œë“  í•˜ë‚˜ì˜ ì˜¤ë¸Œì íŠ¸ë¡œ ê´€ë¦¬í•˜ê¸° ìœ„í•¨
 
     [SerializeField]
-    [Header("CSV ÆÄÀÏ ÀÌ¸§ .csv ¾øÀÌ")] 
-    string csv_FileName; //csvÆÄÀÏÀÌ¸§
+    [Header("CSV íŒŒì¼ ì´ë¦„ .csv ì—†ì´")]
+    string csv_FileName; //csvíŒŒì¼ì´ë¦„
 
-    Dictionary<int, Dialogue> dialogueDic = new Dictionary<int, Dialogue>(); //µñ¼Å³Ê¸®·Î °ü¸®
+    Dictionary<int, Dialogue> dialogueDic = new Dictionary<int, Dialogue>(); //ë”•ì…”ë„ˆë¦¬ë¡œ ê´€ë¦¬
 
     public static bool isFinish;
 
@@ -24,22 +23,22 @@ public class DatabaseManager : MonoBehaviour
             Dialogue[] dialgues = theParser.Parse(csv_FileName);
             for(int i=0; i<dialgues.Length; i++)
             {
-                dialogueDic.Add(i+1, dialgues[i]); //°¢´ë»çµéÀ» Å°°ª 1ºÎÅÍ ³ÖÀ¸¸ç µñ¼Å³Ê¸®¿¡ ³Ö´Â´Ù. Ã¹´ë»çÀÇ Å°°ªÀº 1ÀÌ µÇ´Â°ÅÀÓ
+                dialogueDic.Add(i+1, dialgues[i]); //ê°ëŒ€ì‚¬ë“¤ì„ í‚¤ê°’ 1ë¶€í„° ë„£ìœ¼ë©° ë”•ì…”ë„ˆë¦¬ì— ë„£ëŠ”ë‹¤. ì²«ëŒ€ì‚¬ì˜ í‚¤ê°’ì€ 1ì´ ë˜ëŠ”ê±°ì„
             }
             isFinish = true;
         }
     }
 
 
-    public Dialogue[] getDialogue(int startNum, int endNum) //´ë»ç ²¨³»¿À±â
+    public Dialogue[] getDialogue(int startNum, int endNum) //ëŒ€ì‚¬ êº¼ë‚´ì˜¤ê¸°
     {
         List<Dialogue> dialogueList = new List<Dialogue>();
 
-        for(int i=0; i <= endNum - startNum; i++) //ÇÑ Ä³¸¯ÅÍÀÇ ´ë»ç°¹¼ö¸¸Å­ ¹İº¹
+        for(int i=0; i <= endNum - startNum; i++) //í•œ ìºë¦­í„°ì˜ ëŒ€ì‚¬ê°¯ìˆ˜ë§Œí¼ ë°˜ë³µ
         {
-            dialogueList.Add(dialogueDic[startNum + i]); //À§¿¡¼­ dialogueDic.Add(i+1, dialgues[i]);ÀÌ i+1ÀÌ±â¶§¹® 
+            dialogueList.Add(dialogueDic[startNum + i]); //ìœ„ì—ì„œ dialogueDic.Add(i+1, dialgues[i]);ì´ i+1ì´ê¸°ë•Œë¬¸
         }
 
-        return dialogueList.ToArray(); //¹è¿­ÇüÅÂ·Î ¹Ù²ã¼­ ¹İÈ¯
+        return dialogueList.ToArray(); //ë°°ì—´í˜•íƒœë¡œ ë°”ê¿”ì„œ ë°˜í™˜
     }
 }

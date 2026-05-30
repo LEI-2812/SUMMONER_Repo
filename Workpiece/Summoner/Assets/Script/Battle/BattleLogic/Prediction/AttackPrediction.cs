@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class AttackPrediction
 {
-    // ÀÏ¹İ °ø°İ°ú Æ¯¼ö °ø°İÀÇ È®·ü Á¤º¸
+    // ì¼ë°˜ ê³µê²©ê³¼ íŠ¹ìˆ˜ ê³µê²©ì˜ í™•ë¥  ì •ë³´
     private AttackProbability attackProbability;
 
-    // °ø°İÇÏ´Â ¼ÒÈ¯¼ö Á¤º¸
+    // ê³µê²©í•˜ëŠ” ì†Œí™˜ìˆ˜ ì •ë³´
     private Summon attackSummon;
     private int attackSummonPlateIndex;
     private IAttackStrategy attackStrategy;
     private int specialAttackArrayIndex;
 
-    // °ø°İ¹ŞÀ» ÇÃ·¹ÀÌÆ® Á¤º¸
+    // ê³µê²©ë°›ì„ í”Œë ˆì´íŠ¸ ì •ë³´
     private List<Plate> targetPlate;
     private int targetPlateIndex;
 
-    // »ı¼ºÀÚ
+    // ìƒì„±ì
     public AttackPrediction(
-        Summon attackSummon, //°ø°İÀÚ
-        int attackSummonPlateIndex, //°ø°İÀÚ ÀÚ½ÅÀÇ ÇÃ·¹ÀÌÆ® ¹øÈ£
-        IAttackStrategy attackStrategy, //°ø°İ À¯Çü
-        int specialAttackArrayIndex, //Æ¯¼ö°ø°İ ÀÎµ¦½º
-        List<Plate> targetPlate, //Å¸°ÙÀÇ ÇÃ·¹ÀÌÆ®
-        int targetPlateIndex, //Å¸°ÙÀÇ ÇÃ·¹ÀÌÆ® ¹øÈ£
-        AttackProbability attackProbability) //È®·ü
+        Summon attackSummon, //ê³µê²©ì
+        int attackSummonPlateIndex, //ê³µê²©ì ìì‹ ì˜ í”Œë ˆì´íŠ¸ ë²ˆí˜¸
+        IAttackStrategy attackStrategy, //ê³µê²© ìœ í˜•
+        int specialAttackArrayIndex, //íŠ¹ìˆ˜ê³µê²© ì¸ë±ìŠ¤
+        List<Plate> targetPlate, //íƒ€ê²Ÿì˜ í”Œë ˆì´íŠ¸
+        int targetPlateIndex, //íƒ€ê²Ÿì˜ í”Œë ˆì´íŠ¸ ë²ˆí˜¸
+        AttackProbability attackProbability) //í™•ë¥ 
     {
         this.attackSummon = attackSummon;
         this.attackSummonPlateIndex = attackSummonPlateIndex;
@@ -36,7 +36,7 @@ public class AttackPrediction
         this.attackProbability = attackProbability;
     }
 
-    // Getter ¹× Setter ¸Ş¼Òµå
+    // Getter ë° Setter ë©”ì†Œë“œ
     public Summon getAttackSummon()
     {
         return attackSummon;

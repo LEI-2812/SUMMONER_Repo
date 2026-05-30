@@ -23,38 +23,38 @@ public class PlayerAttackPrediction : MonoBehaviour
             Summon summon = plate.getCurrentSummon();
             if (summon != null)
             {
-                // ¼ÒÈ¯¼öÀÇ Æ¯¼ö ½ºÅ³ÀÌ »ç¿ë °¡´ÉÇÑÁö È®ÀÎ
+                // ì†Œí™˜ìˆ˜ì˜ íŠ¹ìˆ˜ ìŠ¤í‚¬ì´ ì‚¬ìš© ê°€ëŠ¥í•œì§€ í™•ì¸
                 IAttackStrategy[] availableSpecialAttacks = summon.getAvailableSpecialAttacks();
                 bool hasUsableSpecialAttack = (availableSpecialAttacks != null && availableSpecialAttacks.Length > 0);
                 int attackIndex = plateController.getClosestPlayerPlateIndex();
                 if (attackIndex == -1)
                 {
-                    Debug.Log("°ø°İÇÒ ÀÎµ¦½º°¡ ¾øÀ½");
+                    Debug.Log("ê³µê²©í•  ì¸ë±ìŠ¤ê°€ ì—†ìŒ");
                 }
-                int attackSummonPlateIndex = plateController.GetPlateIndex(plate); //ÀÚ±â ÀÚ½ÅÀÇ ÇÃ·¹ÀÌÆ® ¹øÈ£
+                int attackSummonPlateIndex = plateController.GetPlateIndex(plate); //ìê¸° ìì‹ ì˜ í”Œë ˆì´íŠ¸ ë²ˆí˜¸
 
-                // Æ¯¼ö ½ºÅ³ÀÌ ¾ø´Â °æ¿ì ÀÏ¹İ °ø°İÀ¸·Î ¿¹Ãø
+                // íŠ¹ìˆ˜ ìŠ¤í‚¬ì´ ì—†ëŠ” ê²½ìš° ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ì˜ˆì¸¡
                 if (!hasUsableSpecialAttack)
                 {
-                    Debug.Log($"{summon.getSummonName()}´Â »ç¿ë °¡´ÉÇÑ Æ¯¼ö ½ºÅ³ÀÌ ¾ø½À´Ï´Ù. ÀÏ¹İ °ø°İÀ¸·Î ¿¹ÃøÇÕ´Ï´Ù.");
-                    AttackProbability attackProbability = new AttackProbability(100f, 0f); //ÀÏ¹İ°ø°İÀ» 100%
+                    Debug.Log($"{summon.getSummonName()}ëŠ” ì‚¬ìš© ê°€ëŠ¥í•œ íŠ¹ìˆ˜ ìŠ¤í‚¬ì´ ì—†ìŠµë‹ˆë‹¤. ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ì˜ˆì¸¡í•©ë‹ˆë‹¤.");
+                    AttackProbability attackProbability = new AttackProbability(100f, 0f); //ì¼ë°˜ê³µê²©ì„ 100%
 
                     AttackPrediction attackPrediction = new AttackPrediction(
-                        summon, //°ø°İÇÏ´Â ¼ÒÈ¯¼ö
-                        plateController.GetPlateIndex(plate), //ÀÚ±â ÀÚ½ÅÀÇ ÇÃ·¹ÀÌÆ® ¹øÈ£
-                        summon.getAttackStrategy(), //ÀÏ¹İ°ø°İ
-                        0, //Æ¯¼ö°ø°İ ¹øÈ£
-                        enermyPlates, //Å¸°Ù ÇÃ·¹ÀÌÆ®
-                        attackIndex, ///Å¸°Ù ¹øÈ£
-                        attackProbability //È®·ü
+                        summon, //ê³µê²©í•˜ëŠ” ì†Œí™˜ìˆ˜
+                        plateController.GetPlateIndex(plate), //ìê¸° ìì‹ ì˜ í”Œë ˆì´íŠ¸ ë²ˆí˜¸
+                        summon.getAttackStrategy(), //ì¼ë°˜ê³µê²©
+                        0, //íŠ¹ìˆ˜ê³µê²© ë²ˆí˜¸
+                        enermyPlates, //íƒ€ê²Ÿ í”Œë ˆì´íŠ¸
+                        attackIndex, ///íƒ€ê²Ÿ ë²ˆí˜¸
+                        attackProbability //í™•ë¥ 
                         );
 
                     playerPrediction.Add(attackPrediction);
-                    Debug.Log($"Ãß°¡µÈ ÀÏ¹İ°ø°İ Prediction: {GetPredictionDetails(attackPrediction)}");
+                    Debug.Log($"ì¶”ê°€ëœ ì¼ë°˜ê³µê²© Prediction: {GetPredictionDetails(attackPrediction)}");
                 }
                 else
                 {
-                    // ÀûÀıÇÑ ¿¹Ãø Å¬·¡½º¸¦ Ã£¾Æ¼­ °ø°İ ¿¹Ãø ¼öÇà
+                    // ì ì ˆí•œ ì˜ˆì¸¡ í´ë˜ìŠ¤ë¥¼ ì°¾ì•„ì„œ ê³µê²© ì˜ˆì¸¡ ìˆ˜í–‰
                     foreach (IAttackPrediction prediction in attackPredictions)
                     {
                         if (prediction.getPreSummonType() == summon.getSummonType())
@@ -63,7 +63,7 @@ public class PlayerAttackPrediction : MonoBehaviour
                             if (result != null)
                             {
                                 playerPrediction.Add(result);
-                                Debug.Log($"Ãß°¡µÈ Prediction: {GetPredictionDetails(result)}");
+                                Debug.Log($"ì¶”ê°€ëœ Prediction: {GetPredictionDetails(result)}");
                             }
                         }
                     }
@@ -77,10 +77,10 @@ public class PlayerAttackPrediction : MonoBehaviour
 
     private string GetPredictionDetails(AttackPrediction prediction)
     {
-        return $"¾Æ±º °ø°İ ¼ÒÈ¯¼ö: {prediction.getAttackSummon().getSummonName()}, " +
-               $"¾Æ±º °ø°İ Á¾·ù: {prediction.getAttackStrategy().GetType().Name}, " +
-               $"¾Æ±º Å¸°Ù ÇÃ·¹ÀÌÆ®¹øÈ£: {prediction.getTargetPlateIndex()}, " +
-               $"ÀÏ¹İ°ø°İ È®·ü: {prediction.getAttackProbability().normalAttackProbability}%, " +
-               $"Æ¯¼ö°ø°İ È®·ü: {prediction.getAttackProbability().specialAttackProbability}%";
+        return $"ì•„êµ° ê³µê²© ì†Œí™˜ìˆ˜: {prediction.getAttackSummon().getSummonName()}, " +
+               $"ì•„êµ° ê³µê²© ì¢…ë¥˜: {prediction.getAttackStrategy().GetType().Name}, " +
+               $"ì•„êµ° íƒ€ê²Ÿ í”Œë ˆì´íŠ¸ë²ˆí˜¸: {prediction.getTargetPlateIndex()}, " +
+               $"ì¼ë°˜ê³µê²© í™•ë¥ : {prediction.getAttackProbability().normalAttackProbability}%, " +
+               $"íŠ¹ìˆ˜ê³µê²© í™•ë¥ : {prediction.getAttackProbability().specialAttackProbability}%";
     }
 }

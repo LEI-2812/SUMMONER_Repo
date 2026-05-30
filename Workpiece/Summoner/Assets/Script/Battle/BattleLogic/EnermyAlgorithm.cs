@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public struct AttackProbability
@@ -9,7 +8,7 @@ public struct AttackProbability
     public float normalAttackProbability;
     public float specialAttackProbability;
 
-    // »ı¼ºÀÚ¸¦ Ãß°¡ÇÏ¿© ÃÊ±âÈ­ÇÒ ¼ö ÀÖµµ·Ï ÇÔ
+    // ìƒì„±ìë¥¼ ì¶”ê°€í•˜ì—¬ ì´ˆê¸°í™”í•  ìˆ˜ ìˆë„ë¡ í•¨
     public AttackProbability(float normalProb, float specialProb)
     {
         normalAttackProbability = normalProb;
@@ -27,81 +26,81 @@ public class EnermyAlgorithm : MonoBehaviour
     private List<AttackPrediction> playerAttackPredictionsList;
 
 
-    //¾Ë°í¸®Áò ¼ø¼­´ë·Î ½ÇÇà
+    //ì•Œê³ ë¦¬ì¦˜ ìˆœì„œëŒ€ë¡œ ì‹¤í–‰
     public List<AttackPrediction> HandleReactPrediction(Summon attackingEnermySummon, int attackingEnermyPlateIndex, List<AttackPrediction> playerAttackPredictionsList)
     {
 
         if (playerAttackPredictionsList.Count == 0)
         {
-            // ¸®½ºÆ®°¡ ºñ¾îÀÖÀ¸¸é ÀÏ¹İ °ø°İÀ¸·Î Ã³¸®
-            handleReactNormalAttack(attackingEnermySummon, attackingEnermyPlateIndex, plateController.getClosestPlayerPlateIndex()); // ±âº» Å¸°Ù ÇÃ·¹ÀÌÆ® ÀÎµ¦½º »ç¿ë
-            Debug.Log("¸®½ºÆ®°¡ ºñ¾î¼­ ÀÏ¹İ°ø°İ ´ëÀÀ");
+            // ë¦¬ìŠ¤íŠ¸ê°€ ë¹„ì–´ìˆìœ¼ë©´ ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ì²˜ë¦¬
+            handleReactNormalAttack(attackingEnermySummon, attackingEnermyPlateIndex, plateController.getClosestPlayerPlateIndex()); // ê¸°ë³¸ íƒ€ê²Ÿ í”Œë ˆì´íŠ¸ ì¸ë±ìŠ¤ ì‚¬ìš©
+            Debug.Log("ë¦¬ìŠ¤íŠ¸ê°€ ë¹„ì–´ì„œ ì¼ë°˜ê³µê²© ëŒ€ì‘");
         }
         else
         {
-            Debug.Log("´ëÀÀ°ø°İ Áß...");
+            Debug.Log("ëŒ€ì‘ê³µê²© ì¤‘...");
             int indexToRemove = canReactWithSpecialAttack(attackingEnermySummon, attackingEnermyPlateIndex, playerAttackPredictionsList);
-            if (indexToRemove != -1) //Æ¯¼ö°ø°İÀ¸·Î ´ëÀÀÀÌ °¡´ÉÇÒ°æ¿ì
+            if (indexToRemove != -1) //íŠ¹ìˆ˜ê³µê²©ìœ¼ë¡œ ëŒ€ì‘ì´ ê°€ëŠ¥í• ê²½ìš°
             {
-                // Æ¯¼ö°ø°İÀ¸·Î ´ëÀÀÇÑ °æ¿ì ÇØ´ç Ç×¸ñÀ» ¸®½ºÆ®¿¡¼­ Á¦°Å
+                // íŠ¹ìˆ˜ê³µê²©ìœ¼ë¡œ ëŒ€ì‘í•œ ê²½ìš° í•´ë‹¹ í•­ëª©ì„ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±°
                 playerAttackPredictionsList.RemoveAt(indexToRemove);
-                Debug.Log("Æ¯¼ö°ø°İ ´ëÀÀ ¿Ï·á, ¸®½ºÆ®¿¡¼­ Ç×¸ñ Á¦°Å");
+                Debug.Log("íŠ¹ìˆ˜ê³µê²© ëŒ€ì‘ ì™„ë£Œ, ë¦¬ìŠ¤íŠ¸ì—ì„œ í•­ëª© ì œê±°");
             }
             else
             {
-                // Æ¯¼ö°ø°İÀÌ ºÒ°¡´ÉÇÑ °æ¿ì ÀÏ¹İ°ø°İÀ¸·Î ´ëÀÀ
+                // íŠ¹ìˆ˜ê³µê²©ì´ ë¶ˆê°€ëŠ¥í•œ ê²½ìš° ì¼ë°˜ê³µê²©ìœ¼ë¡œ ëŒ€ì‘
                 handleReactNormalAttack(attackingEnermySummon, attackingEnermyPlateIndex, plateController.getClosestPlayerPlateIndex());
-                Debug.Log("Æ¯¼ö°ø°İ¿¡ ´ëÇÑ ´ëÀÀ°ø°İÀÌ ¾ø°Å³ª È®·üÀÌ °É·È½À´Ï´Ù. ÀÏ¹İ°ø°İÀ¸·Î ´ëÀÀ");
+                Debug.Log("íŠ¹ìˆ˜ê³µê²©ì— ëŒ€í•œ ëŒ€ì‘ê³µê²©ì´ ì—†ê±°ë‚˜ í™•ë¥ ì´ ê±¸ë ¸ìŠµë‹ˆë‹¤. ì¼ë°˜ê³µê²©ìœ¼ë¡œ ëŒ€ì‘");
             }
         }
 
-        return playerAttackPredictionsList; // º¯°æµÈ ¸®½ºÆ® ¹İÈ¯
+        return playerAttackPredictionsList; // ë³€ê²½ëœ ë¦¬ìŠ¤íŠ¸ ë°˜í™˜
     }
 
 
-    // Æ¯¼ö°ø°İÀ¸·Î ´ëÀÀÀÌ °¡´ÉÇÑÁö °Ë»çÇÏ´Â ¸Ş¼Òµå
+    // íŠ¹ìˆ˜ê³µê²©ìœ¼ë¡œ ëŒ€ì‘ì´ ê°€ëŠ¥í•œì§€ ê²€ì‚¬í•˜ëŠ” ë©”ì†Œë“œ
     private int canReactWithSpecialAttack(Summon attacker, int attackingEnermyPlateIndex, List<AttackPrediction> playerAttackPredictionsList)
     {
         int indexToRemove = -1;
         for (int i = 0; i < playerAttackPredictionsList.Count; i++)
         {
             AttackPrediction playerPrediction = playerAttackPredictionsList[i];
-            AttackProbability preAttackProbability = playerPrediction.getAttackProbability(); // È®·ü
+            AttackProbability preAttackProbability = playerPrediction.getAttackProbability(); // í™•ë¥ 
 
 
-            if (canReactSpecialAttack(preAttackProbability)) // Æ¯¼ö°ø°İÀ¸·Î °ø°İÇÒÁö
+            if (canReactSpecialAttack(preAttackProbability)) // íŠ¹ìˆ˜ê³µê²©ìœ¼ë¡œ ê³µê²©í• ì§€
             {
                 bool specialAttackExecuted = handleReactSpecialAttack(attacker, attackingEnermyPlateIndex, playerPrediction);
                 if (specialAttackExecuted)
                 {
-                    return i; // Æ¯¼ö °ø°İ ¼º°ø ½Ã ÇØ´ç ÀÎµ¦½º¸¦ ¹İÈ¯
+                    return i; // íŠ¹ìˆ˜ ê³µê²© ì„±ê³µ ì‹œ í•´ë‹¹ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜
                 }
             }
         }
-        return indexToRemove; // Æ¯¼ö °ø°İ¿¡ ¼º°øÇÏÁö ¸øÇÑ °æ¿ì
+        return indexToRemove; // íŠ¹ìˆ˜ ê³µê²©ì— ì„±ê³µí•˜ì§€ ëª»í•œ ê²½ìš°
     }
 
 
 
-    //Æ¯¼ö°ø°İ¿¡ ´ëÇÑ ´ëÀÀ
+    //íŠ¹ìˆ˜ê³µê²©ì— ëŒ€í•œ ëŒ€ì‘
     private bool handleReactSpecialAttack(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        if(playerPrediction.getAttackStrategy() is AttackAllEnemiesStrategy allAttackStrategy) //¿¹ÃøÇÑ °ø°İÅ¸ÀÔÀÌ ÀüÃ¼°ø°İÀÎÁö °Ë»ç
+        if(playerPrediction.getAttackStrategy() is AttackAllEnemiesStrategy allAttackStrategy) //ì˜ˆì¸¡í•œ ê³µê²©íƒ€ì…ì´ ì „ì²´ê³µê²©ì¸ì§€ ê²€ì‚¬
         {
             if(allAttackStrategy.getStatusType() == StatusType.Poison)
             {
-               return reactSpecialFromPoison(attacker , attackingEnermyPlateIndex,playerPrediction); //µ¶¼º¿¡ ´ëÇÑ ´ëÀÀ
+               return reactSpecialFromPoison(attacker , attackingEnermyPlateIndex,playerPrediction); //ë…ì„±ì— ëŒ€í•œ ëŒ€ì‘
             }
             else if(allAttackStrategy.getStatusType() == StatusType.None)
             {
-                return reactSpecialFromAllNone(attacker, attackingEnermyPlateIndex, playerPrediction); //ÀüÃ¼°ø°İ ´ëÀÀ
+                return reactSpecialFromAllNone(attacker, attackingEnermyPlateIndex, playerPrediction); //ì „ì²´ê³µê²© ëŒ€ì‘
             }
         }
-        else if(playerPrediction.getAttackStrategy() is TargetedAttackStrategy targetAttackStrategy) //¿¹ÃøÇÑ °ø°İÅ¸ÀÔÀÌ Å¸°Ù°ø°İÀÎÁö °Ë»ç
+        else if(playerPrediction.getAttackStrategy() is TargetedAttackStrategy targetAttackStrategy) //ì˜ˆì¸¡í•œ ê³µê²©íƒ€ì…ì´ íƒ€ê²Ÿê³µê²©ì¸ì§€ ê²€ì‚¬
         {
             if (targetAttackStrategy.getStatusType() == StatusType.None)
             {
-                return reactSpecialFromTargetNone(attacker, attackingEnermyPlateIndex, playerPrediction); //Àú°İ°ø°İ ´ëÀÀ
+                return reactSpecialFromTargetNone(attacker, attackingEnermyPlateIndex, playerPrediction); //ì €ê²©ê³µê²© ëŒ€ì‘
 
             }
             else if (targetAttackStrategy.getStatusType() == StatusType.Upgrade)
@@ -115,13 +114,13 @@ public class EnermyAlgorithm : MonoBehaviour
 
             }
         }
-        else if (playerPrediction.getAttackStrategy() is ClosestEnemyAttackStrategy)//¿¹ÃøÇÑ °ø°İÀÌ ±ÙÁ¢°ø°İÀÏ°æ¿ì (24.10.20 ±âÁØ cat»Ó)
-        { //°¡µ¶¼ºÀ» À§ÇØ else ¸»°í elseif»ç¿ë
-            return false; //°í¾çÀÌ´Â Æ¯¼ö°ø°İ ´ëÀÀ¿¡ ¾øÀ¸¹Ç·Î
+        else if (playerPrediction.getAttackStrategy() is ClosestEnemyAttackStrategy)//ì˜ˆì¸¡í•œ ê³µê²©ì´ ê·¼ì ‘ê³µê²©ì¼ê²½ìš° (24.10.20 ê¸°ì¤€ catë¿)
+        { //ê°€ë…ì„±ì„ ìœ„í•´ else ë§ê³  elseifì‚¬ìš©
+            return false; //ê³ ì–‘ì´ëŠ” íŠ¹ìˆ˜ê³µê²© ëŒ€ì‘ì— ì—†ìœ¼ë¯€ë¡œ
         }
         else
         {
-            Debug.Log("Àû ¼ÒÈ¯¼öÀÇ Æ¯¼ö°ø°İ ´ëÀÀ¿¡¼­ °ø°İÀÌ Àß¸ø µé¾î¿È");
+            Debug.Log("ì  ì†Œí™˜ìˆ˜ì˜ íŠ¹ìˆ˜ê³µê²© ëŒ€ì‘ì—ì„œ ê³µê²©ì´ ì˜ëª» ë“¤ì–´ì˜´");
             return false;
         }
 
@@ -133,32 +132,32 @@ public class EnermyAlgorithm : MonoBehaviour
 
     private bool reactSpecialFromPoison(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //ÇØ´ç ¼ÒÈ¯¼öÀÇ ½ºÅ³ °¡Á®¿À±â
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //í•´ë‹¹ ì†Œí™˜ìˆ˜ì˜ ìŠ¤í‚¬ ê°€ì ¸ì˜¤ê¸°
 
         if (attackStrategy == null)
         {
             handleReactNormalAttack(attacker, attackingEnermyPlateIndex, playerPrediction.getTargetPlateIndex());
-            Debug.Log($"{attacker.getSummonName()}°¡ ½ºÅ³ÀÌ ¾ø¾î¼­ ÀÏ¹İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+            Debug.Log($"{attacker.getSummonName()}ê°€ ìŠ¤í‚¬ì´ ì—†ì–´ì„œ ì¼ë°˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ÄğÅ¸ÀÓÀÌ¸é ´ÙÀ½ Æ¯¼ö½ºÅ³ °Ë»ç
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ì¿¨íƒ€ì„ì´ë©´ ë‹¤ìŒ íŠ¹ìˆ˜ìŠ¤í‚¬ ê²€ì‚¬
                 {
                     continue;
                 }
-                if (attackStrategy[i].getStatusType() == StatusType.Heal) //Å¸°ÙÇÃ·¹ÀÌÆ®°¡ ÀûÀÌ µÇ¾î¾ßÇÔ
+                if (attackStrategy[i].getStatusType() == StatusType.Heal) //íƒ€ê²Ÿí”Œë ˆì´íŠ¸ê°€ ì ì´ ë˜ì–´ì•¼í•¨
                 {
                     int targetPlateIndex = plateController.getLowestHealthEnermyPlateIndex();
                     battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.getSummonName()}°¡ Èú Æ¯¼ö °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ í íŠ¹ìˆ˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
-                else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //Àú°İ°ø°İÀÎÁö °Ë»ç
+                else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //ì €ê²©ê³µê²©ì¸ì§€ ê²€ì‚¬
                 {
-                    battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i); //Àú°İ°ø°İ
-                    Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö Àú°İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i); //ì €ê²©ê³µê²©
+                    Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ì €ê²© ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
             }
@@ -169,37 +168,37 @@ public class EnermyAlgorithm : MonoBehaviour
 
     private bool reactSpecialFromTargetNone(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //ÇØ´ç ¼ÒÈ¯¼öÀÇ ½ºÅ³ °¡Á®¿À±â
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //í•´ë‹¹ ì†Œí™˜ìˆ˜ì˜ ìŠ¤í‚¬ ê°€ì ¸ì˜¤ê¸°
 
         if (attackStrategy == null)
         {
             handleReactNormalAttack(attacker, attackingEnermyPlateIndex, playerPrediction.getAttackSummonPlateIndex());
-            Debug.Log($"{attacker.getSummonName()}°¡ ÀÏ¹İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+            Debug.Log($"{attacker.getSummonName()}ê°€ ì¼ë°˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ÄğÅ¸ÀÓÀÌ¸é ´ÙÀ½ Æ¯¼ö½ºÅ³ °Ë»ç
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ì¿¨íƒ€ì„ì´ë©´ ë‹¤ìŒ íŠ¹ìˆ˜ìŠ¤í‚¬ ê²€ì‚¬
                 {
                     continue;
                 }
                 if (attackStrategy[i].getStatusType() == StatusType.Stun)
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i);
-                    Debug.Log($"{attacker.getSummonName()}°¡ ½ºÅÏ Æ¯¼ö °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ ìŠ¤í„´ íŠ¹ìˆ˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
                 else if (attackStrategy[i].getStatusType() == StatusType.Shield)
                 {
                     battleController.SpecialAttackLogic(attacker, attackingEnermyPlateIndex, i);
-                    Debug.Log($"{attacker.getSummonName()}°¡ ½¯µå Æ¯¼ö °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ ì‰´ë“œ íŠ¹ìˆ˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
                 else if (attackStrategy[i].getStatusType() == StatusType.Heal)
                 {
                     battleController.SpecialAttackLogic(attacker, attackingEnermyPlateIndex, i);
-                    Debug.Log($"{attacker.getSummonName()}°¡ Èú Æ¯¼ö °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ í íŠ¹ìˆ˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
             }
@@ -207,41 +206,41 @@ public class EnermyAlgorithm : MonoBehaviour
         return false;
     }
 
-    //ÀüÃ¼ °ø°İ ´ëÀÀ
+    //ì „ì²´ ê³µê²© ëŒ€ì‘
     private bool reactSpecialFromAllNone(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //ÇØ´ç ¼ÒÈ¯¼öÀÇ ½ºÅ³ °¡Á®¿À±â
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //í•´ë‹¹ ì†Œí™˜ìˆ˜ì˜ ìŠ¤í‚¬ ê°€ì ¸ì˜¤ê¸°
 
         if (attackStrategy == null)
         {
-            handleReactNormalAttack(attacker, attackingEnermyPlateIndex,playerPrediction.getAttackSummonPlateIndex()); //ÀüÃ¼°ø°İÀ» »ç¿ëÇÑ Àû¿¡°Ô ÀÏ¹İ°ø°İ´ëÀÀ
-            Debug.Log($"{attacker.getSummonName()}°¡ ÀÏ¹İ ´ëÀÀÇß½À´Ï´Ù.");
+            handleReactNormalAttack(attacker, attackingEnermyPlateIndex,playerPrediction.getAttackSummonPlateIndex()); //ì „ì²´ê³µê²©ì„ ì‚¬ìš©í•œ ì ì—ê²Œ ì¼ë°˜ê³µê²©ëŒ€ì‘
+            Debug.Log($"{attacker.getSummonName()}ê°€ ì¼ë°˜ ëŒ€ì‘í–ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ÄğÅ¸ÀÓÀÌ¸é ´ÙÀ½ Æ¯¼ö½ºÅ³ °Ë»ç
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ì¿¨íƒ€ì„ì´ë©´ ë‹¤ìŒ íŠ¹ìˆ˜ìŠ¤í‚¬ ê²€ì‚¬
                 {
                     continue;
                 }
                 if (attackStrategy[i].getStatusType() == StatusType.Stun)
                 {
-                    battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i); //°ø°İÇÑ ´ë»ó¿¡°Ô ½ºÅÏ
+                    battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i); //ê³µê²©í•œ ëŒ€ìƒì—ê²Œ ìŠ¤í„´
 
-                    Debug.Log($"{attacker.getSummonName()}°¡ ½ºÅÏ Æ¯¼ö °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ ìŠ¤í„´ íŠ¹ìˆ˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
-                else if (attackStrategy[i].getStatusType() == StatusType.Shield) //°¡Àå Ã¼·ÂÀÌ ³·Àº Àû¿¡°Ô ½¯µå
+                else if (attackStrategy[i].getStatusType() == StatusType.Shield) //ê°€ì¥ ì²´ë ¥ì´ ë‚®ì€ ì ì—ê²Œ ì‰´ë“œ
                 {
-                    battleController.SpecialAttackLogic(attacker, attackingEnermyPlateIndex, i); //ÀÚ±â ÀÚ½Å¿¡°Ô ½¯µå
-                    Debug.Log($"{attacker.getSummonName()}°¡ ½¯µå Æ¯¼ö °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    battleController.SpecialAttackLogic(attacker, attackingEnermyPlateIndex, i); //ìê¸° ìì‹ ì—ê²Œ ì‰´ë“œ
+                    Debug.Log($"{attacker.getSummonName()}ê°€ ì‰´ë“œ íŠ¹ìˆ˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
                 else if (attackStrategy[i].getStatusType() == StatusType.Heal)
                 {
-                    battleController.SpecialAttackLogic(attacker, attackingEnermyPlateIndex, i); //ÀÚ±âÀÚ½Å¿¡°Ô Èú
-                    Debug.Log($"{attacker.getSummonName()}°¡ Èú Æ¯¼ö ½ºÅ³À» ½ÇÇàÇß½À´Ï´Ù.");
+                    battleController.SpecialAttackLogic(attacker, attackingEnermyPlateIndex, i); //ìê¸°ìì‹ ì—ê²Œ í
+                    Debug.Log($"{attacker.getSummonName()}ê°€ í íŠ¹ìˆ˜ ìŠ¤í‚¬ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
             }
@@ -251,31 +250,31 @@ public class EnermyAlgorithm : MonoBehaviour
     }
     private bool reactSpecialFromHeal(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //ÇØ´ç ¼ÒÈ¯¼öÀÇ ½ºÅ³ °¡Á®¿À±â
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //í•´ë‹¹ ì†Œí™˜ìˆ˜ì˜ ìŠ¤í‚¬ ê°€ì ¸ì˜¤ê¸°
 
         if (attackStrategy == null)
         {
             handleReactNormalAttack(attacker, attackingEnermyPlateIndex, playerPrediction.getAttackSummonPlateIndex());
-            Debug.Log($"{attacker.getSummonName()}°¡ ÀÏ¹İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+            Debug.Log($"{attacker.getSummonName()}ê°€ ì¼ë°˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ÄğÅ¸ÀÓÀÌ¸é ´ÙÀ½ Æ¯¼ö½ºÅ³ °Ë»ç
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ì¿¨íƒ€ì„ì´ë©´ ë‹¤ìŒ íŠ¹ìˆ˜ìŠ¤í‚¬ ê²€ì‚¬
                 {
                     continue;
                 }
-                if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //Å¸°Ù°ø°İÀÎÁö °Ë»ç
+                if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //íƒ€ê²Ÿê³µê²©ì¸ì§€ ê²€ì‚¬
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i);
-                    Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö Àú°İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ì €ê²© ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
-                else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is AttackAllEnemiesStrategy) //ÀüÃ¼°ø°İÀÎÁö °Ë»ç
+                else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is AttackAllEnemiesStrategy) //ì „ì²´ê³µê²©ì¸ì§€ ê²€ì‚¬
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i);
-                    Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö ÀüÃ¼ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ì „ì²´ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
             }
@@ -285,33 +284,33 @@ public class EnermyAlgorithm : MonoBehaviour
     }
     private bool reactSpecialFromUpgrade(Summon attacker, int attackingEnermyPlateIndex, AttackPrediction playerPrediction)
     {
-        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //ÇØ´ç ¼ÒÈ¯¼öÀÇ ½ºÅ³ °¡Á®¿À±â
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //í•´ë‹¹ ì†Œí™˜ìˆ˜ì˜ ìŠ¤í‚¬ ê°€ì ¸ì˜¤ê¸°
 
         if (attackStrategy == null)
         {
             handleReactNormalAttack(attacker, attackingEnermyPlateIndex, playerPrediction.getAttackSummonPlateIndex());
-            Debug.Log($"{attacker.getSummonName()}°¡ ÀÏ¹İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+            Debug.Log($"{attacker.getSummonName()}ê°€ ì¼ë°˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ÄğÅ¸ÀÓÀÌ¸é ´ÙÀ½ Æ¯¼ö½ºÅ³ °Ë»ç
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ì¿¨íƒ€ì„ì´ë©´ ë‹¤ìŒ íŠ¹ìˆ˜ìŠ¤í‚¬ ê²€ì‚¬
                 {
                     continue;
                 }
-                if (attackStrategy[i].getStatusType() == StatusType.Curse) //ÀúÁÖ°ø°İÀÎÁö °Ë»ç
+                if (attackStrategy[i].getStatusType() == StatusType.Curse) //ì €ì£¼ê³µê²©ì¸ì§€ ê²€ì‚¬
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i);
                     //specialAttackExecuted = true;
-                    Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö ÀúÁÖ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ì €ì£¼ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
-                else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //Àú°İ°ø°İÀÎÁö °Ë»ç
+                else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //ì €ê²©ê³µê²©ì¸ì§€ ê²€ì‚¬
                 {
                     battleController.SpecialAttackLogic(attacker, playerPrediction.getAttackSummonPlateIndex(), i);
                    // specialAttackExecuted = true;
-                    Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö Àú°İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ì €ê²© ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return true;
                 }
             }
@@ -323,43 +322,43 @@ public class EnermyAlgorithm : MonoBehaviour
 
     private void handleReactNormalAttack(Summon attacker, int attackingEnermyPlateIndex, int targetPlateIndex)
     {
-        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //ÇØ´ç ¼ÒÈ¯¼öÀÇ ½ºÅ³ °¡Á®¿À±â
+        IAttackStrategy[] attackStrategy = attacker.getSpecialAttackStrategy(); //í•´ë‹¹ ì†Œí™˜ìˆ˜ì˜ ìŠ¤í‚¬ ê°€ì ¸ì˜¤ê¸°
         float randomValue;
         if (attackStrategy == null)
         {
-            randomValue = UnityEngine.Random.Range(0f, 100f); // 0¿¡¼­ 100 »çÀÌÀÇ ¹«ÀÛÀ§ °ª
-            if (randomValue < 30f) //°­°ø°İ
+            randomValue = UnityEngine.Random.Range(0f, 100f); // 0ì—ì„œ 100 ì‚¬ì´ì˜ ë¬´ì‘ìœ„ ê°’
+            if (randomValue < 30f) //ê°•ê³µê²©
             {
-                Debug.Log($"{attacker.name} ÀÇ °­°ø°İ");
+                Debug.Log($"{attacker.name} ì˜ ê°•ê³µê²©");
                 double originPower = attacker.getAttackPower();
-                attacker.setAttackPower(attacker.getHeavyAttackPower()); //°ø°İ·ÂÀ» °­°ø°İ·ÂÀ¸·Î ÀüÈ¯
-                attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //ÀÏ¹İ°ø°İ¼öÇà
-                attacker.setAttackPower(originPower); //¿ø·¡ °ø°İ·ÂÀ¸·Î µÇµ¹¸®±â
+                attacker.setAttackPower(attacker.getHeavyAttackPower()); //ê³µê²©ë ¥ì„ ê°•ê³µê²©ë ¥ìœ¼ë¡œ ì „í™˜
+                attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //ì¼ë°˜ê³µê²©ìˆ˜í–‰
+                attacker.setAttackPower(originPower); //ì›ë˜ ê³µê²©ë ¥ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°
             }
-            else //ÀÏ¹İ °ø°İ·ÂÀ¸·Î °ø°İ
+            else //ì¼ë°˜ ê³µê²©ë ¥ìœ¼ë¡œ ê³µê²©
             {
-                attacker.normalAttack(plateController.getPlayerPlates(), targetPlateIndex); //ÀÏ¹İ°ø°İ ¼öÇà
+                attacker.normalAttack(plateController.getPlayerPlates(), targetPlateIndex); //ì¼ë°˜ê³µê²© ìˆ˜í–‰
             }
-            Debug.Log($"{attacker.getSummonName()}°¡ ÀÏ¹İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+            Debug.Log($"{attacker.getSummonName()}ê°€ ì¼ë°˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
             return;
         }
 
-        if (plateController.getPlayerSummonCount() >= 2) //¼ÒÈ¯¼ö°¡ 2¸¶¸® ÀÌ»ó Á¸ÀçÇÏ´Â°¡?
+        if (plateController.getPlayerSummonCount() >= 2) //ì†Œí™˜ìˆ˜ê°€ 2ë§ˆë¦¬ ì´ìƒ ì¡´ì¬í•˜ëŠ”ê°€?
         {
             int index = get30PercentDifferentHP(plateController.getPlayerPlates());
-            if (index != -1) //¼ÒÈ¯¼öµéÁß Ã¼·ÂÂ÷ÀÌ°¡ 30%ÀÌ»ó Â÷ÀÌ³ª´Â ¼ÒÈ¯¼ö°¡ ÀÖ´Â°¡? ÀÖÀ»°æ¿ì Ã¼·ÂÀÌ ³ôÀºÂÊÀÇ ÀÎµ¦½º ¹İÈ¯
+            if (index != -1) //ì†Œí™˜ìˆ˜ë“¤ì¤‘ ì²´ë ¥ì°¨ì´ê°€ 30%ì´ìƒ ì°¨ì´ë‚˜ëŠ” ì†Œí™˜ìˆ˜ê°€ ìˆëŠ”ê°€? ìˆì„ê²½ìš° ì²´ë ¥ì´ ë†’ì€ìª½ì˜ ì¸ë±ìŠ¤ ë°˜í™˜
             {
-                Debug.Log("¼ÒÈ¯¼ö2¸¶¸® ÀÌ»óÁß 30%ÀÌ»óÀÎ ÀÎµ¦½º: " + index);
+                Debug.Log("ì†Œí™˜ìˆ˜2ë§ˆë¦¬ ì´ìƒì¤‘ 30%ì´ìƒì¸ ì¸ë±ìŠ¤: " + index);
                 for (int i = 0; i < attackStrategy.Length; i++)
                 {
-                    if (attacker.isSpecialAttackCool(attackStrategy[i])) //ÄğÅ¸ÀÓÀÌ¸é ´ÙÀ½ Æ¯¼ö½ºÅ³ °Ë»ç
+                    if (attacker.isSpecialAttackCool(attackStrategy[i])) //ì¿¨íƒ€ì„ì´ë©´ ë‹¤ìŒ íŠ¹ìˆ˜ìŠ¤í‚¬ ê²€ì‚¬
                     {
                         continue;
                     }
-                    if (attackStrategy[i].getStatusType() == StatusType.LifeDrain) //ÈíÇ÷ °ø°İÀÎÁö °Ë»ç
+                    if (attackStrategy[i].getStatusType() == StatusType.LifeDrain) //í¡í˜ˆ ê³µê²©ì¸ì§€ ê²€ì‚¬
                     {
                         battleController.SpecialAttackLogic(attacker, index, i);
-                        Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö ÈíÇ÷ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ í¡í˜ˆ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                         return;
                     }
                 }
@@ -368,55 +367,55 @@ public class EnermyAlgorithm : MonoBehaviour
             {
                 for (int i = 0; i < attackStrategy.Length; i++)
                 {
-                    if (attacker.isSpecialAttackCool(attackStrategy[i])) //ÄğÅ¸ÀÓÀÌ¸é ´ÙÀ½ Æ¯¼ö½ºÅ³ °Ë»ç
+                    if (attacker.isSpecialAttackCool(attackStrategy[i])) //ì¿¨íƒ€ì„ì´ë©´ ë‹¤ìŒ íŠ¹ìˆ˜ìŠ¤í‚¬ ê²€ì‚¬
                     {
                         continue;
                     }
-                    if (attackStrategy[i].getStatusType() == StatusType.Upgrade) //°­È­ °ø°İÀÎÁö °Ë»ç
+                    if (attackStrategy[i].getStatusType() == StatusType.Upgrade) //ê°•í™” ê³µê²©ì¸ì§€ ê²€ì‚¬
                     {
                         battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                        Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö °­È­ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ê°•í™” ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                         return;
                     }
-                    else if (attackStrategy[i].getStatusType() == StatusType.Burn) //È­»ó °ø°İÀÎÁö °Ë»ç
+                    else if (attackStrategy[i].getStatusType() == StatusType.Burn) //í™”ìƒ ê³µê²©ì¸ì§€ ê²€ì‚¬
                     {
                         battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                        Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö È­»ó °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ í™”ìƒ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                         return;
                     }
-                    else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is AttackAllEnemiesStrategy) //ÀüÃ¼ °ø°İÀÎÁö °Ë»ç
+                    else if (attackStrategy[i].getStatusType() == StatusType.None && attackStrategy[i] is AttackAllEnemiesStrategy) //ì „ì²´ ê³µê²©ì¸ì§€ ê²€ì‚¬
                     {
                         battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                        Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö ÀüÃ¼ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                        Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ì „ì²´ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                         return;
                     }
                 }
             }
         }
-        if (hasPlayerSummonOverMediumRank(plateController.getPlayerPlates())) //¼ÒÈ¯¼ö µî±ŞÀÌ Áß±Ş ÀÌ»óÀÎ ¸÷ÀÌ Á¸ÀçÇÏ´Â°¡?
+        if (hasPlayerSummonOverMediumRank(plateController.getPlayerPlates())) //ì†Œí™˜ìˆ˜ ë“±ê¸‰ì´ ì¤‘ê¸‰ ì´ìƒì¸ ëª¹ì´ ì¡´ì¬í•˜ëŠ”ê°€?
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ÄğÅ¸ÀÓÀÌ¸é ´ÙÀ½ Æ¯¼ö½ºÅ³ °Ë»ç
+                if (attacker.isSpecialAttackCool(attackStrategy[i])) //ì¿¨íƒ€ì„ì´ë©´ ë‹¤ìŒ íŠ¹ìˆ˜ìŠ¤í‚¬ ê²€ì‚¬
                 {
                     continue;
                 }
                 if (attackStrategy[i].getStatusType() == StatusType.Curse)
                 {
                     battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö ÀúÁÖ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ì €ì£¼ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return;
                 }
                 else if (attackStrategy[i].getStatusType() == StatusType.Stun)
                 {
                     battleController.SpecialAttackLogic(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö È¥¶õ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ í˜¼ë€ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return;
                 }
                 else if (attackStrategy[i].getStatusType() == StatusType.Shield)
                 {
-                    battleController.SpecialAttackLogic(attacker, attackingEnermyPlateIndex, i); //ÀÚ±â ÀÚ½Å¿¡°Ô ½¯µå
-                    Debug.Log($"{attacker.getSummonName()}°¡ Æ¯¼ö ½¯µå ½ºÅ³À» ½ÇÇàÇß½À´Ï´Ù.");
+                    battleController.SpecialAttackLogic(attacker, attackingEnermyPlateIndex, i); //ìê¸° ìì‹ ì—ê²Œ ì‰´ë“œ
+                    Debug.Log($"{attacker.getSummonName()}ê°€ íŠ¹ìˆ˜ ì‰´ë“œ ìŠ¤í‚¬ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
                     return;
                 }
             }
@@ -424,20 +423,20 @@ public class EnermyAlgorithm : MonoBehaviour
         
 
 
-        randomValue = UnityEngine.Random.Range(0f, 100f); // 0¿¡¼­ 100 »çÀÌÀÇ ¹«ÀÛÀ§ °ª
-        if (randomValue < 30f) //°­°ø°İ
+        randomValue = UnityEngine.Random.Range(0f, 100f); // 0ì—ì„œ 100 ì‚¬ì´ì˜ ë¬´ì‘ìœ„ ê°’
+        if (randomValue < 30f) //ê°•ê³µê²©
         {
-            Debug.Log($"{attacker.name} ÀÇ °­°ø°İ");
+            Debug.Log($"{attacker.name} ì˜ ê°•ê³µê²©");
             double originPower = attacker.getAttackPower();
-            attacker.setAttackPower(attacker.getHeavyAttackPower()); //°ø°İ·ÂÀ» °­°ø°İ·ÂÀ¸·Î ÀüÈ¯
-            attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //ÀÏ¹İ°ø°İ¼öÇà
-            attacker.setAttackPower(originPower); //¿ø·¡ °ø°İ·ÂÀ¸·Î µÇµ¹¸®±â
+            attacker.setAttackPower(attacker.getHeavyAttackPower()); //ê³µê²©ë ¥ì„ ê°•ê³µê²©ë ¥ìœ¼ë¡œ ì „í™˜
+            attacker.normalAttack(plateController.getPlayerPlates(), plateController.getClosestPlayerPlatesIndex(attacker)); //ì¼ë°˜ê³µê²©ìˆ˜í–‰
+            attacker.setAttackPower(originPower); //ì›ë˜ ê³µê²©ë ¥ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°
         }
-        else //ÀÏ¹İ °ø°İ·ÂÀ¸·Î °ø°İ
+        else //ì¼ë°˜ ê³µê²©ë ¥ìœ¼ë¡œ ê³µê²©
         {
-            attacker.normalAttack(plateController.getPlayerPlates(), targetPlateIndex); //ÀÏ¹İ°ø°İ ¼öÇà
+            attacker.normalAttack(plateController.getPlayerPlates(), targetPlateIndex); //ì¼ë°˜ê³µê²© ìˆ˜í–‰
         }
-        Debug.Log($"{attacker.getSummonName()}°¡ ÀÏ¹İ °ø°İÀ» ½ÇÇàÇß½À´Ï´Ù.");
+        Debug.Log($"{attacker.getSummonName()}ê°€ ì¼ë°˜ ê³µê²©ì„ ì‹¤í–‰í–ˆìŠµë‹ˆë‹¤.");
 
     }
 
@@ -449,10 +448,10 @@ public class EnermyAlgorithm : MonoBehaviour
             Summon summon = plate.getCurrentSummon();
             if (summon != null && (summon.getSummonRank() == SummonRank.Medium || summon.getSummonRank() == SummonRank.High ))
             {
-                return true; // Áß±Ş ÀÌ»óÀÎ ¼ÒÈ¯¼ö°¡ Á¸ÀçÇÏ¸é true ¹İÈ¯
+                return true; // ì¤‘ê¸‰ ì´ìƒì¸ ì†Œí™˜ìˆ˜ê°€ ì¡´ì¬í•˜ë©´ true ë°˜í™˜
             }
         }
-        return false; // Áß±Ş ÀÌ»óÀÎ ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é false ¹İÈ¯
+        return false; // ì¤‘ê¸‰ ì´ìƒì¸ ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ false ë°˜í™˜
     }
 
     private int get30PercentDifferentHP(List<Plate> playerplates)
@@ -462,7 +461,7 @@ public class EnermyAlgorithm : MonoBehaviour
         int highestHealthIndex = -1;
         double highestHealth = double.MinValue;
 
-        // 1. °¡Àå ÇöÀç Ã¼·ÂÀÌ ³ôÀº ¼ÒÈ¯¼ö Ã£±â
+        // 1. ê°€ì¥ í˜„ì¬ ì²´ë ¥ì´ ë†’ì€ ì†Œí™˜ìˆ˜ ì°¾ê¸°
         for (int i = 0; i < playerplates.Count; i++)
         {
             Summon currentSummon = playerplates[i].getCurrentSummon();
@@ -475,26 +474,26 @@ public class EnermyAlgorithm : MonoBehaviour
             }
         }
 
-        // °¡Àå ³ôÀº Ã¼·ÂÀÇ ¼ÒÈ¯¼ö¸¦ Ã£Áö ¸øÇÑ °æ¿ì
+        // ê°€ì¥ ë†’ì€ ì²´ë ¥ì˜ ì†Œí™˜ìˆ˜ë¥¼ ì°¾ì§€ ëª»í•œ ê²½ìš°
         if (highestHealthIndex == -1) return -1;
 
-        // 2. ³ª¸ÓÁö ¼ÒÈ¯¼öµé »çÀÌ¿¡¼­ °¡Àå ³ôÀº Ã¼·Âº¸´Ù 30% ³·Àº ¼ÒÈ¯¼ö Ã£±â
+        // 2. ë‚˜ë¨¸ì§€ ì†Œí™˜ìˆ˜ë“¤ ì‚¬ì´ì—ì„œ ê°€ì¥ ë†’ì€ ì²´ë ¥ë³´ë‹¤ 30% ë‚®ì€ ì†Œí™˜ìˆ˜ ì°¾ê¸°
         for (int i = 0; i < playerplates.Count; i++)
         {
-            if (i == highestHealthIndex) continue; // °¡Àå ³ôÀº Ã¼·ÂÀÇ ¼ÒÈ¯¼ö´Â ºñ±³¿¡¼­ Á¦¿Ü
+            if (i == highestHealthIndex) continue; // ê°€ì¥ ë†’ì€ ì²´ë ¥ì˜ ì†Œí™˜ìˆ˜ëŠ” ë¹„êµì—ì„œ ì œì™¸
 
             Summon compareSummon = playerplates[i].getCurrentSummon();
             if (compareSummon == null) continue;
 
-            // Ã¼·Â ºñ±³: °¡Àå ³ôÀº ¼ÒÈ¯¼öÀÇ Ã¼·Âº¸´Ù 30% ³·ÀºÁö Ã¼Å©
+            // ì²´ë ¥ ë¹„êµ: ê°€ì¥ ë†’ì€ ì†Œí™˜ìˆ˜ì˜ ì²´ë ¥ë³´ë‹¤ 30% ë‚®ì€ì§€ ì²´í¬
             if (compareSummon.getNowHP() <= highestHealth * 0.7)
             {
-                // Á¶°ÇÀ» ¸¸Á·ÇÏ¸é °¡Àå ³ôÀº Ã¼·ÂÀÇ ¼ÒÈ¯¼ö ÀÎµ¦½º¸¦ ¹İÈ¯
+                // ì¡°ê±´ì„ ë§Œì¡±í•˜ë©´ ê°€ì¥ ë†’ì€ ì²´ë ¥ì˜ ì†Œí™˜ìˆ˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜
                 return highestHealthIndex;
             }
         }
 
-        return -1; // Á¶°ÇÀ» ¸¸Á·ÇÏ´Â ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ” ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
     private int getLowestMonsterIndex(List<Plate> enermyPlates)
@@ -520,7 +519,7 @@ public class EnermyAlgorithm : MonoBehaviour
     //        {
     //            double enermyHealthRatio = (double)enermySummon.getNowHP() / enermySummon.getMaxHP();
 
-    //            // Ã¼·Â Â÷ÀÌ°¡ 30% ÀÌ»óÀÎ °æ¿ì ÀÎµ¦½º ¹İÈ¯
+    //            // ì²´ë ¥ ì°¨ì´ê°€ 30% ì´ìƒì¸ ê²½ìš° ì¸ë±ìŠ¤ ë°˜í™˜
     //            if (Math.Abs(attackerHealthRatio - enermyHealthRatio) >= 0.3)
     //            {
     //                return i;
@@ -528,63 +527,63 @@ public class EnermyAlgorithm : MonoBehaviour
     //        }
     //    }
 
-    //    return -1; // Á¶°ÇÀ» ¸¸Á·ÇÏ´Â ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é -1 ¹İÈ¯
+    //    return -1; // ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ” ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     //}
 
 
     private bool canReactSpecialAttack(AttackProbability attackProbability)
     {
-        // 0¿¡¼­ 100 »çÀÌÀÇ ·£´ı °ªÀ» »ı¼º
+        // 0ì—ì„œ 100 ì‚¬ì´ì˜ ëœë¤ ê°’ì„ ìƒì„±
         float randomValue = UnityEngine.Random.Range(0f, 100f);
         if(randomValue < attackProbability.specialAttackProbability)
         {
-            Debug.Log("Æ¯¼ö°ø°İÈ®·ü ´çÃ·");
+            Debug.Log("íŠ¹ìˆ˜ê³µê²©í™•ë¥  ë‹¹ì²¨");
         }
 
-        // Æ¯¼ö °ø°İ È®·üÀÌ ·£´ı °ªº¸´Ù Å©¸é true ¹İÈ¯ (Æ¯¼ö °ø°İ ¼±ÅÃ)
+        // íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì´ ëœë¤ ê°’ë³´ë‹¤ í¬ë©´ true ë°˜í™˜ (íŠ¹ìˆ˜ ê³µê²© ì„ íƒ)
         return randomValue < attackProbability.specialAttackProbability;
     }
 
 
-    //ÇÃ·¹ÀÌ¾îÀÇ ¿¹Ãø°ø°İÀ» ¸®½ºÆ® »ı¼º·ÎÁ÷
+    //í”Œë ˆì´ì–´ì˜ ì˜ˆì¸¡ê³µê²©ì„ ë¦¬ìŠ¤íŠ¸ ìƒì„±ë¡œì§
 
     public List<AttackPrediction> getPlayerAttackPredictionsList()
     {
-        // 1. ¼ÒÈ¯¼öÀÇ »óÅÂ Ã¼Å©
-        List<Plate> playerPlates = CheckPlayerPlateState(); // ÇöÀç playerPlatesµé
+        // 1. ì†Œí™˜ìˆ˜ì˜ ìƒíƒœ ì²´í¬
+        List<Plate> playerPlates = CheckPlayerPlateState(); // í˜„ì¬ playerPlatesë“¤
 
-        // 2. ¸ó½ºÅÍÀÇ »óÅÂ Ã¼Å© (»õ ¸®½ºÆ®¿¡ »óÅÂ Á¶Á¤µÈ enermyPlates Ãß°¡)
+        // 2. ëª¬ìŠ¤í„°ì˜ ìƒíƒœ ì²´í¬ (ìƒˆ ë¦¬ìŠ¤íŠ¸ì— ìƒíƒœ ì¡°ì •ëœ enermyPlates ì¶”ê°€)
         List<Plate> applyEnermyPlates = getApplyStatusEnermyPlates();
 
-        //3. ¼ÒÈ¯¼öÀÇ ¿¹Ãø°ø°İ ¸®½ºÆ®¸¦ ¹Ş¾Æ¿Â´Ù.
+        //3. ì†Œí™˜ìˆ˜ì˜ ì˜ˆì¸¡ê³µê²© ë¦¬ìŠ¤íŠ¸ë¥¼ ë°›ì•„ì˜¨ë‹¤.
         playerAttackPredictionsList = playerAttackPrediction.getPlayerAttackPredictionList(playerPlates, applyEnermyPlates);
 
         return playerAttackPredictionsList;
     }
 
 
-    // 1. ÇöÀç playerPlateµéÀ» °ø°İÀÌ³ª µ¥¹ÌÁö Àû¿ëÀÌ ¾ÈµÇ°Ô »õ ¸®½ºÆ®·Î °¡Á®¿Â´Ù.
+    // 1. í˜„ì¬ playerPlateë“¤ì„ ê³µê²©ì´ë‚˜ ë°ë¯¸ì§€ ì ìš©ì´ ì•ˆë˜ê²Œ ìƒˆ ë¦¬ìŠ¤íŠ¸ë¡œ ê°€ì ¸ì˜¨ë‹¤.
     public List<Plate> CheckPlayerPlateState()
     {
         List<Plate> playerPlateStates = new List<Plate>();
         List<Plate> playerPlates = plateController.getPlayerPlates();
 
-        for (int i = 0; i < playerPlates.Count; i++) // ÀÎµ¦½º¸¦ ÀÌ¿ëÇØ ¼øÈ¸
+        for (int i = 0; i < playerPlates.Count; i++) // ì¸ë±ìŠ¤ë¥¼ ì´ìš©í•´ ìˆœíšŒ
         {
             Plate plate = playerPlates[i];
             Summon summon = plate.getCurrentSummon();
 
             if (summon != null)
             {
-                Debug.Log($"{summon.getSummonName()}ÀÌ ¸®½ºÆ®·Î µé¾î°¨");
-                // ±âÁ¸ ÇÃ·¹ÀÌÆ®¸¦ »õ ¸®½ºÆ®¿¡ Ãß°¡ (»óÅÂ¸¸ °ü¸®)
+                Debug.Log($"{summon.getSummonName()}ì´ ë¦¬ìŠ¤íŠ¸ë¡œ ë“¤ì–´ê°");
+                // ê¸°ì¡´ í”Œë ˆì´íŠ¸ë¥¼ ìƒˆ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€ (ìƒíƒœë§Œ ê´€ë¦¬)
                 playerPlateStates.Add(plate);
             }
         }
 
         return playerPlateStates;
     }
-    // 2. Àû ¸ó½ºÅÍÀÇ »óÅÂ¸¦ Á¶Á¤ÇÏ¿© »õ·Î¿î ÇÃ·¹ÀÌÆ® ¸®½ºÆ® ¹İÈ¯
+    // 2. ì  ëª¬ìŠ¤í„°ì˜ ìƒíƒœë¥¼ ì¡°ì •í•˜ì—¬ ìƒˆë¡œìš´ í”Œë ˆì´íŠ¸ ë¦¬ìŠ¤íŠ¸ ë°˜í™˜
     private List<Plate> getApplyStatusEnermyPlates()
     {
         List<Plate> applyEnermyPlates = new List<Plate>();
@@ -594,27 +593,27 @@ public class EnermyAlgorithm : MonoBehaviour
             Summon originSummon = plate.getCurrentSummon();
             if (originSummon != null)
             {
-                // Summon °´Ã¼¸¸ º¹Á¦ÇÏ°í »óÅÂ È¿°ú¸¦ Àû¿ë
+                // Summon ê°ì²´ë§Œ ë³µì œí•˜ê³  ìƒíƒœ íš¨ê³¼ë¥¼ ì ìš©
                 Summon clonedSummon = originSummon.Clone();
                 Summon adjustedSummon = ApplyEnermyStatus(clonedSummon);
 
-                // ¿øº» Plate¿¡ ÀÓ½Ã·Î º¹Á¦µÈ Summon ¼³Á¤
+                // ì›ë³¸ Plateì— ì„ì‹œë¡œ ë³µì œëœ Summon ì„¤ì •
                 plate.setCurrentSummon(adjustedSummon);
                 applyEnermyPlates.Add(plate);
 
-                // ¿øº» SummonÀ¸·Î º¹¿ø
+                // ì›ë³¸ Summonìœ¼ë¡œ ë³µì›
                 plate.setCurrentSummon(originSummon);
             }
             else
             {
-                applyEnermyPlates.Add(plate); // ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é ±×´ë·Î Ãß°¡
+                applyEnermyPlates.Add(plate); // ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ ê·¸ëŒ€ë¡œ ì¶”ê°€
             }
         }
 
         return applyEnermyPlates;
     }
 
-    // º¹Á¦µÈ Summon¿¡ »óÅÂ È¿°ú Àû¿ë
+    // ë³µì œëœ Summonì— ìƒíƒœ íš¨ê³¼ ì ìš©
     private Summon ApplyEnermyStatus(Summon clonedSummon)
     {
         if (clonedSummon.getAllStatusTypes().Contains(StatusType.Poison))
@@ -635,24 +634,24 @@ public class EnermyAlgorithm : MonoBehaviour
             if (clonedSummon.getNowHP() <= 0) return null;
         }
 
-        return clonedSummon; // »óÅÂ°¡ Àû¿ëµÈ º¹Á¦º» Summon ¹İÈ¯
+        return clonedSummon; // ìƒíƒœê°€ ì ìš©ëœ ë³µì œë³¸ Summon ë°˜í™˜
     }
 
 
-    //// 2. Àû ¸ó½ºÅÍÀÇ »óÅÂ¸¦ Á¶Á¤ÇÏ¿© »õ·Î¿î ÇÃ·¹ÀÌÆ® ¸®½ºÆ® ¹İÈ¯
+    //// 2. ì  ëª¬ìŠ¤í„°ì˜ ìƒíƒœë¥¼ ì¡°ì •í•˜ì—¬ ìƒˆë¡œìš´ í”Œë ˆì´íŠ¸ ë¦¬ìŠ¤íŠ¸ ë°˜í™˜
     //private List<Plate> getApplyStatusEnermyPlates()
     //{
-    //    List<Plate> applyEnermyPlates = new List<Plate>(); // »õ ¸®½ºÆ®
+    //    List<Plate> applyEnermyPlates = new List<Plate>(); // ìƒˆ ë¦¬ìŠ¤íŠ¸
 
-    //    foreach (Plate plate in plateController.getEnermyPlates()) // enermyPlates¸¦ ÇÏ³ª¾¿ °¡Á®¿Â´Ù
+    //    foreach (Plate plate in plateController.getEnermyPlates()) // enermyPlatesë¥¼ í•˜ë‚˜ì”© ê°€ì ¸ì˜¨ë‹¤
     //    {
-    //        Summon originSummon = plate.getCurrentSummon(); // ÇØ´ç ÇÃ·¹ÀÌÆ®ÀÇ ¼ÒÈ¯¼ö¸¦ °¡Á®¿Í¼­
+    //        Summon originSummon = plate.getCurrentSummon(); // í•´ë‹¹ í”Œë ˆì´íŠ¸ì˜ ì†Œí™˜ìˆ˜ë¥¼ ê°€ì ¸ì™€ì„œ
     //        if (originSummon != null)
     //        {
     //            Summon copySummon = originSummon;
-    //            // ±âÁ¸ ¸ó½ºÅÍ¸¦ °¡Á®¿Í »óÅÂ¸¦ Á¶Á¤ ÈÄ »õ ÇÃ·¹ÀÌÆ® ¸®½ºÆ®¿¡ Ãß°¡
+    //            // ê¸°ì¡´ ëª¬ìŠ¤í„°ë¥¼ ê°€ì ¸ì™€ ìƒíƒœë¥¼ ì¡°ì • í›„ ìƒˆ í”Œë ˆì´íŠ¸ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
     //            Summon applySummon = ApplyEnermyStatus(copySummon);
-    //            plate.setCurrentSummon(applySummon); //nullÀÌ¿©µµ ³Ö¾îÁÜ. Á×¾úÀ»¶© nullÀÌ¹Ç·Î °ø°İ´ë»óÀÌ µÇÁö ¾Ê°Ô
+    //            plate.setCurrentSummon(applySummon); //nullì´ì—¬ë„ ë„£ì–´ì¤Œ. ì£½ì—ˆì„ë• nullì´ë¯€ë¡œ ê³µê²©ëŒ€ìƒì´ ë˜ì§€ ì•Šê²Œ
     //            applyEnermyPlates.Add(plate);
     //        }
     //    }
@@ -660,31 +659,31 @@ public class EnermyAlgorithm : MonoBehaviour
     //    return applyEnermyPlates;
     //}
 
-    //// 2.(1) ¸ó½ºÅÍ »óÅÂ¿¡ µû¶ó ¼öÄ¡ Á¶Á¤
+    //// 2.(1) ëª¬ìŠ¤í„° ìƒíƒœì— ë”°ë¼ ìˆ˜ì¹˜ ì¡°ì •
     //private Summon ApplyEnermyStatus(Summon enermySummon)
     //{
-    //    // µ¶¼º: ÃÖ´ë Ã¼·ÂÀÇ 10% µ¥¹ÌÁö Àû¿ë
+    //    // ë…ì„±: ìµœëŒ€ ì²´ë ¥ì˜ 10% ë°ë¯¸ì§€ ì ìš©
     //    if (enermySummon.getAllStatusTypes().Contains(StatusType.Poison))
     //    {
-    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.1); // 10% Ã¼·Â °¨¼Ò
-    //        if (enermySummon.getNowHP() <= 0) return null; // Ã¼·ÂÀÌ 0 ÀÌÇÏ¶ó¸é Á¦¿Ü
+    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.1); // 10% ì²´ë ¥ ê°ì†Œ
+    //        if (enermySummon.getNowHP() <= 0) return null; // ì²´ë ¥ì´ 0 ì´í•˜ë¼ë©´ ì œì™¸
     //    }
 
-    //    // È­»ó: ÃÖ´ë Ã¼·ÂÀÇ 20% µ¥¹ÌÁö Àû¿ë
+    //    // í™”ìƒ: ìµœëŒ€ ì²´ë ¥ì˜ 20% ë°ë¯¸ì§€ ì ìš©
     //    if (enermySummon.getAllStatusTypes().Contains(StatusType.Burn))
     //    {
-    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.2); // 20% Ã¼·Â °¨¼Ò
-    //        if (enermySummon.getNowHP() <= 0) return null; // Ã¼·ÂÀÌ 0 ÀÌÇÏ¶ó¸é Á¦¿Ü
+    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.2); // 20% ì²´ë ¥ ê°ì†Œ
+    //        if (enermySummon.getNowHP() <= 0) return null; // ì²´ë ¥ì´ 0 ì´í•˜ë¼ë©´ ì œì™¸
     //    }
 
-    //    // ÈíÇ÷: ÃÖ´ë Ã¼·ÂÀÇ 20% µ¥¹ÌÁö Àû¿ë
+    //    // í¡í˜ˆ: ìµœëŒ€ ì²´ë ¥ì˜ 20% ë°ë¯¸ì§€ ì ìš©
     //    if (enermySummon.getAllStatusTypes().Contains(StatusType.LifeDrain))
     //    {
-    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.2); // 20% Ã¼·Â °¨¼Ò
-    //        if (enermySummon.getNowHP() <= 0) return null; // Ã¼·ÂÀÌ 0 ÀÌÇÏ¶ó¸é Á¦¿Ü
+    //        enermySummon.setNowHP(enermySummon.getNowHP() - enermySummon.getMaxHP() * 0.2); // 20% ì²´ë ¥ ê°ì†Œ
+    //        if (enermySummon.getNowHP() <= 0) return null; // ì²´ë ¥ì´ 0 ì´í•˜ë¼ë©´ ì œì™¸
     //    }
 
-    //    return enermySummon; // »óÅÂ Àû¿ëµÈ ¸ó½ºÅÍ ¹İÈ¯
+    //    return enermySummon; // ìƒíƒœ ì ìš©ëœ ëª¬ìŠ¤í„° ë°˜í™˜
     //}
 
 

@@ -10,17 +10,17 @@ public class Eagle : Summon
         summonName = "Eagle";
         maxHP = 350;
         nowHP = maxHP;
-        attackPower = 45; //ÀÏ¹İ°ø°İ
-        summonRank = SummonRank.High; // »ó±Ş ¼ÒÈ¯¼ö
+        attackPower = 45; //ì¼ë°˜ê³µê²©
+        summonRank = SummonRank.High; // ìƒê¸‰ ì†Œí™˜ìˆ˜
         summonType = SummonType.Eagle;
         heavyAttakPower = 30;
 
         ApplayMultiple(multiple);
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1);
-        // Æ¯¼ö °ø°İ: Å¸°Ù ÁöÁ¤ °ø°İ
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.None, heavyAttakPower, 2) }; //Àú°İ 30µ¥¹ÌÁö, ÄğÅ¸ÀÓ 2ÅÏ
+        // íŠ¹ìˆ˜ ê³µê²©: íƒ€ê²Ÿ ì§€ì • ê³µê²©
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.None, heavyAttakPower, 2) }; //ì €ê²© 30ë°ë¯¸ì§€, ì¿¨íƒ€ì„ 2í„´
 
     }
 
@@ -28,7 +28,7 @@ public class Eagle : Summon
     {
         maxHP = (int)(maxHP * multiple);
         nowHP = maxHP;
-        attackPower = (int)(attackPower * multiple); //ÀÏ¹İ°ø°İ
+        attackPower = (int)(attackPower * multiple); //ì¼ë°˜ê³µê²©
         heavyAttakPower = (int)(heavyAttakPower * multiple);
     }
 

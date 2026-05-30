@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class Enermy : Character
 {
-    private List<Plate> enermyPlates; // ÀûÀÌ »ç¿ëÇÒ ÇÃ·¹ÀÌÆ® ¸ñ·Ï
+    private List<Plate> enermyPlates; // ì ì´ ì‚¬ìš©í•  í”Œë ˆì´íŠ¸ ëª©ë¡
 
-    [Header("ÄÁÆ®·Ñ·¯")]
+    [Header("ì»¨íŠ¸ë¡¤ëŸ¬")]
     [SerializeField] private TurnController turnController;
     [SerializeField] private PlateController plateController;
     private EnermyAttackController enermyAttackController;
     //private EnermyAlgorithm enermyAlgorithm;
 
-    BattleAlert battleAlert;
+    private BattleResultAlertView battleResultAlertView;
 
     //private int stageNum;
     //private int currentTurn;
@@ -26,26 +26,26 @@ public class Enermy : Character
 
     private void Start()
     {
-        battleAlert = GetComponent<BattleAlert>();
+        battleResultAlertView = GetComponent<BattleResultAlertView>();
     }
 
     public  void startTurn()
     {
-        Debug.Log("Àû ÅÏ ½ÃÀÛ");
-        // ÀûÀÇ Çàµ¿À» ÀÚµ¿À¸·Î °áÁ¤ÇÔ (¿¹: ÇÃ·¹ÀÌ¾î¸¦ °ø°İ)
+        Debug.Log("ì  í„´ ì‹œì‘");
+        // ì ì˜ í–‰ë™ì„ ìë™ìœ¼ë¡œ ê²°ì •í•¨ (ì˜ˆ: í”Œë ˆì´ì–´ë¥¼ ê³µê²©)
         takeAction();
     }
 
-    public void takeAction() //¿©±â¿¡ AI·ÎÁ÷ ÀÛ¼º
+    public void takeAction() //ì—¬ê¸°ì— AIë¡œì§ ì‘ì„±
     {
-        //ÇÃ·¹ÀÌ¾îÀÇ ¿¹Ãø°ø°İ ¸®½ºÆ®¸¦ °¡Á®¿À°í
+        //í”Œë ˆì´ì–´ì˜ ì˜ˆì¸¡ê³µê²© ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì˜¤ê³ 
         List<AttackPrediction> playerAttackPredictionsList = enermyAttackController.getEnermyAlgorithmController().getPlayerAttackPredictionsList();
         if(playerAttackPredictionsList.Count == 0)
         {
-            Debug.Log("¿¹Ãø ¸®½ºÆ®°¡ ºñ¾îÀÖ½À´Ï´Ù.");
+            Debug.Log("ì˜ˆì¸¡ ë¦¬ìŠ¤íŠ¸ê°€ ë¹„ì–´ìˆìŠµë‹ˆë‹¤.");
         }
-        Debug.Log("¸®½ºÆ®¸¦ °¡Á®¿Í¼­ Àû ´ëÀÀ½ÃÀÛ");
-        //ÀûÀÇ °ø°İ ½ÃÀÛ
+        Debug.Log("ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì™€ì„œ ì  ëŒ€ì‘ì‹œì‘");
+        //ì ì˜ ê³µê²© ì‹œì‘
         enermyAttackController.EnermyAttackStart(playerAttackPredictionsList);
 
         EndTurn();
@@ -53,7 +53,7 @@ public class Enermy : Character
 
     public void EndTurn()
     {
-        Debug.Log("Àû ÅÏ Á¾·á");
+        Debug.Log("ì  í„´ ì¢…ë£Œ");
         turnController.EndTurn();
     }
 

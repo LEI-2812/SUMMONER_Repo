@@ -14,11 +14,11 @@ public class Snake : Summon
         summonName = "Snake";
         maxHP = 300;
         nowHP = maxHP;
-        attackPower = 40; //ÀÏ¹İ°ø°İ
-        summonRank = SummonRank.Medium; // Áß±Ş ¼ÒÈ¯¼ö
+        attackPower = 40; //ì¼ë°˜ê³µê²©
+        summonRank = SummonRank.Medium; // ì¤‘ê¸‰ ì†Œí™˜ìˆ˜
         summonType = SummonType.Snake;
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1); //±ÙÁ¢ °ø°İ
-        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Poison, 0.1, 3, 2) };//Áßµ¶, Ã¼·Â¿¡20% ÄğÅ¸ÀÓ3ÅÏ Áö¼Ó½Ã°£3ÅÏ
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1); //ê·¼ì ‘ ê³µê²©
+        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Poison, 0.1, 3, 2) };//ì¤‘ë…, ì²´ë ¥ì—20% ì¿¨íƒ€ì„3í„´ ì§€ì†ì‹œê°„3í„´
 
         ApplyMultiple(multiple);
     }
@@ -27,7 +27,7 @@ public class Snake : Summon
     {
         maxHP = (int)(maxHP * multiple);
         nowHP = maxHP;
-        attackPower = (int)(attackPower * multiple); //ÀÏ¹İ°ø°İ
+        attackPower = (int)(attackPower * multiple); //ì¼ë°˜ê³µê²©
         heavyAttakPower = (int)(heavyAttakPower * multiple);
     }
 

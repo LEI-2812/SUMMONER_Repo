@@ -7,17 +7,17 @@ public class Fox : Summon
 
     public override void summonInitialize()
     {
-        summonName = "Fox"; //ÀÌ¸§ Fox
-        maxHP = 250; //ÃÖ´ëÃ¼·Â 200
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 35; //ÀÏ¹İ°ø°İ
-        summonRank = SummonRank.Low; // ÇÏ±Ş ¼ÒÈ¯¼ö
+        summonName = "Fox"; //ì´ë¦„ Fox
+        maxHP = 250; //ìµœëŒ€ì²´ë ¥ 200
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 35; //ì¼ë°˜ê³µê²©
+        summonRank = SummonRank.Low; // í•˜ê¸‰ ì†Œí™˜ìˆ˜
         summonType = SummonType.Fox;
         ApplayMultiple(multiple);
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Upgrade, 0.3, 3, 1) };//°ø°İ·Â °­È­, 20% »ó½Â, ÄğÅ¸ÀÓ 3ÅÏ //Áö¼Ó½Ã°£ 1ÅÏ
+        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Upgrade, 0.3, 3, 1) };//ê³µê²©ë ¥ ê°•í™”, 20% ìƒìŠ¹, ì¿¨íƒ€ì„ 3í„´ //ì§€ì†ì‹œê°„ 1í„´
 
     }
 
@@ -25,7 +25,7 @@ public class Fox : Summon
     {
         maxHP = (int)(maxHP * multiple);
         nowHP = maxHP;
-        attackPower = (int)(attackPower * multiple); //ÀÏ¹İ°ø°İ
+        attackPower = (int)(attackPower * multiple); //ì¼ë°˜ê³µê²©
     }
 
 

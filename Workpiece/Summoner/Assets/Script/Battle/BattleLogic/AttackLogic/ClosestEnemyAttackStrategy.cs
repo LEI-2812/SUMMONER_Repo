@@ -23,12 +23,12 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
 
         if (closestEnemySummon != null)
         {
-            Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {closestEnemySummon.getSummonName()}À»(¸¦) °ø°ÝÇÕ´Ï´Ù.");
+            Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {closestEnemySummon.getSummonName()}ì„(ë¥¼) ê³µê²©í•©ë‹ˆë‹¤.");
             closestEnemySummon.takeDamage(attacker.getAttackPower());
         }
         else
         {
-            Debug.Log("°ø°ÝÇÒ ÀûÀÌ ¾ø½À´Ï´Ù.");
+            Debug.Log("ê³µê²©í•  ì ì´ ì—†ìŠµë‹ˆë‹¤.");
         }
     }
 
@@ -39,11 +39,11 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
             Summon enemySummon = targetPlates[i].getCurrentSummon();
             if (enemySummon != null)
             {
-                return enemySummon; // Ã¹ ¹øÂ°·Î Á¸ÀçÇÏ´Â ¼ÒÈ¯¼ö¸¦ ¹Ù·Î ¹ÝÈ¯
+                return enemySummon; // ì²« ë²ˆì§¸ë¡œ ì¡´ìž¬í•˜ëŠ” ì†Œí™˜ìˆ˜ë¥¼ ë°”ë¡œ ë°˜í™˜
             }
         }
 
-        return null; // Àû ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é null ¹ÝÈ¯
+        return null; // ì  ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ null ë°˜í™˜
     }
 
     public double getSpecialDamage()
@@ -57,10 +57,10 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
 
     public int getCurrentCooldown() => currentCooldown;
 
-    // ÄðÅ¸ÀÓÀ» ÃÊ±âÈ­ (½ºÅ³ »ç¿ë ÈÄ Àû¿ë)
+    // ì¿¨íƒ€ìž„ì„ ì´ˆê¸°í™” (ìŠ¤í‚¬ ì‚¬ìš© í›„ ì ìš©)
     public void ApplyCooldown() => currentCooldown = cooltime;
 
-    // ÅÏ Á¾·á ½Ã ÄðÅ¸ÀÓ °¨¼Ò
+    // í„´ ì¢…ë£Œ ì‹œ ì¿¨íƒ€ìž„ ê°ì†Œ
     public void ReduceCooldown()
     {
         if (currentCooldown > 0)

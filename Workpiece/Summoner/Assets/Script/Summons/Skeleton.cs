@@ -6,17 +6,17 @@ public class Skeleton : Summon
 {
     private void Awake()
     {
-        summonName = "Skeleton"; //ÀÌ¸§ ½ºÄÌ·¹Åæ
-        maxHP = 650; //ÃÖ´ëÃ¼·Â 650
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 150; //ÀÏ¹İ°ø°İ
+        summonName = "Skeleton"; //ì´ë¦„ ìŠ¤ì¼ˆë ˆí†¤
+        maxHP = 650; //ìµœëŒ€ì²´ë ¥ 650
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 150; //ì¼ë°˜ê³µê²©
         heavyAttakPower = 170;
-        summonRank = SummonRank.Normal; // Æ¯±Ş ¼ÒÈ¯¼ö
+        summonRank = SummonRank.Normal; // íŠ¹ê¸‰ ì†Œí™˜ìˆ˜
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0); //±ÙÁ¢°ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0); //ê·¼ì ‘ê³µê²©
         specialAttackStrategies = new IAttackStrategy[] {
-            new TargetedAttackStrategy(StatusType.None, 160,0) //Å¸°Ù°ø°İ 160µ¥¹ÌÁö
+            new TargetedAttackStrategy(StatusType.None, 160,0) //íƒ€ê²Ÿê³µê²© 160ë°ë¯¸ì§€
         };
     }
 

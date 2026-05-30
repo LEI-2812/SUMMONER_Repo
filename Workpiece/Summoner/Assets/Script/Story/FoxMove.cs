@@ -4,65 +4,65 @@ using UnityEngine;
 
 public class FoxMove : MonoBehaviour
 {
-    private Vector3 targetPosition; // ÀÌµ¿ÇÒ ¸ñÇ¥ À§Ä¡
-    private bool isMoving; // ÀÌµ¿ ¿©ºÎ È®ÀÎ
-    private float moveSpeed; // ÀÌµ¿ ¼Óµµ
+    private Vector3 targetPosition; // ì´ë™í•  ëª©í‘œ ìœ„ì¹˜
+    private bool isMoving; // ì´ë™ ì—¬ë¶€ í™•ì¸
+    private float moveSpeed; // ì´ë™ ì†ë„
 
-    [Header("½Ã³ª¸®¿À¾À ÇÃ·¹ÀÌ¾î")]
+    [Header("ì‹œë‚˜ë¦¬ì˜¤ì”¬ í”Œë ˆì´ì–´")]
     [SerializeField] private GameObject fox;
 
-    [Header("¾Ö´Ï¸ŞÀÌÅÍ")]
-    [SerializeField] private Animator foxAni; // ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌÅÍ
+    [Header("ì• ë‹ˆë©”ì´í„°")]
+    [SerializeField] private Animator foxAni; // í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´í„°
 
-    [Header("interRaction ÄÁÆ®·Ñ·¯")]
-    [SerializeField] private InteractionController interactionController; // InteractionEvent ¿¬°á
+    [Header("interRaction ì»¨íŠ¸ë¡¤ëŸ¬")]
+    [SerializeField] private InteractionController interactionController; // InteractionEvent ì—°ê²°
 
 
     void Update()
     {
-        // Ä³¸¯ÅÍ°¡ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§¸¸ ÀÌµ¿ Ã³¸®
+        // ìºë¦­í„°ê°€ ì›€ì§ì´ê³  ìˆì„ ë•Œë§Œ ì´ë™ ì²˜ë¦¬
         if (isMoving)
         {
             MoveToTarget();
         }
     }
 
-    // ¸ñÇ¥ À§Ä¡¿Í ÀÌµ¿ ¼Óµµ¸¦ ¼³Á¤ÇÏ´Â ¸Ş¼­µå
+    // ëª©í‘œ ìœ„ì¹˜ì™€ ì´ë™ ì†ë„ë¥¼ ì„¤ì •í•˜ëŠ” ë©”ì„œë“œ
     public void CharacterMove(float distance, float speed)
     {
         interactionController.stopNextDialogue();
         targetPosition = fox.transform.position + new Vector3(distance, 0f, 0f);
         moveSpeed = speed;
 
-        // ÀÌµ¿ ¹æÇâ¿¡ µû¶ó Ä³¸¯ÅÍÀÇ ¹æÇâ ÀüÈ¯
+        // ì´ë™ ë°©í–¥ì— ë”°ë¼ ìºë¦­í„°ì˜ ë°©í–¥ ì „í™˜
         if (distance < 0)
         {
-            // ¿ŞÂÊ ÀÌµ¿ ½Ã Ä³¸¯ÅÍ¸¦ µÚÁıÀ½
+            // ì™¼ìª½ ì´ë™ ì‹œ ìºë¦­í„°ë¥¼ ë’¤ì§‘ìŒ
             fox.transform.localScale = new Vector3(1, 1, 1);
-            //fox.transform.localScale = new Vector3(-1, 1, 1); ¿ø·¡ ÀÌ»óÅÂ¿´´Âµ¥ ¿ÖÀÌ·¯Áö
+            //fox.transform.localScale = new Vector3(-1, 1, 1); ì›ë˜ ì´ìƒíƒœì˜€ëŠ”ë° ì™œì´ëŸ¬ì§€
         }
         else if (distance > 0)
         {
-            // ¿À¸¥ÂÊ ÀÌµ¿ ½Ã Ä³¸¯ÅÍ¸¦ ¿ø·¡ ¹æÇâÀ¸·Î µ¹¸²
+            // ì˜¤ë¥¸ìª½ ì´ë™ ì‹œ ìºë¦­í„°ë¥¼ ì›ë˜ ë°©í–¥ìœ¼ë¡œ ëŒë¦¼
             fox.transform.localScale = new Vector3(-1, 1, 1);
-            //fox.transform.localScale = new Vector3(1, 1, 1); ¿ø·¡ ÀÌ°Å¿´´Âµ¥ ¾Ö°¡ ¹İ´ë·Î µ¹¾Æ°¡¿ä ¹¹Áö?
+            //fox.transform.localScale = new Vector3(1, 1, 1); ì›ë˜ ì´ê±°ì˜€ëŠ”ë° ì• ê°€ ë°˜ëŒ€ë¡œ ëŒì•„ê°€ìš” ë­ì§€?
         }
 
-        // ÀÌµ¿ ½ÃÀÛÇÏ¸é¼­ ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
+        // ì´ë™ ì‹œì‘í•˜ë©´ì„œ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
         isMoving = true;
         interactionController.stopNextDialogue();
         foxAni.Play("Stage3_Fox");
     }
 
-    // Ä³¸¯ÅÍ¸¦ ¸ñÇ¥ À§Ä¡·Î ÀÌµ¿½ÃÅ°´Â ¸Ş¼­µå
+    // ìºë¦­í„°ë¥¼ ëª©í‘œ ìœ„ì¹˜ë¡œ ì´ë™ì‹œí‚¤ëŠ” ë©”ì„œë“œ
     public void MoveToTarget()
     {
         if (!isMoving) return;
 
-        // ÇöÀç À§Ä¡¿¡¼­ ¸ñÇ¥ À§Ä¡±îÁö ÀÏÁ¤ÇÑ ¼Óµµ·Î ÀÌµ¿
+        // í˜„ì¬ ìœ„ì¹˜ì—ì„œ ëª©í‘œ ìœ„ì¹˜ê¹Œì§€ ì¼ì •í•œ ì†ë„ë¡œ ì´ë™
         fox.transform.position = Vector3.MoveTowards(fox.transform.position, targetPosition, moveSpeed * Time.deltaTime);
 
-        // ¸ñÇ¥ À§Ä¡¿¡ µµ´ŞÇÏ¸é ÀÌµ¿ ÁßÁö
+        // ëª©í‘œ ìœ„ì¹˜ì— ë„ë‹¬í•˜ë©´ ì´ë™ ì¤‘ì§€
         if (Vector3.Distance(fox.transform.position, targetPosition) < 0.01f)
         {
             isMoving = false;

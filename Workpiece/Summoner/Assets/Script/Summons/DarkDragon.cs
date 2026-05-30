@@ -6,20 +6,20 @@ public class DarkDragon : Summon
 {
     private void Awake()
     {
-        summonName = "DarkDragon"; //ÀÌ¸§ ´ÙÅ© µå·¡°ï
-        maxHP = 3000; //ÃÖ´ëÃ¼·Â 200
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 400; //ÀÏ¹İ°ø°İ
+        summonName = "DarkDragon"; //ì´ë¦„ ë‹¤í¬ ë“œë˜ê³¤
+        maxHP = 3000; //ìµœëŒ€ì²´ë ¥ 200
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 400; //ì¼ë°˜ê³µê²©
         heavyAttakPower = 500;
-        summonRank = SummonRank.Boss; // Æ¯±Ş ¼ÒÈ¯¼ö
+        summonRank = SummonRank.Boss; // íŠ¹ê¸‰ ì†Œí™˜ìˆ˜
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
         specialAttackStrategies = new IAttackStrategy[] {
-            new AttackAllEnemiesStrategy(StatusType.None, 370, 0), //ÀüÃ¼°ø°İ µ¥¹ÌÁö 370
-            new AttackAllEnemiesStrategy(StatusType.Burn, 0.2, 5,2), //È­»ó, Ã¼·Â 20% µ¥¹ÌÁö, ÄğÅ¸ÀÓ 5ÅÏ, Áö¼Ó½Ã°£ 2ÅÏ
-            new TargetedAttackStrategy(StatusType.None, 450, 0), //Àú°İ, µ¥¹ÌÁö450
-            new TargetedAttackStrategy(StatusType.LifeDrain, 0.2, 4, 2) //´ë»ó¿¡°Ô ÈíÇ÷, ÄğÅ¸ÀÓ 4ÅÏ, Áö¼Ó½Ã°£ 2ÅÏ
+            new AttackAllEnemiesStrategy(StatusType.None, 370, 0), //ì „ì²´ê³µê²© ë°ë¯¸ì§€ 370
+            new AttackAllEnemiesStrategy(StatusType.Burn, 0.2, 5,2), //í™”ìƒ, ì²´ë ¥ 20% ë°ë¯¸ì§€, ì¿¨íƒ€ì„ 5í„´, ì§€ì†ì‹œê°„ 2í„´
+            new TargetedAttackStrategy(StatusType.None, 450, 0), //ì €ê²©, ë°ë¯¸ì§€450
+            new TargetedAttackStrategy(StatusType.LifeDrain, 0.2, 4, 2) //ëŒ€ìƒì—ê²Œ í¡í˜ˆ, ì¿¨íƒ€ì„ 4í„´, ì§€ì†ì‹œê°„ 2í„´
         };
     }
 

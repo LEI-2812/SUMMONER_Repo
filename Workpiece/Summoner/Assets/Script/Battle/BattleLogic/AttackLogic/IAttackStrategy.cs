@@ -6,10 +6,10 @@ public interface IAttackStrategy
 {
    void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackarrayIndex);
 
-    StatusType getStatusType(); // »óÅÂ Å¸ÀÔ ¹İÈ¯ ¸Ş¼­µå Ãß°¡
-    double getSpecialDamage(); //Æ¯¼ö°ø°İ·Â°ª ¹İÈ¯
-    int getCooltime(); // ÄğÅ¸ÀÓ °ª ¹İÈ¯
-    int getCurrentCooldown(); // ÇöÀç ÄğÅ¸ÀÓ »óÅÂ ¹İÈ¯
-    void ApplyCooldown(); // ÄğÅ¸ÀÓ Àû¿ë
-    void ReduceCooldown(); // ÅÏ Á¾·á ½Ã ÄğÅ¸ÀÓ °¨¼Ò
+    StatusType getStatusType(); // ìƒíƒœ íƒ€ì… ë°˜í™˜ ë©”ì„œë“œ ì¶”ê°€
+    double getSpecialDamage(); //íŠ¹ìˆ˜ê³µê²©ë ¥ê°’ ë°˜í™˜
+    int getCooltime(); // ì¿¨íƒ€ì„ ê°’ ë°˜í™˜
+    int getCurrentCooldown(); // í˜„ì¬ ì¿¨íƒ€ì„ ìƒíƒœ ë°˜í™˜
+    void ApplyCooldown(); // ì¿¨íƒ€ì„ ì ìš©
+    void ReduceCooldown(); // í„´ ì¢…ë£Œ ì‹œ ì¿¨íƒ€ì„ ê°ì†Œ
 }

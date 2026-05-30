@@ -8,9 +8,9 @@ using UnityEngine;
 public class BattleController : MonoBehaviour
 {
 
-    [SerializeField] private StatePanel statePanel;
+    [SerializeField] private SummonStatePanelView statePanel;
 
-    public bool isAttacking = false; //°ø°ÝÁßÀÎÀÌ ÆÇº°
+    public bool isAttacking = false; //ê³µê²©ì¤‘ì¸ì´ íŒë³„
 
     private PlateController plateController;
 
@@ -30,30 +30,41 @@ public class BattleController : MonoBehaviour
     public Summon attackStart(int buttonIndex)
     {
         attakingSummon = statePanel.getStatePanelSummon();
-        SpecialAttackInfo = new SpecialAttackInfo(attakingSummon.getSpecialAttackStrategy()[buttonIndex], buttonIndex);
-        return attakingSummon; //»óÅÂÃ¢¿¡ ÀÖ´Â ¼ÒÈ¯¼ö¸¦ ¹ÝÈ¯
+        SpecialAttackInfo = null;
+
+        if (attakingSummon == null)
+        {
+            Debug.Log("ì„ íƒëœ plateì— ì†Œí™˜ìˆ˜ê°€ ì—†ìŠµë‹ˆë‹¤.");
+            return null;
+        }
+
+        if (IsValidSpecialAttackIndex(attakingSummon, buttonIndex))
+        {
+            SpecialAttackInfo = new SpecialAttackInfo(attakingSummon.getSpecialAttackStrategy()[buttonIndex], buttonIndex);
+        }
+        return attakingSummon; //ìƒíƒœì°½ì— ìžˆëŠ” ì†Œí™˜ìˆ˜ë¥¼ ë°˜í™˜
     }
 
-    // Æ¯¼ö °ø°Ý Ã³¸® ¸Þ¼­µå
+    // íŠ¹ìˆ˜ ê³µê²© ì²˜ë¦¬ ë©”ì„œë“œ
     public void SpecialAttackLogic(Summon attackSummon, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer = false)
     {
         if (attackSummon == null)
         {
-            Debug.Log("¼±ÅÃµÈ plate¿¡ ¼ÒÈ¯¼ö°¡ ¾ø½À´Ï´Ù.");
+            Debug.Log("ì„ íƒëœ plateì— ì†Œí™˜ìˆ˜ê°€ ì—†ìŠµë‹ˆë‹¤.");
             return;
         }
 
-        // Æ¯¼ö °ø°Ý ¹è¿­ÀÇ ¹üÀ§¸¦ È®ÀÎÇÏ¿© ÀÎµ¦½º°¡ À¯È¿ÇÑÁö °ËÁõ
+        // íŠ¹ìˆ˜ ê³µê²© ë°°ì—´ì˜ ë²”ìœ„ë¥¼ í™•ì¸í•˜ì—¬ ì¸ë±ìŠ¤ê°€ ìœ íš¨í•œì§€ ê²€ì¦
         if (!IsValidSpecialAttackIndex(attackSummon, selectSpecialAttackIndex))
         {
-            Debug.LogError("À¯È¿ÇÏÁö ¾ÊÀº Æ¯¼ö °ø°Ý ÀÎµ¦½ºÀÔ´Ï´Ù. ÀÎµ¦½º: " + selectSpecialAttackIndex);
+            Debug.LogError("ìœ íš¨í•˜ì§€ ì•Šì€ íŠ¹ìˆ˜ ê³µê²© ì¸ë±ìŠ¤ìž…ë‹ˆë‹¤. ì¸ë±ìŠ¤: " + selectSpecialAttackIndex);
             return;
         }
 
-        // »ç¿ë °¡´ÉÇÑ Æ¯¼ö °ø°ÝÀ» ¹è¿­ ÀÎµ¦½º·Î °¡Á®¿È
+        // ì‚¬ìš© ê°€ëŠ¥í•œ íŠ¹ìˆ˜ ê³µê²©ì„ ë°°ì—´ ì¸ë±ìŠ¤ë¡œ ê°€ì ¸ì˜´
         IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy()[selectSpecialAttackIndex];
 
-        // °ø°Ý Å¸ÀÔº°·Î ·ÎÁ÷ ¼öÇà
+        // ê³µê²© íƒ€ìž…ë³„ë¡œ ë¡œì§ ìˆ˜í–‰
         if (attackStrategy is TargetedAttackStrategy targetedAttack)
         {
             attackSummon.attackSound.Play();
@@ -71,7 +82,7 @@ public class BattleController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("¾Ë ¼ö ¾ø´Â °ø°Ý Àü·«ÀÔ´Ï´Ù.");
+            Debug.LogWarning("ì•Œ ìˆ˜ ì—†ëŠ” ê³µê²© ì „ëžµìž…ë‹ˆë‹¤.");
         }
 
         ResetBattleSummonAndAttackInfo();
@@ -79,105 +90,110 @@ public class BattleController : MonoBehaviour
 
     private bool IsValidSpecialAttackIndex(Summon attackSummon, int selectSpecialAttackIndex)
     {
+        if (attackSummon == null || attackSummon.getSpecialAttackStrategy() == null)
+        {
+            return false;
+        }
+
         return selectSpecialAttackIndex >= 0 && selectSpecialAttackIndex < attackSummon.getSpecialAttackStrategy().Length;
     }
 
-    //Å¸°ÙÁöÁ¤ ·ÎÁ÷
+    //íƒ€ê²Ÿì§€ì • ë¡œì§
     private void HandleTargetedAttack(Summon attackSummon, TargetedAttackStrategy targetedAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
 
-        if (isPlayer) //ÇÃ·¹ÀÌ¾î
+        if (isPlayer) //í”Œë ˆì´ì–´
         {
-            //¾Æ±º ¹öÇÁ¿¡ ´ëÇÑ °ÍÀÏ°æ¿ì
+            //ì•„êµ° ë²„í”„ì— ëŒ€í•œ ê²ƒì¼ê²½ìš°
             if (targetedAttack.isBenefitEffect(targetedAttack))
             {
-                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ¾Æ±º ÇÃ·¹ÀÌÆ®¿¡ ÀÌ·Î¿î È¿°ú
-                Debug.Log($"ÇÃ·¹ÀÌ¾î°¡ ¼±ÅÃÇÑ ¾Æ±ºÀÇ ÇÃ·¹ÀÌÆ® {selectedPlateIndex}°¡ ÀÌ·Î¿î È¿°ú ´ë»óÀÔ´Ï´Ù.");
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì•„êµ° í”Œë ˆì´íŠ¸ì— ì´ë¡œìš´ íš¨ê³¼
+                Debug.Log($"í”Œë ˆì´ì–´ê°€ ì„ íƒí•œ ì•„êµ°ì˜ í”Œë ˆì´íŠ¸ {selectedPlateIndex}ê°€ ì´ë¡œìš´ íš¨ê³¼ ëŒ€ìƒìž…ë‹ˆë‹¤.");
                 return;
             }
-            //°ø°Ý¿¡ ´ëÇÑ °ÍÀÏ°æ¿ì
+            //ê³µê²©ì— ëŒ€í•œ ê²ƒì¼ê²½ìš°
             if (!IsValidPlateIndex(selectedPlateIndex, plateController.getEnermyPlates().Count))
             {
-                Debug.Log("À¯È¿ÇÑ ÀûÀÇ ÇÃ·¹ÀÌÆ® ÀÎµ¦½º°¡ ¼±ÅÃµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+                Debug.Log("ìœ íš¨í•œ ì ì˜ í”Œë ˆì´íŠ¸ ì¸ë±ìŠ¤ê°€ ì„ íƒë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
                 return;
             }
             else
             {
-                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // Àû ÇÃ·¹ÀÌÆ®¿¡ °ø°Ý
-                Debug.Log($"ÇÃ·¹ÀÌ¾î°¡ ¼±ÅÃÇÑ ÀûÀÇ ÇÃ·¹ÀÌÆ® {selectedPlateIndex}°¡ °ø°Ý ´ë»óÀÔ´Ï´Ù.");
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì  í”Œë ˆì´íŠ¸ì— ê³µê²©
+                Debug.Log($"í”Œë ˆì´ì–´ê°€ ì„ íƒí•œ ì ì˜ í”Œë ˆì´íŠ¸ {selectedPlateIndex}ê°€ ê³µê²© ëŒ€ìƒìž…ë‹ˆë‹¤.");
             }
         }
-        else //Àû
+        else //ì 
         {
             if (targetedAttack.isBenefitEffect(targetedAttack))
             {
-                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // Àû ÇÃ·¹ÀÌÆ®¿¡ ÀÌ·Î¿î È¿°ú
-                Debug.Log($"ÀûÀÌ ¼±ÅÃÇÑ ÀûÀÇ ÇÃ·¹ÀÌÆ® {selectedPlateIndex}°¡ ÀÌ·Î¿î È¿°ú ´ë»óÀÔ´Ï´Ù.");
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì  í”Œë ˆì´íŠ¸ì— ì´ë¡œìš´ íš¨ê³¼
+                Debug.Log($"ì ì´ ì„ íƒí•œ ì ì˜ í”Œë ˆì´íŠ¸ {selectedPlateIndex}ê°€ ì´ë¡œìš´ íš¨ê³¼ ëŒ€ìƒìž…ë‹ˆë‹¤.");
                 return;
             }
             if (!IsValidPlateIndex(selectedPlateIndex, plateController.getPlayerPlates().Count))
             {
-                Debug.Log("À¯È¿ÇÑ ÇÃ·¹ÀÌ¾îÀÇ ÇÃ·¹ÀÌÆ® ÀÎµ¦½º°¡ ¼±ÅÃµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+                Debug.Log("ìœ íš¨í•œ í”Œë ˆì´ì–´ì˜ í”Œë ˆì´íŠ¸ ì¸ë±ìŠ¤ê°€ ì„ íƒë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
                 return;
             }
             else
             {
-                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // Àû ÇÃ·¹ÀÌÆ®¿¡ °ø°Ý
-                Debug.Log($"ÀûÀÌ ¼±ÅÃÇÑ ÇÃ·¹ÀÌ¾îÀÇ ÇÃ·¹ÀÌÆ® {selectedPlateIndex}°¡ °ø°Ý ´ë»óÀÔ´Ï´Ù.");
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì  í”Œë ˆì´íŠ¸ì— ê³µê²©
+                Debug.Log($"ì ì´ ì„ íƒí•œ í”Œë ˆì´ì–´ì˜ í”Œë ˆì´íŠ¸ {selectedPlateIndex}ê°€ ê³µê²© ëŒ€ìƒìž…ë‹ˆë‹¤.");
             }
 
         }
     }
 
 
-    //ÀüÃ¼°ø°Ý ·ÎÁ÷
+    //ì „ì²´ê³µê²© ë¡œì§
     private void HandleAttackAll(Summon attackSummon, AttackAllEnemiesStrategy allAttackstrategy, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
 
         if (isPlayer)
         {
-            if(allAttackstrategy.isBenefitEffect(allAttackstrategy)) //Èú, º¸È£¸·, °­È­ ÀÎÁö ¹¯±â
+            if(allAttackstrategy.isBenefitEffect(allAttackstrategy)) //íž, ë³´í˜¸ë§‰, ê°•í™” ì¸ì§€ ë¬»ê¸°
             {
-                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ÀûÀÇ ÇÃ·¹ÀÌÆ®¿¡ °ø°Ý
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì ì˜ í”Œë ˆì´íŠ¸ì— ê³µê²©
             }
             else
             {
-                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ÀûÀÇ ÇÃ·¹ÀÌÆ®¿¡ °ø°Ý
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì ì˜ í”Œë ˆì´íŠ¸ì— ê³µê²©
             }
-            Debug.Log("¾Æ±ºÀÇ Æ¯¼ö ÀüÃ¼ °ø°ÝÀÌ ¼º°øÀûÀ¸·Î ¼öÇàµÇ¾ú½À´Ï´Ù.");
+            Debug.Log("ì•„êµ°ì˜ íŠ¹ìˆ˜ ì „ì²´ ê³µê²©ì´ ì„±ê³µì ìœ¼ë¡œ ìˆ˜í–‰ë˜ì—ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
-            if (allAttackstrategy.isBenefitEffect(allAttackstrategy)) //Èú, º¸È£¸·, °­È­ ÀÎÁö ¹¯±â
+            if (allAttackstrategy.isBenefitEffect(allAttackstrategy)) //íž, ë³´í˜¸ë§‰, ê°•í™” ì¸ì§€ ë¬»ê¸°
             {
-                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // Àû ÇÃ·¹ÀÌÆ®¿¡ ¹öÇÁ
+                attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì  í”Œë ˆì´íŠ¸ì— ë²„í”„
             }
             else
             {
-                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ®¿¡ °ø°Ý
+                attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ì— ê³µê²©
             }
-            Debug.Log("ÀûÀÇ Æ¯¼ö ÀüÃ¼ °ø°ÝÀÌ ¼º°øÀûÀ¸·Î ¼öÇàµÇ¾ú½À´Ï´Ù.");
+            Debug.Log("ì ì˜ íŠ¹ìˆ˜ ì „ì²´ ê³µê²©ì´ ì„±ê³µì ìœ¼ë¡œ ìˆ˜í–‰ë˜ì—ˆìŠµë‹ˆë‹¤.");
         }
     }
 
-    //±ÙÁ¢°ø°Ý ·ÎÁ÷
+    //ê·¼ì ‘ê³µê²© ë¡œì§
     private void HandleClosestEnemyAttack(Summon attackSummon, ClosestEnemyAttackStrategy closestAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
 
         if (isPlayer)
         {
-            attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ÀûÀÇ ÇÃ·¹ÀÌÆ®¿¡ °ø°Ý
-            Debug.Log("¾Æ±ºÀÇ Æ¯¼ö ±ÙÁ¢ °ø°ÝÀÌ ¼º°øÀûÀ¸·Î ¼öÇàµÇ¾ú½À´Ï´Ù.");
+            attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì ì˜ í”Œë ˆì´íŠ¸ì— ê³µê²©
+            Debug.Log("ì•„êµ°ì˜ íŠ¹ìˆ˜ ê·¼ì ‘ ê³µê²©ì´ ì„±ê³µì ìœ¼ë¡œ ìˆ˜í–‰ë˜ì—ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
-            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ÀûÀÌ ÇÃ·¹ÀÌ¾î ÇÃ·¹ÀÌÆ®¿¡ °ø°Ý
-            Debug.Log("ÀûÀÇ Æ¯¼ö ±ÙÁ¢ °ø°ÝÀÌ ¼º°øÀûÀ¸·Î ¼öÇàµÇ¾ú½À´Ï´Ù.");
+            attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // ì ì´ í”Œë ˆì´ì–´ í”Œë ˆì´íŠ¸ì— ê³µê²©
+            Debug.Log("ì ì˜ íŠ¹ìˆ˜ ê·¼ì ‘ ê³µê²©ì´ ì„±ê³µì ìœ¼ë¡œ ìˆ˜í–‰ë˜ì—ˆìŠµë‹ˆë‹¤.");
         }
     }
 
 
-    //À¯È¿ÇÑ ÇÃ·¹ÀÌÆ®ÀÎÁö °Ë»ç
+    //ìœ íš¨í•œ í”Œë ˆì´íŠ¸ì¸ì§€ ê²€ì‚¬
     private bool IsValidPlateIndex(int selectedPlateIndex, int plateCount)
     {
         return selectedPlateIndex >= 0 && selectedPlateIndex < plateCount;
@@ -194,10 +210,10 @@ public class BattleController : MonoBehaviour
     }
 
 
-    // SummonController¿¡ PlateController Á¢±Ù ¸Þ¼­µå Ãß°¡
+    // SummonControllerì— PlateController ì ‘ê·¼ ë©”ì„œë“œ ì¶”ê°€
     public PlateController GetPlateController()
     {
-        return plateController; // ÀÌ¹Ì SummonController¿¡¼­ PlateController¸¦ ÂüÁ¶ÇÏ°í ÀÖ´Ù°í °¡Á¤
+        return plateController; // ì´ë¯¸ SummonControllerì—ì„œ PlateControllerë¥¼ ì°¸ì¡°í•˜ê³  ìžˆë‹¤ê³  ê°€ì •
     }
 
     public SpecialAttackInfo getNowSpecialAttackInfo()

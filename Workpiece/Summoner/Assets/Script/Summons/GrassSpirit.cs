@@ -6,16 +6,16 @@ public class GrassSpirit : Summon
 {
     private void Awake()
     {
-        summonName = "GrassSpirit"; //ÀÌ¸§ Ç®Á¤·É
-        maxHP = 350; //ÃÖ´ëÃ¼·Â 200
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 80; //ÀÏ¹İ°ø°İ
+        summonName = "GrassSpirit"; //ì´ë¦„ í’€ì •ë ¹
+        maxHP = 350; //ìµœëŒ€ì²´ë ¥ 200
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 80; //ì¼ë°˜ê³µê²©
         heavyAttakPower = 110;
-        summonRank = SummonRank.Normal; // ÀÏ¹İ ¼ÒÈ¯¼ö
+        summonRank = SummonRank.Normal; // ì¼ë°˜ ì†Œí™˜ìˆ˜
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Heal, 0.1, 3) }; //ÃÖ´ë Ã¼·ÂÀÇ 0.1¸¸Å­ È¸º¹, ÄğÅ¸ÀÓ 3ÅÏ
+        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Heal, 0.1, 3) }; //ìµœëŒ€ ì²´ë ¥ì˜ 0.1ë§Œí¼ íšŒë³µ, ì¿¨íƒ€ì„ 3í„´
     }
 
 

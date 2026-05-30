@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
 {
-    private Vector3 targetPosition; // ÀÌµ¿ÇÒ ¸ñÇ¥ À§Ä¡
-    private bool isMoving; // ÀÌµ¿ ¿©ºÎ È®ÀÎ
-    private float moveSpeed; // ÀÌµ¿ ¼Óµµ
+    private Vector3 targetPosition; // ì´ë™í•  ëª©í‘œ ìœ„ì¹˜
+    private bool isMoving; // ì´ë™ ì—¬ë¶€ í™•ì¸
+    private float moveSpeed; // ì´ë™ ì†ë„
 
-    [Header("½Ã³ª¸®¿À¾À ÇÃ·¹ÀÌ¾î")]
+    [Header("ì‹œë‚˜ë¦¬ì˜¤ì”¬ í”Œë ˆì´ì–´")]
     [SerializeField] private GameObject enemy;
 
-    [Header("interRaction ÄÁÆ®·Ñ·¯")]
-    [SerializeField] private InteractionController interactionController; // InteractionEvent ¿¬°á
+    [Header("interRaction ì»¨íŠ¸ë¡¤ëŸ¬")]
+    [SerializeField] private InteractionController interactionController; // InteractionEvent ì—°ê²°
 
 
     void Update()
     {
-        // Ä³¸¯ÅÍ°¡ ¿òÁ÷ÀÌ°í ÀÖÀ» ¶§¸¸ ÀÌµ¿ Ã³¸®
+        // ìºë¦­í„°ê°€ ì›€ì§ì´ê³  ìˆì„ ë•Œë§Œ ì´ë™ ì²˜ë¦¬
         if (isMoving)
         {
             MoveToTarget();
@@ -25,27 +25,27 @@ public class EnemyMove : MonoBehaviour
     }
 
 
-    // ¸ñÇ¥ À§Ä¡¿Í ÀÌµ¿ ¼Óµµ¸¦ ¼³Á¤ÇÏ´Â ¸Ş¼­µå
+    // ëª©í‘œ ìœ„ì¹˜ì™€ ì´ë™ ì†ë„ë¥¼ ì„¤ì •í•˜ëŠ” ë©”ì„œë“œ
     public void CharacterMove(float distance, float speed)
     {
         interactionController.stopNextDialogue();
         targetPosition = enemy.transform.position + new Vector3(distance, 0f, 0f);
         moveSpeed = speed;
 
-        // ÀÌµ¿ ½ÃÀÛÇÏ¸é¼­ ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
+        // ì´ë™ ì‹œì‘í•˜ë©´ì„œ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
         isMoving = true;
         interactionController.stopNextDialogue();
     }
 
-    // Ä³¸¯ÅÍ¸¦ ¸ñÇ¥ À§Ä¡·Î ÀÌµ¿½ÃÅ°´Â ¸Ş¼­µå
+    // ìºë¦­í„°ë¥¼ ëª©í‘œ ìœ„ì¹˜ë¡œ ì´ë™ì‹œí‚¤ëŠ” ë©”ì„œë“œ
     public void MoveToTarget()
     {
         if (!isMoving) return;
 
-        // ÇöÀç À§Ä¡¿¡¼­ ¸ñÇ¥ À§Ä¡±îÁö ÀÏÁ¤ÇÑ ¼Óµµ·Î ÀÌµ¿
+        // í˜„ì¬ ìœ„ì¹˜ì—ì„œ ëª©í‘œ ìœ„ì¹˜ê¹Œì§€ ì¼ì •í•œ ì†ë„ë¡œ ì´ë™
         enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, targetPosition, moveSpeed * Time.deltaTime);
 
-        // ¸ñÇ¥ À§Ä¡¿¡ µµ´ŞÇÏ¸é ÀÌµ¿ ÁßÁö
+        // ëª©í‘œ ìœ„ì¹˜ì— ë„ë‹¬í•˜ë©´ ì´ë™ ì¤‘ì§€
         if (Vector3.Distance(enemy.transform.position, targetPosition) < 0.01f)
         {
             isMoving = false;

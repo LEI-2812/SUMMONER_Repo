@@ -1,30 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public enum StatusType
 {
-    None, //´Ü¼ø °ø°İ
-    Stun, //È¥¶õ
-    Poison, //Áßµ¶
-    Heal, //Èú
-    Curse, //ÀúÁÖ
-    LifeDrain, //ÈíÇ÷
-    Burn, //È­»ó
-    Shield, //º¸È£¸·
-    Upgrade, //°­È­
-    OnceInvincibility //1È¸ ¹«Àû
+    None, //ë‹¨ìˆœ ê³µê²©
+    Stun, //í˜¼ë€
+    Poison, //ì¤‘ë…
+    Heal, //í
+    Curse, //ì €ì£¼
+    LifeDrain, //í¡í˜ˆ
+    Burn, //í™”ìƒ
+    Shield, //ë³´í˜¸ë§‰
+    Upgrade, //ê°•í™”
+    OnceInvincibility //1íšŒ ë¬´ì 
 }
 
 [System.Serializable]
 public class StatusEffect
 {
     public StatusType statusType { get; private set; }
-    public int effectTime { get; set; } // Áö¼Ó ½Ã°£
-    public double damagePerTurn { get; set; } // ¸Å ÅÏ¸¶´Ù ÁÙ µ¥¹ÌÁö
+    public int effectTime { get; set; } // ì§€ì† ì‹œê°„
+    public double damagePerTurn { get; set; } // ë§¤ í„´ë§ˆë‹¤ ì¤„ ë°ë¯¸ì§€
 
-    private Summon attacker; // °ø°İÀÚ
+    private Summon attacker; // ê³µê²©ì
 
     private bool applyOnce = false;
 
@@ -39,51 +38,51 @@ public class StatusEffect
     }
 
 
-    //µ¤¾î¾º¾îÁö´Â °Í¿¡ ´ëÇØ¼­¸¸ ³Ö±â
+    //ë®ì–´ì”Œì–´ì§€ëŠ” ê²ƒì— ëŒ€í•´ì„œë§Œ ë„£ê¸°
     public void ApplyStatus(Summon target)
     {
         switch (statusType)
         {
-            case StatusType.Stun: //°ø°İ ºÒ°¡´É
+            case StatusType.Stun: //ê³µê²© ë¶ˆê°€ëŠ¥
                 target.setIsAttack(false);
                 break;
 
-            case StatusType.Poison: // Áßµ¶
-                target.takeDamage(damagePerTurn); // Áï½Ã µ¥¹ÌÁö Àû¿ë
-                effectTime -= 1; //µ¥¹ÌÁö¸¦ ÀÔÈ÷ÀÚ¸¶ÀÚ ÅÏ ÇÏ³ª¸¦ ÁÙÀÓ.
+            case StatusType.Poison: // ì¤‘ë…
+                target.takeDamage(damagePerTurn); // ì¦‰ì‹œ ë°ë¯¸ì§€ ì ìš©
+                effectTime -= 1; //ë°ë¯¸ì§€ë¥¼ ì…íˆìë§ˆì í„´ í•˜ë‚˜ë¥¼ ì¤„ì„.
                 break;
 
-            case StatusType.Burn: //È­»ó
-                target.takeDamage(damagePerTurn); // Áï½Ã µ¥¹ÌÁö Àû¿ë
-                effectTime -= 1 ; //µ¥¹ÌÁö¸¦ ÀÔÈ÷ÀÚ¸¶ÀÚ ÅÏ ÇÏ³ª¸¦ ÁÙÀÓ.
+            case StatusType.Burn: //í™”ìƒ
+                target.takeDamage(damagePerTurn); // ì¦‰ì‹œ ë°ë¯¸ì§€ ì ìš©
+                effectTime -= 1 ; //ë°ë¯¸ì§€ë¥¼ ì…íˆìë§ˆì í„´ í•˜ë‚˜ë¥¼ ì¤„ì„.
                 break;
 
-            case StatusType.LifeDrain: //ÈíÇ÷
-                if (target != null) //Áï½Ã »ç¿ë
+            case StatusType.LifeDrain: //í¡í˜ˆ
+                if (target != null) //ì¦‰ì‹œ ì‚¬ìš©
                 {
                     target.takeDamage(damagePerTurn);
                     attacker.Heal(damagePerTurn);
-                    Debug.Log($"{target.getSummonName()}¿¡°Ô¼­ {damagePerTurn} ¸¸Å­ ÈíÇ÷ÇÕ´Ï´Ù. ÇöÀçÃ¼·Â: {attacker.getNowHP()}");
+                    Debug.Log($"{target.getSummonName()}ì—ê²Œì„œ {damagePerTurn} ë§Œí¼ í¡í˜ˆí•©ë‹ˆë‹¤. í˜„ì¬ì²´ë ¥: {attacker.getNowHP()}");
                 }
                 else
                 {
-                    Debug.Log("Å¸°ÙÀÌ ¾ø°Å³ª Á×¾î¼­ ÈíÇ÷ÀÌ ¾ÈµË´Ï´Ù.");
+                    Debug.Log("íƒ€ê²Ÿì´ ì—†ê±°ë‚˜ ì£½ì–´ì„œ í¡í˜ˆì´ ì•ˆë©ë‹ˆë‹¤.");
                 }
                 break;
 
-            case StatusType.Shield: //½¯µå
+            case StatusType.Shield: //ì‰´ë“œ
                 target.AddShield(damagePerTurn);
                 break;
 
-            case StatusType.Upgrade: //°­È­
+            case StatusType.Upgrade: //ê°•í™”
                 target.UpgradeAttackPower(damagePerTurn);
                 break;
-            case StatusType.Curse: //ÀúÁÖ
+            case StatusType.Curse: //ì €ì£¼
                 target.Cursed(damagePerTurn);
                 break;
 
             default:
-                Debug.Log("Á¤ÀÇµÇÁö ¾ÊÀº »óÅÂÀÌ»óÀÔ´Ï´Ù.");
+                Debug.Log("ì •ì˜ë˜ì§€ ì•Šì€ ìƒíƒœì´ìƒì…ë‹ˆë‹¤.");
                 break;
         }
     }
@@ -113,6 +112,6 @@ public class StatusEffect
 
     public void setApplyOnce()
     {
-        applyOnce = true; // ÇÑ ¹ø¸¸ Àû¿ëµÇµµ·Ï Ç¥½Ã
+        applyOnce = true; // í•œ ë²ˆë§Œ ì ìš©ë˜ë„ë¡ í‘œì‹œ
     }
 }

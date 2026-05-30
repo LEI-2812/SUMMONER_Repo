@@ -1,0 +1,11 @@
+﻿"기능","우선순위","테스트","상태","결과","다음조치","파일"
+"CSV 대사 파싱","높음","CSV 로드","대기","아직 QA 전","DialogueCsvParse 테스트 작성","DialogueParser.cs"
+"CSV 대사 파싱","높음","대사 범위 선택","대기","아직 QA 전","storyNum별 범위 테스트","StoryStage.cs"
+"대사 진행","높음","다음 대사 출력","대기","아직 QA 전","InteractionController 흐름 검사","InteractionController.cs"
+"대사 진행","중간","클릭 입력","대기","아직 QA 전","클릭으로 다음 줄 진행 확인","Stage*_Controller.cs"
+"대사 진행","중간","Space 입력","대기","아직 QA 전","Space로 다음 줄 진행 확인","Stage*_Controller.cs"
+"Stage 연출","중간","Stage1 연출","대기","아직 QA 전","Stage1 먼저 기준 테스트","Stage1_Controller.cs"
+"Stage 연출","중간","캐릭터 이동","대기","아직 QA 전","이동 중 입력 무시 확인","PlayerMove.cs"
+"스토리 종료","높음","전투 씬 이동","대기","아직 QA 전","Fight Screen_NStage 이동 확인","InteractionController.cs"
+"스토리 종료","중간","Epilogue 종료","대기","아직 QA 전","Thank Screen 이동 확인","InteractionController.cs"
+

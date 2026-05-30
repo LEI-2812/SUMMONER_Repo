@@ -8,41 +8,41 @@ using UnityEngine.UI;
 
 public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandler
 {
-    [Header("Ç¥ÇöÇÒ ¿ÀºêÁ§Æ®µé")]
+    [Header("í‘œí˜„í•  ì˜¤ë¸Œì íŠ¸ë“¤")]
     public GameObject angryImage;
     public GameObject characterFox;
     public GameObject dialogueBox;
 
-    private int scenarioFlowCount = 0; //´ë»ç Ä«¿îÆ®
+    private int scenarioFlowCount = 0; //ëŒ€ì‚¬ ì¹´ìš´íŠ¸
 
-    //ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌ¼Ç
+    //í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´ì…˜
     [SerializeField] private Animator playerAni;
     [SerializeField] private Animator foxAni;
 
-    [Header("ÄÁÆ®·Ñ·¯")]
+    [Header("ì»¨íŠ¸ë¡¤ëŸ¬")]
     [SerializeField] private InteractionController interactionController;
     [SerializeField] private PlayerMove playerMove;
     [SerializeField] private FoxMove foxMove;
 
-    [Header("È¿°úÀ½")]
+    [Header("íš¨ê³¼ìŒ")]
     [SerializeField] private AudioSource angrySound;
 
     private int isSameDialgueIndex = -1;
 
-    void Awake() //¿©±â¿¡¼­ ¿ÀºêÁ§Æ®µéÀÇ ÃÊ±â ¼³Á¤À» ÇØÁØ´Ù.
+    void Awake() //ì—¬ê¸°ì—ì„œ ì˜¤ë¸Œì íŠ¸ë“¤ì˜ ì´ˆê¸° ì„¤ì •ì„ í•´ì¤€ë‹¤.
     {
         angryImage.SetActive(false);
         characterFox.SetActive(false);
     }
 
-    void Start() //Start¿¡¼­ Ã³À½ ½ÇÇàÇÒ ¸Ş¼Òµå³ª ¿ÀºêÁ§Æ®¸¦ ÁöÁ¤ÇØÁÖµµ·Ï ÇÑ´Ù.
+    void Start() //Startì—ì„œ ì²˜ìŒ ì‹¤í–‰í•  ë©”ì†Œë“œë‚˜ ì˜¤ë¸Œì íŠ¸ë¥¼ ì§€ì •í•´ì£¼ë„ë¡ í•œë‹¤.
     {
         scenarioFlow();
     }
 
     void Update()
     {
-        // À¯ÀúÀÇ ÀÔ·ÂÀ¸·Î ´ë»ç ³Ñ±â±â (¿¹: ½ºÆäÀÌ½º¹Ù)
+        // ìœ ì €ì˜ ì…ë ¥ìœ¼ë¡œ ëŒ€ì‚¬ ë„˜ê¸°ê¸° (ì˜ˆ: ìŠ¤í˜ì´ìŠ¤ë°”)
         if (Input.GetKeyDown(KeyCode.Space))
         {
             OnClickDialogue();
@@ -51,7 +51,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
 
     public void scenarioFlow()
     {
-        if (checkCSVDialogueID()) //´ÙÀ½ ´ë»çÀÇ ID°¡ ÀÌÀü ID¿Í °°À¸¸é ±×³É ´ë»ç¸¸ Ãâ·Â½ÃÅ´.
+        if (checkCSVDialogueID()) //ë‹¤ìŒ ëŒ€ì‚¬ì˜ IDê°€ ì´ì „ IDì™€ ê°™ìœ¼ë©´ ê·¸ëƒ¥ ëŒ€ì‚¬ë§Œ ì¶œë ¥ì‹œí‚´.
         {
             return;
         }
@@ -60,62 +60,62 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         {
             case 1: //  34 ~ 40
                 Debug.Log(scenarioFlowCount);
-                //  (¿À¸¥ÂÊÀ¸·Î °É¾î ³ª°£´Ù.)
+                //  (ì˜¤ë¥¸ìª½ìœ¼ë¡œ ê±¸ì–´ ë‚˜ê°„ë‹¤.)
                 offDialgueBox();
-                playerMove.CharacterMove(860f, 400f); // xÁÂÇ¥·Î +860 ÀÌµ¿, ¼Óµµ 200
+                playerMove.CharacterMove(860f, 400f); // xì¢Œí‘œë¡œ +860 ì´ë™, ì†ë„ 200
                 break;
             case 2:
                 Debug.Log(scenarioFlowCount);
-                //  ½£ÀÇ ¾ÈÂÊÀ¸·Î µé¾î¿Ô³×. Áöµµ »ó¿¡¼­´Â ÀÌ ½£À» Áö³ª¾ß ÇÑ´Ù´øµ¥.
+                //  ìˆ²ì˜ ì•ˆìª½ìœ¼ë¡œ ë“¤ì–´ì™”ë„¤. ì§€ë„ ìƒì—ì„œëŠ” ì´ ìˆ²ì„ ì§€ë‚˜ì•¼ í•œë‹¤ë˜ë°.
                 onDialgueBox();
                 break;
             case 3:
                 Debug.Log(scenarioFlowCount);
-                //  ½½½½ ¸ÔÀ» °Íµµ ¶³¾îÁ®°¡¼­ Á» À§ÅÂ·Î¿î°É.
+                //  ìŠ¬ìŠ¬ ë¨¹ì„ ê²ƒë„ ë–¨ì–´ì ¸ê°€ì„œ ì¢€ ìœ„íƒœë¡œìš´ê±¸.
                 break;
             case 4:
                 Debug.Log(scenarioFlowCount);
-                //  (¼ÒÈ¯¼úÀ» ÁøÇàÇÏ°í, ¿©¿ì°¡ ³ªÅ¸³­´Ù.)
+                //  (ì†Œí™˜ìˆ ì„ ì§„í–‰í•˜ê³ , ì—¬ìš°ê°€ ë‚˜íƒ€ë‚œë‹¤.)
                 showBlueEffect();
                 offDialgueBox();
                 break;
             case 5:
                 Debug.Log(scenarioFlowCount);
-                /*  *Âì* ´Á´ë¿´À¸¸é ´õ ÁÁ¾ÒÀ»ÅÙµ¥.
-                 *  ³Ê, °¡¼­ °í±â Á» »ç³ÉÇØ¿Í. ÀÌ¿ÕÀÌ¸é Å« ³ğÀ¸·Î.
+                /*  *ì¯§* ëŠ‘ëŒ€ì˜€ìœ¼ë©´ ë” ì¢‹ì•˜ì„í…ë°.
+                 *  ë„ˆ, ê°€ì„œ ê³ ê¸° ì¢€ ì‚¬ëƒ¥í•´ì™€. ì´ì™•ì´ë©´ í° ë†ˆìœ¼ë¡œ.
                  */
                 onDialgueBox();
                 break;
             case 6:
                 Debug.Log(scenarioFlowCount);
-                //  (¼ÒÈ¯¼ö '¿©¿ì'°¡ È­¸¦ ³½´Ù.)
+                //  (ì†Œí™˜ìˆ˜ 'ì—¬ìš°'ê°€ í™”ë¥¼ ë‚¸ë‹¤.)
                 showAngryEffect();
                 angrySound.Play();
                 offDialgueBox();
                 break;
             case 7:
                 Debug.Log(scenarioFlowCount);
-                //  ¾îÂ¿ ¼ö ¾øÀİ¾Æ. ³»°¡ ¸Ô°í »ì¾Æ¾ßÁö ³ÊÈñµµ ³ª¿Ã ¼ö ÀÖ´Ù°í.
+                //  ì–´ì©” ìˆ˜ ì—†ì–ì•„. ë‚´ê°€ ë¨¹ê³  ì‚´ì•„ì•¼ì§€ ë„ˆí¬ë„ ë‚˜ì˜¬ ìˆ˜ ìˆë‹¤ê³ .
                 onDialgueBox();
                 break;
         }
     }
 
-    // ´ë»ç ID¸¦ ºñ±³ÇÏ´Â ¸Ş¼Òµå
+    // ëŒ€ì‚¬ IDë¥¼ ë¹„êµí•˜ëŠ” ë©”ì†Œë“œ
     private bool checkCSVDialogueID()
     {
-        // InteractionController¿¡¼­ ÇöÀç ´ë»ç CSV ID °¡Á®¿À±â
+        // InteractionControllerì—ì„œ í˜„ì¬ ëŒ€ì‚¬ CSV ID ê°€ì ¸ì˜¤ê¸°
         int currentDialogueIndex = interactionController.getCurrentDialogueIndex();
 
-        // ÇöÀç ´ë»çÀÇ ID°¡ ÀÌÀü ´ë»çÀÇ ID¿Í °°À¸¸é ´ë»ç¸¸ ÁøÇàÇÏ°í Á¾·á
+        // í˜„ì¬ ëŒ€ì‚¬ì˜ IDê°€ ì´ì „ ëŒ€ì‚¬ì˜ IDì™€ ê°™ìœ¼ë©´ ëŒ€ì‚¬ë§Œ ì§„í–‰í•˜ê³  ì¢…ë£Œ
         if (currentDialogueIndex == isSameDialgueIndex)
         {
             //interactionController.ShowNextLine();
             return true;
         }
-        // ´ë»çÀÇ ID°¡ º¯°æµÈ °æ¿ì¸¸ ÀÌµ¿ Ã³¸®
-        isSameDialgueIndex = currentDialogueIndex; // ÀÌÀü ´ë»ç ID ¾÷µ¥ÀÌÆ®
-        // ½ºÀ§Ä¡¹® ½ÇÇà Àü scenarioFlow Áõ°¡
+        // ëŒ€ì‚¬ì˜ IDê°€ ë³€ê²½ëœ ê²½ìš°ë§Œ ì´ë™ ì²˜ë¦¬
+        isSameDialgueIndex = currentDialogueIndex; // ì´ì „ ëŒ€ì‚¬ ID ì—…ë°ì´íŠ¸
+        // ìŠ¤ìœ„ì¹˜ë¬¸ ì‹¤í–‰ ì „ scenarioFlow ì¦ê°€
         nextScenarioFlow();
 
         return false;
@@ -147,7 +147,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     }
     private void nextScenarioFlow()
     {
-        scenarioFlowCount++; //´ÙÀ½ ´ë»ç ¹× ½Ã³ª¸®¿À ÁøÇàÀ» À§ÇØ °ª ¿Ã¸®±â
+        scenarioFlowCount++; //ë‹¤ìŒ ëŒ€ì‚¬ ë° ì‹œë‚˜ë¦¬ì˜¤ ì§„í–‰ì„ ìœ„í•´ ê°’ ì˜¬ë¦¬ê¸°
     }
 
     private void onDialgueBox()
@@ -160,7 +160,7 @@ public class Stage3_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         dialogueBox.SetActive(false);
     }
     public void OnClickDialogue()
-    {   //ÇÃ·¹ÀÌ¾î°¡ ¿òÁ÷ÀÌÁö ¾Ê´Â »óÈ²ÀÏ¶§¸¸ Å¬¸¯ Çã¿ë
+    {   //í”Œë ˆì´ì–´ê°€ ì›€ì§ì´ì§€ ì•ŠëŠ” ìƒí™©ì¼ë•Œë§Œ í´ë¦­ í—ˆìš©
         if (!playerMove.getIsMoving())
         {
             interactionController.ShowNextLine();

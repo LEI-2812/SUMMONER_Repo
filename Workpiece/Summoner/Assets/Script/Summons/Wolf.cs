@@ -10,21 +10,21 @@ public class Wolf : Summon
         summonName = "Wolf";
         maxHP = 350;
         nowHP = maxHP;
-        attackPower = 50; //ÀÏ¹İ°ø°İ
+        attackPower = 50; //ì¼ë°˜ê³µê²©
         heavyAttakPower = 30;
-        summonRank = SummonRank.High; // Áß±Ş ¼ÒÈ¯¼ö
+        summonRank = SummonRank.High; // ì¤‘ê¸‰ ì†Œí™˜ìˆ˜
         summonType = SummonType.Wolf;
         ApplayMultiple(multiple);
 
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1); //±ÙÁ¢°ø°İ
-        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.None, heavyAttakPower, 2) };//ÀüÃ¼°ø°İ, 25µ¥¹ÌÁö, ÄğÅ¸ÀÓ2ÅÏ
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1); //ê·¼ì ‘ê³µê²©
+        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.None, heavyAttakPower, 2) };//ì „ì²´ê³µê²©, 25ë°ë¯¸ì§€, ì¿¨íƒ€ì„2í„´
     }
 
     public override void ApplayMultiple(double multiple)
     {
         maxHP = (int)(maxHP * multiple);
         nowHP = maxHP;
-        attackPower = (int)(attackPower * multiple); //ÀÏ¹İ°ø°İ
+        attackPower = (int)(attackPower * multiple); //ì¼ë°˜ê³µê²©
         heavyAttakPower = (int)(heavyAttakPower * multiple);
     }
 

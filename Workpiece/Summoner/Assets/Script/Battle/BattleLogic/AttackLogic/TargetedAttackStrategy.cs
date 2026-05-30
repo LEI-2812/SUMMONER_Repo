@@ -6,11 +6,11 @@ using static UnityEngine.GraphicsBuffer;
 
 public class TargetedAttackStrategy : IAttackStrategy
 {
-    private StatusType statusType; // »óÅÂ Å¸ÀÔ (°ø°ÝÀÎÁö ÈúÀÎÁö)
-    private double damage; //µ¥¹ÌÁö
-    private int cooltime; //ÄðÅ¸ÀÓ
-    private int currentCooldown; //ÇöÀç ÄðÅ¸ÀÓ ÁøÇà½Ã°£
-    private int statusTime; //Áö¼Ó½Ã°£
+    private StatusType statusType; // ìƒíƒœ íƒ€ìž… (ê³µê²©ì¸ì§€ ížì¸ì§€)
+    private double damage; //ë°ë¯¸ì§€
+    private int cooltime; //ì¿¨íƒ€ìž„
+    private int currentCooldown; //í˜„ìž¬ ì¿¨íƒ€ìž„ ì§„í–‰ì‹œê°„
+    private int statusTime; //ì§€ì†ì‹œê°„
     public TargetedAttackStrategy(StatusType statusType, double damage, int cooltime, int statusTime=0)
     {
         this.statusType = statusType;
@@ -28,54 +28,54 @@ public class TargetedAttackStrategy : IAttackStrategy
             switch (statusType)
             {
                 case StatusType.Heal:
-                    double healAmount = (int)target.getMaxHP() * 0.3; // ÃÖ´ë Ã¼·ÂÀÇ 30%¸¸Å­ È¸º¹
-                    healAmount = Math.Floor(healAmount); // ¼Ò¼öÁ¡ ¾Æ·¡¸¦ ¹ö¸²
+                    double healAmount = (int)target.getMaxHP() * 0.3; // ìµœëŒ€ ì²´ë ¥ì˜ 30%ë§Œí¼ íšŒë³µ
+                    healAmount = Math.Floor(healAmount); // ì†Œìˆ˜ì  ì•„ëž˜ë¥¼ ë²„ë¦¼
                     target.Heal(healAmount);
-                    Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}À»(¸¦) {healAmount}¸¸Å­ Ä¡À¯Çß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì„(ë¥¼) {healAmount}ë§Œí¼ ì¹˜ìœ í–ˆìŠµë‹ˆë‹¤.");
                     break;
                 case StatusType.None:
-                    Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}À»(¸¦) °­·ÂÇÏ°Ô °ø°ÝÇÕ´Ï´Ù.");
-                    target.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // °­·ÂÇÑ °ø°Ý
+                    Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì„(ë¥¼) ê°•ë ¥í•˜ê²Œ ê³µê²©í•©ë‹ˆë‹¤.");
+                    target.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // ê°•ë ¥í•œ ê³µê²©
                     break;
-                case StatusType.LifeDrain: //ÈíÇ÷
+                case StatusType.LifeDrain: //í¡í˜ˆ
                     double lifeDrainDamage = target.getMaxHP() * 0.1;
                     StatusEffect drainEffect = new StatusEffect(StatusType.LifeDrain, statusTime, lifeDrainDamage, attacker);
                     target.ApplyStatusEffect(drainEffect);
-                    Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}¿¡°Ô ÈíÇ÷À» »ç¿ëÇÏ¿© {lifeDrainDamage} µ¥¹ÌÁö¸¦ ÀÔÈ÷°í È¸º¹ÇÕ´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì—ê²Œ í¡í˜ˆì„ ì‚¬ìš©í•˜ì—¬ {lifeDrainDamage} ë°ë¯¸ì§€ë¥¼ ìž…ížˆê³  íšŒë³µí•©ë‹ˆë‹¤.");
                     break;
-                case StatusType.Shield: //½¯µå
+                case StatusType.Shield: //ì‰´ë“œ
                     target = attacker;
                     StatusEffect shieldEffect = new StatusEffect(StatusType.Shield, statusTime, damage);
                     target.ApplyStatusEffect(shieldEffect);
-                    Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}¿¡°Ô {damage} ¸¸Å­ º¸È£¸·À» ºÎ¿©ÇÕ´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì—ê²Œ {damage} ë§Œí¼ ë³´í˜¸ë§‰ì„ ë¶€ì—¬í•©ë‹ˆë‹¤.");
                     break;
-                case StatusType.Upgrade: //°­È­
+                case StatusType.Upgrade: //ê°•í™”
                     double upgradeAttackPower = attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage();
                     StatusEffect upgradeEffect = new StatusEffect(StatusType.Upgrade, statusTime, upgradeAttackPower);
                     target.ApplyStatusEffect(upgradeEffect);
-                    Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}¿¡°Ô °ø°Ý·Â {(int)(target.getAttackPower() * upgradeAttackPower)} ¸¸Å­ »ó½Â ½ÃÄ×½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì—ê²Œ ê³µê²©ë ¥ {(int)(target.getAttackPower() * upgradeAttackPower)} ë§Œí¼ ìƒìŠ¹ ì‹œì¼°ìŠµë‹ˆë‹¤.");
                     break;
-                case StatusType.OnceInvincibility: //¹«Àû
-                    target = attacker; //ÀÚ±âÀÚ½ÅÀÌ ´ë»ó
-                    target.setOnceInvincibility(true); //1¹ø ¹«Àû È°¼ºÈ­
+                case StatusType.OnceInvincibility: //ë¬´ì 
+                    target = attacker; //ìžê¸°ìžì‹ ì´ ëŒ€ìƒ
+                    target.setOnceInvincibility(true); //1ë²ˆ ë¬´ì  í™œì„±í™”
                     break;
-                case StatusType.Curse: //ÀúÁÖ
-                    double curseAttackPower =  attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage(); //´ë»ó °ø°Ý·Â 20% °¨¼Ò
-                    Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}¿¡°Ô  °ø°Ý·Â {curseAttackPower * 100} ¸¸Å­ ÀúÁÖ¸¦ °É¾ú½À´Ï´Ù.");
+                case StatusType.Curse: //ì €ì£¼
+                    double curseAttackPower =  attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage(); //ëŒ€ìƒ ê³µê²©ë ¥ 20% ê°ì†Œ
+                    Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì—ê²Œ  ê³µê²©ë ¥ {curseAttackPower * 100} ë§Œí¼ ì €ì£¼ë¥¼ ê±¸ì—ˆìŠµë‹ˆë‹¤.");
                     StatusEffect curseEffect = new StatusEffect(StatusType.Curse, statusTime, curseAttackPower);
                     target.ApplyStatusEffect(curseEffect);
-                    target.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // °­·ÂÇÑ °ø°Ý
+                    target.takeDamage(attacker.getSpecialAttackStrategy()[Arrayindex].getSpecialDamage()); // ê°•ë ¥í•œ ê³µê²©
                     break;
-                case StatusType.Stun: //È¥¶õ
+                case StatusType.Stun: //í˜¼ëž€
                     StatusEffect stunEffect = new StatusEffect(StatusType.Stun, statusTime);
                     target.ApplyStatusEffect(stunEffect);
-                    Debug.Log($"{attacker.getSummonName()}ÀÌ(°¡) {target.getSummonName()}¿¡°Ô È¥¶õÀ» Àû¿ëÇß½À´Ï´Ù.");
+                    Debug.Log($"{attacker.getSummonName()}ì´(ê°€) {target.getSummonName()}ì—ê²Œ í˜¼ëž€ì„ ì ìš©í–ˆìŠµë‹ˆë‹¤.");
                     break;
             }
         }
         else
         {
-            Debug.Log("¼±ÅÃµÈ plate¿¡ ´ë»óÀÌ ¾ø½À´Ï´Ù.");
+            Debug.Log("ì„ íƒëœ plateì— ëŒ€ìƒì´ ì—†ìŠµë‹ˆë‹¤.");
         }
     }
 
@@ -101,10 +101,10 @@ public class TargetedAttackStrategy : IAttackStrategy
 
     public int getCurrentCooldown() => currentCooldown;
 
-    // ÄðÅ¸ÀÓÀ» ÃÊ±âÈ­ (½ºÅ³ »ç¿ë ÈÄ Àû¿ë)
+    // ì¿¨íƒ€ìž„ì„ ì´ˆê¸°í™” (ìŠ¤í‚¬ ì‚¬ìš© í›„ ì ìš©)
     public void ApplyCooldown() => currentCooldown = cooltime;
 
-    // ÅÏ Á¾·á ½Ã ÄðÅ¸ÀÓ °¨¼Ò
+    // í„´ ì¢…ë£Œ ì‹œ ì¿¨íƒ€ìž„ ê°ì†Œ
     public void ReduceCooldown()
     {
         if (currentCooldown > 0)

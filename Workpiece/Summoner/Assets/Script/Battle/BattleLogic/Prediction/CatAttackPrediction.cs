@@ -10,39 +10,39 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
         return SummonType.Cat;
     }
 
-    //°í¾çÀÌ ¿¹Ãø°ø°İ
+    //ê³ ì–‘ì´ ì˜ˆì¸¡ê³µê²©
     public AttackPrediction getAttackPrediction(Summon cat, int catPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
-        // ±âº»°ª ¼³Á¤: ÀÏ¹İ °ø°İ 50%, Æ¯¼ö °ø°İ 50%
+        // ê¸°ë³¸ê°’ ì„¤ì •: ì¼ë°˜ ê³µê²© 50%, íŠ¹ìˆ˜ ê³µê²© 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = getClosestEnermyIndex(enermyPlates);
         AttackPrediction attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
-        // ÀÏ¹İ °ø°İÀ¸·Î Ã³Ä¡°¡ °¡´ÉÇÏ¸é ÀÏ¹İ °ø°İ È®·ü 10% Áõ°¡
+        // ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ì²˜ì¹˜ê°€ ê°€ëŠ¥í•˜ë©´ ì¼ë°˜ ê³µê²© í™•ë¥  10% ì¦ê°€
         if (getIndexOfNormalAttackCanKill(cat, enermyPlates) != -1)
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "°í¾çÀÌ ÀÏ¹İ°ø°İÀ¸·Î Ã³Ä¡ °¡´É");
-            attackIndex = getIndexOfNormalAttackCanKill(cat, enermyPlates); //ÀÏ¹İ °ø°İÀ¸·Î Ã³Ä¡°¡´ÉÇÑ ÀÎµ¦½º ¹Ş±â
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "ê³ ì–‘ì´ ì¼ë°˜ê³µê²©ìœ¼ë¡œ ì²˜ì¹˜ ê°€ëŠ¥");
+            attackIndex = getIndexOfNormalAttackCanKill(cat, enermyPlates); //ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ì²˜ì¹˜ê°€ëŠ¥í•œ ì¸ë±ìŠ¤ ë°›ê¸°
         }
         else
         {
-            // Æ¯¼ö °ø°İÀ¸·Î Ã³Ä¡°¡ °¡´ÉÇÏ¸é Æ¯¼ö °ø°İ È®·ü Áõ°¡
+            // íŠ¹ìˆ˜ ê³µê²©ìœ¼ë¡œ ì²˜ì¹˜ê°€ ê°€ëŠ¥í•˜ë©´ íŠ¹ìˆ˜ ê³µê²© í™•ë¥  ì¦ê°€
             if (getIndexOfSpecialCanKill(cat, enermyPlates) != -1)
             {
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "°í¾çÀÌ Æ¯¼ö°ø°İÀ¸·Î Ã³Ä¡°¡´É");
-                attackIndex = getIndexOfSpecialCanKill(cat, enermyPlates); //Æ¯¼ö °ø°İÀ¸·Î Ã³Ä¡°¡´ÉÇÑ ÀÎµ¦½º ¹Ş±â
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "ê³ ì–‘ì´ íŠ¹ìˆ˜ê³µê²©ìœ¼ë¡œ ì²˜ì¹˜ê°€ëŠ¥");
+                attackIndex = getIndexOfSpecialCanKill(cat, enermyPlates); //íŠ¹ìˆ˜ ê³µê²©ìœ¼ë¡œ ì²˜ì¹˜ê°€ëŠ¥í•œ ì¸ë±ìŠ¤ ë°›ê¸°
             }
             else
-            { //Æ¯¼ö°ø°İ¿¡ +5%
+            { //íŠ¹ìˆ˜ê³µê²©ì— +5%
                 if(getMostDamageAttack(cat) == AttackType.NormalAttack)
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "°í¾çÀÌ ÀÏ¹İ°ø°İÀÌ ´õ ¸¹Àº µ¥¹ÌÁö¸¦ ÀÔÈû");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "ê³ ì–‘ì´ ì¼ë°˜ê³µê²©ì´ ë” ë§ì€ ë°ë¯¸ì§€ë¥¼ ì…í˜");
                 }
                 else
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "°í¾çÀÌ Æ¯¼ö°ø°İÀÌ ´õ ¸¹Àº µ¥¹ÌÁö¸¦ ÀÔÈû");
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "ê³ ì–‘ì´ íŠ¹ìˆ˜ê³µê²©ì´ ë” ë§ì€ ë°ë¯¸ì§€ë¥¼ ì…í˜");
                 }
-                attackIndex = getClosestEnermyIndex(enermyPlates); //Àû ÇÃ·¹ÀÌÆ® Áß¿¡¼­ °¡Àå °¡±îÀÌ ÀÖ´Â ÀÎµ¦½º ¹Ş±â
+                attackIndex = getClosestEnermyIndex(enermyPlates); //ì  í”Œë ˆì´íŠ¸ ì¤‘ì—ì„œ ê°€ì¥ ê°€ê¹Œì´ ìˆëŠ” ì¸ë±ìŠ¤ ë°›ê¸°
             }
         }
 
@@ -53,19 +53,19 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
     public AttackType getMostDamageAttack(Summon attackingSummon)
     {
 
-        // »ç¿ë °¡´ÉÇÑ Æ¯¼ö °ø°İ ¸ñ·Ï °¡Á®¿À±â
+        // ì‚¬ìš© ê°€ëŠ¥í•œ íŠ¹ìˆ˜ ê³µê²© ëª©ë¡ ê°€ì ¸ì˜¤ê¸°
         IAttackStrategy[] availableSpecialAttacks = attackingSummon.getAvailableSpecialAttacks();
 
-        // °¢ Æ¯¼ö °ø°İ È®ÀÎ
+        // ê° íŠ¹ìˆ˜ ê³µê²© í™•ì¸
         foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
         {
-            //Æ¯¼ö°ø°İÀÌ nullÀÌ¸é ÀÏ¹İ°ø°İ ¹İÈ¯
+            //íŠ¹ìˆ˜ê³µê²©ì´ nullì´ë©´ ì¼ë°˜ê³µê²© ë°˜í™˜
             if(availableSpecialAttacks == null)
             {
                 return AttackType.NormalAttack;
             }
 
-            //ÀÏ¹İ°ø°İ·ÂÀÌ ´õ ½Ø¸é ÀÏ¹İ°ø°İ ¹İÈ¯ °í¾çÀÌ´Â ´ÜÀÏÅ¸±ê °ø°İÀÌ±â¶§¹®¿¡ °ø°İ·Â¸¸ ºñ±³
+            //ì¼ë°˜ê³µê²©ë ¥ì´ ë” ìŒ”ë©´ ì¼ë°˜ê³µê²© ë°˜í™˜ ê³ ì–‘ì´ëŠ” ë‹¨ì¼íƒ€ê¹ƒ ê³µê²©ì´ê¸°ë•Œë¬¸ì— ê³µê²©ë ¥ë§Œ ë¹„êµ
             if (attackingSummon.getAttackPower() > specialAttack.getSpecialDamage())
                 return AttackType.NormalAttack;
             else
@@ -76,26 +76,26 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
 
-    // ÀÏ¹İ °ø°İÀ¸·Î ÀûÀ» ¹°¸®Ä¥ ¼ö ÀÖ´Â °¡Àå °¡±î¿î ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ì ì„ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆëŠ” ê°€ì¥ ê°€ê¹Œìš´ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int getIndexOfNormalAttackCanKill(Summon cat, List<Plate> enermyPlates)
     {
-        // °¡Àå °¡±î¿î ÀûÀÇ ÀÎµ¦½º¸¦ °¡Á®¿È
+        // ê°€ì¥ ê°€ê¹Œìš´ ì ì˜ ì¸ë±ìŠ¤ë¥¼ ê°€ì ¸ì˜´
         int closestIndex = getClosestEnermyIndex(enermyPlates);
 
         if (closestIndex != -1)
         {
             Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
-            // °¡Àå °¡±î¿î ÀûÀÇ ¼ÒÈ¯¼ö°¡ ÀÖ°í, ÀÏ¹İ °ø°İÀ¸·Î ¹°¸®Ä¥ ¼ö ÀÖ´ÂÁö È®ÀÎ
+            // ê°€ì¥ ê°€ê¹Œìš´ ì ì˜ ì†Œí™˜ìˆ˜ê°€ ìˆê³ , ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆëŠ”ì§€ í™•ì¸
             if (closestEnermySummon != null && cat.getAttackPower() >= closestEnermySummon.getNowHP())
             {
-                return closestIndex; // °ø°İÀ¸·Î ¹°¸®Ä¥ ¼ö ÀÖÀ¸¸é ÀÎµ¦½º ¹İÈ¯
+                return closestIndex; // ê³µê²©ìœ¼ë¡œ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆìœ¼ë©´ ì¸ë±ìŠ¤ ë°˜í™˜
             }
         }
 
-        return -1; // °ø°İ °¡´ÉÇÑ ÀûÀÌ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ê³µê²© ê°€ëŠ¥í•œ ì ì´ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
-    //Æ¯¼ö½ºÅ³·Î Á×ÀÏ ¼ö ÀÖ´Â ÀÎµ¦½º ¹İÈ¯
+    //íŠ¹ìˆ˜ìŠ¤í‚¬ë¡œ ì£½ì¼ ìˆ˜ ìˆëŠ” ì¸ë±ìŠ¤ ë°˜í™˜
     public int getIndexOfSpecialCanKill(Summon cat, List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
@@ -103,11 +103,11 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
             Summon enermySummon = enermyPlates[i].getCurrentSummon();
             if (enermySummon != null && cat.getHeavyAttackPower() >= enermySummon.getNowHP())
             {
-                // ÀÏ¹İ °ø°İÀ¸·Î ÀûÀÇ Ã¼·ÂÀ» 0 ÀÌÇÏ·Î ¸¸µé ¼ö ÀÖÀ¸¸é ÇØ´ç ÀÎµ¦½º ¹İÈ¯
+                // ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ì ì˜ ì²´ë ¥ì„ 0 ì´í•˜ë¡œ ë§Œë“¤ ìˆ˜ ìˆìœ¼ë©´ í•´ë‹¹ ì¸ë±ìŠ¤ ë°˜í™˜
                 return i;
             }
         }
-        return -1; // °ø°İ °¡´ÉÇÑ ÀûÀÌ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ê³µê²© ê°€ëŠ¥í•œ ì ì´ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
 
@@ -118,28 +118,28 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
             Summon enermySummon = enermyPlates[i].getCurrentSummon();
             if (enermySummon != null)
             {
-                return i; // °¡Àå °¡±î¿î(Ã¹ ¹øÂ°·Î ¹ß°ßµÈ) Àû ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º ¹İÈ¯
+                return i; // ê°€ì¥ ê°€ê¹Œìš´(ì²« ë²ˆì§¸ë¡œ ë°œê²¬ëœ) ì  ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ ë°˜í™˜
             }
         }
-        return -1; // Àû ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ì  ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
-    // È®·ü °ªÀ» ¼³Á¤ÇÏ°í Á¶Á¤ÇÏ¿© ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // í™•ë¥  ê°’ì„ ì„¤ì •í•˜ê³  ì¡°ì •í•˜ì—¬ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     private AttackProbability AdjustAttackProbabilities(AttackProbability currentProbabilities, float AttackChange, bool isNormalAttack, string reason)
     {
         if (isNormalAttack)
         {
-            // ÀÏ¹İ °ø°İ È®·üÀ» Áõ°¡½ÃÅ°°í, Æ¯¼ö °ø°İ È®·üÀ» ±×¸¸Å­ °¨¼Ò
+            // ì¼ë°˜ ê³µê²© í™•ë¥ ì„ ì¦ê°€ì‹œí‚¤ê³ , íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì„ ê·¸ë§Œí¼ ê°ì†Œ
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"ÀÏ¹İ °ø°İ È®·üÀÌ {AttackChange}% Áõ°¡ÇÏ¿´½À´Ï´Ù. ÀÌÀ¯: {reason}. ÇöÀç È®·ü: ÀÏ¹İ {currentProbabilities.normalAttackProbability}%, Æ¯¼ö {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"ì¼ë°˜ ê³µê²© í™•ë¥ ì´ {AttackChange}% ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤. ì´ìœ : {reason}. í˜„ì¬ í™•ë¥ : ì¼ë°˜ {currentProbabilities.normalAttackProbability}%, íŠ¹ìˆ˜ {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
-            // Æ¯¼ö °ø°İ È®·üÀ» Áõ°¡½ÃÅ°°í, ÀÏ¹İ °ø°İ È®·üÀ» ±×¸¸Å­ °¨¼Ò
+            // íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì„ ì¦ê°€ì‹œí‚¤ê³ , ì¼ë°˜ ê³µê²© í™•ë¥ ì„ ê·¸ë§Œí¼ ê°ì†Œ
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"Æ¯¼ö °ø°İ È®·üÀÌ {AttackChange}% Áõ°¡ÇÏ¿´½À´Ï´Ù. ÀÌÀ¯: {reason}. ÇöÀç È®·ü: ÀÏ¹İ {currentProbabilities.normalAttackProbability}%, Æ¯¼ö {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì´ {AttackChange}% ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤. ì´ìœ : {reason}. í˜„ì¬ í™•ë¥ : ì¼ë°˜ {currentProbabilities.normalAttackProbability}%, íŠ¹ìˆ˜ {currentProbabilities.specialAttackProbability}%");
         }
         return currentProbabilities;
     }

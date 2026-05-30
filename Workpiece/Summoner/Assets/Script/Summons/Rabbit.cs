@@ -16,13 +16,13 @@ public class Rabbit : Summon
         summonName = "Rabbit";
         maxHP = 300;
         nowHP = maxHP;
-        attackPower = 37; //ÀÏ¹İ°ø°İ
-        summonRank = SummonRank.Medium; // Áß±Ş ¼ÒÈ¯¼ö
+        attackPower = 37; //ì¼ë°˜ê³µê²©
+        summonRank = SummonRank.Medium; // ì¤‘ê¸‰ ì†Œí™˜ìˆ˜
         summonType = SummonType.Rabbit;
 
         ApplayMultiple(multiple);
 
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //±ÙÁ¢°ø°İ
+        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //ê·¼ì ‘ê³µê²©
         specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Heal, 0.3, 3) };
 
     }
@@ -31,7 +31,7 @@ public class Rabbit : Summon
     {
         maxHP = (int)(maxHP * multiple);
         nowHP = maxHP;
-        attackPower = (int)(attackPower * multiple); //ÀÏ¹İ°ø°İ
+        attackPower = (int)(attackPower * multiple); //ì¼ë°˜ê³µê²©
         heavyAttakPower = (int)(heavyAttakPower * multiple);
     }
 

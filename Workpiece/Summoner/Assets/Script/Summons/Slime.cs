@@ -7,14 +7,14 @@ public class Slime : Summon
 
     private void Awake()
     {
-        summonName = "Slime"; //ÀÌ¸§ ½½¶óÀÓ
-        maxHP = 200; //ÃÖ´ëÃ¼·Â 200
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 25; //ÀÏ¹İ°ø°İ
-        heavyAttakPower = 25; //ÀÏ¹İ°ø°İµµ °­°ø°İÀ¸·Î
-        summonRank = SummonRank.Normal; // ÀÏ¹İ ¼ÒÈ¯¼ö
-        heavyAttakPower = 40; //°­°ø°İ·ÂÀÌ ¾øÀ½
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        summonName = "Slime"; //ì´ë¦„ ìŠ¬ë¼ì„
+        maxHP = 200; //ìµœëŒ€ì²´ë ¥ 200
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 25; //ì¼ë°˜ê³µê²©
+        heavyAttakPower = 25; //ì¼ë°˜ê³µê²©ë„ ê°•ê³µê²©ìœ¼ë¡œ
+        summonRank = SummonRank.Normal; // ì¼ë°˜ ì†Œí™˜ìˆ˜
+        heavyAttakPower = 40; //ê°•ê³µê²©ë ¥ì´ ì—†ìŒ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 1);
         specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Shield, 50, 2) };
     }

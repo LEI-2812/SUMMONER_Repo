@@ -7,16 +7,16 @@ public class FireSpirit : Summon
 
     private void Awake()
     {
-        summonName = "FireSpirit"; //ÀÌ¸§ ½½¶óÀÓ
-        maxHP = 350; //ÃÖ´ëÃ¼·Â 200
-        nowHP = maxHP; //ÇöÀçÃ¼·Â // ±ú¾î³¯¶© ÃÖ´ëÃ¼·ÂÀ¸·Î ¼³Á¤
-        attackPower = 60; //ÀÏ¹İ°ø°İ
+        summonName = "FireSpirit"; //ì´ë¦„ ìŠ¬ë¼ì„
+        maxHP = 350; //ìµœëŒ€ì²´ë ¥ 200
+        nowHP = maxHP; //í˜„ì¬ì²´ë ¥ // ê¹¨ì–´ë‚ ë• ìµœëŒ€ì²´ë ¥ìœ¼ë¡œ ì„¤ì •
+        attackPower = 60; //ì¼ë°˜ê³µê²©
         heavyAttakPower = 130;
-        summonRank = SummonRank.Normal; // ÀÏ¹İ ¼ÒÈ¯¼ö
+        summonRank = SummonRank.Normal; // ì¼ë°˜ ì†Œí™˜ìˆ˜
 
-        // ÀÏ¹İ °ø°İ: °¡Àå °¡±î¿î Àû °ø°İ
+        // ì¼ë°˜ ê³µê²©: ê°€ì¥ ê°€ê¹Œìš´ ì  ê³µê²©
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Upgrade, 0.1, 3, 1) }; //°ø°İ·ÂÀÇ 0.1¸¸Å­ °­È­, ÄğÅ¸ÀÓ 1ÅÏ, Áö¼Ó½Ã°£ 1ÅÏ
+        specialAttackStrategies = new IAttackStrategy[] { new AttackAllEnemiesStrategy(StatusType.Upgrade, 0.1, 3, 1) }; //ê³µê²©ë ¥ì˜ 0.1ë§Œí¼ ê°•í™”, ì¿¨íƒ€ì„ 1í„´, ì§€ì†ì‹œê°„ 1í„´
     }
 
 

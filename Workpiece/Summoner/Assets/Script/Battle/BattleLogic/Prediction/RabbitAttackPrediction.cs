@@ -13,36 +13,36 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
     public AttackPrediction getAttackPrediction(Summon rabbit, int rabbitPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
-        // ±âº»°ª ¼³Á¤: ÀÏ¹İ °ø°İ 50%, Æ¯¼ö °ø°İ 50%
+        // ê¸°ë³¸ê°’ ì„¤ì •: ì¼ë°˜ ê³µê²© 50%, íŠ¹ìˆ˜ ê³µê²© 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = getClosestEnermyIndex(enermyPlates);
         AttackPrediction attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
-        if (GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex) != -1) //¼ÒÈ¯¼ö Áß ÇÑÂÊÀÌ ´Ù¸¥ ÂÊ°ú Ã¼·ÂÀ» ºñ±³ÇßÀ» ¶§ 30% ÀÌ»ó ³·Àº°¡?
+        if (GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex) != -1) //ì†Œí™˜ìˆ˜ ì¤‘ í•œìª½ì´ ë‹¤ë¥¸ ìª½ê³¼ ì²´ë ¥ì„ ë¹„êµí–ˆì„ ë•Œ 30% ì´ìƒ ë‚®ì€ê°€?
         {
             attackIndex = GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex);
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "Åä³¢ ¼ÒÈ¯¼öÁß ÇÑÂÊÀÌ ´Ù¸¥ ÂÊ°ú ºñ±³ÇÒ¶§ 30% ³·À½");
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "í† ë¼ ì†Œí™˜ìˆ˜ì¤‘ í•œìª½ì´ ë‹¤ë¥¸ ìª½ê³¼ ë¹„êµí• ë•Œ 30% ë‚®ìŒ");
             attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
-        else if (getIndexOfLowerHealthIfAllDown30(playerPlates) != -1) //¼ÒÈ¯¼ö ¸ğµÎÀÇ Ã¼·ÂÀÌ 30% ÀÌÇÏÀÎ°¡?
+        else if (getIndexOfLowerHealthIfAllDown30(playerPlates) != -1) //ì†Œí™˜ìˆ˜ ëª¨ë‘ì˜ ì²´ë ¥ì´ 30% ì´í•˜ì¸ê°€?
         {
             attackIndex = getIndexOfLowerHealthIfAllDown30(playerPlates);
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "Åä³¢ ¼ÒÈ¯¼öÀÇ Ã¼·ÂÀÌ ¸ğµÎ 30% ÀÌÇÏ");
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "í† ë¼ ì†Œí™˜ìˆ˜ì˜ ì²´ë ¥ì´ ëª¨ë‘ 30% ì´í•˜");
             attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
         else if (AllPlayerSummonOver70Percent(playerPlates))
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "Åä³¢ ¸ğµç ÇÃ·¹ÀÌ¾î ¼ÒÈ¯¼ö Ã¼·ÂÀÌ 70% ÀÌ»ó");
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "í† ë¼ ëª¨ë“  í”Œë ˆì´ì–´ ì†Œí™˜ìˆ˜ ì²´ë ¥ì´ 70% ì´ìƒ");
             attackIndex = getIndexOfLowestHealthSummon(playerPlates);
             attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
         else if (getIndexOfNormalAttackCanKill(rabbit, enermyPlates) != -1)
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "Åä³¢ ÀÏ¹İ°ø°İÀ¸·Î Ã³Ä¡°¡´É");
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "í† ë¼ ì¼ë°˜ê³µê²©ìœ¼ë¡œ ì²˜ì¹˜ê°€ëŠ¥");
             attackIndex = getIndexOfLowestHealthSummon(playerPlates);
             attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
-        else// ¸ğµÎ Á¶°ÇÀÌ ¾È¸ÂÀ¸¸é °¡Àå ³·Àº Ã¼·Â ¾Æ±º Èú
+        else// ëª¨ë‘ ì¡°ê±´ì´ ì•ˆë§ìœ¼ë©´ ê°€ì¥ ë‚®ì€ ì²´ë ¥ ì•„êµ° í
         {
             attackIndex = getIndexOfLowestHealthSummon(playerPlates);
             attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
@@ -55,8 +55,8 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
 
-    // ¼ÒÈ¯¼öÀÇ Ã¼·Â Â÷ÀÌ°¡ 30% ÀÌ»ó ³·ÀºÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
-    // ¾Æ±º ¼ÒÈ¯¼ö Áß Ã¼·Â Â÷ÀÌ°¡ 30% ÀÌ»óÀÎ °æ¿ì, ´õ ³·Àº Ã¼·ÂÀ» °¡Áø ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ì†Œí™˜ìˆ˜ì˜ ì²´ë ¥ ì°¨ì´ê°€ 30% ì´ìƒ ë‚®ì€ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
+    // ì•„êµ° ì†Œí™˜ìˆ˜ ì¤‘ ì²´ë ¥ ì°¨ì´ê°€ 30% ì´ìƒì¸ ê²½ìš°, ë” ë‚®ì€ ì²´ë ¥ì„ ê°€ì§„ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int GetIndexOfLowerHealthIfDifferenceOver30(List<Plate> playerPlates,int rabbitIndex)
     {
         if (playerPlates.Count < 2) return -1;
@@ -66,22 +66,22 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
         for (int i = 0; i < playerPlates.Count; i++)
         {
-            if (i == rabbitIndex) continue; // rabbitIndex´Â Á¦¿Ü
+            if (i == rabbitIndex) continue; // rabbitIndexëŠ” ì œì™¸
 
             Summon currentSummon = playerPlates[i].getCurrentSummon();
             if (currentSummon == null) continue;
 
             for (int j = 0; j < playerPlates.Count; j++)
             {
-                if (i == j || j == rabbitIndex) continue; // ÀÚ±â ÀÚ½Å°ú rabbitIndex´Â Á¦¿Ü
+                if (i == j || j == rabbitIndex) continue; // ìê¸° ìì‹ ê³¼ rabbitIndexëŠ” ì œì™¸
 
                 Summon compareSummon = playerPlates[j].getCurrentSummon();
                 if (compareSummon == null) continue;
 
-                // ÇöÀç ¼ÒÈ¯¼öÀÇ Ã¼·Â ºñÀ² °è»ê (ÀÚ±â Ã¼·Â / ºñ±³ ¼ÒÈ¯¼ö Ã¼·Â)
+                // í˜„ì¬ ì†Œí™˜ìˆ˜ì˜ ì²´ë ¥ ë¹„ìœ¨ ê³„ì‚° (ìê¸° ì²´ë ¥ / ë¹„êµ ì†Œí™˜ìˆ˜ ì²´ë ¥)
                 double healthRatio = currentSummon.getNowHP() / compareSummon.getNowHP();
 
-                // Á¶°ÇÀ» ¸¸Á·ÇÏ´Â °æ¿ì Áß¿¡¼­ °¡Àå ³·Àº Ã¼·ÂÀ» °¡Áø ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ÃßÀû
+                // ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ” ê²½ìš° ì¤‘ì—ì„œ ê°€ì¥ ë‚®ì€ ì²´ë ¥ì„ ê°€ì§„ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ì¶”ì 
                 if (healthRatio <= 0.7 && currentSummon.getNowHP() < lowestHealth)
                 {
                     lowestHealth = currentSummon.getNowHP();
@@ -90,11 +90,11 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
             }
         }
 
-        return lowestHealthIndex; // Á¶°ÇÀ» ¸¸Á·ÇÏ´Â °¡Àå ³·Àº Ã¼·ÂÀÇ ¼ÒÈ¯¼ö ÀÎµ¦½º ¹İÈ¯, ¾øÀ¸¸é -1 ¹İÈ¯
+        return lowestHealthIndex; // ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ” ê°€ì¥ ë‚®ì€ ì²´ë ¥ì˜ ì†Œí™˜ìˆ˜ ì¸ë±ìŠ¤ ë°˜í™˜, ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
 
-    // ¸ğµç ÇÃ·¹ÀÌ¾î ¼ÒÈ¯¼ö Áß Ã¼·ÂÀÌ 30% ÀÌÇÏÀÎ ¼ÒÈ¯¼ö Áß °¡Àå ³·Àº Ã¼·ÂÀ» °¡Áø ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ëª¨ë“  í”Œë ˆì´ì–´ ì†Œí™˜ìˆ˜ ì¤‘ ì²´ë ¥ì´ 30% ì´í•˜ì¸ ì†Œí™˜ìˆ˜ ì¤‘ ê°€ì¥ ë‚®ì€ ì²´ë ¥ì„ ê°€ì§„ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int getIndexOfLowerHealthIfAllDown30(List<Plate> playerPlates)
     {
         double minHealthRatio = double.MaxValue;
@@ -107,13 +107,13 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
             {
                 double healthRatio = playerSummon.getNowHP() / playerSummon.getMaxHP();
 
-                // ¸ğµç ¼ÒÈ¯¼ö°¡ Ã¼·Â 30% ÀÌÇÏÀÎÁö È®ÀÎ
+                // ëª¨ë“  ì†Œí™˜ìˆ˜ê°€ ì²´ë ¥ 30% ì´í•˜ì¸ì§€ í™•ì¸
                 if (healthRatio > 0.3f)
                 {
-                    return -1; // ÇÏ³ª¶óµµ Ã¼·ÂÀÌ 30%¸¦ ³ÑÀ¸¸é -1 ¹İÈ¯
+                    return -1; // í•˜ë‚˜ë¼ë„ ì²´ë ¥ì´ 30%ë¥¼ ë„˜ìœ¼ë©´ -1 ë°˜í™˜
                 }
 
-                // °¡Àå ³·Àº Ã¼·ÂÀ» °¡Áø ¼ÒÈ¯¼ö ÀÎµ¦½º¸¦ ±â·Ï
+                // ê°€ì¥ ë‚®ì€ ì²´ë ¥ì„ ê°€ì§„ ì†Œí™˜ìˆ˜ ì¸ë±ìŠ¤ë¥¼ ê¸°ë¡
                 if (healthRatio < minHealthRatio)
                 {
                     minHealthRatio = healthRatio;
@@ -122,10 +122,10 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
             }
         }
 
-        return indexOfMinHealth; // ¸ğµç ¼ÒÈ¯¼ö°¡ 30% ÀÌÇÏÀÎ °æ¿ì °¡Àå ³·Àº Ã¼·ÂÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯
+        return indexOfMinHealth; // ëª¨ë“  ì†Œí™˜ìˆ˜ê°€ 30% ì´í•˜ì¸ ê²½ìš° ê°€ì¥ ë‚®ì€ ì²´ë ¥ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜
     }
 
-    // ÇÃ·¹ÀÌ¾î ¼ÒÈ¯¼öÀÇ Ã¼·ÂÀÌ ¸ğµÎ 70% ÀÌ»óÀÎÁö È®ÀÎ
+    // í”Œë ˆì´ì–´ ì†Œí™˜ìˆ˜ì˜ ì²´ë ¥ì´ ëª¨ë‘ 70% ì´ìƒì¸ì§€ í™•ì¸
     public bool AllPlayerSummonOver70Percent(List<Plate> playerPlates)
     {
         foreach (Plate plate in playerPlates)
@@ -136,14 +136,14 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
                 double healthRatio = playerSummon.getNowHP() / playerSummon.getMaxHP();
                 if (healthRatio < 0.7f)
                 {
-                    return false; // ÇÏ³ª¶óµµ 70% ÀÌÇÏÀÌ¸é false ¹İÈ¯
+                    return false; // í•˜ë‚˜ë¼ë„ 70% ì´í•˜ì´ë©´ false ë°˜í™˜
                 }
             }
         }
         return true;
     }
 
-    // °¡Àå ³·Àº Ã¼·ÂÀ» °¡Áø ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // ê°€ì¥ ë‚®ì€ ì²´ë ¥ì„ ê°€ì§„ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     public int getIndexOfLowestHealthSummon(List<Plate> playerPlates)
     {
         double minHealthRatio = double.MaxValue;
@@ -156,7 +156,7 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
             {
                 double healthRatio = summon.getNowHP() / summon.getMaxHP();
 
-                // °¡Àå ³·Àº Ã¼·ÂÀ» °¡Áø ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º ±â·Ï
+                // ê°€ì¥ ë‚®ì€ ì²´ë ¥ì„ ê°€ì§„ ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ ê¸°ë¡
                 if (healthRatio < minHealthRatio)
                 {
                     minHealthRatio = healthRatio;
@@ -165,26 +165,26 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
             }
         }
 
-        return indexOfMinHealth; // °¡Àå ³·Àº Ã¼·ÂÀÇ ¼ÒÈ¯¼ö ÀÎµ¦½º ¹İÈ¯
+        return indexOfMinHealth; // ê°€ì¥ ë‚®ì€ ì²´ë ¥ì˜ ì†Œí™˜ìˆ˜ ì¸ë±ìŠ¤ ë°˜í™˜
     }
 
-    // °¡Àå °¡±î¿î ÀûÀ» °ø°İÇßÀ» ¶§ ¹°¸®Ä¥ ¼ö ÀÖ´ÂÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+    // ê°€ì¥ ê°€ê¹Œìš´ ì ì„ ê³µê²©í–ˆì„ ë•Œ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆëŠ”ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
     public int getIndexOfNormalAttackCanKill(Summon rabbit, List<Plate> enermyPlates)
     {
-        // °¡Àå °¡±î¿î ÀûÀÇ ÀÎµ¦½º¸¦ °¡Á®¿È
+        // ê°€ì¥ ê°€ê¹Œìš´ ì ì˜ ì¸ë±ìŠ¤ë¥¼ ê°€ì ¸ì˜´
         int closestIndex = getClosestEnermyIndex(enermyPlates);
 
         if (closestIndex != -1)
         {
             Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
-            // °¡Àå °¡±î¿î ÀûÀÇ ¼ÒÈ¯¼ö°¡ ÀÖ°í, ÀÏ¹İ °ø°İÀ¸·Î ¹°¸®Ä¥ ¼ö ÀÖ´ÂÁö È®ÀÎ
+            // ê°€ì¥ ê°€ê¹Œìš´ ì ì˜ ì†Œí™˜ìˆ˜ê°€ ìˆê³ , ì¼ë°˜ ê³µê²©ìœ¼ë¡œ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆëŠ”ì§€ í™•ì¸
             if (closestEnermySummon != null && rabbit.getAttackPower() >= closestEnermySummon.getNowHP())
             {
-                return closestIndex; // °ø°İÀ¸·Î ¹°¸®Ä¥ ¼ö ÀÖÀ¸¸é ÀÎµ¦½º ¹İÈ¯
+                return closestIndex; // ê³µê²©ìœ¼ë¡œ ë¬¼ë¦¬ì¹  ìˆ˜ ìˆìœ¼ë©´ ì¸ë±ìŠ¤ ë°˜í™˜
             }
         }
 
-        return -1; // °ø°İ °¡´ÉÇÑ ÀûÀÌ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ê³µê²© ê°€ëŠ¥í•œ ì ì´ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
 
@@ -195,31 +195,31 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
             Summon enermySummon = enermyPlates[i].getCurrentSummon();
             if (enermySummon != null)
             {
-                return i; // °¡Àå °¡±î¿î(Ã¹ ¹øÂ°·Î ¹ß°ßµÈ) Àû ¼ÒÈ¯¼öÀÇ ÀÎµ¦½º ¹İÈ¯
+                return i; // ê°€ì¥ ê°€ê¹Œìš´(ì²« ë²ˆì§¸ë¡œ ë°œê²¬ëœ) ì  ì†Œí™˜ìˆ˜ì˜ ì¸ë±ìŠ¤ ë°˜í™˜
             }
         }
-        return -1; // Àû ¼ÒÈ¯¼ö°¡ ¾øÀ¸¸é -1 ¹İÈ¯
+        return -1; // ì  ì†Œí™˜ìˆ˜ê°€ ì—†ìœ¼ë©´ -1 ë°˜í™˜
     }
 
 
 
 
-    // È®·ü °ªÀ» ¼³Á¤ÇÏ°í Á¶Á¤ÇÏ¿© ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+    // í™•ë¥  ê°’ì„ ì„¤ì •í•˜ê³  ì¡°ì •í•˜ì—¬ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
     private AttackProbability AdjustAttackProbabilities(AttackProbability currentProbabilities, float AttackChange, bool isNormalAttack, string reason)
     {
         if (isNormalAttack)
         {
-            // ÀÏ¹İ °ø°İ È®·üÀ» Áõ°¡½ÃÅ°°í, Æ¯¼ö °ø°İ È®·üÀ» ±×¸¸Å­ °¨¼Ò
+            // ì¼ë°˜ ê³µê²© í™•ë¥ ì„ ì¦ê°€ì‹œí‚¤ê³ , íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì„ ê·¸ë§Œí¼ ê°ì†Œ
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"ÀÏ¹İ °ø°İ È®·üÀÌ {AttackChange}% Áõ°¡ÇÏ¿´½À´Ï´Ù. ÀÌÀ¯: {reason}. ÇöÀç È®·ü: ÀÏ¹İ {currentProbabilities.normalAttackProbability}%, Æ¯¼ö {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"ì¼ë°˜ ê³µê²© í™•ë¥ ì´ {AttackChange}% ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤. ì´ìœ : {reason}. í˜„ì¬ í™•ë¥ : ì¼ë°˜ {currentProbabilities.normalAttackProbability}%, íŠ¹ìˆ˜ {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
-            // Æ¯¼ö °ø°İ È®·üÀ» Áõ°¡½ÃÅ°°í, ÀÏ¹İ °ø°İ È®·üÀ» ±×¸¸Å­ °¨¼Ò
+            // íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì„ ì¦ê°€ì‹œí‚¤ê³ , ì¼ë°˜ ê³µê²© í™•ë¥ ì„ ê·¸ë§Œí¼ ê°ì†Œ
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"Æ¯¼ö °ø°İ È®·üÀÌ {AttackChange}% Áõ°¡ÇÏ¿´½À´Ï´Ù. ÀÌÀ¯: {reason}. ÇöÀç È®·ü: ÀÏ¹İ {currentProbabilities.normalAttackProbability}%, Æ¯¼ö {currentProbabilities.specialAttackProbability}%");
+            Debug.Log($"íŠ¹ìˆ˜ ê³µê²© í™•ë¥ ì´ {AttackChange}% ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤. ì´ìœ : {reason}. í˜„ì¬ í™•ë¥ : ì¼ë°˜ {currentProbabilities.normalAttackProbability}%, íŠ¹ìˆ˜ {currentProbabilities.specialAttackProbability}%");
         }
         return currentProbabilities;
     }
