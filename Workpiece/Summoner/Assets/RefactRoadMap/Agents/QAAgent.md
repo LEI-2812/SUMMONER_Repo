@@ -1,85 +1,87 @@
 # QA Agent
 
-## 1. 폴더 구조
+## 1. Purpose
 
-QA Agent는 리팩토링 변경이 기존 기능을 깨뜨리지 않는지 검사하는 기준 문서다.
-실제 테스트 코드를 바로 작성하기 전에, 어떤 수동 테스트와 자동 테스트가 필요한지 먼저 제안한다.
-
-위치:
-
-```text
-Assets/RefactRoadMap
-  Agents
-    QAAgent.md
-```
+QA Agent는 리팩토링 에이전트가 작성한 테스트 코드와 QA 요청을 실제로 실행하는 역할이다.
+리팩토링 변경이 기존 기능을 깨뜨리지 않는지 확인하고, 결과를 QAReports와 WorkLogs에 기록한다.
 
 이 문서는 코드 실행 파일이 아니다.
-리팩토링할 때마다 테스트 항목을 정하고, 검증 결과를 로드맵 변경 기록에 남기기 위한 기준이다.
+QA Agent는 코드 리팩토링을 직접 진행하지 않는다.
+검증 결과의 상세 로그는 `WorkLogs/YYYY-MM-DD.md`에 기록하고, QA 상태는 `Assets/RefactRoadMap/QAReports/*.csv`에 기록한다.
 
-## 2. 핵심 흐름
-
-QA Agent는 아래 순서로 동작하도록 사용한다.
+## 2. QA Flow
 
 ```text
-코드 변경 전
+QAReports의 Pending QA 수신
  -> 변경 대상 시스템 확인
- -> 유지되어야 할 기존 동작 확인
- -> 수동 테스트 항목 제안
- -> 자동 테스트 후보 제안
- -> 시뮬레이션 후보 제안
-
-코드 변경 후
+ -> 리팩토링 에이전트가 작성한 테스트 코드 확인
+ -> QAReports의 Pending QA 항목 확인
  -> Unity Console 컴파일 에러 확인
- -> 관련 씬 실행 확인
- -> 수동 테스트 수행
- -> 회귀 위험 확인
- -> 로드맵 변경 기록에 검증 결과 작성
+ -> EditMode/PlayMode 테스트 실행
+ -> 관련 씬 실행 또는 Inspector 연결 확인
+ -> QAReports와 WorkLogs에 Pass/Fail/Blocked 작성
+ -> Fail이면 다음 리팩토링 우선순위 최상단에 실패 수정 항목으로 기록
 ```
 
-## 3. 주요 코드
+## 3. Queue Rule
 
-### 코드 변경 전 질문
+QA Agent는 `Assets/RefactRoadMap/QAReports/*.csv`를 작업 큐로 사용한다.
 
-리팩토링을 적용하기 전에는 아래 질문에 답해야 한다.
+상태값:
 
 ```text
-1. 이 변경은 어떤 시스템에 영향을 주는가?
-2. 반드시 유지되어야 하는 기존 동작은 무엇인가?
-3. 수동 테스트가 필요한 씬은 무엇인가?
-4. 자동 테스트로 만들 수 있는 핵심 로직은 무엇인가?
-5. 실패하면 가장 위험한 기능은 무엇인가?
-6. 변경 후 어떤 로드맵에 검증 결과를 기록할 것인가?
+Pending QA
+- 리팩토링 에이전트가 넘긴 실행 대기 항목
+
+Running
+- QA 에이전트가 실행 중인 항목
+
+Pass
+- 자동 테스트 또는 수동 QA 통과
+
+Fail
+- 코드, 씬 연결, Inspector 연결, 기존 동작 회귀가 확인됨
+- 다음 리팩토링 우선순위 최상단에 실패 수정으로 올림
+
+Blocked
+- MCP, Unity Editor 상태, 외부 실행 조건 때문에 QA 실행 불가
+- 코드 실패와 구분해서 기록
 ```
 
-### 테스트 제안 형식
+실행 기준:
 
 ```text
-수동 테스트:
-- Unity에서 직접 확인할 항목
-
-자동 테스트 후보:
-- EditMode 또는 PlayMode 테스트로 만들 수 있는 항목
-
-시뮬레이션 후보:
-- 여러 번 반복 실행해 안정성을 확인할 항목
-
-회귀 위험:
-- 기존 기능이 깨질 가능성이 높은 항목
+- EditMode는 관련 묶음 단위로 먼저 실행한다.
+- PlayMode는 씬 로드 비용이 크므로 기능별 또는 씬별로 나눠 실행한다.
+- 실패한 테스트는 같은 테스트를 재실행할 수 있도록 fullName과 실패 메시지를 기록한다.
+- 수동 QA는 씬 이름, 오브젝트 이름, 확인할 Inspector 필드를 같이 기록한다.
 ```
 
-### 공통 검증 기준
+## 4. QA Intake Questions
+
+```text
+1. 리팩토링 에이전트가 어떤 기능을 바꿨는가?
+2. 유지되어야 하는 기존 동작은 무엇인가?
+3. 실행할 EditMode/PlayMode 테스트 이름은 무엇인가?
+4. 수동으로 열어야 하는 씬은 무엇인가?
+5. Inspector 연결 확인이 필요한 오브젝트/필드는 무엇인가?
+6. 결과를 어떤 QAReports 파일과 WorkLogs 파일에 기록할 것인가?
+```
+
+## 5. Common Criteria
 
 ```text
 - Unity Console 컴파일 에러 없음
-- 관련 씬 실행 가능
+- 리팩토링 에이전트가 작성한 테스트 코드 실행
+- 관련 씬 실행 가능 여부 확인
 - 변경 기능 수동 테스트 완료
 - 주변 기능 회귀 테스트 완료
-- 로드맵 변경 기록에 검증 결과 작성
+- QAReports 상태를 Pass, Fail, Blocked 중 하나로 갱신
+- WorkLogs에 검증 결과, 실패 메시지, 미검증 사유 기록
+- Fail 항목은 다음 리팩토링 우선순위로 올림
 ```
 
-## 4. 실행 방법
-
-### 게임 시스템 QA
+## 6. GameSystem QA
 
 수동 테스트:
 
@@ -94,22 +96,12 @@ QA Agent는 아래 순서로 동작하도록 사용한다.
 자동 테스트 후보:
 
 ```text
-- GameSaveKey가 모든 저장 키를 제공하는지 확인
-- GameProgressSave가 savedStage만 초기화하는지 확인
-- StageFlowSelect가 stage 번호에 맞는 씬 이름과 배율을 반환하는지 확인
+- GameSaveController가 저장 없음/있음 상태를 올바르게 반환하는지 확인
+- PlayerPrefsSaveStore가 savedStage 0을 저장 데이터로 보지 않는지 확인
+- GameSystemStaticRegressionTests가 진행도 키 직접 접근을 막는지 확인
 ```
 
-시뮬레이션 후보:
-
-```text
-SaveLoadSimulation
-- 새 게임 시작
-- 저장값 확인
-- 이어하기
-- 설정값 유지 확인
-```
-
-### 스토리 시스템 QA
+## 7. StorySystem QA
 
 수동 테스트:
 
@@ -126,22 +118,12 @@ SaveLoadSimulation
 자동 테스트 후보:
 
 ```text
+- StorySceneMove가 storyNum별 다음 씬 이름을 반환하는지 확인
+- StorySystemStaticRegressionTests가 View 이름과 GUID 유지 여부를 확인하는지 검증
 - DialogueCsvParse가 CSV 문자열을 Dialogue 배열로 변환하는지 확인
-- DialogueRangeSelect가 storyNum에 맞는 대사 범위를 반환하는지 확인
-- StoryProgressAdvance가 다음 대사 줄을 순서대로 반환하는지 확인
 ```
 
-시뮬레이션 후보:
-
-```text
-StoryDialogueSimulation
-- CSV 전체 파싱
-- 빈 대사 확인
-- 잘못된 ID 확인
-- storyNum별 대사 범위 존재 확인
-```
-
-### 전투 핵심 QA
+## 8. BattleCore QA
 
 수동 테스트:
 
@@ -166,18 +148,7 @@ StoryDialogueSimulation
 - BattleResultCheck가 승리/패배 조건을 판단하는지 확인
 ```
 
-시뮬레이션 후보:
-
-```text
-BattleSimulation
-- 플레이어 소환수 3마리, 적 3마리 배치
-- 10턴 자동 진행
-- HP가 음수가 되지 않는지 확인
-- 죽은 소환수가 Plate에 남지 않는지 확인
-- 턴이 무한 루프에 빠지지 않는지 확인
-```
-
-### 전투 콘텐츠 QA
+## 9. BattleContent QA
 
 수동 테스트:
 
@@ -200,70 +171,7 @@ BattleSimulation
 - PlayerAttackPredictionBuild가 소환수별 예측 목록을 생성하는지 확인
 ```
 
-시뮬레이션 후보:
+## 10. Latest Summary
 
-```text
-SummonPickSimulation
-- 1000번 뽑기 실행
-- Low / Medium / High 비율 확인
-- 후보 3개 중복 여부 확인
-
-EnemyAiSimulation
-- 플레이어 Plate와 적 Plate를 여러 상태로 구성
-- 적 행동 결정 반복 실행
-- 사용 불가능한 특수공격을 선택하지 않는지 확인
-```
-
-## 5. 나중에 확장할 수 있는 부분
-
-### Unity 테스트 폴더 후보
-
-나중에 자동 테스트를 추가할 때는 아래 구조를 사용한다.
-
-```text
-Assets/Tests
-  EditMode
-    GameSaveTests.cs
-    DialogueCsvParseTests.cs
-    BattleTargetSelectTests.cs
-    SummonStatusApplyTests.cs
-    SummonPickProbabilityTests.cs
-  PlayMode
-    StorySceneFlowTests.cs
-    BattleTurnFlowTests.cs
-```
-
-### 자동화 우선순위
-
-초기에는 수동 테스트를 우선한다.
-자동 테스트는 Unity 씬 의존이 낮은 순수 로직부터 만든다.
-
-우선순위:
-
-```text
-1. GameSaveKey, StageFlowSelect
-2. DialogueCsvParse, DialogueRangeSelect
-3. BattleTargetSelect, PlayerManaUse
-4. SummonStatusApply
-5. SummonPickProbability
-6. EnemyActionDecide
-```
-
-## 6. 변경 기록
-
-### 2026-05-30
-
-수정 대상:
-- Assets/RefactRoadMap/Agents/QAAgent.md
-
-어떻게 수정했는가:
-- 리팩토링 변경 전후에 수행할 QA 기준 문서를 추가했다.
-- 게임 시스템, 스토리 시스템, 전투 핵심, 전투 콘텐츠별 수동 테스트와 자동 테스트 후보를 정리했다.
-- 전투, 소환수 뽑기, 스토리 대사, 저장/불러오기 시뮬레이션 후보를 추가했다.
-
-왜 그렇게 수정했는가:
-- Unity 프로젝트는 컴파일이 되어도 씬 흐름이나 프리팹 연결이 깨질 수 있으므로, 리팩토링마다 검증 기준이 필요하다.
-- 자동 테스트를 처음부터 무리하게 만들기보다 수동 테스트 기준과 자동화 후보를 함께 관리하는 편이 현실적이다.
-
-검증 방법:
-- QAAgent.md 생성 위치 확인
+2026-05-30: QA Agent를 실제 QA 실행 전담 역할로 분리했다.
+리팩토링 에이전트가 작성한 테스트 코드와 QA 요청을 실행하고, 실패는 다음 리팩토링 우선순위로 기록한다.
