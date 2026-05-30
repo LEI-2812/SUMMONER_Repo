@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StoryChangeImage : MonoBehaviour
+public class StoryImageView : MonoBehaviour
 {
     [Header("ID 순서에 맞춰서 이미지 넣기")]
     [SerializeField] private Sprite[] spriteArray; //스프라이트 배열
@@ -11,7 +9,7 @@ public class StoryChangeImage : MonoBehaviour
     [Header("받은 Sprite를 넣을 Image오브젝트")]
     [SerializeField] private Image targetImage;
 
-    private InteractionController interactionController; // InteractionController 참조
+    private InteractionController interactionController;
 
     private void Awake()
     {

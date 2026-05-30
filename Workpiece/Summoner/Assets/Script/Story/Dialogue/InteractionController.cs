@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class InteractionController : MonoBehaviour, IPointerClickHandler
 {
@@ -12,20 +13,19 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] private InteractionEvent interactionEvent; // InteractionEvent 연결
 
-    private Dialogue[] currentDialogues; // 현재 진행 중인 대화
-    private int currentDialogueIndex = 0; // 현재 진행 중인 Dialogue 인덱스(CSV의 ID순서)
-    private int currentDialogueLineIndex = 0; // 현재 진행 중인 Dialogue의 대사 인덱스
+    private readonly StoryProgressAdvance storyProgressAdvance = new StoryProgressAdvance();
     private bool isDialogueActive = false; // 대화 진행 상태 체크
 
     private bool isStory; //스토리가 진행중인지 확인
     private StoryStage storyStage;
-    public FadeController fadeController;
+    [FormerlySerializedAs("fadeController")]
+    [SerializeField] private FadePanelView fadePanelView;
 
-    private StoryChangeImage changeImage;
+    private StoryImageView storyImageView;
 
     void Awake()
     {
-        changeImage = GetComponent<StoryChangeImage>();
+        storyImageView = GetComponent<StoryImageView>();
         storyStage = GetComponent<StoryStage>();
     }
 
@@ -44,15 +44,14 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public void StartDialogue()
     {
         if (isDialogueActive) return; // 이미 대화 중이면 중복 실행 방지
-        currentDialogues = interactionEvent.getDialogue(); // 대사를 가져온다.
+        Dialogue[] currentDialogues = interactionEvent.getDialogue(); // 대사를 가져온다.
         if (currentDialogues == null || currentDialogues.Length == 0) // 대사가 없으면 종료
         {
             Debug.LogWarning("대화 내용이 없습니다.");
             return;
         }
 
-        currentDialogueIndex = 0; // 캐릭터 대사 초기화
-        currentDialogueLineIndex = 0; // 대사 인덱스 초기화
+        storyProgressAdvance.Start(currentDialogues);
         isDialogueActive = true;
         ShowNextLine(); // 첫 번째 대사 출력
     }
@@ -63,41 +62,9 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
         if (!isDialogueActive || isStory) return; // 대화가 진행 중이 아니면 실행 안 함
 
-        // 현재 캐릭터의 대사 출력
-        if (currentDialogueIndex < currentDialogues.Length)
+        if (storyProgressAdvance.TryGetNextLine(out Dialogue currentDialogue, out int dialogueLineIndex))
         {
-            Dialogue currentDialogue = currentDialogues[currentDialogueIndex]; //읽어들일 Dialogue를 가져온다.
-
-            // 현재 캐릭터의 모든 대사를 출력했다면 다음 캐릭터(CSV의 ID)로 넘어감
-            if (currentDialogueLineIndex >= currentDialogue.context.Length)
-            {
-                currentDialogueLineIndex = 0; // 대사 인덱스 초기화
-                currentDialogueIndex++; // 다음 캐릭터로 이동
-                ShowNextLine(); // 다음 캐릭터 대사 출력
-                return;
-            }
-
-            // 현재 캐릭터의 대사 출력
-            characterName.text = currentDialogue.name;
-
-            // 현재 대사에 이어붙이기 기능 추가
-            string combinedDialogue = "";
-            
-            for (int i = 0; i <= currentDialogueLineIndex; i++)
-            {
-                if (i % 2 == 0) //3번째 대사마다 이어붙일 대사를 초기화시킨다.
-                    combinedDialogue = "";
-
-                combinedDialogue += currentDialogue.context[i];
-               
-                if (i < currentDialogueLineIndex)
-                {
-                    combinedDialogue += "\n"; // 대사를 합칠 때 들여쓰기로 추가
-                }
-            }
-
-            dialogueContext.text = combinedDialogue; // 합쳐진 대사 출력
-            currentDialogueLineIndex++; // 다음 대사로 이동
+            DialogueLineShow.Show(characterName, dialogueContext, currentDialogue, dialogueLineIndex);
         }
         else
         {
@@ -111,27 +78,13 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         isDialogueActive = false;
         Debug.Log("대화가 종료되었습니다.");
 
-        fadeController.RegisterCallback(() =>
+        fadePanelView.RegisterCallback(() =>
         {
-            switch (storyStage.getStoryNum())
-            {
-                case 0:
-                    Debug.Log("프롤로그");
-                    SceneManager.LoadScene("Stage Select Screen");
-                    break;
-                case 8:
-                    Debug.Log("에필로그");
-                    SceneManager.LoadScene("Thank Screen");
-                    break;
-                default:
-                    Debug.Log("이도저도 아닌");
-                    goToFightScreen();
-                    break;
-            }
+            StorySceneMove.LoadNextScene(storyStage.getStoryNum());
         });
 
         // 페이드 아웃 실행
-        fadeController.FadeOut();
+        fadePanelView.FadeOut();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -143,19 +96,19 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
             if (isDialogueActive && !isStory)
             {
                 ShowNextLine();
-                changeImage.ShowImage();
+                storyImageView.ShowImage();
             }
         }
     }
 
     public int getCurrentDialogueIndex()
     {
-        return currentDialogueIndex;
+        return storyProgressAdvance.CurrentDialogueIndex;
     }
 
     public int getCurrentDialogueLineIndex()
     {
-        return currentDialogueLineIndex;
+        return storyProgressAdvance.CurrentDialogueLineIndex;
     }
 
     public bool getIsStory()
@@ -173,8 +126,4 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         isStory = true; // 이동이 끝나면 InteractionController에서 대사 진행을 허용
     }
 
-    private void goToFightScreen()
-    {
-        SceneManager.LoadScene("Fight Screen_"+storyStage.getStoryNum()+"Stage");
-    }
 }

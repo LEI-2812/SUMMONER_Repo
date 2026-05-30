@@ -1,28 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
-public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandler
+public class Stage2_Controller : StoryScenarioControllerBase
 {
     [Header("표현할 오브젝트들")]
     public GameObject bangImage;
     public GameObject confusebubbleImage;
     public GameObject dialogueBox;
 
-    private int scenarioFlowCount = 0; //대사 카운트
-
     //플레이어 애니메이션
     [SerializeField] private Animator playerAni;
-
-    [Header("컨트롤러")]
-    [SerializeField] private InteractionController interactionController;
-    [SerializeField] private PlayerMove playerMove;
-
-    private int isSameDialgueIndex = -1;
     void Awake() //여기에서 오브젝트들의 초기 설정을 해준다.
     {
         // 느낌표 들어갈 곳, 미리 비활성화
@@ -35,36 +21,23 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         scenarioFlow();
     }
 
-    void Update()
+    protected override void PlayScenarioStep(int scenarioStep)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnClickDialogue();
-        }
-    }
-
-    public void scenarioFlow()
-    {
-        if (checkCSVDialogueID()) //다음 대사의 ID가 이전 ID와 같으면 그냥 대사만 출력시킴.
-        {
-            return;
-        }
-
-        switch (scenarioFlowCount)
+        switch (scenarioStep)
         {
             case 1: // 28 ~ 33
-                Debug.Log(scenarioFlowCount);
+                Debug.Log(scenarioStep);
                 /*  (옷을 툭툭 털며)
                  *  생각보다 소환수가 약하잖아?
                  */
                 showConfuseEffect();
                 break;
             case 2:
-                Debug.Log(scenarioFlowCount);
+                Debug.Log(scenarioStep);
                 //  이렇게 힘을 못 추는데 드래곤을 어떻게 잡아, 말도 안 되는 소리를 하고 있어!                
                 break;
             case 3:
-                Debug.Log(scenarioFlowCount);
+                Debug.Log(scenarioStep);
                 /*  (바닥에 떨어진 보석을 줍는다.)
                  *  이건 정수 보석?
                  *  몬스터들이 만들어낸 건가?
@@ -72,43 +45,23 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
                 showBangEffect();
                 break;
             case 4:
-                Debug.Log(scenarioFlowCount);
+                Debug.Log(scenarioStep);
                 //흠, 이걸로 마력을 좀 더 강력하게 만들 수 있겠는데.
                 break;
             case 5:
-                Debug.Log(scenarioFlowCount);
+                Debug.Log(scenarioStep);
                 //  여기서 PlayerYellow() ani 한번만 실행하고 다시 idle 상태로 복귀
                 offDialgueBox();
                 showYellowEffect();
                 break;
             case 6:
-                Debug.Log(scenarioFlowCount);
+                Debug.Log(scenarioStep);
                 /*  이 정도면 다음 적을 상대할 수는 있겠어.
                  *  드래곤을 잡을 정도는 안되지만.
                  */
                 onDialgueBox();
                 break;
         }
-    }
-
-    // 대사 ID를 비교하는 메소드
-    private bool checkCSVDialogueID()
-    {
-        // InteractionController에서 현재 대사 CSV ID 가져오기
-        int currentDialogueIndex = interactionController.getCurrentDialogueIndex();
-
-        // 현재 대사의 ID가 이전 대사의 ID와 같으면 대사만 진행하고 종료
-        if (currentDialogueIndex == isSameDialgueIndex)
-        {
-            //interactionController.ShowNextLine();
-            return true;
-        }
-        // 대사의 ID가 변경된 경우만 이동 처리
-        isSameDialgueIndex = currentDialogueIndex; // 이전 대사 ID 업데이트
-        // 스위치문 실행 전 scenarioFlow 증가
-        nextScenarioFlow();
-
-        return false;
     }
 
     public void showConfuseEffect() //Confuse효과
@@ -147,10 +100,6 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
         playerMove.playYellowAni();
     }
 
-    private void nextScenarioFlow()
-    {
-        scenarioFlowCount++; //다음 대사 및 시나리오 진행을 위해 값 올리기
-    }
     private void onDialgueBox()
     {
         dialogueBox.SetActive(true);
@@ -160,18 +109,5 @@ public class Stage2_Controller : MonoBehaviour, ScenarioBase, IPointerClickHandl
     {
         Debug.Log("대사창 끄기");
         dialogueBox.SetActive(false);
-    }
-
-    public void OnClickDialogue()
-    {   //플레이어가 움직이지 않는 상황일때만 클릭 허용
-        if (!playerMove.getIsMoving())
-        {
-            interactionController.ShowNextLine();
-            scenarioFlow();
-        }
-    }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        OnClickDialogue();
     }
 }

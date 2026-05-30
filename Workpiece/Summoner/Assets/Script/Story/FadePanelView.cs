@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
-public class FadeController : MonoBehaviour // Panel 불투명도 조절해 페이드인 or 페이드아웃
+
+public class FadePanelView : MonoBehaviour // Panel 불투명도 조절해 페이드인 or 페이드아웃
 {
     public bool isFadeIn; // true=FadeIn, false=FadeOut
     public GameObject panel; // 불투명도를 조절할 Panel 오브젝트

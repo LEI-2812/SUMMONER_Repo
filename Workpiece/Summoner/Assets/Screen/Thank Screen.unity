@@ -757,7 +757,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1406726314}
-        m_TargetAssemblyTypeName: GamePlayController, Assembly-CSharp
+        m_TargetAssemblyTypeName: GameplaySettingView, Assembly-CSharp
         m_MethodName: onClickSound
         m_Mode: 1
         m_Arguments:
@@ -2019,7 +2019,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1044036461}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -3267,7 +3267,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1948006729}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
         m_MethodName: openSettingCanvas
         m_Mode: 1
         m_Arguments:
@@ -4403,7 +4403,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1948006729}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
         m_MethodName: toMainAlert
         m_Mode: 1
         m_Arguments:
@@ -5183,7 +5183,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1992571166}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -6206,7 +6206,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1044036461}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnYesButtonClick
         m_Mode: 1
         m_Arguments:
@@ -6661,7 +6661,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1992571166}
-        m_TargetAssemblyTypeName: Alert, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConfirmAlertView, Assembly-CSharp
         m_MethodName: OnNoButtonClick
         m_Mode: 1
         m_Arguments:
@@ -8845,7 +8845,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1948006729}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
         m_MethodName: toQuitAlert
         m_Mode: 1
         m_Arguments:
@@ -9466,7 +9466,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1406726314}
-        m_TargetAssemblyTypeName: GamePlayController, Assembly-CSharp
+        m_TargetAssemblyTypeName: GameplaySettingView, Assembly-CSharp
         m_MethodName: onClickSound
         m_Mode: 1
         m_Arguments:
@@ -9854,7 +9854,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2074911162}
-        m_TargetAssemblyTypeName: Setting, Assembly-CSharp
+        m_TargetAssemblyTypeName: SettingPanelView, Assembly-CSharp
         m_MethodName: openOption
         m_Mode: 1
         m_Arguments:
