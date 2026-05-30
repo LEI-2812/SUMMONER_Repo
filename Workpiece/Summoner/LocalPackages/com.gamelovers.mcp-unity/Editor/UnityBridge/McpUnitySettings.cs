@@ -23,7 +23,7 @@ namespace McpUnity.Unity
         private static McpUnitySettings _instance;
 
         [Tooltip("Port number for MCP server")]
-        public int Port = 8090;
+        public int Port = 8091;
         
         [Tooltip("Timeout in seconds for tool request")]
         public int RequestTimeoutSeconds = RequestTimeoutMinimum;

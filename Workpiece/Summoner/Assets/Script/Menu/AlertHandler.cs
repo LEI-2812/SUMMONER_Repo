@@ -1,26 +1,26 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-//¾Ë¸²Ã¢ ÀÎÅÍÆäÀÌ½º Á¤ÀÇ
+//ì•Œë¦¼ì°½ ì¸í„°í˜ì´ìŠ¤ ì •ì˜
 public interface IAlertHandler
 {
     void ShowAlert(System.Action<bool> callback);
 }
 
-//¾Ë¸²Ã¢ °ü¸® Å¬·¡½º
+//ì•Œë¦¼ì°½ ê´€ë¦¬ í´ë˜ìŠ¤
 public class AlertHandler : MonoBehaviour, IAlertHandler
 {
     [SerializeField] private GameObject alertObject;
-    [SerializeField] private Alert alertScript;
+    [SerializeField] private ConfirmAlertView alertScript;
     [SerializeField] private AudioSource alertClick;
 
     public void ShowAlert(System.Action<bool> callback)
     {
         if (alertObject == null || alertScript == null)
         {
-            Debug.LogError("Alert Object ¶Ç´Â Alert Script°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("Alert Object ë˜ëŠ” Alert Scriptê°€ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 
@@ -44,4 +44,5 @@ public class AlertHandler : MonoBehaviour, IAlertHandler
         callback(alertScript.getResult());
     }
 }
+
 

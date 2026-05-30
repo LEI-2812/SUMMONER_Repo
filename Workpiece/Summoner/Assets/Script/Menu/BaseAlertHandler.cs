@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class BaseAlertHandler : MonoBehaviour, IAlertHandler
 {
     [SerializeField] protected GameObject alertObject;
-    [SerializeField] protected Alert alertScript;
+    [SerializeField] protected ConfirmAlertView alertScript;
     [SerializeField] protected AudioSource alertClick;
 
     public virtual void ShowAlert(System.Action<bool> callback)
@@ -34,3 +34,4 @@ public abstract class BaseAlertHandler : MonoBehaviour, IAlertHandler
         callback(alertScript.getResult());
     }
 }
+

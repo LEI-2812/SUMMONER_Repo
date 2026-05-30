@@ -63,7 +63,7 @@ export interface McpUnityConfig {
 
 export class McpUnity {
   private logger: Logger;
-  private port: number = 8090;
+  private port: number = 8091;
   private host: string = 'localhost';
   private requestTimeout = 10000;
 
@@ -175,7 +175,7 @@ export class McpUnity {
     const config = await this.readConfigFileAsJson();
 
     const configPort = config.Port;
-    this.port = configPort ? parseInt(configPort, 10) : 8090;
+    this.port = configPort ? parseInt(configPort, 10) : 8091;
     this.logger.info(`Using port: ${this.port} for Unity WebSocket connection`);
 
     // Check environment variable first, then config file, then default to localhost

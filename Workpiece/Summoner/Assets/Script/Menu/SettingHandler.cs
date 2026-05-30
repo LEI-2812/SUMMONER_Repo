@@ -9,18 +9,18 @@ public interface ISettingHandler
 }
 
 
-// ¼³Á¤ Ã³¸® Å¬·¡½º
+// ì„¤ì • ì²˜ë¦¬ í´ë˜ìŠ¤
 public class SettingHandler : MonoBehaviour, ISettingHandler
 {
     public GameObject settingPanel;
-    [SerializeField] private Setting setting;
+    [SerializeField] private SettingPanelView setting;
     [SerializeField] private AudioSource menuClick;
 
     public void OpenSettings()
     {
         if (setting == null || settingPanel == null)
         {
-            Debug.LogError("Setting ¶Ç´Â Setting PanelÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("Setting ë˜ëŠ” Setting Panelì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 
@@ -41,11 +41,11 @@ public class SettingHandler : MonoBehaviour, ISettingHandler
             //setting.GetAudioController().ApplySettings();
             //setting.GetVideoController().ApplySettings();
             //setting.GetGamePlayController().ApplySettings();
-            Debug.Log("¼³Á¤ÀÌ Àû¿ëµÇ¾ú½À´Ï´Ù.");
+            Debug.Log("ì„¤ì •ì´ ì ìš©ë˜ì—ˆìŠµë‹ˆë‹¤.");
         }
         else
         {
-            Debug.LogError("Setting °´Ã¼°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("Setting ê°ì²´ê°€ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
         }
     }
 }
