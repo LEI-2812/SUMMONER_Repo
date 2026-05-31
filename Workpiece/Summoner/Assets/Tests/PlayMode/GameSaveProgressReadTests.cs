@@ -14,12 +14,20 @@ namespace Summoner.PlayModeTests
     {
         private const string SavedStageKey = "savedStage";
         private const string PlayingStageKey = "playingStage";
+        private const string MasterVolumeKey = "MasterVolume";
+        private const string BgmVolumeKey = "BGMVolume";
+        private const string SfxVolumeKey = "SFXVolume";
+        private const string ResolutionIndexKey = "resolutionIndex";
+        private const string ScreenModeIndexKey = "screenModeIndex";
+        private const string StorySkipKey = "IsStorySkip";
+        private const string OnlyMouseKey = "IsOnlyMouse";
 
         [UnityTearDown]
         public IEnumerator TearDown()
         {
             PlayerPrefs.DeleteKey(SavedStageKey);
             PlayerPrefs.DeleteKey(PlayingStageKey);
+            DeleteOptionPrefs();
             PlayerPrefs.Save();
             ResetSingleton("GameSaveController", "instance");
             DestroyObjectByName("Stage Text");
@@ -85,6 +93,70 @@ namespace Summoner.PlayModeTests
             Assert.AreEqual(6, GetIntField(stageController, "stageNum"));
         }
 
+        [TestCase(1, 2)]
+        [TestCase(2, 3)]
+        [TestCase(3, 4)]
+        [TestCase(4, 5)]
+        [TestCase(5, 6)]
+        [TestCase(6, 7)]
+        public void SaveClearedStage_StoresNextStageProgress(int clearedStage, int expectedNextStage)
+        {
+            ResetSaveData();
+            MonoBehaviour controller = CreateMonoBehaviour("GameSaveController");
+
+            Invoke(controller, "StartNewGame");
+            Invoke(controller, "SaveClearedStage", expectedNextStage);
+            object saveData = Invoke(controller, "GetGameSave");
+
+            Assert.AreEqual(expectedNextStage, GetIntField(saveData, "savedStage"), clearedStage + " stage clear should unlock next savedStage.");
+            Assert.AreEqual(expectedNextStage, GetIntField(saveData, "playingStage"), clearedStage + " stage clear should continue from next playingStage.");
+        }
+
+        [Test]
+        public void SaveClearedStage_DoesNotLowerSavedStage_WhenOlderStageIsClearedAgain()
+        {
+            ResetSaveData();
+            SaveProgress(5, 5);
+            MonoBehaviour controller = CreateMonoBehaviour("GameSaveController");
+
+            Invoke(controller, "SaveClearedStage", 3);
+            object saveData = Invoke(controller, "GetGameSave");
+
+            Assert.AreEqual(5, GetIntField(saveData, "savedStage"));
+            Assert.AreEqual(3, GetIntField(saveData, "playingStage"));
+        }
+
+        [Test]
+        public void StartNewGame_ResetsProgressAndKeepsOptionPrefs()
+        {
+            ResetSaveData();
+            SaveProgress(6, 6);
+            SaveOptionPrefs();
+            MonoBehaviour controller = CreateMonoBehaviour("GameSaveController");
+
+            Invoke(controller, "StartNewGame");
+            object saveData = Invoke(controller, "GetGameSave");
+
+            Assert.AreEqual(1, GetIntField(saveData, "savedStage"));
+            Assert.AreEqual(1, GetIntField(saveData, "playingStage"));
+            AssertOptionPrefsKept();
+        }
+
+        [Test]
+        public void ResetGameProgress_RemovesProgressAndKeepsOptionPrefs()
+        {
+            ResetSaveData();
+            SaveProgress(4, 4);
+            SaveOptionPrefs();
+            MonoBehaviour controller = CreateMonoBehaviour("GameSaveController");
+
+            Invoke(controller, "ResetGameProgress");
+
+            Assert.IsFalse(PlayerPrefs.HasKey(SavedStageKey));
+            Assert.IsFalse(PlayerPrefs.HasKey(PlayingStageKey));
+            AssertOptionPrefsKept();
+        }
+
         private static void ResetSaveData()
         {
             PlayerPrefs.DeleteKey(SavedStageKey);
@@ -97,6 +169,40 @@ namespace Summoner.PlayModeTests
             PlayerPrefs.SetInt(SavedStageKey, savedStage);
             PlayerPrefs.SetInt(PlayingStageKey, playingStage);
             PlayerPrefs.Save();
+        }
+
+        private static void SaveOptionPrefs()
+        {
+            PlayerPrefs.SetFloat(MasterVolumeKey, 0.25f);
+            PlayerPrefs.SetFloat(BgmVolumeKey, 0.5f);
+            PlayerPrefs.SetFloat(SfxVolumeKey, 0.75f);
+            PlayerPrefs.SetInt(ResolutionIndexKey, 1);
+            PlayerPrefs.SetInt(ScreenModeIndexKey, 2);
+            PlayerPrefs.SetInt(StorySkipKey, 1);
+            PlayerPrefs.SetInt(OnlyMouseKey, 1);
+            PlayerPrefs.Save();
+        }
+
+        private static void AssertOptionPrefsKept()
+        {
+            Assert.AreEqual(0.25f, PlayerPrefs.GetFloat(MasterVolumeKey));
+            Assert.AreEqual(0.5f, PlayerPrefs.GetFloat(BgmVolumeKey));
+            Assert.AreEqual(0.75f, PlayerPrefs.GetFloat(SfxVolumeKey));
+            Assert.AreEqual(1, PlayerPrefs.GetInt(ResolutionIndexKey));
+            Assert.AreEqual(2, PlayerPrefs.GetInt(ScreenModeIndexKey));
+            Assert.AreEqual(1, PlayerPrefs.GetInt(StorySkipKey));
+            Assert.AreEqual(1, PlayerPrefs.GetInt(OnlyMouseKey));
+        }
+
+        private static void DeleteOptionPrefs()
+        {
+            PlayerPrefs.DeleteKey(MasterVolumeKey);
+            PlayerPrefs.DeleteKey(BgmVolumeKey);
+            PlayerPrefs.DeleteKey(SfxVolumeKey);
+            PlayerPrefs.DeleteKey(ResolutionIndexKey);
+            PlayerPrefs.DeleteKey(ScreenModeIndexKey);
+            PlayerPrefs.DeleteKey(StorySkipKey);
+            PlayerPrefs.DeleteKey(OnlyMouseKey);
         }
 
         private static MonoBehaviour CreateMonoBehaviour(string typeName)

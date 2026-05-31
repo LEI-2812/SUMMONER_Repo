@@ -58,7 +58,6 @@ namespace Summoner.EditModeTests
 
             AssertHasComponent("GameSaveController");
             AssertHasComponent("StageFlowController");
-            AssertHasComponent("StageController");
         }
 
         [Test]
@@ -71,6 +70,7 @@ namespace Summoner.EditModeTests
             MonoBehaviour stageSelectView = FindOneComponent("StageSelectView");
             AssertButtonArrayAssigned(stageSelectView, "buttons");
             AssertFieldAssigned(stageSelectView, "audioSource");
+            AssertHasComponent("StageController");
         }
 
         [Test]

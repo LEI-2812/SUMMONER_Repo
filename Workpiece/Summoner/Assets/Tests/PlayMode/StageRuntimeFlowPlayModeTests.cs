@@ -129,6 +129,60 @@ namespace Summoner.PlayModeTests
             Assert.IsNotNull(GetSingletonInstance("StageFlowController", "instance"), "StageFlowController must stay alive after scene load.");
         }
 
+        [UnityTest]
+        public IEnumerator StageSelectScreen_EnablesOnlyUnlockedStageButtons()
+        {
+            for (int savedStage = 1; savedStage <= 7; savedStage++)
+            {
+                ResetSaveData();
+                SaveStage(savedStage);
+
+                yield return LoadScene(StartSceneName);
+
+                MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+                Invoke(stageFlowController, "SendStageSelect");
+                yield return WaitUntilSceneLoaded(StageSelectSceneName);
+                yield return null;
+
+                MonoBehaviour stageSelectView = FindMonoBehaviour("StageSelectView");
+                Button[] stageButtons = GetButtonArray(stageSelectView, "buttons");
+
+                Assert.GreaterOrEqual(stageButtons.Length, 7, "Stage Select Screen must have at least seven stage buttons.");
+
+                for (int buttonIndex = 0; buttonIndex < 7; buttonIndex++)
+                {
+                    bool shouldBeUnlocked = buttonIndex < savedStage;
+                    Assert.AreEqual(
+                        shouldBeUnlocked,
+                        stageButtons[buttonIndex].interactable,
+                        "savedStage=" + savedStage + " must unlock stages 1 through " + savedStage + " only.");
+                }
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator StageFlowController_SendNextStageAfterBattle_LoadsExpectedNextScene()
+        {
+            ResetSaveData();
+            SaveStage(1);
+
+            yield return LoadScene(StartSceneName);
+
+            MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+
+            Invoke(stageFlowController, "SendNextStageAfterBattle", 1);
+            yield return WaitUntilSceneLoaded("Story Screen_2Stage");
+
+            Invoke(stageFlowController, "SendNextStageAfterBattle", 3);
+            yield return WaitUntilSceneLoaded("Fight Screen_4Stage");
+
+            Invoke(stageFlowController, "SendNextStageAfterBattle", 5);
+            yield return WaitUntilSceneLoaded("Fight Screen_6Stage");
+
+            Invoke(stageFlowController, "SendNextStageAfterBattle", 7);
+            yield return WaitUntilSceneLoaded("Epilogue Screen");
+        }
+
         private static IEnumerator LoadScene(string sceneName)
         {
             ResetSingleton("GameSaveController", "instance");
@@ -208,6 +262,16 @@ namespace Summoner.PlayModeTests
             FieldInfo fieldInfo = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public);
             Assert.IsNotNull(fieldInfo, target.GetType().Name + "." + fieldName + " field was not found.");
             return (int)fieldInfo.GetValue(target);
+        }
+
+        private static Button[] GetButtonArray(object target, string fieldName)
+        {
+            FieldInfo fieldInfo = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            Assert.IsNotNull(fieldInfo, target.GetType().Name + "." + fieldName + " field was not found.");
+
+            Button[] buttons = fieldInfo.GetValue(target) as Button[];
+            Assert.IsNotNull(buttons, target.GetType().Name + "." + fieldName + " must be a Button array.");
+            return buttons;
         }
 
         private static void ResetSingleton(string typeName, string fieldName)
