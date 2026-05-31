@@ -762,7 +762,6 @@ GameObject:
   - component: {fileID: 637407126}
   - component: {fileID: 637407127}
   - component: {fileID: 637407128}
-  - component: {fileID: 637407129}
   - component: {fileID: 637407130}
   - component: {fileID: 637407131}
   - component: {fileID: 637407132}
@@ -918,21 +917,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!111 &637407129
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 637407121}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 2a70c8d3d4f1daa49995bcec6f0e654f, type: 2}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &637407130
 MonoBehaviour:
   m_ObjectHideFlags: 0
