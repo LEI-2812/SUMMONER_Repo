@@ -26,7 +26,7 @@ public class PlayerAttackPrediction : MonoBehaviour
                 // 소환수의 특수 스킬이 사용 가능한지 확인
                 IAttackStrategy[] availableSpecialAttacks = summon.getAvailableSpecialAttacks();
                 bool hasUsableSpecialAttack = (availableSpecialAttacks != null && availableSpecialAttacks.Length > 0);
-                int attackIndex = plateController.getClosestPlayerPlateIndex();
+                int attackIndex = plateController.getClosestEnermyPlatesIndex(summon);
                 if (attackIndex == -1)
                 {
                     Debug.Log("공격할 인덱스가 없음");

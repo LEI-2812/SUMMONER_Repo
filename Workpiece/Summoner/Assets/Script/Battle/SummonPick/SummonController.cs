@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SummonController : MonoBehaviour
 {
-    public static SummonController Instance; // 싱글톤
-
     [SerializeField] private GameObject darkBackground; // 재소환 배경 처리할 판넬 (반투명)
 
     public bool isSummoning = false; // 재소환 중인지 확인하는 변수
@@ -16,12 +15,16 @@ public class SummonController : MonoBehaviour
 
     [Header("일반 소환 관련 오브젝트")]
     public List<Summon> summons; // 인스펙터에 넣을 소환수 오브젝트들
-    public GameObject takeSummonPanel;
-    [SerializeField] private List<PickSummonPanelView> selectSummonPanels; // 패널에 띄울 소환수
+    [FormerlySerializedAs("takeSummonPanel")]
+    [SerializeField] private GameObject drawPanel;
+    [FormerlySerializedAs("selectSummonPanels")]
+    [SerializeField] private List<DrawOptionPanelView> drawOptionPanels; // 패널에 띄울 소환수
 
     [Header("재소환 관련 오브젝트")]
-    public GameObject reTakeSummonPanel;
-    [SerializeField] private List<PickSummonPanelView> ReselectSummonPanels; // 패널에 띄울 소환수
+    [FormerlySerializedAs("reTakeSummonPanel")]
+    [SerializeField] private GameObject redrawPanel;
+    [FormerlySerializedAs("ReselectSummonPanels")]
+    [SerializeField] private List<DrawOptionPanelView> redrawOptionPanels; // 패널에 띄울 소환수
     private int selectedPlateIndex = -1; // 소환시킬 플레이트 번호
 
     [Header("(외부 오브젝트)컨트롤러")]
@@ -36,36 +39,42 @@ public class SummonController : MonoBehaviour
 
     private void Awake()
     {
-        // 싱글톤 패턴 구현
-        if (Instance == null)
+        ConnectOptionPanels(drawOptionPanels);
+        ConnectOptionPanels(redrawOptionPanels);
+    }
+
+    private void ConnectOptionPanels(List<DrawOptionPanelView> optionPanels)
+    {
+        if (optionPanels == null) return;
+
+        foreach (DrawOptionPanelView optionPanel in optionPanels)
         {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
+            if (optionPanel == null) continue;
+
+            optionPanel.SetSelectionHandler(OnSelectSummon);
         }
     }
 
     // 일반 및 재소환을 처리하는 메서드
-    public void StartSummon(int plateIndex, bool isResummon)
+    public void StartSummon(int plateIndex, bool isRedraw)
     {
+        isSummoning = true;
 
-        if (isResummon)
+        if (isRedraw)
         {
-            randomReTakeSummon();
-            StartCoroutine(ReSummonSelection(plateIndex));
+            OpenRedrawOptions();
+            StartCoroutine(RedrawSelection(plateIndex));
         }
         else
         {
             darkBackground.SetActive(true);
-            randomTakeSummon();
-            StartCoroutine(TakeSummonSelection(plateIndex));
+            OpenDrawOptions();
+            StartCoroutine(DrawSelection(plateIndex));
         }
     }
 
     // 소환 코루틴 (일반 소환 로직)
-    private IEnumerator TakeSummonSelection(int plateIndex)
+    private IEnumerator DrawSelection(int plateIndex)
     {
         while (selectedSummon == null)
         {
@@ -87,7 +96,7 @@ public class SummonController : MonoBehaviour
     }
 
     // 재소환 코루틴 (재소환 로직)
-    private IEnumerator ReSummonSelection(int plateIndex)
+    private IEnumerator RedrawSelection(int plateIndex)
     {
         while (selectedSummon == null)
         {
@@ -113,7 +122,7 @@ public class SummonController : MonoBehaviour
     }
 
     //차례로 재소환 로직
-    public bool StartResummon()
+    public bool StartRedraw()
     {
         if (plateController.getPlayerPlates()[0].getCurrentSummon() == null && plateController.getPlayerPlates()[1].getCurrentSummon() == null && plateController.getPlayerPlates()[2].getCurrentSummon() == null)
         {
@@ -121,12 +130,12 @@ public class SummonController : MonoBehaviour
             return false;
         }
 
-        ReSummonPanelOpenAndHighlight();
+        OpenRedrawPlateSelection();
         return true;
     }
 
     //소환수가 있는 플레이트만 강조
-    private void ReSummonPanelOpenAndHighlight()
+    private void OpenRedrawPlateSelection()
     {
         // 재소환 진행 중 표시와 백그라운드 활성화
         isSummoning = true;
@@ -144,7 +153,7 @@ public class SummonController : MonoBehaviour
             if (plateController.getPlayerPlates()[i] == plate)
             {
                 selectedPlateIndex = i; //선택한 플레이트의 번호를 넣는다.
-                ResummonSelectStart();
+                StartRedrawOptionSelection();
                 break;
             }
         }
@@ -153,26 +162,25 @@ public class SummonController : MonoBehaviour
     }
 
     //재소환 시킬 플레이트에 넣을 소환수를 선택하는 오브젝트 활성화
-    public void ResummonSelectStart() //재소환 소환수 선택시작
+    private void StartRedrawOptionSelection()
     {
-        reTakeSummonPanel.SetActive(true); //선택할 판넬들을 활성화시킨다.
+        redrawPanel.SetActive(true); //선택할 판넬들을 활성화시킨다.
         StartSummon(selectedPlateIndex, true); //소환을 시작(선택한 인덱스와 재소환여부를 true하여 호출)
     }
 
-    //일반시 소환할 소환수 선택
-    public void randomTakeSummon()
+    private void OpenDrawOptions()
     {
-        takeSummonPanel.SetActive(true);
-        List<Summon> randomSelectedSummons = SummonRandomly();
+        drawPanel.SetActive(true);
+        List<Summon> drawOptions = CreateDrawOptions();
 
-        for (int i = 0; i < selectSummonPanels.Count && i < randomSelectedSummons.Count; i++)
+        for (int i = 0; i < drawOptionPanels.Count && i < drawOptions.Count; i++)
         {
-            Summon summon = randomSelectedSummons[i];
-            selectSummonPanels[i].setAssignedSummon(summon);
+            Summon summon = drawOptions[i];
+            drawOptionPanels[i].setAssignedSummon(summon);
 
             if (summon.getImage() != null && summon.getImage().sprite != null)
             {
-                selectSummonPanels[i].SetSummonImage(summon.getImage());
+                drawOptionPanels[i].SetSummonImage(summon.getImage());
             }
         }
 
@@ -180,20 +188,20 @@ public class SummonController : MonoBehaviour
     }
 
     //재소환시 소환시킬 소환수 선택
-    private void randomReTakeSummon()
+    private void OpenRedrawOptions()
     {
         plateController.HideAllPlates();
-        reTakeSummonPanel.SetActive(true);
-        List<Summon> randomSelectedSummons = SummonRandomly();
+        redrawPanel.SetActive(true);
+        List<Summon> drawOptions = CreateDrawOptions();
 
-        for (int i = 0; i < ReselectSummonPanels.Count && i < randomSelectedSummons.Count; i++)
+        for (int i = 0; i < redrawOptionPanels.Count && i < drawOptions.Count; i++)
         {
-            Summon summon = randomSelectedSummons[i];
-            ReselectSummonPanels[i].setAssignedSummon(summon);
+            Summon summon = drawOptions[i];
+            redrawOptionPanels[i].setAssignedSummon(summon);
 
             if (summon.getImage() != null && summon.getImage().sprite != null)
             {
-                ReselectSummonPanels[i].SetSummonImage(summon.getImage());
+                redrawOptionPanels[i].SetSummonImage(summon.getImage());
             }
         }
 
@@ -201,14 +209,14 @@ public class SummonController : MonoBehaviour
     }
 
     // 3마리의 소환수를 확률에 따라 선택하는 메소드
-    private List<Summon> SummonRandomly()
+    private List<Summon> CreateDrawOptions()
     {
         List<Summon> selectedSummons = new List<Summon>(); // 소환 판넬에 보이게 할 소환수들
 
         // 3마리의 소환수를 선택할 때까지 반복
         while (selectedSummons.Count < 3)
         {
-            Summon summon = SelectSummonByRank();
+            Summon summon = SelectDrawOptionByRank();
             if (summon != null && !selectedSummons.Contains(summon)) // 중복 방지
             {
                 selectedSummons.Add(summon);
@@ -219,35 +227,35 @@ public class SummonController : MonoBehaviour
     }
 
     // 등급에 따른 확률로 소환수를 뽑음
-    private Summon SelectSummonByRank()
+    private Summon SelectDrawOptionByRank()
     {
         float randomValue = Random.Range(0f, 100f);
 
         Summon summon = null;
         if (randomValue <= 50) // Low 등급 (50%)
         {
-            summon = GetSummonByRank(SummonRank.Low);
+            summon = SelectRandomSummonByRank(SummonRank.Low);
         }
         else if (randomValue <= 85) // Medium 등급 (35%)
         {
-            summon = GetSummonByRank(SummonRank.Medium);
+            summon = SelectRandomSummonByRank(SummonRank.Medium);
         }
         else // High 등급 (15%)
         {
-            summon = GetSummonByRank(SummonRank.High);
+            summon = SelectRandomSummonByRank(SummonRank.High);
         }
 
         // 해당 등급의 소환수가 없으면 다른 등급으로 대체
         if (summon == null)
         {
-            summon = GetSummonByRank(SummonRank.Low) ?? GetSummonByRank(SummonRank.Medium) ?? GetSummonByRank(SummonRank.High);
+            summon = SelectRandomSummonByRank(SummonRank.Low) ?? SelectRandomSummonByRank(SummonRank.Medium) ?? SelectRandomSummonByRank(SummonRank.High);
         }
 
         return summon;
     }
 
     // 특정 등급의 소환수 중 하나를 무작위로 선택하는 메소드
-    private Summon GetSummonByRank(SummonRank rank)
+    private Summon SelectRandomSummonByRank(SummonRank rank)
     {
         List<Summon> availableSummons = new List<Summon>();
 
@@ -291,8 +299,8 @@ public class SummonController : MonoBehaviour
                 plateController.getPlayerPlates()[i].SetSummonImageTransparency(1.0f); //투명도 되돌리기
             }
         }
-        takeSummonPanel.SetActive(false);
-        reTakeSummonPanel.SetActive(false);
+        drawPanel.SetActive(false);
+        redrawPanel.SetActive(false);
         clickSound.Play();
     }
 

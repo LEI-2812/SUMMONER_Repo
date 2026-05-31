@@ -13,8 +13,6 @@ public class Enermy : Character
     private EnermyAttackController enermyAttackController;
     //private EnermyAlgorithm enermyAlgorithm;
 
-    private BattleResultAlertView battleResultAlertView;
-
     //private int stageNum;
     //private int currentTurn;
 
@@ -22,11 +20,6 @@ public class Enermy : Character
     {
         enermyAttackController = GetComponent<EnermyAttackController>();
         //enermyAlgorithm = GetComponent<EnermyAlgorithm>();
-    }
-
-    private void Start()
-    {
-        battleResultAlertView = GetComponent<BattleResultAlertView>();
     }
 
     public  void startTurn()

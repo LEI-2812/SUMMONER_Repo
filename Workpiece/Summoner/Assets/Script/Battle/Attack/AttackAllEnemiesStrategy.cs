@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class AttackAllEnemiesStrategy : IAttackStrategy
 {
@@ -21,8 +22,19 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
 
     public void Attack(Summon attacker, List<Plate> targetPlates,int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
+        if (targetPlates == null)
+        {
+            Debug.LogWarning("Target plates are missing.");
+            return;
+        }
+
         foreach (var plate in targetPlates)
         {
+            if (plate == null)
+            {
+                continue;
+            }
+
             Summon target = plate.getCurrentSummon();
             if (target != null)
             {

@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlateView))]
 public class PlateController : MonoBehaviour
 {
 
     [SerializeField] private List<Plate> playerPlates;
     [SerializeField] private List<Plate> enermyPlates;
+    private PlateView plateView;
 
     private List<Plate> plates = new List<Plate>();
 
@@ -14,6 +16,7 @@ public class PlateController : MonoBehaviour
 
     private void Awake()
     {
+        EnsurePlateView();
         InitializePlates();
     }
 
@@ -99,44 +102,16 @@ public class PlateController : MonoBehaviour
     }
 
     public void DownTransparencyForWhoPlate(bool isPlayer)
-   {
-        if (isPlayer)
-        {
-            for (int i = 0; i < playerPlates.Count; i++)
-            {
-                if (playerPlates[i].getCurrentSummon() != null)
-                {
-                    playerPlates[i].SetSummonImageTransparency(0.5f);
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < enermyPlates.Count; i++)
-            {
-                if (enermyPlates[i].getCurrentSummon() != null)
-                {
-                    enermyPlates[i].SetSummonImageTransparency(0.5f);
-                }
-            }
-        }
-   
-   }
+    {
+        plateView.DownTransparencyForOccupiedPlates(isPlayer ? playerPlates : enermyPlates);
+    }
 
 
 
     // 플레이어의 소환수가 있는 플레이트만 강조 및 투명도 설정
     public void HighlightPlayerPlates()
     {
-        // 플레이어 플레이트만 강조
-        for (int i = 0; i < playerPlates.Count; i++)
-        {
-            if (playerPlates[i].getCurrentSummon() != null)
-            {
-                playerPlates[i].Highlight(); // 노란색으로 강조
-                playerPlates[i].SetSummonImageTransparency(0.5f); // 소환수는 투명도 조절
-            }
-        }
+        plateView.HighlightOccupiedPlates(playerPlates);
 
         // 적 플레이트는 숨기기
         HideEnemyPlates();
@@ -145,14 +120,7 @@ public class PlateController : MonoBehaviour
     // 강조를 해제하고 투명도를 기본값으로 되돌리기
     public void ResetPlayerPlateHighlight()
     {
-        for (int i = 0; i < playerPlates.Count; i++)
-        {
-            if (playerPlates[i].getCurrentSummon() != null)
-            {
-                playerPlates[i].Unhighlight(); // 강조 해제
-                playerPlates[i].SetSummonImageTransparency(1.0f); // 투명도 기본값으로 되돌리기
-            }
-        }
+        plateView.ResetOccupiedPlateHighlight(playerPlates);
 
         // 적 플레이트를 다시 보이게 하기
         ShowEnemyPlates();
@@ -161,33 +129,19 @@ public class PlateController : MonoBehaviour
     // 적의 플레이트를 숨기는 메서드
     public void HideEnemyPlates()
     {
-        foreach (Plate plate in enermyPlates)
-        {
-            plate.gameObject.SetActive(false); // 적 플레이트를 비활성화
-        }
+        plateView.HidePlates(enermyPlates);
     }
 
     // 적의 플레이트를 다시 보이게 하는 메서드
     private void ShowEnemyPlates()
     {
-        foreach (Plate plate in enermyPlates)
-        {
-            plate.gameObject.SetActive(true); // 적 플레이트를 활성화
-        }
+        plateView.ShowPlates(enermyPlates);
     }
 
     // 플레이어의 소환수가 있는 플레이트만 강조 및 투명도 설정
     public void HighlightEnermyPlates()
     {
-        // 플레이어 플레이트만 강조
-        for (int i = 0; i < enermyPlates.Count; i++)
-        {
-            if (enermyPlates[i].getCurrentSummon() != null)
-            {
-                enermyPlates[i].Highlight(); // 노란색으로 강조
-                enermyPlates[i].SetSummonImageTransparency(0.5f); // 소환수는 투명도 조절
-            }
-        }
+        plateView.HighlightOccupiedPlates(enermyPlates);
 
         // 적 플레이트는 숨기기
         HidePlayerPlates();
@@ -196,14 +150,7 @@ public class PlateController : MonoBehaviour
     // 강조를 해제하고 투명도를 기본값으로 되돌리기
     public void ResetEnermyPlateHighlight()
     {
-        for (int i = 0; i < enermyPlates.Count; i++)
-        {
-            if (enermyPlates[i].getCurrentSummon() != null)
-            {
-                enermyPlates[i].Unhighlight(); // 강조 해제
-                enermyPlates[i].SetSummonImageTransparency(1.0f); // 투명도 기본값으로 되돌리기
-            }
-        }
+        plateView.ResetOccupiedPlateHighlight(enermyPlates);
 
         // 적 플레이트를 다시 보이게 하기
         ShowPlayerPlates();
@@ -218,35 +165,23 @@ public class PlateController : MonoBehaviour
     // 적의 플레이트를 숨기는 메서드
     public void HidePlayerPlates()
     {
-        foreach (Plate plate in playerPlates)
-        {
-            plate.gameObject.SetActive(false); // 적 플레이트를 비활성화
-        }
+        plateView.HidePlates(playerPlates);
     }
 
     // 적의 플레이트를 다시 보이게 하는 메서드
     private void ShowPlayerPlates()
     {
-        foreach (Plate plate in playerPlates)
-        {
-            plate.gameObject.SetActive(true); // 적 플레이트를 활성화
-        }
+        plateView.ShowPlates(playerPlates);
     }
 
     public void HideAllPlates()
     {
-        foreach (Plate plate in plates)
-        {
-            plate.gameObject.SetActive(false); // 적 플레이트를 비활성화
-        }
+        plateView.HidePlates(plates);
     }
 
     public void ShowAllPlates()
     {
-        foreach (Plate plate in plates)
-        {
-            plate.gameObject.SetActive(true); // 적 플레이트를 비활성화
-        }
+        plateView.ShowPlates(plates);
     }
 
     public int getClosestPlayerPlatesIndex(Summon attackingSummon) //플레이어 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
@@ -279,9 +214,9 @@ public class PlateController : MonoBehaviour
 
     public int getClosestEnermyPlatesIndex(Summon attackingSummon) //적 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
     {
-        for (int i = 0; i < playerPlates.Count; i++)
+        for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon currentSummon = playerPlates[i].getCurrentSummon();
+            Summon currentSummon = enermyPlates[i].getCurrentSummon();
             if (currentSummon != null && currentSummon != attackingSummon) // 현재 소환수가 존재하고, 공격하는 소환수와 같지 않은 경우
             {
                 return i;
@@ -398,6 +333,20 @@ public class PlateController : MonoBehaviour
         // playerPlates와 EnermyPlates의 원본 리스트의 내용을 plates 리스트에 추가
         plates.AddRange(playerPlates);
         plates.AddRange(enermyPlates);
+    }
+
+    private void EnsurePlateView()
+    {
+        if (plateView != null)
+        {
+            return;
+        }
+
+        plateView = GetComponent<PlateView>();
+        if (plateView == null)
+        {
+            plateView = gameObject.AddComponent<PlateView>();
+        }
     }
 
     public List<Plate> getPlayerPlates()

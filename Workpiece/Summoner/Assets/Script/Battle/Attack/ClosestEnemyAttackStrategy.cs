@@ -20,6 +20,12 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
 
     public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)
     {
+        if (targetPlates == null)
+        {
+            Debug.LogWarning("Target plates are missing.");
+            return;
+        }
+
         Summon closestEnemySummon = GetClosestEnemySummon(targetPlates);
 
         if (closestEnemySummon != null)
@@ -34,8 +40,18 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
 
     private Summon GetClosestEnemySummon(List<Plate> targetPlates)
     {
+        if (targetPlates == null)
+        {
+            return null;
+        }
+
         for (int i = 0; i < targetPlates.Count; i++)
         {
+            if (targetPlates[i] == null)
+            {
+                continue;
+            }
+
             Summon enemySummon = targetPlates[i].getCurrentSummon();
             if (enemySummon != null)
             {

@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class PickSummonPanelView : MonoBehaviour,
+public class DrawOptionPanelView : MonoBehaviour,
     IPointerEnterHandler, //플레이트에 마우스 올렸을때 이벤트 인터페이스
     IPointerExitHandler,  //플레이트에 마우스가 벗어낫을때 이벤트 인터페이스
     IPointerClickHandler //플레이트 클릭시 상태창 
@@ -13,6 +14,13 @@ public class PickSummonPanelView : MonoBehaviour,
     [SerializeField] private Summon assignedSummon; // 패널에 할당된 소환수
     [Header("소환이벤트 소환수 이미지")] 
     [SerializeField] private Image summonImage;
+
+    private Action<Summon> selectSummon;
+
+    public void SetSelectionHandler(Action<Summon> selectSummon)
+    {
+        this.selectSummon = selectSummon;
+    }
 
 
     // 패널의 이미지를 설정하는 메소드
@@ -27,7 +35,9 @@ public class PickSummonPanelView : MonoBehaviour,
     public void OnPointerClick(PointerEventData eventData)
     {
         // 패널 클릭 시 해당 소환수 반환
-        SummonController.Instance.OnSelectSummon(assignedSummon);
+        if (assignedSummon == null) return;
+
+        selectSummon?.Invoke(assignedSummon);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

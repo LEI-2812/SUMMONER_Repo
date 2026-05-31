@@ -101,12 +101,9 @@ public class Plate : MonoBehaviour,
     // 소환수가 사망하거나 플레이트에서 떠날 때
     public void RemoveSummon()
     {
-        if (isInSummon)
-        {
-            currentSummon = null; // 소환수 연결 해제
-            isInSummon = false;
-            Debug.Log("소환수 제거.");
-        }
+        currentSummon = null; // 소환수 연결 해제
+        isInSummon = false;
+        Debug.Log("소환수 제거.");
     }
     public void DirectMoveSummon(Summon summon)
     {
@@ -319,6 +316,7 @@ public class Plate : MonoBehaviour,
     public void setCurrentSummon(Summon currentSummon)
     {
         this.currentSummon = currentSummon;
+        isInSummon = currentSummon != null;
     }
     public bool getIsInSummon()
     {

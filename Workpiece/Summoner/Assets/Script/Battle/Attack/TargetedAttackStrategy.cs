@@ -22,7 +22,20 @@ public class TargetedAttackStrategy : IAttackStrategy
 
     public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int Arrayindex)
     {
-        Summon target = targetPlates[selectedPlateIndex].getCurrentSummon();
+        if (targetPlates == null || selectedPlateIndex < 0 || selectedPlateIndex >= targetPlates.Count)
+        {
+            Debug.LogWarning("Invalid target plate index.");
+            return;
+        }
+
+        Plate targetPlate = targetPlates[selectedPlateIndex];
+        if (targetPlate == null)
+        {
+            Debug.LogWarning("Target plate is missing.");
+            return;
+        }
+
+        Summon target = targetPlate.getCurrentSummon();
 
         if (target != null)
         {
