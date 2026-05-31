@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Cat : Summon
@@ -27,7 +25,7 @@ public class Cat : Summon
 
     public override void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
-        if (SpecialAttackArrayIndex < 0 || SpecialAttackArrayIndex >= specialAttackStrategies.Length)
+        if (!SpecialAttackIndexCheck(SpecialAttackArrayIndex))
         {
             Debug.Log("유효하지 않은 특수 공격 인덱스입니다.");
             return;
@@ -35,7 +33,7 @@ public class Cat : Summon
 
         var specialAttack = specialAttackStrategies[SpecialAttackArrayIndex];
 
-        if (specialAttack == null || specialAttack.getCurrentCooldown() > 0)
+        if (!AttackCanUse(specialAttack))
         {
             Debug.Log("특수 스킬이 쿨타임 중입니다.");
             return;
@@ -46,9 +44,8 @@ public class Cat : Summon
         attackPower = heavyAttakPower;
 
         specialAttack.Attack(this, enemyPlates, selectedPlateIndex, SpecialAttackArrayIndex);
-        animator.SetTrigger("attack");
-        StartCoroutine(ColorChange(1)); // 검정색
-        specialAttack.ApplyCooldown();
+        AttackMotionPlay(false);
+        AttackCooldownApply(specialAttack);
         attackPower = originAttackPower;
         isAttack = false;
     }
@@ -59,16 +56,6 @@ public class Cat : Summon
         nowHP = maxHP;
         attackPower = (int)(attackPower * multiple); //일반공격
         heavyAttakPower = (int)(heavyAttakPower * multiple);
-    }
-
-    public override void die()
-    {
-        base.die();
-    }
-
-    public override void takeDamage(double damage)
-    {
-        base.takeDamage(damage);
     }
 
 }

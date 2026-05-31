@@ -1,30 +1,30 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ClosestEnemyAttackStrategy : IAttackStrategy
 {
-    private StatusType StatusType;
+    private StatusType statusType;
     private double damage;
     private int cooltime;
     private int currentCooldown;
-    private int statusTime;
+    private IAttackEffect attackEffect;
+
     public ClosestEnemyAttackStrategy(StatusType statusType,double damage, int cooltime, int statusTime=0)
     {
-        this.StatusType = statusType;
+        this.statusType = statusType;
         this.damage = damage;
         this.cooltime = cooltime;
         this.currentCooldown = 0;
-        this.statusTime = statusTime;
+        this.attackEffect = ClosestEnemyAttackEffectInstanceCreate.Create(statusType);
     }
+
     public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)
     {
         Summon closestEnemySummon = GetClosestEnemySummon(targetPlates);
 
         if (closestEnemySummon != null)
         {
-            Debug.Log($"{attacker.getSummonName()}이(가) {closestEnemySummon.getSummonName()}을(를) 공격합니다.");
-            closestEnemySummon.takeDamage(attacker.getAttackPower());
+            attackEffect.AttackEffectApply(attacker, closestEnemySummon, SpecialAttackarrayIndex);
         }
         else
         {
@@ -50,8 +50,11 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
     {
         return damage;
     }
-    public StatusType getStatusType() { return StatusType; }
-    public void setStatusType(StatusType type) { StatusType = type; }
+
+    public bool BenefitEffectCheck() => attackEffect.BenefitEffectCheck();
+
+    public StatusType getStatusType() { return statusType; }
+    public void setStatusType(StatusType type) { statusType = type; }
     
     public int getCooltime() { return cooltime; }
 

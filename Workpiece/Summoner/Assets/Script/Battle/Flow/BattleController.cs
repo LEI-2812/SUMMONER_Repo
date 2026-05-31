@@ -105,7 +105,7 @@ public class BattleController : MonoBehaviour
         if (isPlayer) //플레이어
         {
             //아군 버프에 대한 것일경우
-            if (targetedAttack.isBenefitEffect(targetedAttack))
+            if (targetedAttack.BenefitEffectCheck())
             {
                 attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 아군 플레이트에 이로운 효과
                 Debug.Log($"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
@@ -125,7 +125,7 @@ public class BattleController : MonoBehaviour
         }
         else //적
         {
-            if (targetedAttack.isBenefitEffect(targetedAttack))
+            if (targetedAttack.BenefitEffectCheck())
             {
                 attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 이로운 효과
                 Debug.Log($"적이 선택한 적의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
@@ -152,7 +152,7 @@ public class BattleController : MonoBehaviour
 
         if (isPlayer)
         {
-            if(allAttackstrategy.isBenefitEffect(allAttackstrategy)) //힐, 보호막, 강화 인지 묻기
+            if(allAttackstrategy.BenefitEffectCheck()) //힐, 보호막, 강화 인지 묻기
             {
                 attackSummon.SpecialAttack(plateController.getPlayerPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적의 플레이트에 공격
             }
@@ -164,7 +164,7 @@ public class BattleController : MonoBehaviour
         }
         else
         {
-            if (allAttackstrategy.isBenefitEffect(allAttackstrategy)) //힐, 보호막, 강화 인지 묻기
+            if (allAttackstrategy.BenefitEffectCheck()) //힐, 보호막, 강화 인지 묻기
             {
                 attackSummon.SpecialAttack(plateController.getEnermyPlates(), selectedPlateIndex, selectSpecialAttackIndex); // 적 플레이트에 버프
             }
