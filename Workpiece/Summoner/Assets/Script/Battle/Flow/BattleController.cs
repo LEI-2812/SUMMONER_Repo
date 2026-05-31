@@ -67,17 +67,17 @@ public class BattleController : MonoBehaviour
         // 공격 타입별로 로직 수행
         if (attackStrategy is TargetedAttackStrategy targetedAttack)
         {
-            attackSummon.attackSound.Play();
+            attackSummon.AttackSoundPlay();
             HandleTargetedAttack(attackSummon, targetedAttack, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);   
         }
         else if (attackStrategy is AttackAllEnemiesStrategy attackAll)
         {
-            attackSummon.attackSound.Play();
+            attackSummon.AttackSoundPlay();
             HandleAttackAll(attackSummon, attackAll, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
         }
         else if (attackStrategy is ClosestEnemyAttackStrategy closestAttack)
         {
-            attackSummon.attackSound.Play();
+            attackSummon.AttackSoundPlay();
             HandleClosestEnemyAttack(attackSummon, closestAttack, selectedPlateIndex, selectSpecialAttackIndex, isPlayer);
         }
         else

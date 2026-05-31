@@ -36,10 +36,9 @@ public class Player : Character
     [SerializeField] private BattleController battleController;
     [SerializeField] private PlateController plateController;
 
-    public BattleResultAlertView battleResultAlertView;
+    [SerializeField] private BattleResultController battleResultController;
 
     private int selectedPlateIndex = -1;
-    private int stageNum;
     public int currentTurn;
     public int clearTurn;
     private bool hasSummonedThisTurn;
@@ -48,8 +47,7 @@ public class Player : Character
     {
         summonButtonText = summonButton.GetComponentInChildren<TextMeshProUGUI>();
         reSummonButtonText = reSummonButton.GetComponentInChildren<TextMeshProUGUI>();
-        battleResultAlertView = GetComponent<BattleResultAlertView>();
-        stageNum = GameSaveController.GetGameSaveOrDefault().playingStage;
+        EnsureBattleResultController();
         clearTurn = turnController.GetClearTurn();
         ResetPlayerSetting();
     }
@@ -141,13 +139,13 @@ public class Player : Character
         }
     }
 
-    public void OnReSummonBtnClick() //재소환 버튼 클릭
+    public void OnRedrawButtonClick()
     {
         //공격중이거나 소환(재소환포함)중에는 클릭안되게
         if (summonController.isSummoning || battleController.getIsAttaking()) return;
 
         if (mana >= usedMana) {
-            if (summonController.StartResummon())
+            if (summonController.StartRedraw())
             { //재소환 시작
               //마나 차감
                 mana -= usedMana;
@@ -197,7 +195,7 @@ public class Player : Character
         if (plateController.IsEnermyPlateClear() && (clearTurn >= currentTurn))
         {
             Debug.Log("승리!");
-            battleResultAlertView.ShowClearResultAlert(stageNum);
+            battleResultController.Clear();
         }
         plateController.CompactEnermyPlates();
         statePanel.gameObject.SetActive(false);
@@ -278,7 +276,7 @@ public class Player : Character
         if (plateController.IsEnermyPlateClear() && (clearTurn >= currentTurn))
         {
             Debug.Log("승리!");
-            battleResultAlertView.ShowClearResultAlert(stageNum);
+            battleResultController.Clear();
         }
         plateController.CompactEnermyPlates();
         statePanel.gameObject.SetActive(false);
@@ -468,6 +466,20 @@ public class Player : Character
     public void TurnOver()
     {
         Debug.Log("패배!");
-        battleResultAlertView.ShowFailResultAlert(stageNum);
+        battleResultController.Fail();
+    }
+
+    private void EnsureBattleResultController()
+    {
+        if (battleResultController != null)
+        {
+            return;
+        }
+
+        battleResultController = GetComponent<BattleResultController>();
+        if (battleResultController == null)
+        {
+            battleResultController = gameObject.AddComponent<BattleResultController>();
+        }
     }
 }

@@ -9,6 +9,7 @@ public class TurnController : MonoBehaviour
     
     [SerializeField] private Player player;
     [SerializeField] private Enermy enermy;
+    [SerializeField] private BattleResultController battleResultController;
     public enum Turn { PlayerTurn, EnermyTurn }
     private Turn currentTurn; // 현재 턴을 나타내는 변수
     private int turnCount;
@@ -17,11 +18,11 @@ public class TurnController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI turnCountText;
     [SerializeField] private TextMeshProUGUI turnClearText;
 
-    StageController stageController;
+    
 
     void Start()
     {
-        stageController = FindAnyObjectByType<StageController>();
+        EnsureBattleResultController();
 
         currentTurn = Turn.PlayerTurn; // 첫 번째 턴은 플레이어 턴으로 시작
         turnCount = 1;
@@ -51,7 +52,7 @@ public class TurnController : MonoBehaviour
             if (enermy.getEnermyAttackController().getPlateController().IsEnermyPlateClear() && (player.clearTurn >= player.currentTurn))
             {
                 Debug.Log("승리!");
-                player.battleResultAlertView.ShowClearResultAlert(stageController.stageNum);
+                battleResultController.Clear();
             }
 
 
@@ -149,5 +150,26 @@ public class TurnController : MonoBehaviour
     public int GetClearTurn()
     {
         return clearTurn;
+    }
+    private void EnsureBattleResultController()
+    {
+        if (battleResultController != null)
+        {
+            return;
+        }
+
+        if (player != null)
+        {
+            battleResultController = player.GetComponent<BattleResultController>();
+            if (battleResultController == null)
+            {
+                battleResultController = player.gameObject.AddComponent<BattleResultController>();
+            }
+        }
+
+        if (battleResultController == null)
+        {
+            battleResultController = FindObjectOfType<BattleResultController>();
+        }
     }
 } 

@@ -13,24 +13,7 @@ public class BattleResultAlertView : MonoBehaviour
     [SerializeField] private AudioSource clearSound;
     [SerializeField] private AudioSource failSound;
 
-    private StageFlowController stageFlowController;
-
-    private void Start()
-    {
-        stageFlowController = StageFlowController.instance;
-        if (stageFlowController == null)
-        {
-            stageFlowController = FindObjectOfType<StageFlowController>();
-        }
-
-        if (stageFlowController == null)
-        {
-            Debug.LogError("StageFlowController is missing in fight scene.");
-        }
-
-    }
-
-    public void ShowClearResultAlert(int stageNum)
+    public void ShowClearResultAlert(System.Action<bool> callback)
     {
         if (clearSound != null)
         {
@@ -39,7 +22,7 @@ public class BattleResultAlertView : MonoBehaviour
 
         if (!CanShowAlert(alertClear, ClearResult, "clear"))
         {
-            CompleteClearResult(stageNum, false);
+            callback?.Invoke(false);
             return;
         }
 
@@ -47,11 +30,11 @@ public class BattleResultAlertView : MonoBehaviour
         ClearResult.ResetAlert();
         StartCoroutine(WaitForAlertResult(alertClear, ClearResult, result =>
         {
-            CompleteClearResult(stageNum, result);
+            callback?.Invoke(result);
         }));
     }
 
-    public void ShowFailResultAlert(int stageNum)
+    public void ShowFailResultAlert(System.Action<bool> callback)
     {
         if (failSound != null)
         {
@@ -60,7 +43,7 @@ public class BattleResultAlertView : MonoBehaviour
 
         if (!CanShowAlert(alertFail, FailResult, "fail"))
         {
-            CompleteFailResult(stageNum, false);
+            callback?.Invoke(false);
             return;
         }
 
@@ -68,7 +51,7 @@ public class BattleResultAlertView : MonoBehaviour
         FailResult.ResetAlert();
         StartCoroutine(WaitForAlertResult(alertFail, FailResult, result =>
         {
-            CompleteFailResult(stageNum, result);
+            callback?.Invoke(result);
         }));
     }
 
@@ -81,51 +64,6 @@ public class BattleResultAlertView : MonoBehaviour
 
         Debug.LogWarning("Battle result " + alertName + " alert is not assigned. Default battle flow will continue.");
         return false;
-    }
-
-    private void CompleteClearResult(int stageNum, bool shouldRetry)
-    {
-        if (stageFlowController == null)
-        {
-            Debug.LogError("Cannot handle clear result because StageFlowController is missing.");
-            return;
-        }
-
-        if (shouldRetry)
-        {
-            stageFlowController.SendFight(stageNum);
-            return;
-        }
-
-        if (GameSaveController.instance == null)
-        {
-            Debug.LogError("Cannot save clear result because GameSaveController is missing.");
-            return;
-        }
-
-        if (stageNum < 7)
-        {
-            GameSaveController.instance.SaveClearedStage(stageNum + 1);
-        }
-
-        stageFlowController.SendNextStageAfterBattle(stageNum);
-    }
-
-    private void CompleteFailResult(int stageNum, bool shouldRetry)
-    {
-        if (stageFlowController == null)
-        {
-            Debug.LogError("Cannot handle fail result because StageFlowController is missing.");
-            return;
-        }
-
-        if (shouldRetry)
-        {
-            stageFlowController.SendFight(stageNum);
-            return;
-        }
-
-        stageFlowController.SendStageSelect();
     }
 
     private IEnumerator WaitForAlertResult(GameObject alertObject, ConfirmAlertView alertScript, System.Action<bool> callback)
