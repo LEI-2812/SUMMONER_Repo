@@ -137,7 +137,7 @@
 - 우선순위: 높음
 - 확인 내용: 새 게임 시작과 진행 데이터 초기화가 옵션 PlayerPrefs 값을 삭제하지 않는지 자동 테스트로 검증하는가
 - 기대 결과: StartNewGame과 ResetGameProgress 이후에도 MasterVolume, BGMVolume, SFXVolume, resolutionIndex, screenModeIndex, IsStorySkip, IsOnlyMouse 값이 유지된다
-- 현재 결과: GameSaveProgressReadTests에 옵션 유지 테스트 추가, 스크립트 재컴파일 통과. MCP PlayMode run_tests는 501 응답으로 실행 차단
+- 현재 결과: GameSaveProgressReadTests에 옵션 유지 테스트 추가, 스크립트 재컴파일 통과. 2026-05-31 PlayMode run_tests는 timeout으로 실행 차단
 - 상태: Fixed
 - 다음 조치: MCP 연결 복구 후 PlayMode 테스트 재실행
 - 관련 파일: GameSaveProgressReadTests.cs, GameSaveController.cs, PlayerPrefsSaveStore.cs
@@ -210,15 +210,16 @@
 
 | ID | 날짜 | 내용 | 상태 |
 |---|---|---|---|
-| BUG-OP-001 | 2026-05-31 | AudioSettingView에서 볼륨 0일 때 Mathf.Log10(0) 처리 여부 미확인 | Open |
-| BUG-OP-002 | 2026-05-31 | Story Skip / Only Mouse 옵션이 실제 Story/Input 흐름에 연결되어 있는지 미확인 | Open |
-| BUG-OP-003 | 2026-05-31 | MCP PlayMode run_tests가 501 응답으로 옵션 유지 자동 테스트 실행 불가 | Open |
-| BUG-OP-004 | 2026-05-31 | VideoSettingView가 잘못된 저장 인덱스를 받을 때 범위 초과를 방어하는지 미확인 | Open |
+| BUG-OP-001 | 2026-05-31 | `AudioSettingView`에서 볼륨 0일 때 `Mathf.Log10(0)` 호출 가능 | Open Fail |
+| BUG-OP-002 | 2026-05-31 | Story Skip은 `StorySkipView`에 정적 연결 확인, Only Mouse 옵션은 Story 입력 흐름에 미반영 | Open Fail |
+| BUG-OP-003 | 2026-05-31 | MCP PlayMode `GameSaveProgressReadTests`가 timeout으로 옵션 유지 자동 테스트 실행 불가 | Open Blocked |
+| BUG-OP-004 | 2026-05-31 | `VideoSettingView`가 잘못된 저장 인덱스를 기본값으로 복구하지 않아 모든 토글이 꺼질 수 있음 | Open Fail |
 
 ## 5. QA 히스토리
 
 | 날짜 | 확인 범위 | 결과 | 메모 |
 |---|---|---|---|
 | 2026-05-31 | OptionSystem QA 항목 정리 | 대기 | 설정 저장, 재시작 유지, 새 게임/이어하기 유지 기준 추가 |
-| 2026-05-31 | 옵션 유지 자동 테스트 추가 | 조건부 통과 | 컴파일 통과, PlayMode 실행은 MCP 501로 차단 |
+| 2026-05-31 | 옵션 유지 자동 테스트 추가 | 조건부 통과 | 컴파일 통과, 2026-05-31 PlayMode 실행은 timeout으로 차단 |
 | 2026-05-31 | OptionSystem 예외 QA 항목 확장 | 대기 | UI 재오픈, 조합 볼륨, 토글 안정성, 저장 인덱스, 실제 흐름 반영 기준 추가 |
+| 2026-05-31 | QA 인덱스 재실행 | 부분 실패 | `recompile_scripts` warning 0, PlayMode `GameSaveProgressReadTests`는 timeout; 볼륨 0, 잘못된 비디오 인덱스, Only Mouse 정적 실패 확인 |

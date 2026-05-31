@@ -1,105 +1,76 @@
-# Battle Core Refactoring Roadmap
+# BattleCore Roadmap
 
-## Current Phase
+## 1. Role
 
-Phase 3 - Battle Core planning and first responsibility split.
+BattleCore는 전투 규칙의 핵심 흐름을 담당한다.
+턴 시작/종료, 마나, 공격 실행, 상태이상, Plate 전투 칸, 승리/패배 판정이 이 문서의 범위다.
 
-## Goal
+소환 후보 뽑기, 후보 패널, Redraw, 소환수 데이터와 적 AI 콘텐츠 흐름은 `04_BattleContentRoadmap.md`에서 관리한다.
+현재 QA 상태나 버그 우선순위는 이 문서에 두지 않고 `qa/00_current.md`에서 관리한다.
 
-턴, 마나, Plate, 공격 실행, 상태이상, 승패 판정을 읽기 쉬운 전투 규칙 단위로 나눈다.
-전투 콘텐츠와 AI 판단은 `04_BattleContentRoadmap.md`에서 다루고, 이 문서는 실제 전투 상태 변경만 관리한다.
+## 2. Ownership
 
-## Scope
+| 영역 | 주요 파일/폴더 | 책임 |
+|---|---|---|
+| 전투 흐름 | `Assets/Script/Battle/Flow` | 턴 진행, 승패 판정, 결과 Alert 연결 |
+| 공격 실행 | `Assets/Script/Battle/Attack` | 대상 선택 결과를 받아 공격 효과 실행 |
+| 상태이상 | `Assets/Script/Battle/Status` | 상태 적용, 턴 갱신, 만료 처리 |
+| 전투 유닛 | `Assets/Script/Battle/Unit`, `Assets/Script/Summons` | 플레이어, 적, 소환수, Plate 데이터 |
+| Plate 제어 | `Assets/Script/Battle/PlateControl` | Plate 조회, 선택, 이동/정렬, 표시 연결 |
+| 전투 View | `Assets/Script/Battle/View` | 전투 UI 표시, 이미지/상태/사운드 표시 |
 
-```text
-Assets/Script/Battle/BattleController.cs
-Assets/Script/Battle/BattleLogic/Player.cs
-Assets/Script/Battle/BattleLogic/Plate.cs
-Assets/Script/Battle/BattleLogic/Controller/TurnController.cs
-Assets/Script/Battle/BattleLogic/Controller/PlateController.cs
-Assets/Script/Battle/BattleLogic/AttackLogic
-Assets/Script/Summons/Summon.cs
-```
+## 3. Current Structure
 
-## Refactoring Rules
+- 전투 결과 처리는 `BattleResultController`, `BattleProgressController`, `BattleStageContext` 기준으로 분리한다.
+- Plate는 소환수가 배치되는 전투 칸이며, 조회/대상 선택/이동/표시 책임이 아직 강하게 연결되어 있다.
+- 상태이상 계산은 `Battle/Status`에 두고, 표시와 사운드는 View 쪽으로 분리하는 방향을 유지한다.
+- 공격 전략은 대상 목록을 받아 효과를 실행하는 구조를 목표로 한다.
+- 턴 흐름은 상태 갱신, 쿨타임 감소, 마나 회복, 승패 확인 순서를 명확히 해야 한다.
 
-- 전투 규칙은 기능 하나씩만 수정한다.
-- 공격, 마나, 상태이상, 턴 종료를 한 작업에 섞지 않는다.
-- 플레이어 행동과 적 행동에서 같은 규칙이 유지되는지 확인할 테스트 코드 또는 QA 요청을 남긴다.
-- UI 표시 책임은 전투 규칙에서 분리할 수 있는지 먼저 판단한다.
-- 상세 변경 기록은 이 문서에 누적하지 않고 `WorkLogs/YYYY-MM-DD.md`에 기록한다.
+## 4. Refactoring Direction
 
-## Current Flow
+- BattleController가 모든 전투 규칙을 직접 처리하지 않도록 흐름, 대상 선택, 공격 실행을 나눈다.
+- PlateController는 조회, 이동/정렬, target query, View 표시 책임을 단계적으로 분리한다.
+- 상태이상은 계산과 표시를 분리하고, 턴 갱신 타이밍을 한곳에서 관리한다.
+- 승리/패배 Alert는 전투씬 단독으로 필요한 context를 받아 표시되게 유지한다.
 
-```text
-Player.OnAttackBtnClick()
- -> BattleController.attackStart()
- -> Summon.normalAttack()
- -> PlateController.CompactEnermyPlates()
- -> BattleResultAlertView.clearAlert()
+### PlateController Split Plan
 
-Player.OnSpecialAttackBtnClick()
- -> BattleController.attackStart()
- -> Plate 선택 대기
- -> BattleController.SpecialAttackLogic()
- -> Summon.SpecialAttack()
+| 이름 | 역할 | 목적 |
+|---|---|---|
+| `PlateFinder` | player/enemy Plate와 소환수 상태 조회 | 리스트 직접 접근을 줄임 |
+| `PlateMover` | 소환수 이동, 사망 후 Plate 정렬 | 이동/압축 규칙을 분리 |
+| `PlateTargetFinder` | 공격/회복 대상 Plate 인덱스 찾기 | 대상 선택 기준을 테스트 가능하게 분리 |
+| `PlateView` | Plate 숨김, 표시, 투명도, 하이라이트 | 화면 표시 책임을 View로 제한 |
 
-TurnController.StartTurn()
- -> 상태이상 갱신
- -> 쿨타임 감소
- -> Plate 압축
- -> 승리 확인
- -> player.startTurn() 또는 enermy.startTurn()
-```
+## 5. Constraints
 
-## Target Flow
+- 플레이어와 적 행동에서 같은 전투 규칙이 유지되어야 한다.
+- 소환수 이미지, 색상, 효과음 표시가 상태 계산 변경 때문에 깨지면 안 된다.
+- Plate 인덱스와 target 선택 기준을 바꿀 때는 공격/회복 대상 규칙을 먼저 고정해야 한다.
+- 승리/패배 Alert는 전투씬에 없는 StageController에 직접 의존하지 않아야 한다.
+- NullReferenceException을 막기 위한 자동 생성/자동 복구가 기존 씬 연결 문제를 숨기면 안 된다.
 
-```text
-턴 시작
- -> 상태/쿨타임 갱신
- -> 입력 또는 AI 행동 선택
- -> 공격 명령 생성
- -> 타겟 선택
- -> 공격 실행
- -> 결과 확인
- -> 턴 종료
-```
+## 6. Next Work Candidates
 
-## Active Tasks
+| ID | 작업 | 목적 |
+|---|---|---|
+| BC-REF-01 | 소환수 View 초기화 경로 정리 | 전투 진입 중 `Summon.Update()` null 참조 방지 |
+| BC-REF-02 | BattleController 공격 실행 분리 | 공격 명령, 대상 선택, 실행 책임 분리 |
+| BC-REF-03 | Player 마나와 입력 책임 분리 | 마나 UI와 공격 요청 결합 축소 |
+| BC-REF-04 | Plate 조회 API 정리 | Plate list 직접 반환을 query API로 대체 |
+| BC-REF-05 | TurnController 단계 분리 | 상태 갱신, 쿨타임, 마나 회복, 결과 확인 순서 명시 |
 
-| ID | Task | Status | Notes |
-|---|---|---|---|
-| BC-01 | Summon 상태이상 적용/갱신/표시 분리 | Next | `SummonStatusApply`, `SummonStatusTick`, `SummonStatusView` 후보 |
-| BC-02 | BattleController 공격 실행 분리 | Pending | `BattleAttackCommand`, `BattleTargetSelect`, `BattleAttackExecute` 후보 |
-| BC-03 | Player 마나와 입력 책임 분리 | Pending | 마나 UI와 공격 요청 분리 |
-| BC-04 | PlateController 조회/표시/압축 분리 | Pending | `BattlePlateQuery`, `BattlePlateHighlight`, `BattlePlateCompact` 후보 |
-| BC-05 | TurnController 시작/종료 단계 분리 | Pending | 상태 갱신, 쿨타임, 마나 회복, 결과 확인 |
+## 7. Done Criteria
 
-## Completed
+- 턴 시작/종료 흐름이 명확히 분리된다.
+- 상태이상 적용, 턴 갱신, 표시 책임이 섞이지 않는다.
+- 공격 대상 선택과 공격 실행이 분리된다.
+- Plate 조회, 이동/정렬, 화면 표시 책임이 분리된다.
+- 승리/패배 Alert가 전투씬 단독 흐름에서 NullReference 없이 표시된다.
 
-완료 상세는 `CompletedArchive.md`와 `WorkLogs/2026-05-30.md`에 보관한다.
+## 8. QA Links
 
-요약:
-
-- Battle Core 로드맵을 턴, 마나, 공격, 상태이상, 승패 판정 기능 단위로 정리함.
-- `BattleAlert -> BattleResultAlertView`, `StatePanel -> SummonStatePanelView` 이름 변경 상태 기록.
-- `Player`, `Plate`, `Summon`은 단순 View 이름 변경 대상에서 제외하고 책임 분리 후 재검토하기로 정리.
-
-## Done Criteria
-
-```text
-1. FightScene에서 일반 소환이 정상인지 확인
-2. 일반 공격 후 적 HP와 Plate 압축이 정상인지 확인
-3. Heal, Shield, Upgrade가 아군에게 적용되는지 확인
-4. Damage, Poison, Stun, Curse가 적에게 적용되는지 확인
-5. 턴 종료 후 마나 회복과 쿨타임 감소가 정상인지 확인
-6. Clear Turn 초과 시 패배가 정상인지 확인
-7. 적 전멸 시 승리 Alert가 정상인지 확인
-8. 관련 QAReports에 QA 요청 또는 결과 기록
-9. FileStateIndex 갱신
-```
-
-## Latest Summary
-
-2026-05-30: Battle Core는 아직 본격 코드 분리 전 단계다.
-다음 작업은 `Summon`의 상태이상 적용, 턴 갱신, 표시 책임을 가장 작은 단위로 나누는 것이다.
+- 현재 QA 큐: `qa/00_current.md`
+- 큰 변경 후 전체 확인: `qa/20_full-check.md`
+- 기능별 QA 종합보고서: `QAReports/03_BattleCore_QA.md`, `QAReports/03_BattleCore_QA.csv`

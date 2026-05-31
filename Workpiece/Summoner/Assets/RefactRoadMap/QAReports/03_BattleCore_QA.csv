@@ -8,5 +8,5 @@
 상태이상,높음,Poison 적용,대기,아직 QA 전,턴마다 HP 감소 확인,Summon.cs
 상태이상,높음,Shield 적용,대기,아직 QA 전,방어막 증가 확인,Summon.cs
 상태이상,중간,Stun/Curse 적용,대기,아직 QA 전,공격 가능 여부 확인,Summon.cs
-승패 판정,높음,승리 Alert,실패 후보,Alert prefab과 BattleResultAlertView 필드 연결은 확인됨. TurnController가 전투씬에 없는 StageController를 참조해 NullReference가 발생할 수 있음,TurnController의 StageController 의존 제거 후 적 전멸 시 Alert 표시 재확인,"TurnController.cs, BattleResultAlertView.cs"
+승패 판정,높음,승리 Alert,수정 확인,"2026-05-31 DevAgent 수정. BattleResultController/BattleProgressController/BattleStageContext 추가, TurnController StageController 의존 제거, BattleResultAlertView UI 전용화. Unity recompile warning 0, EditMode 55/55 passed","QAAgent가 Fight Screen에서 적 전멸 Alert, retry, 다음 스테이지 이동/저장 런타임 재검증","TurnController.cs, Player.cs, BattleResultController.cs, BattleProgressController.cs, BattleStageContext.cs, BattleResultAlertView.cs"
 승패 판정,높음,패배 Alert,수정 확인,Alert prefab과 BattleResultAlertView 필드 연결은 정적 확인됨. Clear Turn 초과 런타임 흐름은 재확인 필요,Clear Turn 초과 상황에서 패배 Alert 표시와 Stage Select 이동 확인,BattleResultAlertView.cs

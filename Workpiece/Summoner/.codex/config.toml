@@ -1,9 +1,10 @@
 # ==================================================
 # Codex 기본 설정
+#   never         # 자동 진행
+#   on-request    # 승인 확인 모드
 # ==================================================
 
-# approval_policy = "never" # 자동 진행
-approval_policy = "on-request" # 승인 확인 모드
+approval_policy = "never" # 승인 확인 모드
 
 sandbox_mode = "workspace-write"
 
@@ -25,16 +26,33 @@ args = ["LocalPackages/com.gamelovers.mcp-unity/Server~/build/index.js"]
 
 [mcp_servers.mcp-unity.tools.get_console_logs]
 approval_mode = "auto"    # 자동 실행
-# approval_mode = "approve" # 승인 받고 실행
 
 [mcp_servers.mcp-unity.tools.recompile_scripts]
-approval_mode = "approve"    # 자동 실행
-# approval_mode = "approve" # 승인 받고 실행
+approval_mode = "auto"    # 자동 실행
 
 [mcp_servers.mcp-unity.tools.run_tests]
-approval_mode = "approve"    # 자동 실행
-# approval_mode = "approve" # 승인 받고 실행
+approval_mode = "auto"    # 자동 실행
 
 [mcp_servers.mcp-unity.tools.get_scene_info]
 approval_mode = "auto"
-# approval_mode = "approve" # 승인 받고 실행
+
+[mcp_servers.mcp-unity.tools.get_gameobject]
+approval_mode = "auto"
+
+[mcp_servers.mcp-unity.tools.reparent_gameobject]
+approval_mode = "auto"
+
+[mcp_servers.mcp-unity.tools.delete_gameobject]
+approval_mode = "auto"
+
+[mcp_servers.mcp-unity.tools.save_scene]
+approval_mode = "auto"
+
+[mcp_servers.mcp-unity.tools.load_scene]
+approval_mode = "auto"
+
+[mcp_servers.mcp-unity.tools.update_gameobject]
+approval_mode = "auto"
+
+[mcp_servers.mcp-unity.tools.update_component]
+approval_mode = "auto"

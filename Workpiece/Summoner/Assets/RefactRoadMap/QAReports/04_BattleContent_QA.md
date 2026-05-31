@@ -70,7 +70,7 @@
 - 현재 결과: 아직 QA 전
 - 상태: Pending
 - 다음 조치: PickSummonPanel 클릭 확인
-- 관련 파일: PickSummonPanelView.cs
+- 관련 파일: DrawOptionPanelView.cs
 
 ---
 
@@ -155,3 +155,4 @@
 | 날짜 | 확인 범위 | 결과 | 메모 |
 |---|---|---|---|
 | 2026-05-31 | BattleContent QA 항목 정리 | 대기 | 실제 QA는 아직 진행 전 |
+| 2026-05-31 | QA 인덱스 재실행 | 차단 | BattleContent 항목은 런타임 씬 조작이 필요하나 PlayMode QA 경로가 timeout/connection 오류로 차단되어 실제 QA 미진행 |

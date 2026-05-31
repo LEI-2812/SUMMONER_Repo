@@ -1,103 +1,76 @@
-# Battle Content Refactoring Roadmap
+# BattleContent Roadmap
 
-## Current Phase
+## 1. Role
 
-Phase 4 - Battle Content planning and first summon-pick split.
+BattleContent는 전투 규칙 위에서 동작하는 콘텐츠 흐름을 담당한다.
+소환 후보 뽑기, Redraw, 후보 패널 표시, 선택 후 Plate 배치, 소환수 데이터, 공격 예측, 적 AI 판단이 이 문서의 범위다.
 
-## Goal
+턴, 마나, 공격 실행, 상태이상 규칙 자체는 `03_BattleCoreRoadmap.md`에서 관리한다.
+현재 QA 상태나 버그 우선순위는 이 문서에 두지 않고 `qa/00_current.md`에서 관리한다.
 
-소환수 뽑기, 소환수 데이터, 공격 전략, 플레이어 공격 예측, 적 AI 판단을 전투 규칙과 분리한다.
-Battle Content는 후보 선택, 데이터 준비, AI 판단까지만 담당하고 실제 HP 감소나 상태 변경은 Battle Core로 넘긴다.
+## 2. Ownership
 
-## Scope
+| 영역 | 주요 파일/폴더 | 책임 |
+|---|---|---|
+| Draw/Redraw 흐름 | `Assets/Script/Battle/SummonPick` | 후보 생성, 후보 선택, Redraw 버튼 흐름 |
+| 후보 패널 | `Assets/Script/Battle/SummonPick/DrawOptionPanelView.cs` | 후보 표시와 선택 이벤트 전달 |
+| 소환수 데이터 | `Assets/Script/Summons` | 소환수 기본 능력치, 이미지, 색상, 사운드 연결 |
+| 공격 예측 | `Assets/Script/Battle/Prediction` | 소환수별 공격 예측 목록 생성 |
+| 적 AI | `Assets/Script/Battle/EnemyAction` | 적 행동 판단과 실행 요청 |
 
-```text
-Assets/Script/Battle/BattleLogic/Controller/SummonController.cs
-Assets/Script/Battle/BattleLogic/PickSummonPanelView.cs
-Assets/Script/Battle/BattleLogic/Prediction
-Assets/Script/Battle/BattleLogic/EnermyAlgorithm.cs
-Assets/Script/Battle/BattleLogic/Controller/EnermyAttackController.cs
-Assets/Script/Summons
-```
+## 3. Current Structure
 
-## Refactoring Rules
+- Draw는 소환 후보를 뽑는 흐름이고, Redraw는 이미 나온 후보를 다시 뽑는 흐름이다.
+- 후보 패널 View는 `DrawOptionPanelView` 이름을 기준으로 유지한다.
+- `DrawOptionPanelView`는 선택 이벤트를 전달하고, controller가 선택 결과를 처리하는 방향으로 유지한다.
+- 소환수 데이터 적용은 능력치, 이미지, 색상, 사운드가 함께 엮여 있어 단계적으로 분리해야 한다.
+- 적 AI는 예측 생성, 행동 결정, 공격 실행 요청을 나누는 방향으로 정리한다.
 
-- 소환수 뽑기, 데이터 적용, 공격 전략 생성, 예측, AI 판단을 한 번에 섞지 않는다.
-- Prefab에 붙은 기존 소환수 스크립트는 바로 갈아엎지 않는다.
-- 새 데이터 구조가 필요하면 기존 Prefab과 연결하는 Adapter 단계를 먼저 둔다.
-- Battle Content 작업 중 Battle Core의 HP 감소, 상태 변경, 턴 종료 흐름을 직접 바꾸지 않는다.
-- 상세 변경 기록은 이 문서에 누적하지 않고 `WorkLogs/YYYY-MM-DD.md`에 기록한다.
+## 4. Refactoring Direction
 
-## Current Flow
+- Draw 확률 계산, 후보 생성, 후보 표시, 후보 선택 처리를 분리한다.
+- 소환수 배치 책임을 Plate 자체에서 분리해 `SummonPlacementController` 같은 별도 흐름으로 옮긴다.
+- 소환수 데이터 적용은 한 종류씩 기준값을 고정한 뒤 공통 적용 구조로 묶는다.
+- 공격 예측과 적 AI는 결정 로직과 실행 로직을 분리한다.
 
-```text
-Player.OnSummonBtnClick()
- -> SummonController.StartSummon()
- -> randomTakeSummon()
- -> SummonRandomly()
- -> SelectSummonByRank()
- -> PickSummonPanelView에 후보 표시
- -> PickSummonPanelView.OnPointerClick()
- -> SummonController.OnSelectSummon()
- -> Plate.SummonPlaceOnPlate()
+### Naming Rule
 
-Enermy.startTurn()
- -> Enermy.takeAction()
- -> EnermyAlgorithm.getPlayerAttackPredictionsList()
- -> EnermyAttackController.EnermyAttackStart()
- -> EnermyAlgorithm.HandleReactPrediction()
- -> BattleController.SpecialAttackLogic() 또는 Summon.normalAttack()
-```
+| 의미 | 현재 이름 |
+|---|---|
+| 소환 후보 뽑기 | Draw |
+| 후보 다시 뽑기 | Redraw |
+| 후보 패널 | Draw Option Panel |
+| 후보 패널 View | `DrawOptionPanelView` |
+| 재소환 버튼 handler | `OnRedrawButtonClick` |
 
-## Target Flow
+## 5. Constraints
 
-```text
-소환 콘텐츠
- -> 후보 선택
- -> UI 표시
- -> Plate 배치
+- 후보는 기존 UI 흐름처럼 3개가 표시되어야 한다.
+- 후보 선택 후 Plate 배치 흐름은 기존 조작감과 동일해야 한다.
+- Redraw는 후보 재생성만 담당하고 Plate 상태를 임의로 깨면 안 된다.
+- 소환수 기본 능력치, 이미지, 색상, 사운드가 리팩토링 중 바뀌면 안 된다.
+- BattleCore의 전투 진입 문제가 열려 있으면 BattleContent 런타임 QA도 막힐 수 있다.
 
-AI 콘텐츠
- -> 플레이어 공격 예측 생성
- -> 적 행동 판단
- -> Battle Core에 공격 명령 전달
-```
+## 6. Next Work Candidates
 
-## Active Tasks
+| ID | 작업 | 목적 |
+|---|---|---|
+| BT-REF-01 | Draw 확률 계산 분리 | 후보 생성 규칙을 테스트 가능한 단위로 분리 |
+| BT-REF-02 | 후보 선택과 패널 표시 분리 | View는 표시/이벤트만 맡고 선택 처리는 controller가 담당 |
+| BT-REF-03 | 소환수 데이터 적용 검증 구조 마련 | 능력치 회귀를 한 종류씩 확인 가능하게 정리 |
+| BT-REF-04 | Enemy AI 판단/실행 분리 | 예측 생성, 행동 결정, 공격 실행 요청을 나눔 |
+| BT-REF-05 | 소환수 배치 책임 분리 | Plate와 Draw 흐름의 직접 결합 축소 |
 
-| ID | Task | Status | Notes |
-|---|---|---|---|
-| BT-01 | SummonController 뽑기 확률 분리 | Next | `SummonPickProbability` 후보 |
-| BT-02 | 후보 선택과 패널 표시 분리 | Pending | `SummonPickCandidateSelect`, `SummonPickPanelShow` 후보 |
-| BT-03 | PickSummonPanelView 싱글톤 직접 호출 줄이기 | Pending | 선택 이벤트 흐름 분리 |
-| BT-04 | 소환수 데이터 적용 한 종류부터 검증 | Pending | `SummonData`, `SummonDataApply` 후보 |
-| BT-05 | EnermyAlgorithm 판단/실행 분리 | Pending | 예측 생성, 행동 결정, 공격 반응 분리 |
+## 7. Done Criteria
 
-## Completed
+- Draw/Redraw 후보 생성, 후보 선택, 패널 표시 책임이 분리된다.
+- 후보 표시와 선택 후 Plate 배치가 기존 UI 흐름과 동일하다.
+- 소환수 데이터 적용 후 기존 능력치가 바뀌지 않는다.
+- 공격 예측 결과가 소환수별 기존 동작과 일치한다.
+- 적 AI 판단과 실행이 분리되어 테스트 가능하다.
 
-완료 상세는 `CompletedArchive.md`와 `WorkLogs/2026-05-30.md`에 보관한다.
+## 8. QA Links
 
-요약:
-
-- Battle Content 로드맵을 소환수 뽑기, 선택/배치, 데이터 적용, 공격 전략, 공격 예측, AI 판단 기능 단위로 정리함.
-- `PickSummonPanel -> PickSummonPanelView` 이름 변경 상태 기록.
-- `SummonController`는 단순 View 이름 변경 대상에서 제외하고 책임 분리 대상으로 유지.
-
-## Done Criteria
-
-```text
-1. 소환 버튼 클릭 시 후보 3개가 표시되는지 확인
-2. 같은 후보가 중복 표시되지 않는지 확인
-3. 후보 클릭 시 선택한 소환수가 Plate에 배치되는지 확인
-4. 재소환 시 기존 공격 가능 상태가 유지되는지 확인
-5. Cat, Rabbit, Wolf, Eagle, Snake, Fox의 기본 능력치가 기존과 같은지 확인
-6. 적 턴에서 기존처럼 반응 공격이 실행되는지 확인
-7. AI가 Heal, Shield, Stun, Curse를 기존 조건에 맞게 선택하는지 확인
-8. 관련 QAReports에 QA 요청 또는 결과 기록
-9. FileStateIndex 갱신
-```
-
-## Latest Summary
-
-2026-05-30: Battle Content는 아직 본격 코드 분리 전 단계다.
-다음 작업은 `SummonController`에서 뽑기 확률, 후보 선택, 패널 표시를 작은 단위로 분리하는 것이다.
+- 현재 QA 큐: `qa/00_current.md`
+- 큰 변경 후 전체 확인: `qa/20_full-check.md`
+- 기능별 QA 종합보고서: `QAReports/04_BattleContent_QA.md`, `QAReports/04_BattleContent_QA.csv`

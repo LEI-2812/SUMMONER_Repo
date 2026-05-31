@@ -7,7 +7,7 @@
 | QA 범위 | CSV 대사 파싱, 대사 진행, Stage 연출, 스토리 진입 조건, 스토리 종료 |
 | 현재 상태 | 정적 확인 항목과 스테이지별 런타임 QA 항목 정리 완료 |
 | 마지막 정리일 | 2026-05-31 |
-| 다음 확인 | MCP timeout 해소 후 EditMode 테스트 재실행 |
+| 다음 확인 | PlayMode StageRuntimeFlowPlayModeTests timeout 해소 후 런타임 재검증 |
 
 ## 2. QA 체크 항목
 
@@ -24,7 +24,7 @@
 | ST-009 | Stage 연출 | Stage3 입력 공통화가 기존 흐름을 유지하는가 | Pending |
 | ST-010 | Stage 연출 | Stage5 입력 공통화가 기존 흐름을 유지하는가 | Pending |
 | ST-011 | Stage 연출 | Stage7 입력 공통화가 기존 흐름을 유지하는가 | Pending |
-| ST-012 | 자동 검사 | StorySystemStaticRegressionTests가 다시 통과하는가 | Blocked |
+| ST-012 | 자동 검사 | StorySystemStaticRegressionTests가 다시 통과하는가 | Pass |
 | ST-013 | 스토리 진입 | 1스테이지 미클리어 상태에서 2스테이지 스토리로 갈 수 없는가 | Pending |
 | ST-014 | 스토리 진입 | 2스테이지 미클리어 상태에서 3스테이지 스토리로 갈 수 없는가 | Pending |
 | ST-015 | 스토리 진입 | 3스테이지 미클리어 상태에서 5스테이지 스토리로 갈 수 없는가 | Pending |
@@ -185,9 +185,9 @@
 - 우선순위: 높음
 - 확인 내용: StorySystemStaticRegressionTests가 현재 상태에서 다시 통과하는지 확인
 - 기대 결과: EditMode 테스트가 모두 통과한다
-- 현재 결과: MCP run_tests timeout으로 재실행하지 못함
-- 상태: Blocked
-- 다음 조치: MCP timeout 원인 수정 후 EditMode 재실행
+- 현재 결과: MCP `run_tests` 클래스 단위 재실행으로 25/25 통과
+- 상태: Pass
+- 다음 조치: 추가 조치 없음
 - 관련 파일: StorySystemStaticRegressionTests.cs
 
 ---
@@ -254,7 +254,7 @@
 - 우선순위: 높음
 - 확인 내용: 전투 클리어 후 다음 스토리/전투/Epilogue 씬 이동 규칙이 자동 테스트로 검증되는지 확인
 - 기대 결과: Stage1 클리어 후 Stage2 Story, Stage3 클리어 후 Stage4 Fight, Stage5 클리어 후 Stage6 Fight, Stage7 클리어 후 Epilogue로 이동한다
-- 현재 결과: StageRuntimeFlowPlayModeTests에 StageFlowController_SendNextStageAfterBattle_LoadsExpectedNextScene 테스트 추가, 스크립트 재컴파일 통과. MCP PlayMode run_tests는 501 응답으로 실행 차단
+- 현재 결과: StageRuntimeFlowPlayModeTests에 StageFlowController_SendNextStageAfterBattle_LoadsExpectedNextScene 테스트 추가, 스크립트 재컴파일 통과. 2026-05-31 PlayMode run_tests는 timeout으로 실행 차단
 - 상태: Fixed
 - 다음 조치: MCP 연결 복구 후 PlayMode 테스트 재실행
 - 관련 파일: StageRuntimeFlowPlayModeTests.cs, StageFlowController.cs
@@ -337,10 +337,10 @@
 
 | ID | 날짜 | 내용 | 상태 |
 |---|---|---|---|
-| BUG-ST-001 | 2026-05-31 | MCP run_tests timeout으로 Stage 입력 공통화 이후 재검증 불가 | Open |
-| BUG-ST-002 | 2026-05-31 | 스토리 스킵 옵션 저장값이 실제 Story 진행 흐름에 연결되어 있는지 미확인 | Open |
-| BUG-ST-003 | 2026-05-31 | MCP PlayMode run_tests가 501 응답으로 StageFlowController 자동 테스트 실행 불가 | Open |
-| BUG-ST-004 | 2026-05-31 | Only Mouse 옵션이 Story 입력 처리에 실제 반영되는지 미확인 | Open |
+| BUG-ST-001 | 2026-05-31 | `StorySystemStaticRegressionTests` 25/25 통과로 Stage 입력 공통화 이후 EditMode 재검증 완료 | Closed |
+| BUG-ST-002 | 2026-05-31 | 스토리 스킵 옵션 저장값은 `StorySkipView`에 정적 연결 확인, 실제 Story 진행 흐름은 미확인 | Open Runtime QA |
+| BUG-ST-003 | 2026-05-31 | MCP PlayMode `StageRuntimeFlowPlayModeTests`가 timeout으로 StageFlowController 자동 테스트 실행 불가 | Open Blocked |
+| BUG-ST-004 | 2026-05-31 | Only Mouse 옵션이 Story 입력 처리에 반영되지 않음. `StoryScenarioControllerBase`가 Space 입력에서 옵션값을 확인하지 않음 | Open Fail |
 
 ## 5. QA 히스토리
 
@@ -349,5 +349,6 @@
 | 2026-05-31 | StorySceneMove, DialogueLineShow, DialogueCsvParse | 통과 | 주요 분리 로직 테스트 통과 |
 | 2026-05-31 | Stage 입력 공통화 | 조건부 통과 | 정적 확인 완료, Unity 재실행 필요 |
 | 2026-05-31 | 스테이지별 Story 진입/종료 QA 항목 확장 | 대기 | 잠금, 종료 후 전투 이동, 4/6 직접 전투 기준 추가 |
-| 2026-05-31 | StageFlowController 다음 씬 이동 테스트 추가 | 조건부 통과 | 컴파일 통과, PlayMode 실행은 MCP 501로 차단 |
+| 2026-05-31 | StageFlowController 다음 씬 이동 테스트 추가 | 조건부 통과 | 컴파일 통과, 2026-05-31 PlayMode 실행은 timeout으로 차단 |
 | 2026-05-31 | Story 예외 QA 항목 확장 | 대기 | 직접 진입, 입력 옵션, CSV 데이터, 연출 중 입력, Skip, Epilogue 기준 추가 |
+| 2026-05-31 | QA 인덱스 재실행 | 부분 완료 | `recompile_scripts` warning 0, `StorySystemStaticRegressionTests` 25/25 통과, `StageRuntimeFlowPlayModeTests` PlayMode는 timeout; Only Mouse 정적 실패 확인 |

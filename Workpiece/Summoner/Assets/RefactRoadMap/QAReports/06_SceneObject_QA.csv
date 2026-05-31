@@ -1,0 +1,8 @@
+"ID","기능","확인내용","상태","현재결과","다음조치"
+"SO-001","HUD 구조","MenuCanvas 하위 번호형 UI 그룹 존재","Pass","HudScene_HasOrganizedRootGroups 통과","추가 조치 없음"
+"SO-002","Fight 1Stage 구조","BattleCanvas 하위 번호형 UI 그룹 존재","Pass","FightSceneOne_HasOrganizedUiGroups 통과","추가 조치 없음"
+"SO-003","Missing Script","HUD와 Fight Screen_1Stage missing script 없음","Pass","AssertNoMissingScriptsInOpenScene 통과","추가 조치 없음"
+"SO-004","코드 경로 호환","StartScreenView.openOption 새 설정 경로 호환","Pass","recompile_scripts warning 0","Start Screen 수동 설정창 확인"
+"SO-005","HUD 런타임","ESC 메뉴, 설정, Alert, 클릭음 실제 Play 동작","Blocked","MCP PlayMode run_tests timeout 또는 Connection failed. 재시도에서 Start Screen 단일 PlayMode 테스트도 timeout","열린 Unity Editor에서 수동 Play 확인"
+"SO-006","Fight 1Stage 런타임","소환, 재소환, 턴 종료, Clear/Fail Alert 실제 Play 동작","Fail","PlayMode 전투 테스트 재시도 중 Summon.Update line 77 NullReferenceException 확인","BUG-BC-002 수정 후 Fight 1Stage PlayMode 재검증"
+"SO-007","적용 범위","Fight Screen_2Stage~7Stage 미변경 확인","Pass","1차 적용은 HUD와 Fight Screen_1Stage만 수행","1차 수동 QA 통과 후 반복 적용 판단"

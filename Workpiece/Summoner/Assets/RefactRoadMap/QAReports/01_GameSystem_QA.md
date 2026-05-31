@@ -225,7 +225,7 @@
 - 우선순위: 높음
 - 확인 내용: 스테이지별 저장, Stage Select 잠금, 전투 클리어 후 다음 씬 이동을 자동 테스트로 검증할 수 있는지 확인
 - 기대 결과: PlayMode 테스트가 savedStage/playingStage와 StageFlowController 흐름을 검증한다
-- 현재 결과: GameSaveProgressReadTests와 StageRuntimeFlowPlayModeTests에 테스트 추가, 스크립트 재컴파일 통과. MCP PlayMode run_tests는 501 응답으로 실행 차단
+- 현재 결과: GameSaveProgressReadTests와 StageRuntimeFlowPlayModeTests에 테스트 추가, 스크립트 재컴파일 통과. 2026-05-31 PlayMode run_tests는 timeout으로 실행 차단
 - 상태: Fixed
 - 다음 조치: MCP 연결 복구 후 PlayMode 테스트 재실행
 - 관련 파일: GameSaveProgressReadTests.cs, StageRuntimeFlowPlayModeTests.cs
@@ -300,8 +300,8 @@
 | ID | 날짜 | 내용 | 상태 |
 |---|---|---|---|
 | BUG-GS-001 | 2026-05-31 | MCP PlayMode timeout으로 이어하기 버튼 표시와 로드 검증 불가 | Open |
-| BUG-GS-002 | 2026-05-31 | MCP PlayMode run_tests가 501 응답으로 자동 테스트 실행 불가 | Open |
-| BUG-GS-003 | 2026-05-31 | savedStage 상한값과 playingStage 불일치 저장값 방어 여부 미확인 | Open |
+| BUG-GS-002 | 2026-05-31 | MCP PlayMode `GameSaveProgressReadTests`는 timeout, `GameSaveContinueTests`는 `Connection failed: Unknown error`로 자동 테스트 실행 불가 | Open Blocked |
+| BUG-GS-003 | 2026-05-31 | `savedStage` 8 이상 표시/버튼은 정적 방어 확인, `playingStage` 불일치 런타임 흐름은 미확인 | Open |
 
 ## 5. QA 히스토리
 
@@ -309,5 +309,6 @@
 |---|---|---|---|
 | 2026-05-31 | 이어하기 저장 조건, 저장 시스템 연결 | 조건부 통과 | PlayMode 실행은 timeout으로 일부 미확인 |
 | 2026-05-31 | 스테이지별 진행 QA 항목 확장 | 대기 | 1~7스테이지 잠금/해금, 재시작 후 이어하기 기준 추가 |
-| 2026-05-31 | 스테이지 진행 자동 테스트 추가 | 조건부 통과 | 컴파일 통과, PlayMode 실행은 MCP 501로 차단 |
+| 2026-05-31 | 스테이지 진행 자동 테스트 추가 | 조건부 통과 | 컴파일 통과, 2026-05-31 PlayMode 실행은 timeout으로 차단 |
 | 2026-05-31 | 시스템 예외 QA 항목 확장 | 대기 | 비정상 저장값, Alert 취소, 중복 입력, 직접 진입, 빌드 세팅 기준 추가 |
+| 2026-05-31 | QA 인덱스 재실행 | 부분 완료 | `recompile_scripts` warning 0, `GameSystemStaticRegressionTests` 4/4 통과. PlayMode `GameSaveProgressReadTests`는 timeout, `GameSaveContinueTests`는 `Connection failed: Unknown error` |

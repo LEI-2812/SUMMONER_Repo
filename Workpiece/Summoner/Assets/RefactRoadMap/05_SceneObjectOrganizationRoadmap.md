@@ -1,4 +1,11 @@
-# Scene Object Organization Roadmap
+# Scene Object Organization Reference
+
+이 문서는 활성 기능 로드맵이 아니다.
+세션 시작 시 확인할 인계 문서는 `00_SessionHandoff.md`이고, 초기 리팩토링 정보는 기능별 5개 로드맵만 사용한다.
+
+씬 계층, 루트 오브젝트, 네이밍, Inspector 연결 정리 기준이 필요할 때만 이 문서를 참고한다.
+
+---
 
 ## 1. 목적
 
@@ -6,6 +13,7 @@
 
 이 문서는 씬 오브젝트를 어떤 기준으로 묶고 이름 붙일지 정하는 기준 문서다.
 코드 구조를 바꾸기 전에 씬 구조부터 안정적으로 정리하는 것을 목표로 한다.
+
 
 ## 2. 기본 원칙
 
@@ -182,32 +190,28 @@ __Camera
 
 __UI
   BattleCanvas
-    UI_Background
-    UI_BattleUnits
-    UI_Turn
-    UI_PlayerAction
-    UI_Mana
-    UI_State
-    UI_SummonPick
-    UI_ResultAlert
+    UI_00_Background
+    UI_10_BattleField
+    UI_20_TurnStatus
+    UI_30_PlayerCommands
+    UI_40_Mana
+    UI_50_SelectedUnitState
+    UI_60_SummonPicker
+    UI_90_ResultAlerts
 ```
 
 정리 대상:
 
 | 현재 이름 | 변경/이동 기준 |
 |---|---|
-| `BattleCanvas/Background` | `UI_Background` |
-| `BattleCanvas/Player_Enermy` | `UI_BattleUnits` |
-| `BattleCanvas/TurnTextUI` | `UI_Turn` |
-| `BattleCanvas/CurrentTurnText` | `UI_Turn` |
-| `BattleCanvas/ClearTurnText` | `UI_Turn` |
-| `BattleCanvas/SummonBtn` | `UI_PlayerAction/SummonButton` |
-| `BattleCanvas/RedoBtn` | `UI_PlayerAction/ReSummonButton` |
-| `BattleCanvas/TurnEndBtn` | `UI_PlayerAction/EndTurnButton` |
-| `BattleCanvas/MPcount Image` | `UI_Mana` |
-| `BattleCanvas/StatePanel` | `UI_State` |
-| `TakeSummon(항상활성화)` | `BattleCanvas/UI_SummonPick` |
-| `Alert_clear`, `Alert_fail` | `BattleCanvas/UI_ResultAlert` |
+| `BattleCanvas/Background` | `UI_00_Background` |
+| `BattleCanvas/Player_Enermy` | `UI_10_BattleField` |
+| `BattleCanvas/TurnTextUI`, `CurrentTurnText`, `ClearTurnText` | `UI_20_TurnStatus` |
+| `BattleCanvas/SummonBtn`, `RedoBtn`, `TurnEndBtn` | `UI_30_PlayerCommands` |
+| `BattleCanvas/MPcount Image` | `UI_40_Mana` |
+| `BattleCanvas/StatePanel` | `UI_50_SelectedUnitState` |
+| `TakeSummon(항상활성화)` | `BattleCanvas/UI_60_SummonPicker` |
+| `Alert_clear`, `Alert_fail` | `BattleCanvas/UI_90_ResultAlerts` |
 
 ### 5.5 HUD
 
@@ -227,14 +231,19 @@ __Handlers
 
 __UI
   MenuCanvas
-    UI_Menu
-    UI_Settings
-    UI_Background
-
-  UI_Alerts
-    Alert_clear
-    Alert_fail
-    Alert_Skip
+    UI_00_Background
+      MenuBackgroundPanel
+    UI_10_Menu
+      MenuPanel
+    UI_20_Settings
+      Setting
+        SettingPanel
+    UI_90_Alerts
+      AlertObject
+      알림창
+        Alert_clear
+        Alert_fail
+        Alert_Skip
 ```
 
 정리 대상:
@@ -245,7 +254,7 @@ __UI
 | `-------스토리관련 오브젝트--------` | 제거 또는 `__Handlers`로 대체 |
 | `-------알림관련 오브젝트--------` | 제거 또는 `__UI/UI_Alerts`로 대체 |
 | `-------오디오관련 오브젝트-------` | 제거 또는 `__Audio`로 대체 |
-| `알림창` | `__UI/UI_Alerts` |
+| `알림창` | `MenuCanvas/UI_90_Alerts` |
 | `HandlerObjects` | `__Handlers` |
 | `AlterClickAudio` | `__Audio/AlertClickAudio` |
 | `SkipAlterHandler` | `__Handlers/SkipAlertHandler` |
@@ -292,3 +301,29 @@ __UI
 - 씬 정리는 한 번에 전체 적용하지 않는다.
 - 먼저 대표 씬 하나를 정리한 뒤 Play 화면에서 위치와 버튼 동작을 확인한다.
 - 이름 변경은 참조를 끊지 않지만, 테스트나 에디터 스크립트가 이름으로 찾는 경우 영향을 줄 수 있다.
+
+## 10. 1차 적용 기록
+
+적용일: 2026-05-31
+
+적용 범위:
+
+- `Assets/Screen/HUD.unity`
+- `Assets/Screen/FightScene/Fight Screen_1Stage.unity`
+- `Assets/Tests/EditMode/Editor/StageSceneConnectionEditModeTests.cs`
+
+적용 내용:
+
+- `HUD.unity`는 구분선 루트 오브젝트를 제거하고 `__UI`, `__Audio`, `__Handlers` 루트 그룹으로 정리했다.
+- `HUD.unity`의 `MenuCanvas`에 남아 있던 비활성 레거시 `MenuView` 컴포넌트 참조는 Unity missing script 검사에서 실패하여 제거했다. 현재 메뉴 처리는 `__Handlers/MenuHandler` 기준이다.
+- `Fight Screen_1Stage.unity`는 루트를 `__UI`, `__Systems`, `__Camera`로 정리했다.
+- `HUD/MenuCanvas` 하위 UI는 `UI_00_Background`, `UI_10_Menu`, `UI_20_Settings`, `UI_90_Alerts`로 번호순 정리했다.
+- `BattleCanvas` 하위 UI는 `UI_00_Background`, `UI_10_BattleField`, `UI_20_TurnStatus`, `UI_30_PlayerCommands`, `UI_40_Mana`, `UI_50_SelectedUnitState`, `UI_60_SummonPicker`, `UI_90_ResultAlerts` 그룹 기준으로 정리했다.
+- 1차 적용은 대표 씬 확인까지만 진행했다. `Fight Screen_2Stage`부터 `7Stage`, Start, Stage Select, Story 씬은 아직 적용하지 않았다.
+
+검증 상태:
+
+- `StageSceneConnectionEditModeTests`에 `HudScene_HasOrganizedRootGroups`, `FightSceneOne_HasOrganizedUiGroups`를 추가했다.
+- 최초 테스트에서 `HUD/MenuCanvas` missing script 1건이 발견되어 레거시 컴포넌트 참조를 제거했다.
+- 번호형 UI 구조 적용 후 Unity MCP `recompile_scripts`는 warning 0으로 통과했다.
+- `Summoner.EditModeTests.StageSceneConnectionEditModeTests`는 5/5 통과했다.

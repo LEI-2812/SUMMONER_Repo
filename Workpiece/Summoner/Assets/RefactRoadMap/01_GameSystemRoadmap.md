@@ -1,101 +1,61 @@
-# Game System Refactoring Roadmap
+# GameSystem Roadmap
 
-## Current Phase
+## 1. Role
 
-Phase 1 - GameSystem stabilization and QA handoff.
+GameSystem은 시작 화면, 새 게임, 이어하기, 저장 데이터, 스테이지 선택, 전투 클리어 후 진행 저장을 담당한다.
+옵션 UI 자체는 `05_OptionSystemRoadmap.md`에서 관리하고, 옵션 값 보존 여부만 GameSystem 경계에서 확인한다.
 
-## Goal
+현재 QA 상태나 버그 우선순위는 이 문서에 두지 않고 `qa/00_current.md`에서 관리한다.
 
-저장, 설정, 메뉴, 씬 이동, 스테이지 진행도 흐름을 한 곳에서 이해할 수 있게 만든다.
-게임 흐름 코드는 PlayerPrefs 키를 직접 알지 않게 하고, UI View와 실제 저장/씬 이동 책임을 분리한다.
+## 2. Ownership
 
-## Scope
+| 영역 | 주요 파일/폴더 | 책임 |
+|---|---|---|
+| 저장 데이터 | `Assets/Script/Save` | 저장값 모델, PlayerPrefs 저장소, 저장 읽기/쓰기 |
+| 시작 화면 | `Assets/Script/Start Screen` | 새 게임, 이어하기, 시작 화면 버튼 흐름 |
+| 스테이지 선택 | `Assets/Script/Stage` | 스테이지 버튼, 잠금/해금 표시, 선택한 스테이지 저장 |
+| 전투 진행 저장 | `Assets/Script/Battle/Flow` | 전투 결과 이후 진행도 저장과 다음 흐름 연결 |
 
-```text
-Assets/Script/Start Screen
-Assets/Script/Menu
-Assets/Script/Option
-Assets/Script/Stage
-Assets/Script/Save
-Assets/Script/Battle/BattleResultAlertView.cs
-```
+## 3. Current Structure
 
-## Refactoring Rules
+- 저장 접근은 `GameSaveController`와 `PlayerPrefsSaveStore` 기준으로 모은다.
+- 저장 데이터는 진행도와 옵션 값을 섞지 않는 방향으로 유지한다.
+- 이어하기 가능 여부는 저장된 진행도 기준으로 판단한다.
+- 스테이지 선택 UI는 저장된 진행도보다 앞선 스테이지를 열지 않아야 한다.
+- 전투 클리어 후 진행 저장은 BattleCore 결과 흐름과 연결되지만 저장 정책은 GameSystem에서 정의한다.
 
-- 저장, 설정, 씬 이동은 기능 단위로만 수정한다.
-- PlayerPrefs 키 직접 접근은 새로 늘리지 않는다.
-- 기존 씬/프리팹 연결을 바꾸는 작업은 먼저 영향 범위를 확인한다.
-- `StartScreenView`, `StageSelectView`, `BattleResultAlertView`처럼 UI와 연결된 파일은 View 책임과 흐름 제어 책임을 구분한다.
-- 상세 변경 기록은 이 문서에 누적하지 않고 `WorkLogs/YYYY-MM-DD.md`에 기록한다.
+## 4. Refactoring Direction
 
-## Current Structure
+- PlayerPrefs 키 직접 접근을 줄이고 저장소 API를 통해 읽고 쓴다.
+- 새 게임, 이어하기, 스테이지 선택, 전투 클리어 저장을 같은 진행도 규칙으로 맞춘다.
+- 저장값 검증과 fallback을 저장 계층 가까이에 둔다.
+- UI View는 화면 표시와 버튼 이벤트 전달만 맡기고 저장 정책 판단은 controller로 옮긴다.
 
-현재 흐름:
+## 5. Constraints
 
-```text
-StartScreenView
- -> 새 게임/이어하기 버튼
- -> GameSaveController
- -> 씬 이동
+- 새 게임은 진행 데이터만 초기화하고 오디오, 비디오, 게임플레이 옵션 값을 지우지 않는다.
+- 저장된 진행도보다 높은 스테이지로 직접 진입하지 않는다.
+- `savedStage`, `playingStage` 값이 비정상이면 안전한 기본값으로 복구해야 한다.
+- 씬 이름과 Stage 번호 매핑을 바꿀 때는 StorySystem과 BattleCore 이동 흐름을 함께 확인한다.
 
-StageSelectView
- -> playingStage 저장
- -> Stage별 Story/Fight Screen 이동
+## 6. Next Work Candidates
 
-BattleResultAlertView
- -> 클리어 시 savedStage, playingStage 저장
- -> 다음 Stage 또는 Epilogue 이동
+| ID | 작업 | 목적 |
+|---|---|---|
+| GS-REF-01 | StageFlow 중복 제거 | 새 게임, 이어하기, 스테이지 선택의 이동 규칙을 한곳에서 관리 |
+| GS-REF-02 | 저장값 검증 위치 정리 | `savedStage`, `playingStage` 범위 방어를 저장 계층에 고정 |
+| GS-REF-03 | 스테이지 UI와 저장 정책 분리 | Stage Select View가 저장 규칙을 직접 판단하지 않게 정리 |
 
-Option Views
- -> Audio/Video/Gameplay 설정 적용
- -> 일부 PlayerPrefs 직접 접근 유지
-```
+## 7. Done Criteria
 
-목표 흐름:
+- 저장 없음 상태와 저장 있음 상태의 시작 화면 동작이 명확하다.
+- 새 게임은 진행도만 초기화하고 옵션 설정은 유지한다.
+- Stage Select는 저장된 진행도 범위만 선택 가능하게 한다.
+- 전투 클리어 후 다음 진행도가 일관되게 저장된다.
+- 비정상 저장값에도 잠긴 스테이지로 진입하지 않는다.
 
-```text
-UI 입력
- -> Save/Setting/Scene 전용 코드
- -> 실제 저장/적용/이동 수행
-```
+## 8. QA Links
 
-## Active Tasks
-
-| ID | Task | Status | Notes |
-|---|---|---|---|
-| GS-QA-00 | MCP QA 실행 복구 | Highest | 수동 QA 대신 MCP `run_tests` timeout 원인 수정 후 진행 |
-| GS-QA-01 | 새 게임 시작 QA 요청 | Pending QA | QA 에이전트가 진행도만 초기화되고 설정값이 유지되는지 확인 |
-| GS-QA-02 | 이어하기 QA 요청 | Pending QA | QA 에이전트가 저장 없음/있음 버튼 표시와 Stage Select 이동 확인 |
-| GS-QA-03 | 스테이지 선택/전투 클리어 QA 요청 | Pending QA | QA 에이전트가 `playingStage`, `savedStage`, 다음 씬 이동 확인 |
-| GS-SET-01 | 설정 View 내부 변수명 정리 검토 | Pending | `audioController`, `videoController`, `gamePlayController` 등 |
-| GS-SCENE-01 | StageFlow 중복 제거 | Pending | StageController, StageSelectView, BattleResultAlertView |
-
-## Completed
-
-완료 상세는 `CompletedArchive.md`와 `WorkLogs/2026-05-30.md`에 보관한다.
-
-요약:
-
-- GameSystem UI 연결 클래스는 `*View` 이름으로 정리됨.
-- 씬 UnityEvent 타입명은 현재 View 이름 기준으로 정리됨.
-- 진행도 읽기 흐름은 `GameSaveController.GetGameSaveOrDefault()` 기준으로 정리됨.
-- GameSystem 정적 회귀 테스트가 추가됨.
-
-## Done Criteria
-
-```text
-1. 새 게임 시작 후 savedStage가 1인지 확인
-2. 새 게임 시작 후 볼륨/해상도 설정이 유지되는지 확인
-3. 이어하기 버튼이 savedStage 기준으로 정상 표시되는지 확인
-4. 스테이지 선택 시 playingStage와 씬 이동이 정상인지 확인
-5. 전투 클리어 후 다음 스테이지 저장이 정상인지 확인
-6. ESC 메뉴, 메인 이동, 종료 Alert가 정상 동작하는지 확인
-7. 관련 QAReports에 QA 요청 또는 결과 기록
-8. FileStateIndex 갱신
-```
-
-## Latest Summary
-
-2026-05-30: 진행도 읽기와 주요 View 이름 정리는 완료 상태다.
-다음 리팩토링 작업은 설정 View 내부 변수명 정리 여부 판단이다.
-다음 작업 최우선순위는 수동 QA가 아니라 MCP `run_tests` timeout 원인 수정과 GameSystem PlayMode 재실행이다.
+- 현재 QA 큐: `qa/00_current.md`
+- 큰 변경 후 전체 확인: `qa/20_full-check.md`
+- 기능별 QA 종합보고서: `QAReports/01_GameSystem_QA.md`, `QAReports/01_GameSystem_QA.csv`
