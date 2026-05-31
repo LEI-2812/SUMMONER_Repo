@@ -28,9 +28,13 @@ approval_mode = "auto"    # 자동 실행
 # approval_mode = "approve" # 승인 받고 실행
 
 [mcp_servers.mcp-unity.tools.recompile_scripts]
-approval_mode = "auto"    # 자동 실행
+approval_mode = "approve"    # 자동 실행
 # approval_mode = "approve" # 승인 받고 실행
 
 [mcp_servers.mcp-unity.tools.run_tests]
-approval_mode = "auto"    # 자동 실행
+approval_mode = "approve"    # 자동 실행
+# approval_mode = "approve" # 승인 받고 실행
+
+[mcp_servers.mcp-unity.tools.get_scene_info]
+approval_mode = "auto"
 # approval_mode = "approve" # 승인 받고 실행
