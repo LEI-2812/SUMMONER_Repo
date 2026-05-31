@@ -91,6 +91,9 @@ GameObject:
   - component: {fileID: 1063343434404023264}
   - component: {fileID: 4746811526590580599}
   - component: {fileID: 610786687573026068}
+  - component: {fileID: 4703122760903396129}
+  - component: {fileID: 1161583282228896167}
+  - component: {fileID: 3680172824629755539}
   m_Layer: 0
   m_Name: Fox
   m_TagString: Untagged
@@ -138,15 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1efcb282fa10014fa4ca2d91f0801f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 5192321352324646301}
-  sprites:
-  - {fileID: -1876336162, guid: ccd85671b3248574f88d5b7f3915786b, type: 3}
-  - {fileID: 2025609583, guid: ccd85671b3248574f88d5b7f3915786b, type: 3}
   shieldImage: {fileID: 2547677096309628023}
   animator: {fileID: 5871225195208921274}
-  attackSound: {fileID: 1063343434404023264}
-  downHitSound: {fileID: 4746811526590580599}
-  upAttackSound: {fileID: 610786687573026068}
   normalAttackSprite: {fileID: 21300000, guid: c092625da1bcac542a94606d0a20088d, type: 3}
   specialAttackSprite: {fileID: 21300000, guid: 9e4c2293d42bb4d489c12e60daf6e2d1, type: 3}
   attackPower: 0
@@ -492,3 +488,48 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4703122760903396129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2937820170548234780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3e0f6a2b7c4a0f8d1e6c3b9a5f2e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  blinkInterval: 1
+--- !u!114 &1161583282228896167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2937820170548234780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901d01eeb4f7fe94699f7bc9c131a0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSound: {fileID: 1063343434404023264}
+  debuffSound: {fileID: 4746811526590580599}
+  buffSound: {fileID: 610786687573026068}
+--- !u!114 &3680172824629755539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2937820170548234780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b36533323832c4abca62b9cd7f4926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 5192321352324646301}
+  sprites:
+  - {fileID: -1876336162, guid: ccd85671b3248574f88d5b7f3915786b, type: 3}
+  - {fileID: 2025609583, guid: ccd85671b3248574f88d5b7f3915786b, type: 3}

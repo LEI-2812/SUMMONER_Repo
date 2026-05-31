@@ -91,6 +91,9 @@ GameObject:
   - component: {fileID: 8383045774908220134}
   - component: {fileID: 5236150488286180272}
   - component: {fileID: 8030751119646906542}
+  - component: {fileID: 7397094029687701616}
+  - component: {fileID: 3337934413383732886}
+  - component: {fileID: 5795987263421856857}
   m_Layer: 0
   m_Name: KingSlime
   m_TagString: Untagged
@@ -130,15 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64194d502e495ec4eaea497161bebae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 636603962226012109}
-  sprites:
-  - {fileID: -1150085304, guid: 8d2ac64919a05ba4c842a50c314b10a3, type: 3}
-  - {fileID: 675001992, guid: 8d2ac64919a05ba4c842a50c314b10a3, type: 3}
   shieldImage: {fileID: 503923366847168250}
   animator: {fileID: 3938865853249468471}
-  attackSound: {fileID: 8383045774908220134}
-  downHitSound: {fileID: 5236150488286180272}
-  upAttackSound: {fileID: 8030751119646906542}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
   attackPower: 0
@@ -492,3 +488,48 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7397094029687701616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3947920273218790462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3e0f6a2b7c4a0f8d1e6c3b9a5f2e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  blinkInterval: 1
+--- !u!114 &3337934413383732886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3947920273218790462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901d01eeb4f7fe94699f7bc9c131a0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSound: {fileID: 8383045774908220134}
+  debuffSound: {fileID: 5236150488286180272}
+  buffSound: {fileID: 8030751119646906542}
+--- !u!114 &5795987263421856857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3947920273218790462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b36533323832c4abca62b9cd7f4926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 636603962226012109}
+  sprites:
+  - {fileID: -1150085304, guid: 8d2ac64919a05ba4c842a50c314b10a3, type: 3}
+  - {fileID: 675001992, guid: 8d2ac64919a05ba4c842a50c314b10a3, type: 3}

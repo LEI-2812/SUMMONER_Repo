@@ -91,6 +91,9 @@ GameObject:
   - component: {fileID: 8844683566227684244}
   - component: {fileID: 5120254344106952167}
   - component: {fileID: 6277003864064940080}
+  - component: {fileID: 8988159677401431240}
+  - component: {fileID: 4318093453662039748}
+  - component: {fileID: 1807716550542203438}
   m_Layer: 0
   m_Name: Wolf
   m_TagString: Untagged
@@ -130,15 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfaacf3ba17ce554c92f02ff0ddbd192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 8721398464925212949}
-  sprites:
-  - {fileID: -1720323784, guid: 61e14c39d98362f4caa88beae9dff857, type: 3}
-  - {fileID: -1933813027, guid: 61e14c39d98362f4caa88beae9dff857, type: 3}
   shieldImage: {fileID: 2146011310539477940}
   animator: {fileID: 2030948058271404649}
-  attackSound: {fileID: 8844683566227684244}
-  downHitSound: {fileID: 5120254344106952167}
-  upAttackSound: {fileID: 6277003864064940080}
   normalAttackSprite: {fileID: 21300000, guid: d07e24f27cf62c2489991f6834f20813, type: 3}
   specialAttackSprite: {fileID: 21300000, guid: 4836ae1bdf26d4b4db0861ee3d6d1f88, type: 3}
   attackPower: 0
@@ -492,3 +488,48 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8988159677401431240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2490388254837929149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3e0f6a2b7c4a0f8d1e6c3b9a5f2e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  blinkInterval: 1
+--- !u!114 &4318093453662039748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2490388254837929149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901d01eeb4f7fe94699f7bc9c131a0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSound: {fileID: 8844683566227684244}
+  debuffSound: {fileID: 5120254344106952167}
+  buffSound: {fileID: 6277003864064940080}
+--- !u!114 &1807716550542203438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2490388254837929149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b36533323832c4abca62b9cd7f4926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 8721398464925212949}
+  sprites:
+  - {fileID: -1720323784, guid: 61e14c39d98362f4caa88beae9dff857, type: 3}
+  - {fileID: -1933813027, guid: 61e14c39d98362f4caa88beae9dff857, type: 3}

@@ -16,6 +16,9 @@ GameObject:
   - component: {fileID: 4466720813647804060}
   - component: {fileID: 5863728558524321758}
   - component: {fileID: 5684462959784064446}
+  - component: {fileID: 1862866405732649636}
+  - component: {fileID: 8910097496773718213}
+  - component: {fileID: 5882957418396550129}
   m_Layer: 0
   m_Name: LowDevil
   m_TagString: Untagged
@@ -63,15 +66,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b6d12293630ea042ac8fe07f3894217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 4554830237240207186}
-  sprites:
-  - {fileID: -1652347556, guid: 67b17117a71eb934191a8579ee843a02, type: 3}
-  - {fileID: 1483310314, guid: 67b17117a71eb934191a8579ee843a02, type: 3}
   shieldImage: {fileID: 8347361997873406969}
   animator: {fileID: 3948279234011370610}
-  attackSound: {fileID: 4466720813647804060}
-  downHitSound: {fileID: 5863728558524321758}
-  upAttackSound: {fileID: 5684462959784064446}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
   attackPower: 0
@@ -417,6 +413,51 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1862866405732649636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206725376955300398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3e0f6a2b7c4a0f8d1e6c3b9a5f2e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  blinkInterval: 1
+--- !u!114 &8910097496773718213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206725376955300398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901d01eeb4f7fe94699f7bc9c131a0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSound: {fileID: 4466720813647804060}
+  debuffSound: {fileID: 5863728558524321758}
+  buffSound: {fileID: 5684462959784064446}
+--- !u!114 &5882957418396550129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206725376955300398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b36533323832c4abca62b9cd7f4926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 4554830237240207186}
+  sprites:
+  - {fileID: -1652347556, guid: 67b17117a71eb934191a8579ee843a02, type: 3}
+  - {fileID: 1483310314, guid: 67b17117a71eb934191a8579ee843a02, type: 3}
 --- !u!1 &8347361997873406969
 GameObject:
   m_ObjectHideFlags: 0

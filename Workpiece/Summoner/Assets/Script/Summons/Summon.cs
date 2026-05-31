@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,17 +14,13 @@ public enum SummonType
     Cat, Rabbit, Wolf, Eagle, Snake, Fox
 }
 
+[RequireComponent(typeof(SummonStatusView))]
+[RequireComponent(typeof(SummonSoundView))]
+[RequireComponent(typeof(SummonImageView))]
 public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 {
-    [SerializeField] protected Image image; // 이미지
-    [SerializeField] protected Sprite[] sprites; // 스프라이트 목록
     [SerializeField] protected GameObject shieldImage;
     [SerializeField] protected Animator animator;
-
-    [Header("효과음")]
-    [SerializeField] public AudioSource attackSound;
-    [SerializeField] private AudioSource downHitSound;
-    [SerializeField] private AudioSource upAttackSound;
 
     protected string summonName; // 이름
     public Sprite normalAttackSprite; // 일반 공격 스프라이트
@@ -41,33 +36,48 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     protected bool onceInvincibility = false;
     public bool isAttack = true; // 상태이상 중 공격 가능 여부
 
-    private bool attakingMotion = false;
-    private int currentEffectIndex = 0;
-    private float blinkTimer = 0f;
-    private float blinkInterval = 1f; // 색상 변경 간격
-
-    [Header("상태이상")]
-    [SerializeField] private List<StatusEffect> activeStatusEffects = new List<StatusEffect>(); // 현재 적용된 상태이상
     protected IAttackStrategy attackStrategy;
     protected IAttackStrategy[] specialAttackStrategies;
     private StatusEffectController statusEffectController;
+    private SummonImageView imageView;
+    private SummonStatusView statusView;
+    private SummonSoundView soundView;
 
     private List<stateObserver> observers = new List<stateObserver>();
 
 
     private void Awake()
     {
-        image = GetComponent<Image>();
+        imageView = GetComponent<SummonImageView>();
+        if (imageView == null)
+        {
+            imageView = gameObject.AddComponent<SummonImageView>();
+        }
+
+        statusView = GetComponent<SummonStatusView>();
+        if (statusView == null)
+        {
+            statusView = gameObject.AddComponent<SummonStatusView>();
+        }
+
+        soundView = GetComponent<SummonSoundView>();
+        if (soundView == null)
+        {
+            soundView = gameObject.AddComponent<SummonSoundView>();
+        }
+
         nowHP = maxHP;
-        statusEffectController = new StatusEffectController(activeStatusEffects);
+        statusEffectController = new StatusEffectController();
     }
 
     void Update()
     {
-        if(!attakingMotion) ApplyStatusEffectBlink();
+        StatusEffectControllerEnsure();
+
+        statusView.StatusEffectsShow(statusEffectController.ActiveStatusEffectsGet());
     }
 
-    public void SetSprite(int index) => image.sprite = sprites[index];
+    public void SetSprite(int index) => imageView.SpriteSet(index);
 
 
     public void normalAttack(List<Plate> targetPlates, int selectedPlateIndex)
@@ -81,36 +91,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         AttackMotionPlay(true);
         AttackCooldownApply(attackStrategy);
         isAttack = false;
-    }
-
-    protected IEnumerator ColorChange(int color)    // 색이 바뀐 뒤 원래 색으로 돌아옴
-    {
-        //
-        attakingMotion = true;
-        switch (color)
-        {
-            case 1: // 검은색
-                image.color = new Color(0f, 0f, 0f); // #000000
-                break;
-            case 2: // 빨간색
-                image.color = new Color(1f, 0.431f, 0.431f); // #FF6E6E
-                break;
-            case 3: // 보라색
-                image.color = new Color(0.639f, 0.192f, 0.839f); // #A331D6
-                break;
-            case 4: // 초록색
-                image.color = new Color(0.192f, 0.835f, 0.318f); // #31D551
-                break;
-            default:
-                image.color = Color.white; // 기본값 설정
-                break;
-
-        }
-
-        yield return new WaitForSeconds(1f);
-
-        image.color = Color.white;
-        attakingMotion = false;
     }
 
     public virtual void SpecialAttack(List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
@@ -136,16 +116,16 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         isAttack = false;
     }
 
-    protected void AttackMotionPlay(bool attackSoundPlay)
+    protected void AttackMotionPlay(bool shouldPlayAttackSound)
     {
         animator.SetTrigger("attack");
 
-        if (attackSoundPlay)
+        if (shouldPlayAttackSound)
         {
-            attackSound.Play();
+            soundView.AttackSoundPlay();
         }
 
-        StartCoroutine(ColorChange(1)); // 검은색
+        statusView.AttackColorShow();
     }
 
     protected void AttackCooldownApply(IAttackStrategy attackStrategy)
@@ -155,6 +135,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     protected bool SpecialAttackIndexCheck(int specialAttackArrayIndex)
     {
+        if (specialAttackStrategies == null)
+        {
+            return false;
+        }
+
         return specialAttackArrayIndex >= 0 && specialAttackArrayIndex < specialAttackStrategies.Length;
     }
 
@@ -170,7 +155,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     {
         if (statusEffectController == null)
         {
-            statusEffectController = new StatusEffectController(activeStatusEffects);
+            statusEffectController = new StatusEffectController();
         }
     }
 
@@ -228,75 +213,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 특수 공격 쿨타임이 종료되었습니다.");
     }
 
-    private void SetColorByStatus(StatusType statusType)
-    {
-        switch (statusType)
-        {
-            case StatusType.Burn:
-                image.color = new Color(1f, 0.3f, 0.3f); // 붉은색(Burn)
-                break;
-            case StatusType.Poison:
-                image.color = new Color(0.3f, 1f, 0.3f); // 녹색(Poison)
-                break;
-            case StatusType.Stun:
-                image.color = new Color(0.2f, 0.2f, 0.2f); // 검은색(Stun)
-                break;
-            case StatusType.LifeDrain:
-                image.color = new Color(1f, 1f, 0.5f); // 노란색(LifeDrain)
-                break;
-            default:
-                image.color = Color.white; // 기본 색상
-                break;
-        }
-    }
-
-
-    private void ApplyStatusEffectBlink()
-    {
-        if (StatusColorResetIfEmpty())
-        {
-            return;
-        }
-
-        if (activeStatusEffects.Count == 1)
-        {
-            SingleStatusColorShow();
-        }
-        else
-        {
-            MultipleStatusColorBlink();
-        }
-    }
-
-    private bool StatusColorResetIfEmpty()
-    {
-        if (activeStatusEffects.Count > 0)
-        {
-            return false;
-        }
-
-        image.color = Color.white;
-        return true;
-    }
-
-    private void SingleStatusColorShow() => SetColorByStatus(activeStatusEffects[0].statusType);
-
-    private void MultipleStatusColorBlink()
-    {
-        blinkTimer += Time.deltaTime;
-
-        if (blinkTimer < blinkInterval)
-        {
-            return;
-        }
-
-        blinkTimer = 0f;
-        currentEffectIndex = (currentEffectIndex + 1) % activeStatusEffects.Count;
-        SetColorByStatus(activeStatusEffects[currentEffectIndex].statusType);
-    }
-
-
-
     public bool getIsAttack() => isAttack;
     public void setIsAttack(bool isAttack) => this.isAttack = isAttack;
 
@@ -312,23 +228,13 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public void AttackPowerCurse(double curseRate) => Cursed(curseRate);
     public void AttackPowerRestore(double originAttack) => attackPower = originAttack;
     public void OnceInvincibilitySet(bool isInvincibility) => setOnceInvincibility(isInvincibility);
-    public void StatusHitColorShow() => StartCoroutine(ColorChange(3));
+    public void StatusHitColorShow() => statusView.StatusHitColorShow();
 
-    public void DebuffSoundPlay()
-    {
-        if (downHitSound != null)
-        {
-            downHitSound.Play();
-        }
-    }
+    public void DebuffSoundPlay() => soundView.DebuffSoundPlay();
 
-    public void BuffSoundPlay()
-    {
-        if (upAttackSound != null)
-        {
-            upAttackSound.Play();
-        }
-    }
+    public void BuffSoundPlay() => soundView.BuffSoundPlay();
+
+    public void AttackSoundPlay() => soundView.AttackSoundPlay();
 
     public void StatusChangedNotify() => NotifyObservers();
 
@@ -363,8 +269,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         // 체력 변경을 옵저버에게 알림
         NotifyObservers();
         animator.SetTrigger("hitted");
-        StartCoroutine(ColorChange(4)); // 초록색
-        upAttackSound.Play();
+        statusView.HealColorShow();
+        soundView.BuffSoundPlay();
     }
 
 
@@ -435,7 +341,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     {
         nowHP -= damage;
         animator.SetTrigger("hitted");
-        StartCoroutine((ColorChange(2)));   // 빨간색
+        statusView.DamageColorShow();
     }
 
     private void DeathCheck(double damage)
@@ -523,8 +429,12 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public SummonRank getSummonRank() => summonRank;
     public void setSummonRank(SummonRank rank) => this.summonRank = rank;
 
-    public void setImage(Image image) => this.image = image;
-    public Image getImage() => image;
+    public void setImage(Image image)
+    {
+        imageView.ImageSet(image);
+    }
+
+    public Image getImage() => imageView.ImageGet();
 
 
     // 특수 공격 쿨타임 확인
@@ -545,15 +455,9 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     public List<StatusType> getAllStatusTypes()
     {
-        List<StatusType> statusTypes = new List<StatusType>();
+        StatusEffectControllerEnsure();
 
-        // activeStatusEffects 리스트에서 각 StatusEffect의 statusType을 추가
-        foreach (StatusEffect effect in activeStatusEffects)
-        {
-            statusTypes.Add(effect.statusType);
-        }
-
-        return statusTypes;
+        return statusEffectController.StatusTypesGet();
     }
 
     public bool IsCursed()
@@ -568,15 +472,9 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     private bool StatusTypeContains(StatusType statusType)
     {
-        foreach (StatusEffect effect in activeStatusEffects)
-        {
-            if (effect.statusType == statusType)
-            {
-                return true;
-            }
-        }
+        StatusEffectControllerEnsure();
 
-        return false;
+        return statusEffectController.StatusTypeContains(statusType);
     }
 
     public bool IsCooltime() // 쿨타임인지 확인
@@ -605,6 +503,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     {
         List<IAttackStrategy> availableSpecialAttacks = new List<IAttackStrategy>();
 
+        if (specialAttackStrategies == null)
+        {
+            return availableSpecialAttacks.ToArray();
+        }
+
         // 특수 공격 중 쿨타임이 없는 공격만 필터링하여 추가
         foreach (IAttackStrategy specialAttack in specialAttackStrategies)
         {
@@ -618,7 +521,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     }
 
 
-    public int getSpecialAttackCount() => specialAttackStrategies.Length;
+    public int getSpecialAttackCount() => specialAttackStrategies == null ? 0 : specialAttackStrategies.Length;
 
     public void AddObserver(stateObserver observer) => observers.Add(observer);
 

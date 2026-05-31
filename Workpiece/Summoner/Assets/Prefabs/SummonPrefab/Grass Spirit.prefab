@@ -16,6 +16,9 @@ GameObject:
   - component: {fileID: 7499148104480188928}
   - component: {fileID: 1945584010833298998}
   - component: {fileID: 1769687516415026042}
+  - component: {fileID: 4788036242151884219}
+  - component: {fileID: 8241479494964002897}
+  - component: {fileID: 7978467569235649808}
   m_Layer: 0
   m_Name: Grass Spirit
   m_TagString: Untagged
@@ -55,15 +58,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfcafde00a02c8b4aaed2359ada94d95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 4012839161702128938}
-  sprites:
-  - {fileID: -639714723, guid: 9a5b6f04e7dd3354d96cdc3e78f8bc63, type: 3}
-  - {fileID: 2123240392, guid: 9a5b6f04e7dd3354d96cdc3e78f8bc63, type: 3}
   shieldImage: {fileID: 0}
   animator: {fileID: 3963563253523807730}
-  attackSound: {fileID: 7499148104480188928}
-  downHitSound: {fileID: 1945584010833298998}
-  upAttackSound: {fileID: 1769687516415026042}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
   attackPower: 0
@@ -417,6 +413,51 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4788036242151884219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024428123702163846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3e0f6a2b7c4a0f8d1e6c3b9a5f2e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  blinkInterval: 1
+--- !u!114 &8241479494964002897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024428123702163846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901d01eeb4f7fe94699f7bc9c131a0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSound: {fileID: 7499148104480188928}
+  debuffSound: {fileID: 1945584010833298998}
+  buffSound: {fileID: 1769687516415026042}
+--- !u!114 &7978467569235649808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024428123702163846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b36533323832c4abca62b9cd7f4926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 4012839161702128938}
+  sprites:
+  - {fileID: -639714723, guid: 9a5b6f04e7dd3354d96cdc3e78f8bc63, type: 3}
+  - {fileID: 2123240392, guid: 9a5b6f04e7dd3354d96cdc3e78f8bc63, type: 3}
 --- !u!1 &3801987164548947946
 GameObject:
   m_ObjectHideFlags: 0

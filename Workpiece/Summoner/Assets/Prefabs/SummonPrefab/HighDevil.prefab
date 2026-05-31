@@ -16,6 +16,9 @@ GameObject:
   - component: {fileID: 7297990795571251392}
   - component: {fileID: 1070367456994098481}
   - component: {fileID: 4130745648796601744}
+  - component: {fileID: 2092506046330959418}
+  - component: {fileID: 3448184401559545465}
+  - component: {fileID: 7239058354938344869}
   m_Layer: 0
   m_Name: HighDevil
   m_TagString: Untagged
@@ -63,15 +66,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984d4dee1d6372347ac4f429ad349b7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 2027178405307903641}
-  sprites:
-  - {fileID: -384636721, guid: 3001f37440df87c429771dc32078980a, type: 3}
-  - {fileID: -75966999, guid: 3001f37440df87c429771dc32078980a, type: 3}
   shieldImage: {fileID: 0}
   animator: {fileID: 1244430238562419733}
-  attackSound: {fileID: 7297990795571251392}
-  downHitSound: {fileID: 1070367456994098481}
-  upAttackSound: {fileID: 4130745648796601744}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
   attackPower: 0
@@ -417,6 +413,51 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2092506046330959418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993421617891715039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3e0f6a2b7c4a0f8d1e6c3b9a5f2e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  blinkInterval: 1
+--- !u!114 &3448184401559545465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993421617891715039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901d01eeb4f7fe94699f7bc9c131a0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSound: {fileID: 7297990795571251392}
+  debuffSound: {fileID: 1070367456994098481}
+  buffSound: {fileID: 4130745648796601744}
+--- !u!114 &7239058354938344869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993421617891715039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b36533323832c4abca62b9cd7f4926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 2027178405307903641}
+  sprites:
+  - {fileID: -384636721, guid: 3001f37440df87c429771dc32078980a, type: 3}
+  - {fileID: -75966999, guid: 3001f37440df87c429771dc32078980a, type: 3}
 --- !u!1 &5898722618668316952
 GameObject:
   m_ObjectHideFlags: 0

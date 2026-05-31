@@ -5,9 +5,39 @@ public class StatusEffectController
 {
     private List<StatusEffect> activeStatusEffects;
 
+    public StatusEffectController()
+        : this(new List<StatusEffect>())
+    {
+    }
+
     public StatusEffectController(List<StatusEffect> activeStatusEffects)
     {
         this.activeStatusEffects = activeStatusEffects;
+    }
+
+    public IReadOnlyList<StatusEffect> ActiveStatusEffectsGet()
+    {
+        return activeStatusEffects;
+    }
+
+    public List<StatusType> StatusTypesGet()
+    {
+        List<StatusType> statusTypes = new List<StatusType>();
+
+        foreach (StatusEffect effect in activeStatusEffects)
+        {
+            if (effect != null)
+            {
+                statusTypes.Add(effect.statusType);
+            }
+        }
+
+        return statusTypes;
+    }
+
+    public bool StatusTypeContains(StatusType statusType)
+    {
+        return StatusEffectFind(statusType) != null;
     }
 
     // 상태이상을 적용한다. 같은 상태이상은 중복 적용하지 않는다.

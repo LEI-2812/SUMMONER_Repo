@@ -91,6 +91,9 @@ GameObject:
   - component: {fileID: 4751110550309776830}
   - component: {fileID: 851354062927403219}
   - component: {fileID: 3049534793104791430}
+  - component: {fileID: 8721549855416244689}
+  - component: {fileID: 4715875864216350982}
+  - component: {fileID: 129363209234657367}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Untagged
@@ -130,15 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df7ef2d659cff7e45878431d1744b500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 4967410675575056086}
-  sprites:
-  - {fileID: -9869291, guid: a48b29361d190a54b83f8e1f37ab67d5, type: 3}
-  - {fileID: 1978277083, guid: a48b29361d190a54b83f8e1f37ab67d5, type: 3}
   shieldImage: {fileID: 2182356159723547260}
   animator: {fileID: 395708260243046059}
-  attackSound: {fileID: 4751110550309776830}
-  downHitSound: {fileID: 851354062927403219}
-  upAttackSound: {fileID: 3049534793104791430}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
   attackPower: 0
@@ -492,3 +488,48 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8721549855416244689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4846182729505904392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d3e0f6a2b7c4a0f8d1e6c3b9a5f2e10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  blinkInterval: 1
+--- !u!114 &4715875864216350982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4846182729505904392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901d01eeb4f7fe94699f7bc9c131a0d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSound: {fileID: 4751110550309776830}
+  debuffSound: {fileID: 851354062927403219}
+  buffSound: {fileID: 3049534793104791430}
+--- !u!114 &129363209234657367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4846182729505904392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b36533323832c4abca62b9cd7f4926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 4967410675575056086}
+  sprites:
+  - {fileID: -9869291, guid: a48b29361d190a54b83f8e1f37ab67d5, type: 3}
+  - {fileID: 1978277083, guid: a48b29361d190a54b83f8e1f37ab67d5, type: 3}
