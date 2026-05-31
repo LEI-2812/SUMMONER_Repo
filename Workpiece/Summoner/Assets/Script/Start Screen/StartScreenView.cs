@@ -141,7 +141,9 @@ public class StartScreenView : MonoBehaviour
         {
             audioSource.Play();
 
-            GameObject option = menuCanvas.transform.Find("Setting/SettingPanel").gameObject;
+            Transform optionTransform = menuCanvas.transform.Find("UI_20_Settings/Setting/SettingPanel")
+                ?? menuCanvas.transform.Find("Setting/SettingPanel");
+            GameObject option = optionTransform != null ? optionTransform.gameObject : null;
 
             if (option != null)
             {

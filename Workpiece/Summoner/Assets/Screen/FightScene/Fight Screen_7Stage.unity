@@ -3032,6 +3032,7 @@ GameObject:
   - component: {fileID: 893681176}
   - component: {fileID: 893681175}
   - component: {fileID: 893681174}
+  - component: {fileID: 893681180}
   m_Layer: 5
   m_Name: Player_Enermy
   m_TagString: Untagged
@@ -3112,6 +3113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1469478338}
   enermy: {fileID: 313031151}
+  battleResultController: {fileID: 0}
   clearTurn: 25
   turnCountText: {fileID: 1842626266}
   turnClearText: {fileID: 95902981}
@@ -3229,6 +3231,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f43ba149b0784942a9fa334d497d6fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &893681180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893681166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e56c88446c4724ab0ba36b22bf9d5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &959924360
@@ -4924,7 +4938,7 @@ MonoBehaviour:
   turnController: {fileID: 893681170}
   battleController: {fileID: 893681171}
   plateController: {fileID: 893681172}
-  battleResultAlertView: {fileID: 0}
+  battleResultController: {fileID: 0}
   currentTurn: 0
   clearTurn: 0
 --- !u!114 &1469478339
@@ -6231,7 +6245,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1469478338}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnReSummonBtnClick
+        m_MethodName: OnRedrawButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

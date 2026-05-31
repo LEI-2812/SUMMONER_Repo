@@ -15,10 +15,12 @@ namespace Summoner.EditModeTests
     {
         private const string StartScenePath = "Assets/Screen/Start Screen.unity";
         private const string StageSelectScenePath = "Assets/Screen/Stage Select Screen.unity";
+        private const string HudScenePath = "Assets/Screen/HUD.unity";
+        private const string FightSceneOnePath = "Assets/Screen/FightScene/Fight Screen_1Stage.unity";
 
         private static readonly string[] FightScenePaths =
         {
-            "Assets/Screen/FightScene/Fight Screen_1Stage.unity",
+            FightSceneOnePath,
             "Assets/Screen/FightScene/Fight Screen_2Stage.unity",
             "Assets/Screen/FightScene/Fight Screen_3Stage.unity",
             "Assets/Screen/FightScene/Fight Screen_4Stage.unity",
@@ -97,6 +99,59 @@ namespace Summoner.EditModeTests
             }
         }
 
+        [Test]
+        public void HudScene_HasOrganizedRootGroups()
+        {
+            OpenScene(HudScenePath);
+
+            AssertNoMissingScriptsInOpenScene();
+            AssertGameObjectPathExists("__UI");
+            AssertGameObjectPathExists("__UI/MenuCanvas");
+            AssertGameObjectPathExists("__UI/MenuCanvas/UI_00_Background/MenuBackgroundPanel");
+            AssertGameObjectPathExists("__UI/MenuCanvas/UI_10_Menu/MenuPanel");
+            AssertGameObjectPathExists("__UI/MenuCanvas/UI_20_Settings/Setting/SettingPanel");
+            AssertGameObjectPathExists("__UI/MenuCanvas/UI_90_Alerts/AlertObject");
+            AssertGameObjectPathExists("__UI/MenuCanvas/UI_90_Alerts/알림창");
+            AssertGameObjectPathExists("__UI/MenuCanvas/UI_90_Alerts/알림창/Alert_clear");
+            AssertGameObjectPathExists("__UI/MenuCanvas/UI_90_Alerts/알림창/Alert_fail");
+            AssertGameObjectPathExists("__UI/MenuCanvas/UI_90_Alerts/알림창/Alert_Skip");
+            AssertGameObjectPathExists("__Audio");
+            AssertGameObjectPathExists("__Audio/MenuClickAudio");
+            AssertGameObjectPathExists("__Audio/AlterClickAudio");
+            AssertGameObjectPathExists("__Handlers");
+            AssertGameObjectPathExists("__Handlers/MenuHandler");
+            AssertGameObjectPathExists("__Handlers/ToMainAlterHandler");
+            AssertGameObjectPathExists("__Handlers/SettingHandler");
+            AssertGameObjectPathExists("__Handlers/ToQuitAlterHandler");
+            AssertGameObjectPathExists("__Handlers/SkipAlterHandler");
+        }
+
+        [Test]
+        public void FightSceneOne_HasOrganizedUiGroups()
+        {
+            OpenScene(FightSceneOnePath);
+
+            AssertNoMissingScriptsInOpenScene();
+            AssertGameObjectPathExists("__Systems/EventSystem");
+            AssertGameObjectPathExists("__Systems/GameSaveController");
+            AssertGameObjectPathExists("__Camera/Main Camera");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_00_Background");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_10_BattleField/Player");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_10_BattleField/Enermy");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_20_TurnStatus/TurnTextUI");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_20_TurnStatus/CurrentTurnText");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_20_TurnStatus/ClearTurnText");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_30_PlayerCommands/SummonBtn");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_30_PlayerCommands/RedoBtn");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_30_PlayerCommands/TurnEndBtn");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_40_Mana");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_50_SelectedUnitState");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_60_SummonPicker/SummonPanel");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_60_SummonPicker/ReSummonPanel");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_90_ResultAlerts/Alert_clear");
+            AssertGameObjectPathExists("__UI/BattleCanvas/UI_90_ResultAlerts/Alert_fail");
+        }
+
         private static void OpenScene(string scenePath)
         {
             EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
@@ -118,6 +173,35 @@ namespace Summoner.EditModeTests
         private static void AssertHasComponent(string typeName)
         {
             Assert.GreaterOrEqual(FindComponents(typeName).Count, 1, typeName + " must exist in " + SceneManager.GetActiveScene().name + ".");
+        }
+
+        private static void AssertGameObjectPathExists(string objectPath)
+        {
+            Assert.IsNotNull(FindGameObjectByPath(objectPath), objectPath + " must exist in " + SceneManager.GetActiveScene().name + ".");
+        }
+
+        private static GameObject FindGameObjectByPath(string objectPath)
+        {
+            string[] pathParts = objectPath.Split('/');
+            Scene scene = SceneManager.GetActiveScene();
+            GameObject current = scene.GetRootGameObjects().FirstOrDefault(rootObject => rootObject.name == pathParts[0]);
+            if (current == null)
+            {
+                return null;
+            }
+
+            for (int i = 1; i < pathParts.Length; i++)
+            {
+                Transform child = current.transform.Find(pathParts[i]);
+                if (child == null)
+                {
+                    return null;
+                }
+
+                current = child.gameObject;
+            }
+
+            return current;
         }
 
         private static MonoBehaviour FindOneComponent(string typeName)
