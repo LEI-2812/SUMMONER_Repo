@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class AudioSettingView : MonoBehaviour
 {
+    private const float MutedVolumeDb = -80f;
+
     [Header("마스터 볼륨 슬라이더")]
     public Slider masterVolumeSlider;
     [Header("BGM 볼륨 슬라이더")]
@@ -65,7 +67,17 @@ public class AudioSettingView : MonoBehaviour
         float adjustedSFXVolume = sfxVolume * masterVolume;
 
         // dB로 변환하여 오디오 믹서에 적용
-        audioMixer.SetFloat("BGMVolume", Mathf.Log10(adjustedBGMVolume) * 20);
-        audioMixer.SetFloat("SFXVolume", Mathf.Log10(adjustedSFXVolume) * 20);
+        audioMixer.SetFloat("BGMVolume", VolumeToDecibel(adjustedBGMVolume));
+        audioMixer.SetFloat("SFXVolume", VolumeToDecibel(adjustedSFXVolume));
+    }
+
+    private static float VolumeToDecibel(float volume)
+    {
+        if (volume <= 0f)
+        {
+            return MutedVolumeDb;
+        }
+
+        return Mathf.Log10(volume) * 20;
     }
 }

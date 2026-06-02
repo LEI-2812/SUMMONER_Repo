@@ -14,6 +14,7 @@ public class GameSaveController : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
 
             // 시작 시 한 번 불러온 뒤 같은 메모리 상태를 기준으로 진행 값을 갱신한다.
@@ -30,6 +31,7 @@ public class GameSaveController : MonoBehaviour
     {
         return saveStore.HasGameSave();
     }
+
 
     // 현재 저장 데이터를 복사본으로 반환한다.
     public GameSaveData GetGameSave()

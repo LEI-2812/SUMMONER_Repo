@@ -11,6 +11,9 @@ namespace Summoner.EditModeTests
         private const string ScriptRoot = "Assets/Script";
         private const string ScreenRoot = "Assets/Screen";
         private const string PlayerPrefsSaveStorePath = "Assets/Script/Save/PlayerPrefsSaveStore.cs";
+        private const string GameSaveControllerPath = "Assets/Script/Save/GameSaveController.cs";
+        private const string AudioSettingViewPath = "Assets/Script/Option/AudioSettingView.cs";
+        private const string VideoSettingViewPath = "Assets/Script/Option/VideoSettingView.cs";
         private const string StartScreenViewPath = "Assets/Script/Start Screen/StartScreenView.cs";
 
         private static readonly string[] KnownPlayerPrefsAccessFiles =
@@ -93,6 +96,42 @@ namespace Summoner.EditModeTests
                 1,
                 getGameSaveCallCount,
                 "StartScreenView should read GetGameSave only for StartSavedStage continue flow. Reuse local values instead of re-reading after StartNewGame.");
+        }
+
+        [Test]
+        public void GameSaveController_MovesToRootBeforeDontDestroyOnLoad()
+        {
+            string text = File.ReadAllText(GameSaveControllerPath);
+
+            StringAssert.Contains("transform.SetParent(null);", text);
+            Assert.Less(
+                text.IndexOf("transform.SetParent(null);"),
+                text.IndexOf("DontDestroyOnLoad(gameObject);"),
+                "GameSaveController must become a root object before DontDestroyOnLoad.");
+        }
+
+        [Test]
+        public void AudioSettingView_GuardsZeroVolumeBeforeLog10()
+        {
+            string text = File.ReadAllText(AudioSettingViewPath);
+
+            StringAssert.Contains("private const float MutedVolumeDb", text);
+            StringAssert.Contains("VolumeToDecibel(adjustedBGMVolume)", text);
+            StringAssert.Contains("VolumeToDecibel(adjustedSFXVolume)", text);
+            StringAssert.Contains("if (volume <= 0f)", text);
+            Assert.IsFalse(text.Contains("Mathf.Log10(adjustedBGMVolume)"));
+            Assert.IsFalse(text.Contains("Mathf.Log10(adjustedSFXVolume)"));
+        }
+
+        [Test]
+        public void VideoSettingView_RepairsInvalidSavedIndexesBeforeToggleSetup()
+        {
+            string text = File.ReadAllText(VideoSettingViewPath);
+
+            StringAssert.Contains("GetValidSavedIndex(\"resolutionIndex\", resolutionToggles.Count)", text);
+            StringAssert.Contains("GetValidSavedIndex(\"screenModeIndex\", screenModeToggles.Count)", text);
+            StringAssert.Contains("savedIndex >= 0 && savedIndex < itemCount", text);
+            StringAssert.Contains("PlayerPrefs.SetInt(prefsKey, 0)", text);
         }
 
         private static bool ContainsPlayerPrefsAccessToKey(string text, string key)

@@ -35,8 +35,8 @@ public class VideoSettingView : MonoBehaviour
     void Awake()
     {
         // 저장된 해상도와 화면 모드 불러오기
-        int savedResolutionIndex = PlayerPrefs.GetInt("resolutionIndex", 0);
-        int savedScreenModeIndex = PlayerPrefs.GetInt("screenModeIndex", 0);
+        int savedResolutionIndex = GetValidSavedIndex("resolutionIndex", resolutionToggles.Count);
+        int savedScreenModeIndex = GetValidSavedIndex("screenModeIndex", screenModeToggles.Count);
 
         // 해상도 토글 초기화
         for (int i = 0; i < resolutionToggles.Count; i++)
@@ -98,5 +98,19 @@ public class VideoSettingView : MonoBehaviour
     {
         Screen.fullScreenMode = mode;
         Debug.Log($"Screen mode set to: {mode}");
+    }
+
+    private static int GetValidSavedIndex(string prefsKey, int itemCount)
+    {
+        int savedIndex = PlayerPrefs.GetInt(prefsKey, 0);
+
+        if (savedIndex >= 0 && savedIndex < itemCount)
+        {
+            return savedIndex;
+        }
+
+        PlayerPrefs.SetInt(prefsKey, 0);
+        PlayerPrefs.Save();
+        return 0;
     }
 }
