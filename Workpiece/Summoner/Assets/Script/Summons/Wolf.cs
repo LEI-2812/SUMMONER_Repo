@@ -7,6 +7,11 @@ public class Wolf : Summon
 {
     public override void summonInitialize()
     {
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "Wolf";
         maxHP = 350;
         nowHP = maxHP;

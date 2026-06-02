@@ -7,6 +7,11 @@ public class Fox : Summon
 
     public override void summonInitialize()
     {
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "Fox"; //이름 Fox
         maxHP = 250; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정

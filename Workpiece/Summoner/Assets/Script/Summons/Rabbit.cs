@@ -13,6 +13,11 @@ public class Rabbit : Summon
 
     public override void summonInitialize()
     {
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "Rabbit";
         maxHP = 300;
         nowHP = maxHP;

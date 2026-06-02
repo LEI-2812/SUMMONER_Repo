@@ -11,6 +11,11 @@ public class Snake : Summon
 
     public override void summonInitialize()
     {
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "Snake";
         maxHP = 300;
         nowHP = maxHP;

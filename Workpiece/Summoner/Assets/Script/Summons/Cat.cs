@@ -6,6 +6,11 @@ public class Cat : Summon
 
     public override void summonInitialize()
     {
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "Cat";
         maxHP = 250;
         nowHP = maxHP;

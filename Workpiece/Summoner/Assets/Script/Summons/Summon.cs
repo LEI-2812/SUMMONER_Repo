@@ -19,6 +19,7 @@ public enum SummonType
 [RequireComponent(typeof(SummonImageView))]
 public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 {
+    [SerializeField] private SummonData summonData;
     [SerializeField] protected GameObject shieldImage;
     [SerializeField] protected Animator animator;
 
@@ -46,7 +47,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     private List<stateObserver> observers = new List<stateObserver>();
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
         imageView = GetComponent<SummonImageView>();
         if (imageView == null)
@@ -361,6 +362,28 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public virtual void summonInitialize()
     {
         NotifyObservers();
+    }
+
+    protected SummonData SummonDataGet() => summonData;
+
+    protected bool SummonDataApply(SummonData data)
+    {
+        if (data == null)
+        {
+            return false;
+        }
+
+        summonName = data.SummonNameGet();
+        summonRank = data.SummonRankGet();
+        summonType = data.SummonTypeGet();
+        maxHP = data.MaxHpGet();
+        nowHP = maxHP;
+        attackPower = data.AttackPowerGet();
+        heavyAttakPower = data.HeavyAttackPowerGet();
+        attackStrategy = data.NormalAttackStrategyCreate();
+        specialAttackStrategies = data.SpecialAttackStrategiesCreate();
+        NotifyObservers();
+        return true;
     }
 
     public static double multiple=5; // 배수 설정

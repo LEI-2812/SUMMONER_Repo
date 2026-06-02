@@ -7,6 +7,11 @@ public class Eagle : Summon
 
     public override void summonInitialize()
     {
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "Eagle";
         maxHP = 350;
         nowHP = maxHP;

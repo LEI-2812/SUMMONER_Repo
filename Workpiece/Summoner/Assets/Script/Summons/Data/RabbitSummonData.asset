@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5882041df34156b3306a08522c6ce0, type: 3}
+  m_Name: RabbitSummonData
+  m_EditorClassIdentifier: 
+  summonName: Rabbit
+  summonRank: 1
+  summonType: 1
+  maxHp: 1500
+  attackPower: 185
+  heavyAttackPower: 0
+  normalAttack:
+    strategyType: 0
+    statusType: 0
+    damage: 185
+    cooltime: 1
+    statusTime: 0
+  specialAttacks:
+  - strategyType: 1
+    statusType: 3
+    damage: 0.3
+    cooltime: 3
+    statusTime: 0
