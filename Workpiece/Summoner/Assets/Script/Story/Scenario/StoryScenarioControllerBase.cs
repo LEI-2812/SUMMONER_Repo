@@ -3,6 +3,8 @@ using UnityEngine.EventSystems;
 
 public abstract class StoryScenarioControllerBase : MonoBehaviour, ScenarioBase, IPointerClickHandler
 {
+    private readonly GameplaySettingStore gameplaySettingStore = new GameplaySettingStore();
+
     [Header("컨트롤러")]
     [SerializeField] protected InteractionController interactionController;
     [SerializeField] protected PlayerMove playerMove;
@@ -44,9 +46,9 @@ public abstract class StoryScenarioControllerBase : MonoBehaviour, ScenarioBase,
 
     protected abstract void PlayScenarioStep(int scenarioStep);
 
-    private static bool IsOnlyMouseEnabled()
+    private bool IsOnlyMouseEnabled()
     {
-        return PlayerPrefs.GetInt("IsOnlyMouse", 0) == 1;
+        return gameplaySettingStore.LoadOnlyMouseEnabled();
     }
 
     private bool IsSameDialogueIndex()

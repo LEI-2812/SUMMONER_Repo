@@ -20,7 +20,7 @@ namespace Summoner.EditModeTests
         {
             "Assets/Script/Save/PlayerPrefsSaveStore.cs",
             "Assets/Script/Option/AudioSettingView.cs",
-            "Assets/Script/Option/GameplaySettingView.cs",
+            "Assets/Script/Option/GameplaySettingStore.cs",
             "Assets/Script/Option/VideoSettingView.cs"
         };
 
@@ -132,6 +132,19 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("GetValidSavedIndex(\"screenModeIndex\", screenModeToggles.Count)", text);
             StringAssert.Contains("savedIndex >= 0 && savedIndex < itemCount", text);
             StringAssert.Contains("PlayerPrefs.SetInt(prefsKey, 0)", text);
+        }
+
+        [Test]
+        public void GameplaySettingStore_OwnsGameplayPlayerPrefsKeys()
+        {
+            string text = File.ReadAllText("Assets/Script/Option/GameplaySettingStore.cs");
+
+            StringAssert.Contains("private const string StorySkipKey = \"IsStorySkip\"", text);
+            StringAssert.Contains("private const string OnlyMouseKey = \"IsOnlyMouse\"", text);
+            StringAssert.Contains("LoadStorySkipEnabled()", text);
+            StringAssert.Contains("SaveStorySkipEnabled(bool isEnabled)", text);
+            StringAssert.Contains("LoadOnlyMouseEnabled()", text);
+            StringAssert.Contains("SaveOnlyMouseEnabled(bool isEnabled)", text);
         }
 
         private static bool ContainsPlayerPrefsAccessToKey(string text, string key)

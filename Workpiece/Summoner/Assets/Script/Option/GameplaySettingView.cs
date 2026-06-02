@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class GameplaySettingView : MonoBehaviour
 {
+    private readonly GameplaySettingStore gameplaySettingStore = new GameplaySettingStore();
+
     [SerializeField] private Toggle isStorySkip;
 
     [SerializeField] private Toggle isOnlyMouse;
@@ -12,8 +14,8 @@ public class GameplaySettingView : MonoBehaviour
 
     private void Start()
     {
-        isStorySkip.isOn = PlayerPrefs.GetInt("IsStorySkip", 0) == 1;
-        isOnlyMouse.isOn = PlayerPrefs.GetInt("IsOnlyMouse", 0) == 1;
+        isStorySkip.isOn = gameplaySettingStore.LoadStorySkipEnabled();
+        isOnlyMouse.isOn = gameplaySettingStore.LoadOnlyMouseEnabled();
     }
 
     private void Update()
@@ -35,9 +37,8 @@ public class GameplaySettingView : MonoBehaviour
         {
             Debug.Log("스토리를 스킵합니다.");
         }
-        else
-        PlayerPrefs.SetInt("IsStorySkip", isStorySkip.isOn ? 1 : 0);
-        PlayerPrefs.Save();
+
+        gameplaySettingStore.SaveStorySkipEnabled(isStorySkip.isOn);
     }
 
     public void onlyUseMouse()
@@ -46,10 +47,8 @@ public class GameplaySettingView : MonoBehaviour
         {
             Debug.Log("마우스로만 조작할 수 있습니다");
         }
-        else
 
-        PlayerPrefs.SetInt("IsOnlyMouse", isOnlyMouse.isOn ? 1 : 0);
-        PlayerPrefs.Save();
+        gameplaySettingStore.SaveOnlyMouseEnabled(isOnlyMouse.isOn);
     }
 
     public void onClickSound()
