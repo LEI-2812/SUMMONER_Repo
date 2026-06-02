@@ -5,8 +5,10 @@ using UnityEngine;
 public class QueenSpirit : Summon
 {
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         summonName = "QueenSpirit"; //이름 정령여왕
         maxHP = 400; //최대체력 400
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정

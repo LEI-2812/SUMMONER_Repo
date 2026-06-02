@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class HighDevil : Summon
 {
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         summonName = "HighDevil"; //이름 하급악마
         maxHP = 1000; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정

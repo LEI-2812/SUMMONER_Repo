@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Skeleton : Summon
 {
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         summonName = "Skeleton"; //이름 스켈레톤
         maxHP = 650; //최대체력 650
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정

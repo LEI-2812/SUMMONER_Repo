@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class KingSlime : Summon
 {
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         summonName = "KingSlime"; //이름 슬라임
         maxHP = 250; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정

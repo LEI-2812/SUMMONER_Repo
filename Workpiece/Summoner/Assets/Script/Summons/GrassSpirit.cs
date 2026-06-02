@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class GrassSpirit : Summon
 {
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         summonName = "GrassSpirit"; //이름 풀정령
         maxHP = 350; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
