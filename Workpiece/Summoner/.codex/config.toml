@@ -4,8 +4,7 @@
 #   on-request    # 승인 확인 모드
 # ==================================================
 
-approval_policy = "never" # 승인 확인 모드
-
+approval_policy = "never"
 sandbox_mode = "workspace-write"
 
 
@@ -15,7 +14,7 @@ sandbox_mode = "workspace-write"
 
 [mcp_servers.mcp-unity]
 command = "node"
-args = ["LocalPackages/com.gamelovers.mcp-unity/Server~/build/index.js"]
+args = ["D:/UnityProjects/SUMMONER_Repo/Workpiece/Summoner/LocalPackages/com.gamelovers.mcp-unity/Server~/build/index.js"]
 
 
 # ==================================================
@@ -56,3 +55,6 @@ approval_mode = "auto"
 
 [mcp_servers.mcp-unity.tools.update_component]
 approval_mode = "auto"
+
+[mcp_servers.mcp-unity.tools.execute_menu_item]
+approval_mode = "approve"
