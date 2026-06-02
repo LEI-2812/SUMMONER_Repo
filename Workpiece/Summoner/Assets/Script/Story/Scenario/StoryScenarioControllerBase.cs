@@ -12,7 +12,7 @@ public abstract class StoryScenarioControllerBase : MonoBehaviour, ScenarioBase,
 
     protected virtual void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !IsOnlyMouseEnabled())
         {
             OnClickDialogue();
         }
@@ -43,6 +43,11 @@ public abstract class StoryScenarioControllerBase : MonoBehaviour, ScenarioBase,
     }
 
     protected abstract void PlayScenarioStep(int scenarioStep);
+
+    private static bool IsOnlyMouseEnabled()
+    {
+        return PlayerPrefs.GetInt("IsOnlyMouse", 0) == 1;
+    }
 
     private bool IsSameDialogueIndex()
     {

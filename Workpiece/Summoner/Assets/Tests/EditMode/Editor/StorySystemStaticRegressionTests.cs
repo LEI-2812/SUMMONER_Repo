@@ -271,7 +271,8 @@ namespace Summoner.EditModeTests
             string text = File.ReadAllText(StoryScenarioControllerBasePath);
 
             StringAssert.Contains("public abstract class StoryScenarioControllerBase : MonoBehaviour, ScenarioBase, IPointerClickHandler", text);
-            StringAssert.Contains("if (Input.GetKeyDown(KeyCode.Space))", text);
+            StringAssert.Contains("if (Input.GetKeyDown(KeyCode.Space) && !IsOnlyMouseEnabled())", text);
+            StringAssert.Contains("PlayerPrefs.GetInt(\"IsOnlyMouse\", 0) == 1", text);
             StringAssert.Contains("public void OnPointerClick(PointerEventData eventData)", text);
             StringAssert.Contains("public void OnClickDialogue()", text);
             StringAssert.Contains("interactionController.ShowNextLine();", text);
