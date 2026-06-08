@@ -54,7 +54,7 @@ public class PlayerMove : MonoBehaviour
 
         // 이동 시작하면서 애니메이션 재생
         isMoving = true;
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
         playerAni.Play("PlayerWalk");
        
         walkSound.loop = true;
@@ -74,54 +74,54 @@ public class PlayerMove : MonoBehaviour
         {
             isMoving = false;
             playerAni.Play("Idle");
-            interactionController.startNextDialogue();
+            interactionController.StartNextDialogue();
 
             walkSound.loop = false;
             walkSound.Stop();
         }              
     }
 
-    public void playConfuseAni()
+    public void PlayConfuseAni()
     {
         playerAni.Play("Confuse");
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
     }
 
-    public void stopConfuseAni()
+    public void StopConfuseAni()
     {
         playerAni.Play("Idle");
-        interactionController.startNextDialogue();
+        interactionController.StartNextDialogue();
     }
 
-    public void playBlueAni()
+    public void PlayBlueAni()
     {
         playerAni.Play("PlayerBlue");
         effectSound.Play();
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
         Invoke("stopBlueAni", 1.2f);
     }
     
-    public void stopBlueAni()
+    public void StopBlueAni()
     {
         playerAni.Play("Idle");
-        interactionController.startNextDialogue();
+        interactionController.StartNextDialogue();
     }
 
-    public void playYellowAni()
+    public void PlayYellowAni()
     {
         playerAni.Play("PlayerYellow");
         effectSound.Play();
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
         Invoke("stopYellowAni", 1.2f);
     }
-    public void stopYellowAni()
+    public void StopYellowAni()
     {
         playerAni.Play("Idle");
-        interactionController.startNextDialogue();
+        interactionController.StartNextDialogue();
     }
 
     //getter setter
-    public bool getIsMoving()
+    public bool GetIsMoving()
     {
         return isMoving;
     }

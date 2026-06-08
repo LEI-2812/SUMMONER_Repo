@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ScenarioBase
 {
-    public void scenarioFlow();
+    public void ScenarioFlow();
 }

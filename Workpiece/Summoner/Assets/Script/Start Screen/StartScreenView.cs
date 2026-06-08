@@ -40,7 +40,7 @@ public class StartScreenView : MonoBehaviour
         // SettingPanelView 버튼 클릭 이벤트를 연결
         if (settingBtn != null)
         {
-            settingBtn.onClick.AddListener(openOption); // 버튼에 openOption 이벤트 연결
+            settingBtn.onClick.AddListener(OpenOption); // 버튼에 OpenOption 이벤트 연결
         }
         else{ Debug.LogError("SettingPanelView 버튼이 연결되지 않았습니다."); }
         newAlert.SetActive(false);
@@ -70,7 +70,7 @@ public class StartScreenView : MonoBehaviour
                 else
                 {
                     const int newGameStartStage = 1;
-                    stageController.setStageNum(newGameStartStage);
+                    stageController.SetStageNum(newGameStartStage);
 
                     // 새 게임은 진행 데이터만 초기화하고, 옵션 설정값은 유지한다.
                     if (GameSaveController.instance == null)
@@ -113,7 +113,7 @@ public class StartScreenView : MonoBehaviour
             if (result)
             {
                 // 저장된 진행 스테이지를 기준으로 스테이지 선택 화면을 연다.
-                stageController.setStageNum(savedStage);
+                stageController.SetStageNum(savedStage);
                 SceneManager.LoadScene("Stage Select Screen");
             }
             else
@@ -134,7 +134,7 @@ public class StartScreenView : MonoBehaviour
     }
 
     //설정창 끄기 키기
-    public void openOption()
+    public void OpenOption()
     {
         // OptionCanvas_Audio가 존재할 경우에만 로직 실행
         if (menuCanvas != null)
@@ -187,7 +187,7 @@ public class StartScreenView : MonoBehaviour
         alertObject.SetActive(true);
 
         // 사용자가 버튼을 클릭할 때까지 대기
-        while (!alertScript.getIsClicked())
+        while (!alertScript.GetIsClicked())
         {
             yield return null;  // 한 프레임 대기
         }
@@ -196,6 +196,6 @@ public class StartScreenView : MonoBehaviour
         alertObject.SetActive(false);
 
         // 버튼 클릭 후 결과 콜백 호출 (true: Yes, false: No)
-        callback(alertScript.getResult());
+        callback(alertScript.GetResult());
     }
 }

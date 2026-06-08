@@ -1265,7 +1265,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 737927099}
         m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: toMainAlert
+        m_MethodName: ToMainAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4273,7 +4273,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 994664794}
         m_TargetAssemblyTypeName: GameplaySettingView, Assembly-CSharp
-        m_MethodName: onClickSound
+        m_MethodName: OnClickSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6485,7 +6485,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 737927099}
         m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: toQuitAlert
+        m_MethodName: ToQuitAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9852,7 +9852,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1161797845}
         m_TargetAssemblyTypeName: SettingPanelView, Assembly-CSharp
-        m_MethodName: openOption
+        m_MethodName: OpenOption
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10259,7 +10259,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 737927099}
         m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: openSettingCanvas
+        m_MethodName: OpenSettingCanvas
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10917,7 +10917,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 994664794}
         m_TargetAssemblyTypeName: GameplaySettingView, Assembly-CSharp
-        m_MethodName: onClickSound
+        m_MethodName: OnClickSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

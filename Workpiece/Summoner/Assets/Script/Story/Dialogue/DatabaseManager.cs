@@ -30,7 +30,7 @@ public class DatabaseManager : MonoBehaviour
     }
 
 
-    public Dialogue[] getDialogue(int startNum, int endNum) //대사 꺼내오기
+    public Dialogue[] GetDialogue(int startNum, int endNum) //대사 꺼내오기
     {
         List<Dialogue> dialogueList = new List<Dialogue>();
 

@@ -10,7 +10,7 @@ public class Stage7_Controller : StoryScenarioControllerBase
 
     void Start()
     {
-        scenarioFlow();
+        ScenarioFlow();
     }
 
     protected override void PlayScenarioStep(int scenarioStep)
@@ -20,13 +20,13 @@ public class Stage7_Controller : StoryScenarioControllerBase
             case 1: //  50 ~ 58
                 Debug.Log(scenarioStep);
                 //  (오른쪽으로 조심스럽게 이동한다.)
-                offDialgueBox();
+                OffDialgueBox();
                 playerMove.CharacterMove(700f, 400f);
                 break;
             case 2:
                 Debug.Log(scenarioStep);
                 //  *소근소근* 드래곤이 이 자식인가본데.
-                onDialgueBox();
+                OnDialgueBox();
                 break;
             case 3:
                 Debug.Log(scenarioStep);
@@ -74,12 +74,12 @@ public class Stage7_Controller : StoryScenarioControllerBase
         }
     }
 
-    private void onDialgueBox()
+    private void OnDialgueBox()
     {
         dialogueBox.SetActive(true);
     }
 
-    private void offDialgueBox()
+    private void OffDialgueBox()
     {
         dialogueBox.SetActive(false);
     }

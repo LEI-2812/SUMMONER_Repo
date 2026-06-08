@@ -10,7 +10,7 @@ public class StoryStage : MonoBehaviour
     private int x = 0;
     private int y = 0;
 
-    public void checkStage() // 스테이지 번호별로 출력할 스토리 다르게 설정
+    public void CheckStage() // 스테이지 번호별로 출력할 스토리 다르게 설정
     {
         
         switch (storyNum)
@@ -42,19 +42,19 @@ public class StoryStage : MonoBehaviour
         }
     }
 
-    public int getStoryNum()
+    public int GetStoryNum()
     {
         return storyNum;
     }
-    public void setStoryNum(int stage)
+    public void SetStoryNum(int stage)
     {
         storyNum = stage;
     }
-    public int getX()
+    public int GetX()
     {
         return x;
     }
-    public int getY()
+    public int GetY()
     {
         return y;
     }

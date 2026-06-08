@@ -18,16 +18,16 @@ public class StageSelectView : MonoBehaviour
     private void Start()
     {
         stageController = FindObjectOfType<StageController>();
-        int stageNum = stageController.getStageNum();
+        int stageNum = stageController.GetStageNum();
         ButtonInteractivity(stageNum);
         //ButtonInteractivity(7);
     }
 
-    public void stageLoader(int stage)
+    public void StageLoader(int stage)
     {
         Debug.Log("버튼 클릭");
         audioSource.Play();
-        stageController.setStageNum(stage); //현재 스테이지 정보를 컨트롤러에 저장
+        stageController.SetStageNum(stage); //현재 스테이지 정보를 컨트롤러에 저장
         // 선택한 스테이지는 저장 시스템을 통해 기록한다.
         if (GameSaveController.instance == null)
         {

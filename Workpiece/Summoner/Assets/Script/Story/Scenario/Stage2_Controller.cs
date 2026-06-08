@@ -18,7 +18,7 @@ public class Stage2_Controller : StoryScenarioControllerBase
 
     void Start() //Start에서 처음 실행할 메소드나 오브젝트를 지정해주도록 한다.
     {
-        scenarioFlow();
+        ScenarioFlow();
     }
 
     protected override void PlayScenarioStep(int scenarioStep)
@@ -30,7 +30,7 @@ public class Stage2_Controller : StoryScenarioControllerBase
                 /*  (옷을 툭툭 털며)
                  *  생각보다 소환수가 약하잖아?
                  */
-                showConfuseEffect();
+                ShowConfuseEffect();
                 break;
             case 2:
                 Debug.Log(scenarioStep);
@@ -42,7 +42,7 @@ public class Stage2_Controller : StoryScenarioControllerBase
                  *  이건 정수 보석?
                  *  몬스터들이 만들어낸 건가?
                  */
-                showBangEffect();
+                ShowBangEffect();
                 break;
             case 4:
                 Debug.Log(scenarioStep);
@@ -51,61 +51,61 @@ public class Stage2_Controller : StoryScenarioControllerBase
             case 5:
                 Debug.Log(scenarioStep);
                 //  여기서 PlayerYellow() ani 한번만 실행하고 다시 idle 상태로 복귀
-                offDialgueBox();
-                showYellowEffect();
+                OffDialgueBox();
+                ShowYellowEffect();
                 break;
             case 6:
                 Debug.Log(scenarioStep);
                 /*  이 정도면 다음 적을 상대할 수는 있겠어.
                  *  드래곤을 잡을 정도는 안되지만.
                  */
-                onDialgueBox();
+                OnDialgueBox();
                 break;
         }
     }
 
-    public void showConfuseEffect() //Confuse효과
+    public void ShowConfuseEffect() //Confuse효과
     {
         // 혼란 이미지 활성화 및 애니메이션 실행
         confusebubbleImage.SetActive(true);
-        interactionController.stopNextDialogue(); //여기서 알아서 대사를 멈추게함
+        interactionController.StopNextDialogue(); //여기서 알아서 대사를 멈추게함
 
         // 2초 후에 `endConfuseEffect` 메서드 호출
         Invoke("endConfuseEffect", 1.5f);
     }
-    private void endConfuseEffect()
+    private void EndConfuseEffect()
     {
         // 혼란 이미지 비활성화 및 캐릭터 상태 초기화
         confusebubbleImage.SetActive(false);
-        interactionController.startNextDialogue(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
+        interactionController.StartNextDialogue(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
     }
 
-    public void showBangEffect() //Confuse효과
+    public void ShowBangEffect() //Confuse효과
     {
         // 혼란 이미지 활성화 및 애니메이션 실행
         bangImage.SetActive(true);
-        interactionController.stopNextDialogue(); //여기서 알아서 대사를 멈추게함
+        interactionController.StopNextDialogue(); //여기서 알아서 대사를 멈추게함
 
         Invoke("endBangEffect", 1f);
     }
-    private void endBangEffect()
+    private void EndBangEffect()
     {
         // 혼란 이미지 비활성화 및 캐릭터 상태 초기화
         bangImage.SetActive(false);
-        interactionController.startNextDialogue(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
+        interactionController.StartNextDialogue(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
     }
 
-    public void showYellowEffect()
+    public void ShowYellowEffect()
     {
-        playerMove.playYellowAni();
+        playerMove.PlayYellowAni();
     }
 
-    private void onDialgueBox()
+    private void OnDialgueBox()
     {
         dialogueBox.SetActive(true);
     }
 
-    private void offDialgueBox()
+    private void OffDialgueBox()
     {
         Debug.Log("대사창 끄기");
         dialogueBox.SetActive(false);

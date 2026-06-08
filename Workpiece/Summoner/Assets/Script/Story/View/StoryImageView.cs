@@ -18,7 +18,7 @@ public class StoryImageView : MonoBehaviour
 
     public void ShowImage()
     {
-        int currentDialogueIndex = interactionController.getCurrentDialogueIndex(); // currentDialogueIndex 가져오기
+        int currentDialogueIndex = interactionController.GetCurrentDialogueIndex(); // currentDialogueIndex 가져오기
         Debug.Log(currentDialogueIndex);
         
         if (currentDialogueIndex >= 0 && currentDialogueIndex < spriteArray.Length)

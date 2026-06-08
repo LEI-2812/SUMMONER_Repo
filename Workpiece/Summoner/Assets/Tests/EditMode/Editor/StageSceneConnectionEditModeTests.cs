@@ -134,6 +134,8 @@ namespace Summoner.EditModeTests
             AssertNoMissingScriptsInOpenScene();
             AssertGameObjectPathExists("__Systems/EventSystem");
             AssertGameObjectPathExists("__Systems/GameSaveController");
+            AssertGameObjectPathExists("__Systems/BattleRuntime");
+            AssertHasComponent("BattleStartController");
             AssertGameObjectPathExists("__Camera/Main Camera");
             AssertGameObjectPathExists("__UI/BattleCanvas/UI_00_Background");
             AssertGameObjectPathExists("__UI/BattleCanvas/UI_10_BattleField/Player");

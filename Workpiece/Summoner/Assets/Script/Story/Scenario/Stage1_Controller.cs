@@ -24,7 +24,7 @@ public class Stage1_Controller : StoryScenarioControllerBase
 
     void Start() //Start에서 처음 실행할 메소드나 오브젝트를 지정해주도록 한다.
     {
-        scenarioFlow();       
+        ScenarioFlow();       
     }
 
     protected override void PlayScenarioStep(int scenarioStep)
@@ -36,7 +36,7 @@ public class Stage1_Controller : StoryScenarioControllerBase
                 /*
                  * (오른쪽으로 걸어간다.)[1]
                  */
-                offDialgueBox(); //텍스트를 임시로 꺼둔다.
+                OffDialgueBox(); //텍스트를 임시로 꺼둔다.
                 playerMove.CharacterMove(700f, 400f); // x좌표로 +700 이동, 속도 400 움직이는 동안 다음대사로 못넘어감
                 break;
             case 2:
@@ -44,7 +44,7 @@ public class Stage1_Controller : StoryScenarioControllerBase
                 /* <<대사출력>>
                 *..그래서 일단 걷고 있긴 한데, 어느 쪽으로 가야 하는 거지?
                  */
-                onDialgueBox();
+                OnDialgueBox();
                 break;
             case 3:
                 Debug.Log(scenarioStep);
@@ -57,7 +57,7 @@ public class Stage1_Controller : StoryScenarioControllerBase
                 /*
                  * (오른쪽으로 몇 발자국 더 나아간다.) [2]
                  */
-                offDialgueBox();
+                OffDialgueBox();
                 playerMove.CharacterMove(150f, 400f); // x좌표로 +150 이동, 속도 400
                 break;
             case 5:
@@ -65,7 +65,7 @@ public class Stage1_Controller : StoryScenarioControllerBase
                 /* <<대사출력>>
                  *    잠깐. 이 방향이 정말 맞아? 아닌 것 같은데.
                  */
-                onDialgueBox();
+                OnDialgueBox();
                 playerMove.CharacterMove(-150f, 400f); // x좌표로 -150 이동, 속도 400
                 break;
             case 6:
@@ -83,18 +83,18 @@ public class Stage1_Controller : StoryScenarioControllerBase
                  * (다시 오른쪽으로 돌아 앞으로 걸어간다.) [4]
                  * 
                  */
-                offDialgueBox();
+                OffDialgueBox();
                 break;
             case 8:
                 Debug.Log(scenarioStep);
                 //*한숨* 왜 하필이면 나야.
-                onDialgueBox();
+                OnDialgueBox();
                 break;
             case 9:
                 Debug.Log(scenarioStep);
                 //이마를 짚는다.
-                offDialgueBox();
-                showConfuseEffect(); //꼬인 이미지 출력
+                OffDialgueBox();
+                ShowConfuseEffect(); //꼬인 이미지 출력
                 break;
             case 10:
                 Debug.Log(scenarioStep);
@@ -103,7 +103,7 @@ public class Stage1_Controller : StoryScenarioControllerBase
                  * 쓸데없이 마력이 존재하는 나같은 인간이 뭐가 된다고 드래곤을 잡는다는 거야.
                  * 마나 보석 없이는 작은 마법 하나도 못 쓰는데
                  */
-                onDialgueBox();
+                OnDialgueBox();
                 break;
             case 11:
                 Debug.Log(scenarioStep);
@@ -111,8 +111,8 @@ public class Stage1_Controller : StoryScenarioControllerBase
                  * (잠시 시간이 흐르고, 천천히 일어선다.)
                  * ...
                  */
-                offDialgueBox();
-                showDotbubbleEffect(); //... 이미지 출력
+                OffDialgueBox();
+                ShowDotbubbleEffect(); //... 이미지 출력
                 break;
             case 12:
                 Debug.Log(scenarioStep);
@@ -120,53 +120,53 @@ public class Stage1_Controller : StoryScenarioControllerBase
                  * 보상은 준다니 가야지, 어쩌겠어.
                  * 마침 쪼들리던 참이니 목숨 값 한 번 두둑이 받아보지, 뭐.
                  */
-                onDialgueBox();
+                OnDialgueBox();
                 break;
         }
     }
 
 
-    public void showConfuseEffect() //Confuse효과 시작
+    public void ShowConfuseEffect() //Confuse효과 시작
     {
         Invoke("onConfuseImage", 0.4f); // 0.4초 후 혼란 이미지 활성화
-        playerMove.playConfuseAni(); //애니메이션은 바로 실행
+        playerMove.PlayConfuseAni(); //애니메이션은 바로 실행
     }
-    private void onConfuseImage() //0.4초후에 이미지 활성화시키고
+    private void OnConfuseImage() //0.4초후에 이미지 활성화시키고
     {
         confusebubbleImage.SetActive(true);
         //1초위 이미지가 꺼지게
         Invoke("offConfuseImage", 1f);
     }
-    private void offConfuseImage() //1.4초때 이미지는 비활성화 후
+    private void OffConfuseImage() //1.4초때 이미지는 비활성화 후
     {
         confusebubbleImage.SetActive(false);
         Invoke("endConfuseEffect", 0.4f);
     }
-    private void endConfuseEffect() //1.8초 뒤에는 끝내게
+    private void EndConfuseEffect() //1.8초 뒤에는 끝내게
     {
-        playerMove.stopConfuseAni(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
+        playerMove.StopConfuseAni(); //Idle로 돌아오고 다음 대사를 이어갈 수 있게 설정
     }
    
 
-    public void showDotbubbleEffect()
+    public void ShowDotbubbleEffect()
     {
         dotbubbleImage.SetActive(true);
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
 
         Invoke("endDotbubbleEffect", 2f);
     }
-    private void endDotbubbleEffect()
+    private void EndDotbubbleEffect()
     {
         dotbubbleImage.SetActive(false);
-        interactionController.startNextDialogue();
+        interactionController.StartNextDialogue();
     }
 
-    private void onDialgueBox()
+    private void OnDialgueBox()
     {
         dialogueBox.SetActive(true);
     }
 
-    private void offDialgueBox()
+    private void OffDialgueBox()
     {
         dialogueBox.SetActive(false);
     }

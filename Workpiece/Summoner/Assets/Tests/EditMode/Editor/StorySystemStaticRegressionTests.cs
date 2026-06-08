@@ -185,9 +185,9 @@ namespace Summoner.EditModeTests
         {
             string text = File.ReadAllText(InteractionControllerPath);
 
-            StringAssert.Contains("StorySceneMove.LoadNextScene(storyStage.getStoryNum())", text);
+            StringAssert.Contains("StorySceneMove.LoadNextScene(storyStage.GetStoryNum())", text);
             Assert.IsFalse(
-                text.Contains("Fight Screen_\"+storyStage.getStoryNum()+\"Stage"),
+                text.Contains("Fight Screen_\"+storyStage.GetStoryNum()+\"Stage"),
                 "InteractionController should delegate next scene name decisions to StorySceneMove.");
         }
 

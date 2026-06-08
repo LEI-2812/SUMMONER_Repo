@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -30,7 +30,7 @@ public class StorySkipView : MonoBehaviour
 
         playingStage = GameSaveController.GetGameSaveOrDefault().playingStage.ToString();
         Debug.Log("현재 플레이 스테이지 : " + playingStage);
-        isSkipActive();
+        IsSkipActive();
     }
 
     private void Update()
@@ -38,16 +38,16 @@ public class StorySkipView : MonoBehaviour
         // 버튼이 활성화 되어있고 그 상태에서 엔터를 누르면 스킵창 출력
         if (Input.GetKeyDown(KeyCode.Return) && SkipBtn.activeSelf)
         {
-            skipAlert();
+            SkipAlert();
         }
-        isSkipActive();
+        IsSkipActive();
     }
 
-    public void isSkipActive()
+    public void IsSkipActive()
     {
         if (setting != null)
         {
-            if (setting.GetGamePlayController().getIsStorySkip())
+            if (setting.GetGamePlayController().GetIsStorySkip())
             {
                 SkipBtn.SetActive(true);
             }
@@ -62,7 +62,7 @@ public class StorySkipView : MonoBehaviour
         }
     }
 
-    public void skipAlert()
+    public void SkipAlert()
     {
         if (skipAlertHandler == null)
         {

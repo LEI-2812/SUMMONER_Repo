@@ -30,7 +30,7 @@ public class FoxMove : MonoBehaviour
     // 목표 위치와 이동 속도를 설정하는 메서드
     public void CharacterMove(float distance, float speed)
     {
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
         targetPosition = fox.transform.position + new Vector3(distance, 0f, 0f);
         moveSpeed = speed;
 
@@ -50,7 +50,7 @@ public class FoxMove : MonoBehaviour
 
         // 이동 시작하면서 애니메이션 재생
         isMoving = true;
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
         foxAni.Play("Stage3_Fox");
     }
 
@@ -67,22 +67,22 @@ public class FoxMove : MonoBehaviour
         {
             isMoving = false;
             foxAni.Play("Fox_Idle");
-            interactionController.startNextDialogue();
+            interactionController.StartNextDialogue();
         }
     }
 
-    public void playAngryAni()
+    public void PlayAngryAni()
     {
         foxAni.Play("AngryFox");
     }
 
-    public void stopAngryAni()
+    public void StopAngryAni()
     {
         foxAni.Play("Fox_Idle");
     }
 
     //getter setter
-    public bool getIsMoving()
+    public bool GetIsMoving()
     {
         return isMoving;
     }

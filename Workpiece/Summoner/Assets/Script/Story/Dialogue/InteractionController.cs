@@ -44,7 +44,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
     public void StartDialogue()
     {
         if (isDialogueActive) return; // 이미 대화 중이면 중복 실행 방지
-        Dialogue[] currentDialogues = interactionEvent.getDialogue(); // 대사를 가져온다.
+        Dialogue[] currentDialogues = interactionEvent.GetDialogue(); // 대사를 가져온다.
         if (currentDialogues == null || currentDialogues.Length == 0) // 대사가 없으면 종료
         {
             Debug.LogWarning("대화 내용이 없습니다.");
@@ -80,7 +80,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
 
         fadePanelView.RegisterCallback(() =>
         {
-            StorySceneMove.LoadNextScene(storyStage.getStoryNum());
+            StorySceneMove.LoadNextScene(storyStage.GetStoryNum());
         });
 
         // 페이드 아웃 실행
@@ -101,27 +101,27 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public int getCurrentDialogueIndex()
+    public int GetCurrentDialogueIndex()
     {
         return storyProgressAdvance.CurrentDialogueIndex;
     }
 
-    public int getCurrentDialogueLineIndex()
+    public int GetCurrentDialogueLineIndex()
     {
         return storyProgressAdvance.CurrentDialogueLineIndex;
     }
 
-    public bool getIsStory()
+    public bool GetIsStory()
     {
         return isStory;
     }
 
-    public void startNextDialogue()
+    public void StartNextDialogue()
     {
         isStory = false; // 이동이 끝나면 InteractionController에서 대사 진행을 허용
     }
 
-    public void stopNextDialogue()
+    public void StopNextDialogue()
     {
         isStory = true; // 이동이 끝나면 InteractionController에서 대사 진행을 허용
     }

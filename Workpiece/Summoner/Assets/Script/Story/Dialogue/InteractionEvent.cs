@@ -14,12 +14,12 @@ public class InteractionEvent : MonoBehaviour
         storyStage = GetComponent<StoryStage>();
     }
 
-    public Dialogue[] getDialogue()
+    public Dialogue[] GetDialogue()
     {
-        storyStage.checkStage();
-        dialogue.line.x = storyStage.getX();
-        dialogue.line.y = storyStage.getY();
-        dialogue.dialogues = DatabaseManager.instance.getDialogue((int)dialogue.line.x, (int)dialogue.line.y);
+        storyStage.CheckStage();
+        dialogue.line.x = storyStage.GetX();
+        dialogue.line.y = storyStage.GetY();
+        dialogue.dialogues = DatabaseManager.instance.GetDialogue((int)dialogue.line.x, (int)dialogue.line.y);
         return dialogue.dialogues;
     }
 }

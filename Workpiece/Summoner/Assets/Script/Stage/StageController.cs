@@ -34,7 +34,7 @@ public class StageController : MonoBehaviour
         GameSaveController.instance.SaveClearedStage(stageNumber);
     }
 
-    public void stageLoader(int stage)
+    public void StageLoader(int stage)
     {
         Debug.Log("버튼 클릭");
         audioSource.Play();
@@ -150,11 +150,11 @@ public class StageController : MonoBehaviour
     {
         SceneManager.LoadScene("Epilogue Screen");
     }
-    public int getStageNum()
+    public int GetStageNum()
     {
         return stageNum;
     }
-    public void setStageNum(int stage)
+    public void SetStageNum(int stage)
     {
         stageNum = stage;
     }

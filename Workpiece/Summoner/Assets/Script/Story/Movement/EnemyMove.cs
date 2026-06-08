@@ -28,13 +28,13 @@ public class EnemyMove : MonoBehaviour
     // 목표 위치와 이동 속도를 설정하는 메서드
     public void CharacterMove(float distance, float speed)
     {
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
         targetPosition = enemy.transform.position + new Vector3(distance, 0f, 0f);
         moveSpeed = speed;
 
         // 이동 시작하면서 애니메이션 재생
         isMoving = true;
-        interactionController.stopNextDialogue();
+        interactionController.StopNextDialogue();
     }
 
     // 캐릭터를 목표 위치로 이동시키는 메서드
@@ -49,12 +49,12 @@ public class EnemyMove : MonoBehaviour
         if (Vector3.Distance(enemy.transform.position, targetPosition) < 0.01f)
         {
             isMoving = false;
-            interactionController.startNextDialogue();
+            interactionController.StartNextDialogue();
         }
     }
 
     //getter setter
-    public bool getIsMoving()
+    public bool GetIsMoving()
     {
         return isMoving;
     }

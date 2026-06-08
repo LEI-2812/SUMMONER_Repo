@@ -20,7 +20,7 @@ public abstract class StoryScenarioControllerBase : MonoBehaviour, ScenarioBase,
         }
     }
 
-    public void scenarioFlow()
+    public void ScenarioFlow()
     {
         if (IsSameDialogueIndex())
         {
@@ -37,10 +37,10 @@ public abstract class StoryScenarioControllerBase : MonoBehaviour, ScenarioBase,
 
     public void OnClickDialogue()
     {
-        if (!playerMove.getIsMoving())
+        if (!playerMove.GetIsMoving())
         {
             interactionController.ShowNextLine();
-            scenarioFlow();
+            ScenarioFlow();
         }
     }
 
@@ -53,7 +53,7 @@ public abstract class StoryScenarioControllerBase : MonoBehaviour, ScenarioBase,
 
     private bool IsSameDialogueIndex()
     {
-        int currentDialogueIndex = interactionController.getCurrentDialogueIndex();
+        int currentDialogueIndex = interactionController.GetCurrentDialogueIndex();
 
         if (currentDialogueIndex == sameDialogueIndex)
         {
