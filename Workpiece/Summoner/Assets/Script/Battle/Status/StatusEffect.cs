@@ -34,30 +34,30 @@ public class StatusEffect
     }
 
 
-    public double getOriginAttack()
+    public double GetOriginAttack()
     {
         return originAttack;
     }
-    public void setOriginAttack(double originAttack)
+    public void SetOriginAttack(double originAttack)
     {
         this.originAttack = originAttack;
     }
 
-    public IStatusEffectTarget getAttacker()
+    public IStatusEffectTarget GetAttacker()
     {
         return attacker;
     }
-    public void setAttacker(IStatusEffectTarget attackerTarget)
+    public void SetAttacker(IStatusEffectTarget attackerTarget)
     {
         attacker = attackerTarget;
     }
 
-    public bool shouldApplyOnce()
+    public bool ShouldApplyOnce()
     {
         return damagePerTurn > 0 && !applyOnce;
     }
 
-    public void setApplyOnce()
+    public void SetApplyOnce()
     {
         applyOnce = true; // 한 번만 적용되도록 표시
     }

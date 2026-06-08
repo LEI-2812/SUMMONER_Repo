@@ -6,23 +6,23 @@ using UnityEngine;
 public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
 {
 
-    public SummonType getPreSummonType()
+    public SummonType GetPreSummonType()
     {
         return SummonType.Eagle;
     }
 
 
     //독수리 예측공격
-    public AttackPrediction getAttackPrediction(Summon eagle, int eaglePlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon eagle, int eaglePlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
-        int attackIndex = getClosestEnermyIndex(enermyPlates); //가장 가까운적의 인덱스 기본값
+        int attackIndex = GetClosestEnermyIndex(enermyPlates); //가장 가까운적의 인덱스 기본값
 
         //소환수, 소환수의 플레이트 번호, 소환수의 특수공격첫번째, 특수공격배열 인덱스번호, 타겟플레이트, 타겟플레이트 변호, 확률
-        AttackPrediction attackPrediction = new AttackPrediction(eagle, eaglePlateIndex, eagle.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        AttackPrediction attackPrediction = new AttackPrediction(eagle, eaglePlateIndex, eagle.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
-        if (isTwoOrMoreEnemies(enermyPlates)) //적이 2마리 이상인가?
+        if (IsTwoOrMoreEnemies(enermyPlates)) //적이 2마리 이상인가?
         {
             if (IsEnermyHealthDifferenceOver30(enermyPlates) != -1) //몬스터 한 쪽이 다른쪽과 비교했을 때 30% 이상 낮은가?
             {
@@ -44,21 +44,21 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 몬스터 체력이 10퍼이내로 비슷함");
             }
         }
-        else if (isOnlyOneEnemy(enermyPlates)) //적이 1마리 인가?
+        else if (IsOnlyOneEnemy(enermyPlates)) //적이 1마리 인가?
         {
-            if (getIndexOfNormalAttackCanKill(eagle, enermyPlates) != -1)
+            if (GetIndexOfNormalAttackCanKill(eagle, enermyPlates) != -1)
             {
-                attackIndex = getIndexOfNormalAttackCanKill(eagle, enermyPlates);
+                attackIndex = GetIndexOfNormalAttackCanKill(eagle, enermyPlates);
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "독수리 일반공격으로 사냥가능");
             }
-            else if (getSpecialAttackKillIndex(eagle, enermyPlates) != -1)
+            else if (GetSpecialAttackKillIndex(eagle, enermyPlates) != -1)
             {
-                attackIndex = getSpecialAttackKillIndex(eagle, enermyPlates);
+                attackIndex = GetSpecialAttackKillIndex(eagle, enermyPlates);
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 특수공격으로 사냥가능");
             }
             else
             {
-                if (getTypeOfMoreAttackDamage(eagle, enermyPlates) == AttackType.NormalAttack)//일반공격과 특수공격 중 피해를 많이 줄 공격에 5%상승
+                if (GetTypeOfMoreAttackDamage(eagle, enermyPlates) == AttackType.NormalAttack)//일반공격과 특수공격 중 피해를 많이 줄 공격에 5%상승
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "독수리 일반공격이 더 큰 피해를 입힘");
                 }
@@ -69,30 +69,30 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
             }
         }
 
-        attackPrediction = new AttackPrediction(eagle, eaglePlateIndex, eagle.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        attackPrediction = new AttackPrediction(eagle, eaglePlateIndex, eagle.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         Debug.Log("독수리 겨냥: " + attackIndex);
         return attackPrediction;
     }
 
 
     // 적이 2마리 이상인가?
-    public bool isTwoOrMoreEnemies(List<Plate> enermyPlates)
+    public bool IsTwoOrMoreEnemies(List<Plate> enermyPlates)
     {
         int count = 0;
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null) count++;
+            if (plate.GetCurrentSummon() != null) count++;
         }
         return count >= 2;
     }
 
     // 적이 1마리인가?
-    public bool isOnlyOneEnemy(List<Plate> enermyPlates)
+    public bool IsOnlyOneEnemy(List<Plate> enermyPlates)
     {
         int count = 0;
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null) count++;
+            if (plate.GetCurrentSummon() != null) count++;
         }
         return count == 1;
     }
@@ -108,23 +108,23 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
 
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon currentSummon = enermyPlates[i].getCurrentSummon();
+            Summon currentSummon = enermyPlates[i].GetCurrentSummon();
             if (currentSummon == null) continue;
 
             for (int j = 0; j < enermyPlates.Count; j++)
             {
                 if (i == j) continue; // 자기 자신은 비교하지 않음
 
-                Summon compareSummon = enermyPlates[j].getCurrentSummon();
+                Summon compareSummon = enermyPlates[j].GetCurrentSummon();
                 if (compareSummon == null) continue;
 
                 // 현재 소환수의 체력 비율 계산 (자기 체력 / 비교 몬스터 체력)
-                double healthRatio = currentSummon.getNowHP() / compareSummon.getNowHP();
+                double healthRatio = currentSummon.GetNowHP() / compareSummon.GetNowHP();
 
                 // 조건을 만족하는 경우 중에서 가장 낮은 체력을 가진 소환수의 인덱스를 추적
-                if (healthRatio <= 0.7 && currentSummon.getNowHP() < lowestHealth)
+                if (healthRatio <= 0.7 && currentSummon.GetNowHP() < lowestHealth)
                 {
-                    lowestHealth = currentSummon.getNowHP();
+                    lowestHealth = currentSummon.GetNowHP();
                     lowestHealthIndex = i;
                 }
             }
@@ -141,7 +141,7 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         if (enermyPlates.Count < 2) return false;
 
         //가장 가까운 인덱스 반환
-        int closetIndex = getClosestEnermyIndex(attackingSummon, enermyPlates);
+        int closetIndex = GetClosestEnermyIndex(attackingSummon, enermyPlates);
 
         if (closetIndex == lowestIndex)
             return true;
@@ -150,11 +150,11 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 가장 가까운 적 소환수의 인덱스를 반환하는 메소드
-    public int getClosestEnermyIndex(Summon attackingSummon, List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(Summon attackingSummon, List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
             if (enermySummon != null && enermySummon != attackingSummon)
             {
                 return i; // 첫 번째로 만나는 유효한 적 소환수의 인덱스를 반환
@@ -172,9 +172,9 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
 
         // 사용 가능한 특수 공격이 있는지 먼저 검사
         bool hasAvailableSpecialAttack = false;
-        for (int i = 0; i < eagle.getSpecialAttackStrategy().Length; i++)
+        for (int i = 0; i < eagle.GetSpecialAttackStrategy().Length; i++)
         {
-            if (!eagle.isSpecialAttackCool(eagle.getSpecialAttackStrategy()[i]))
+            if (!eagle.IsSpecialAttackCool(eagle.GetSpecialAttackStrategy()[i]))
             {
                 hasAvailableSpecialAttack = true;
                 break;
@@ -193,10 +193,10 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         // 최대 현재 체력을 가진 소환수를 찾음
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon currentSummon = enermyPlates[i].getCurrentSummon();
+            Summon currentSummon = enermyPlates[i].GetCurrentSummon();
             if (currentSummon == null) continue;
 
-            double currentHealth = currentSummon.getNowHP();
+            double currentHealth = currentSummon.GetNowHP();
 
             if (currentHealth > highestHealth)
             {
@@ -217,10 +217,10 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             if (i == maxHealthIndex) continue; // 최대 현재 체력 소환수는 비교에서 제외
 
-            Summon compareSummon = enermyPlates[i].getCurrentSummon();
+            Summon compareSummon = enermyPlates[i].GetCurrentSummon();
             if (compareSummon == null) continue;
 
-            double healthDifference = Math.Abs(maxHealth - compareSummon.getNowHP());
+            double healthDifference = Math.Abs(maxHealth - compareSummon.GetNowHP());
 
             // 10% 이상의 차이가 나면 조건을 만족하지 않으므로 resultIndex를 -1로 설정하고 종료
             if (healthDifference > maxHealth * 0.1)
@@ -240,7 +240,7 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         if (enermyPlates.Count < 2) return -1;
 
         //가장 가까운 인덱스 반환
-        int closetIndex = getClosestEnermyIndex(attackingSummon, enermyPlates);
+        int closetIndex = GetClosestEnermyIndex(attackingSummon, enermyPlates);
 
         if (closetIndex == lowestIndex)
             return closetIndex;
@@ -250,17 +250,17 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 가장 체력이 많은 몬스터의 인덱스를 반환하는 메소드
-    public int getIndexOfMostHealthEnermy(List<Plate> enermyPlates)
+    public int GetIndexOfMostHealthEnermy(List<Plate> enermyPlates)
     {
         int maxHealthIndex = -1;
         double maxHealth = double.MinValue;
 
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
             if (enermySummon != null)
             {
-                double currentHealth = enermySummon.getNowHP();
+                double currentHealth = enermySummon.GetNowHP();
                 if (currentHealth > maxHealth)
                 {
                     maxHealth = currentHealth;
@@ -272,12 +272,12 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         return maxHealthIndex; // 가장 체력이 높은 소환수의 인덱스 반환, 없으면 -1
     }
 
-    public AttackType getTypeOfMoreAttackDamage(Summon eagle, List<Plate> enermyPlates)
+    public AttackType GetTypeOfMoreAttackDamage(Summon eagle, List<Plate> enermyPlates)
     {
-        double maxDamage = eagle.getAttackPower(); // 기본값: 일반 공격의 데미지
+        double maxDamage = eagle.GetAttackPower(); // 기본값: 일반 공격의 데미지
 
         // 사용 가능한 특수 공격 목록 가져오기
-        IAttackStrategy[] availableSpecialAttacks = eagle.getAvailableSpecialAttacks();
+        IAttackStrategy[] availableSpecialAttacks = eagle.GetAvailableSpecialAttacks();
 
         // 각 특수 공격 확인
         foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
@@ -287,10 +287,10 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
             // 적 플레이트에 있는 모든 소환수에게 특수 공격 시 예상 피해 축적
             foreach (Plate plate in enermyPlates)
             {
-                Summon enermySummon = plate.getCurrentSummon();
+                Summon enermySummon = plate.GetCurrentSummon();
                 if (enermySummon != null)
                 {
-                    totalSpecialAttackDamage += specialAttack.getSpecialDamage();
+                    totalSpecialAttackDamage += specialAttack.GetSpecialDamage();
                 }
             }
 
@@ -307,13 +307,13 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 특수 공격으로 공격할 수 있는지 확인하고, 공격 가능한 인덱스를 반환하는 메소드
-    public int getSpecialAttackKillIndex(Summon eagle, List<Plate> enermyPlates)
+    public int GetSpecialAttackKillIndex(Summon eagle, List<Plate> enermyPlates)
     {
         // 사용 가능한 특수 공격이 있는지 먼저 검사
         bool hasAvailableSpecialAttack = false;
-        for (int i = 0; i < eagle.getSpecialAttackStrategy().Length; i++)
+        for (int i = 0; i < eagle.GetSpecialAttackStrategy().Length; i++)
         {
-            if (!eagle.isSpecialAttackCool(eagle.getSpecialAttackStrategy()[i]))
+            if (!eagle.IsSpecialAttackCool(eagle.GetSpecialAttackStrategy()[i]))
             {
                 hasAvailableSpecialAttack = true;
                 break;
@@ -327,16 +327,16 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         }
 
 
-        for (int i=0; i< eagle.getSpecialAttackStrategy().Length; i++)
+        for (int i=0; i< eagle.GetSpecialAttackStrategy().Length; i++)
         {
-            if (eagle.isSpecialAttackCool(eagle.getSpecialAttackStrategy()[i]))
+            if (eagle.IsSpecialAttackCool(eagle.GetSpecialAttackStrategy()[i]))
             {
                 continue;
             }
             for (int ii = 0; ii < enermyPlates.Count; ii++)
             {
-                Summon enermySummon = enermyPlates[ii].getCurrentSummon();
-                if (enermySummon != null && eagle.getSpecialAttackStrategy()[i].getSpecialDamage() >= enermySummon.getNowHP())
+                Summon enermySummon = enermyPlates[ii].GetCurrentSummon();
+                if (enermySummon != null && eagle.GetSpecialAttackStrategy()[i].GetSpecialDamage() >= enermySummon.GetNowHP())
                 {
                     return i; // 특수 공격으로 처치 가능한 인덱스 반환
                 }
@@ -346,13 +346,13 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 가장 가까운 적을 공격했을 때 물리칠 수 있는지 확인하고, 공격 가능한 인덱스를 반환하는 메소드
-    public int getIndexOfNormalAttackCanKill(Summon eagle, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon eagle, List<Plate> enermyPlates)
     {
-        int closestIndex = getClosestEnermyIndex(enermyPlates);
+        int closestIndex = GetClosestEnermyIndex(enermyPlates);
         if (closestIndex != -1)
         {
-            Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
-            if (closestEnermySummon != null && eagle.getAttackPower() >= closestEnermySummon.getNowHP())
+            Summon closestEnermySummon = enermyPlates[closestIndex].GetCurrentSummon();
+            if (closestEnermySummon != null && eagle.GetAttackPower() >= closestEnermySummon.GetNowHP())
             {
                 return closestIndex; // 가장 가까운 적을 일반 공격으로 처치할 수 있는 인덱스 반환
             }
@@ -360,11 +360,11 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         return -1; // 처치할 수 없으면 -1 반환
     }
 
-    public int getClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
             if (enermySummon != null)
             {
                 return i; // 가장 가까운(첫 번째로 발견된) 적 소환수의 인덱스 반환

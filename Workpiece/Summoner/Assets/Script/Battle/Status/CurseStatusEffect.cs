@@ -41,10 +41,10 @@ public class CurseStatusEffect : StatusEffect, IStatusEffect
     {
         target.StatusHitColorShow();
 
-        if (shouldApplyOnce())
+        if (ShouldApplyOnce())
         {
             target.AttackPowerCurse(damagePerTurn);
-            setApplyOnce();
+            SetApplyOnce();
             target.StatusChangedNotify();
         }
 

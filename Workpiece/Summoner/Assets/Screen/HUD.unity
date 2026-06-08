@@ -6084,7 +6084,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1727548682}
         m_TargetAssemblyTypeName: SettingPanelView, Assembly-CSharp
-        m_MethodName: openOption
+        m_MethodName: OpenOption
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8908,7 +8908,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 618725096}
         m_TargetAssemblyTypeName: GameplaySettingView, Assembly-CSharp
-        m_MethodName: onClickSound
+        m_MethodName: OnClickSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12508,7 +12508,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 618725096}
         m_TargetAssemblyTypeName: GameplaySettingView, Assembly-CSharp
-        m_MethodName: storySkip
+        m_MethodName: StorySkip
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

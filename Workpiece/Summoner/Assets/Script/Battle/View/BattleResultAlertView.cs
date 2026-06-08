@@ -70,12 +70,12 @@ public class BattleResultAlertView : MonoBehaviour
     {
         alertObject.SetActive(true);
 
-        while (!alertScript.getIsClicked())
+        while (!alertScript.GetIsClicked())
         {
             yield return null;
         }
 
         alertObject.SetActive(false);
-        callback(alertScript.getResult());
+        callback(alertScript.GetResult());
     }
 }

@@ -70,12 +70,12 @@ public class DrawOptionPanelView : MonoBehaviour,
         assignedSummon = null;
     }
 
-    public Summon getAssignedSummon()
+    public Summon GetAssignedSummon()
     {
         return assignedSummon;
     }
 
-    public void setAssignedSummon(Summon summon)
+    public void SetAssignedSummon(Summon summon)
     {
         assignedSummon = summon;
     }

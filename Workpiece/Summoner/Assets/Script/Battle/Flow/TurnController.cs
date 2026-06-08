@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -20,14 +17,14 @@ public class TurnController : MonoBehaviour
 
     
 
-    void Start()
+    public void TurnStartInitialize()
     {
         EnsureBattleResultController();
 
         currentTurn = Turn.PlayerTurn; // 첫 번째 턴은 플레이어 턴으로 시작
         turnCount = 1;
-        UpdateTurnCountUI();
-        SetClearCountUI();
+        TurnCountTextUpdate();
+        ClearTurnTextSet();
         StartTurn();
     }
 
@@ -35,50 +32,13 @@ public class TurnController : MonoBehaviour
     {
         if (currentTurn == Turn.PlayerTurn)  // 플레이어 턴일 경우
         {
-            // 적 소환수 상태 업데이트 및 데미지 처리
-            var enermyPlates = enermy.getEnermyAttackController().getPlateController().getEnermySummons();
-
-            // 상태 업데이트를 먼저 진행
-            foreach (var summon in enermyPlates)
-            {
-                summon.UpdateDamageStatusEffects(); // 데미지를 주는 상태이상 업데이트
-                summon.UpdateStunAndCurseStatus();  // 스턴 및 저주 상태 업데이트
-                summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
-            }
-
-            player.getPlateController().CompactEnermyPlates(); //앞당기기
-
-            // 승리 조건
-            if (enermy.getEnermyAttackController().getPlateController().IsEnermyPlateClear() && (player.clearTurn >= player.currentTurn))
-            {
-                Debug.Log("승리!");
-                battleResultController.Clear();
-            }
-
-
-            foreach (var summon in player.getPlateController().getPlayerSummons())
-            {
-                summon.UpdateSpecialAttackCooldowns(); // 특수 공격 쿨타임 업데이트
-            }
-
-            player.startTurn();
+            PlayerTurnStart();
+            return;
         }
-        else if (currentTurn == Turn.EnermyTurn)  // 적의 턴일 경우
+
+        if (currentTurn == Turn.EnermyTurn)  // 적의 턴일 경우
         {
-            // 적 턴 시작시 아군 소환수 상태이상 및 쿨타임 업데이트
-            foreach (var summon in player.getPlateController().getPlayerSummons())
-            {
-                summon.UpdateDamageStatusEffects(); // 데미지를 주는 상태이상 업데이트
-                summon.UpdateStunAndCurseStatus(); // 스턴 및 저주 상태 업데이트
-                summon.getAttackStrategy().ReduceCooldown(); // 일반 공격 쿨타임 감소
-            }
-
-            foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
-            {
-                summon.UpdateSpecialAttackCooldowns(); // 특수 공격 쿨타임 업데이트
-            }
-
-            enermy.startTurn();
+            EnermyTurnStart();
         }
     }
 
@@ -86,58 +46,142 @@ public class TurnController : MonoBehaviour
     {
         if (currentTurn == Turn.PlayerTurn)
         {
-            // 다음 턴을 적의 턴으로 설정
-            currentTurn = Turn.EnermyTurn;
-
-            // 적 턴 시작시 아군 소환수 상태이상 및 쿨타임 업데이트
-            foreach (var summon in player.getPlateController().getPlayerSummons())
-            {
-                summon.UpdateUpgradeStatus(); //강화 상태 업데이트
-            }
-
-            // 플레이어 턴이 끝나면 턴 카운트를 증가시키지 않고 바로 적 턴 시작
-            StartTurn();
+            PlayerTurnEnd();
+            return;
         }
-        else if (currentTurn == Turn.EnermyTurn)
+
+        if (currentTurn == Turn.EnermyTurn)
         {
-
-            // 적 턴이 끝난 후 턴 카운트를 증가시키고 플레이어 턴 시작
-            currentTurn = Turn.PlayerTurn;
-            turnCount++; // 적 턴이 끝나면 턴 카운트를 증가시킴
-            UpdateTurnCountUI();
-            player.AddMana();
-
-            //적 턴 끝날때 적 플레이트의 강화를 품
-            foreach (var summon in enermy.getEnermyAttackController().getPlateController().getEnermySummons())
-            {
-                summon.UpdateUpgradeStatus(); //강화 상태 업데이트
-            }
-
-            // 플레이어 턴이 끝날 때 혼란 상태가 아닌 소환수들의 공격 가능 여부를 설정
-            foreach (var summon in player.getPlateController().getPlayerSummons())
-            {
-                if (!summon.IsStun()) // 스턴 상태가 아닌 경우
-                {
-                    summon.setIsAttack(true); // 공격 가능하게 설정
-                }
-            }
-
-            Debug.Log("현재 턴: " + turnCount);
-
-            StartTurn();
+            EnermyTurnEnd();
         }
     }
-    private void UpdateTurnCountUI()
+
+    private void PlayerTurnStart()
+    {
+        EnemySummonTurnStartEffectsApply();
+        GetEnermyPlateController().CompactEnermyPlates();
+        BattleClearResultTry();
+        PlayerSummonSpecialCooldownsUpdate();
+        player.PlayerTurnStart();
+    }
+
+    private void EnermyTurnStart()
+    {
+        PlayerSummonTurnStartEffectsApply();
+        EnemySummonSpecialCooldownsUpdate();
+        enermy.EnermyTurnStart();
+    }
+
+    private void PlayerTurnEnd()
+    {
+        // 플레이어 턴이 끝나면 턴 카운트를 증가시키지 않고 바로 적 턴 시작
+        currentTurn = Turn.EnermyTurn;
+        PlayerSummonUpgradeStatusUpdate();
+        StartTurn();
+    }
+
+    private void EnermyTurnEnd()
+    {
+        currentTurn = Turn.PlayerTurn;
+        turnCount++;
+        TurnCountTextUpdate();
+        player.AddMana();
+        EnemySummonUpgradeStatusUpdate();
+        PlayerSummonAttackReadyReset();
+        Debug.Log("현재 턴: " + turnCount);
+        StartTurn();
+    }
+
+    private void EnemySummonTurnStartEffectsApply()
+    {
+        foreach (var summon in GetEnermyPlateController().GetEnermySummons())
+        {
+            SummonTurnStartEffectsApply(summon);
+        }
+    }
+
+    private void PlayerSummonTurnStartEffectsApply()
+    {
+        foreach (var summon in player.GetPlateController().GetPlayerSummons())
+        {
+            SummonTurnStartEffectsApply(summon);
+        }
+    }
+
+    private void SummonTurnStartEffectsApply(Summon summon)
+    {
+        summon.UpdateDamageStatusEffects();
+        summon.UpdateStunAndCurseStatus();
+        summon.GetAttackStrategy().ReduceCooldown();
+    }
+
+    private void PlayerSummonSpecialCooldownsUpdate()
+    {
+        foreach (var summon in player.GetPlateController().GetPlayerSummons())
+        {
+            summon.UpdateSpecialAttackCooldowns();
+        }
+    }
+
+    private void EnemySummonSpecialCooldownsUpdate()
+    {
+        foreach (var summon in GetEnermyPlateController().GetEnermySummons())
+        {
+            summon.UpdateSpecialAttackCooldowns();
+        }
+    }
+
+    private void PlayerSummonUpgradeStatusUpdate()
+    {
+        foreach (var summon in player.GetPlateController().GetPlayerSummons())
+        {
+            summon.UpdateUpgradeStatus();
+        }
+    }
+
+    private void EnemySummonUpgradeStatusUpdate()
+    {
+        foreach (var summon in GetEnermyPlateController().GetEnermySummons())
+        {
+            summon.UpdateUpgradeStatus();
+        }
+    }
+
+    private void PlayerSummonAttackReadyReset()
+    {
+        foreach (var summon in player.GetPlateController().GetPlayerSummons())
+        {
+            if (!summon.IsStun())
+            {
+                summon.SetIsAttack(true);
+            }
+        }
+    }
+
+    private void BattleClearResultTry()
+    {
+        battleResultController.ClearResultTry(
+            GetEnermyPlateController().IsEnermyPlateClear(),
+            player.clearTurn,
+            player.currentTurn);
+    }
+
+    private PlateController GetEnermyPlateController()
+    {
+        return enermy.GetEnermyAttackController().GetPlateController();
+    }
+
+    private void TurnCountTextUpdate()
     {
         turnCountText.text = $"Current Turn : {turnCount}";
     }
 
-    private void SetClearCountUI()
+    private void ClearTurnTextSet()
     {
         turnClearText.text = $"Clear Turn : {clearTurn}";
     }
 
-    public Turn getCurrentTurn()
+    public Turn GetCurrentTurn()
     {
         return currentTurn;
     }

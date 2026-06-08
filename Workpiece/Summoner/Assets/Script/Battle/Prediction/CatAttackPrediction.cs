@@ -1,39 +1,39 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
 {
-    public SummonType getPreSummonType()
+    public SummonType GetPreSummonType()
     {
         return SummonType.Cat;
     }
 
     // 고양이 예측 공격
-    public AttackPrediction getAttackPrediction(Summon cat, int catPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon cat, int catPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
-        int attackIndex = getClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        int attackIndex = GetClosestEnermyIndex(enermyPlates);
+        AttackPrediction attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         // 일반 공격으로 처치 가능하면 일반 공격 확률 10% 증가
-        if (getIndexOfNormalAttackCanKill(cat, enermyPlates) != -1)
+        if (GetIndexOfNormalAttackCanKill(cat, enermyPlates) != -1)
         {
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "고양이가 일반 공격으로 처치 가능");
-            attackIndex = getIndexOfNormalAttackCanKill(cat, enermyPlates); // 일반 공격으로 처치 가능한 인덱스 받기
+            attackIndex = GetIndexOfNormalAttackCanKill(cat, enermyPlates); // 일반 공격으로 처치 가능한 인덱스 받기
         }
         else
         {
             // 특수 공격으로 처치 가능하면 특수 공격 확률 증가
-            if (getIndexOfSpecialCanKill(cat, enermyPlates) != -1)
+            if (GetIndexOfSpecialCanKill(cat, enermyPlates) != -1)
             {
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "고양이가 특수 공격으로 처치 가능");
-                attackIndex = getIndexOfSpecialCanKill(cat, enermyPlates); // 특수 공격으로 처치 가능한 인덱스 받기
+                attackIndex = GetIndexOfSpecialCanKill(cat, enermyPlates); // 특수 공격으로 처치 가능한 인덱스 받기
             }
             else
             {
                 // 더 강한 공격의 확률 5% 증가
-                if (getMostDamageAttack(cat) == AttackType.NormalAttack)
+                if (GetMostDamageAttack(cat) == AttackType.NormalAttack)
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "고양이 일반 공격이 더 많은 대미지를 입힘");
                 }
@@ -41,18 +41,18 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "고양이 특수 공격이 더 많은 대미지를 입힘");
                 }
-                attackIndex = getClosestEnermyIndex(enermyPlates); // 적 플레이트 중 가장 가까이 있는 인덱스 받기
+                attackIndex = GetClosestEnermyIndex(enermyPlates); // 적 플레이트 중 가장 가까이 있는 인덱스 받기
             }
         }
 
-        attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         return attackPrediction;
     }
 
-    public AttackType getMostDamageAttack(Summon attackingSummon)
+    public AttackType GetMostDamageAttack(Summon attackingSummon)
     {
         // 사용 가능한 특수 공격 목록 가져오기
-        IAttackStrategy[] availableSpecialAttacks = attackingSummon.getAvailableSpecialAttacks();
+        IAttackStrategy[] availableSpecialAttacks = attackingSummon.GetAvailableSpecialAttacks();
 
         // 각 특수 공격 확인
         foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
@@ -64,7 +64,7 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
             }
 
             // 일반 공격력이 더 세면 일반 공격 반환. 고양이는 단일 타깃 공격이기 때문에 공격력만 비교
-            if (attackingSummon.getAttackPower() > specialAttack.getSpecialDamage())
+            if (attackingSummon.GetAttackPower() > specialAttack.GetSpecialDamage())
                 return AttackType.NormalAttack;
             else
                 return AttackType.SpecialAttack;
@@ -74,16 +74,16 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 일반 공격으로 적을 물리칠 수 있는 가장 가까운 인덱스를 반환하는 메서드
-    public int getIndexOfNormalAttackCanKill(Summon cat, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon cat, List<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
-        int closestIndex = getClosestEnermyIndex(enermyPlates);
+        int closestIndex = GetClosestEnermyIndex(enermyPlates);
 
         if (closestIndex != -1)
         {
-            Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
+            Summon closestEnermySummon = enermyPlates[closestIndex].GetCurrentSummon();
             // 가장 가까운 적의 소환수가 있고, 일반 공격으로 물리칠 수 있는지 확인
-            if (closestEnermySummon != null && cat.getAttackPower() >= closestEnermySummon.getNowHP())
+            if (closestEnermySummon != null && cat.GetAttackPower() >= closestEnermySummon.GetNowHP())
             {
                 return closestIndex; // 공격으로 물리칠 수 있으면 인덱스 반환
             }
@@ -93,12 +93,12 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 특수 공격으로 죽일 수 있는 인덱스 반환
-    public int getIndexOfSpecialCanKill(Summon cat, List<Plate> enermyPlates)
+    public int GetIndexOfSpecialCanKill(Summon cat, List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
-            if (enermySummon != null && cat.getHeavyAttackPower() >= enermySummon.getNowHP())
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
+            if (enermySummon != null && cat.GetHeavyAttackPower() >= enermySummon.GetNowHP())
             {
                 // 특수 공격으로 적의 체력을 0 이하로 만들 수 있으면 해당 인덱스 반환
                 return i;
@@ -107,11 +107,11 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
         return -1; // 공격 가능한 적이 없으면 -1 반환
     }
 
-    public int getClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
             if (enermySummon != null)
             {
                 return i; // 가장 가까운, 처음 발견한 적 소환수의 인덱스 반환

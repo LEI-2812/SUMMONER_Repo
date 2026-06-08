@@ -26,6 +26,28 @@ public class BattleResultController : MonoBehaviour
         alertView.ShowClearResultAlert(progressController.CompleteClearResult);
     }
 
+    public void ClearResultTry(bool isEnemyPlateClear, int clearTurn, int currentTurn)
+    {
+        if (!isEnemyPlateClear || clearTurn < currentTurn)
+        {
+            return;
+        }
+
+        Debug.Log("승리!");
+        Clear();
+    }
+
+    public void FailResultTry(int clearTurn, int currentTurn)
+    {
+        if (clearTurn >= currentTurn)
+        {
+            return;
+        }
+
+        Debug.Log("패배!");
+        Fail();
+    }
+
     public void Fail()
     {
         if (resultStarted)

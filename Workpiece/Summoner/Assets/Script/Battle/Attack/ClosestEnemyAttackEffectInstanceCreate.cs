@@ -20,8 +20,8 @@ public static class ClosestEnemyAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) 공격합니다.");
-            target.takeDamage(attacker.getAttackPower());
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}을(를) 공격합니다.");
+            target.TakeDamage(attacker.GetAttackPower());
         }
     }
 

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec3e46d9a728984bb7cc551d6a8253b, type: 3}
+  m_Name: StageEnemyPlacementData
+  m_EditorClassIdentifier: 
+  stageEnemyPlacements:
+  - stage: 1
+    enemyPlacementSlots:
+    - plateIndex: 0
+      enemySummonPrefab: {fileID: 1760420319589789094, guid: 8fd706c78e2922046af9ec2e55c582ca, type: 3}
+    - plateIndex: 1
+      enemySummonPrefab: {fileID: 1760420319589789094, guid: 8fd706c78e2922046af9ec2e55c582ca, type: 3}

@@ -65,7 +65,7 @@ public class LifeDrainStatusEffect : StatusEffect, IStatusEffect
 
     private void LifeDrainApply(IStatusEffectTarget target)
     {
-        IStatusEffectTarget attacker = getAttacker();
+        IStatusEffectTarget attacker = GetAttacker();
 
         if (target == null || attacker == null)
         {

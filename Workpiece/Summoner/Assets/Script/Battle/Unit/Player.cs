@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-using Unity.VisualScripting;
 using System.Collections;
 using TMPro;
 
@@ -54,365 +53,441 @@ public class Player : Character
 
     private void Update()
     {
-        if (mana < usedMana)
-        {
-            reSummonButton.image.color = new Color32(174, 174, 174, 255);
-            reSummonButtonText.color = new Color32(209, 209, 209, 255);
-        }
-        else
-        {
-            reSummonButton.image.color = new Color32(249, 247, 196, 255);
-            reSummonButtonText.color = new Color32(249, 247, 196, 255);
-        }
+        RedrawButtonStateShow();
     }
 
-    public void startTurn()
+    private void RedrawButtonStateShow()
+    {
+        if (mana < usedMana)
+        {
+            RedrawButtonDisabledShow();
+            return;
+        }
+
+        RedrawButtonEnabledShow();
+    }
+
+    private void RedrawButtonDisabledShow()
+    {
+        reSummonButton.image.color = new Color32(174, 174, 174, 255);
+        reSummonButtonText.color = new Color32(209, 209, 209, 255);
+    }
+
+    private void RedrawButtonEnabledShow()
+    {
+        reSummonButton.image.color = new Color32(249, 247, 196, 255);
+        reSummonButtonText.color = new Color32(249, 247, 196, 255);
+    }
+
+    public void PlayerTurnStart()
     {
         Debug.Log("플레이어 턴 시작");
         Debug.Log($"{gameObject.name} 의 마나: {mana}");
         currentTurn = turnController.GetTurnCount();
         hasSummonedThisTurn = false;
         UpdateManaUI();
-        
-        if(clearTurn < currentTurn)
-        {
-            TurnOver();
-        }
+
+        BattleFailResultTry();
     }
 
     public void OnSummonBtnClick()
     {
-        //공격중이거나 소환(재소환포함)중에는 클릭안되게
-        if (summonController.isSummoning || battleController.getIsAttaking()) return;
+        if (PlayerActionBlockedCheck()) return;
 
-        if (hasSummonedThisTurn)
+        if (!SummonTurnCanUseCheck())
         {
-            failSound.Play();
-            Debug.Log("이 턴에서는 이미 소환을 했습니다. 다음 턴에 소환할 수 있습니다.");
             return;
         }
 
-        if (mana > 0)
+        if (!SummonManaCanUseCheck())
         {
-            for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
-            {
-                if (!plateController.getPlayerPlates()[i].getIsInSummon())
-                {
-                    Debug.Log(i + "번째 플레이트에 소환 예정");
-                    summonController.StartSummon(i, false);
-                    mana -= 1;
-                    hasSummonedThisTurn = true;
-                    UpdateManaUI();
-                    clickSound.Play();
-                    summonButton.image.color = new Color32(137, 125, 115, 255); // 회색(#897D73)
-                    summonButtonText.color = new Color32(159, 159, 159, 255);  // 회색(#9F9F9F)
-                    return;
-                }
-            }
-            Debug.Log("모든 플레이트에 소환수가 있습니다.");
+            return;
         }
-        else
+
+        if (!PlayerEmptyPlateSummonTry())
         {
-            failSound.Play(); // 효과음 재생
-            Debug.Log("마나가 부족하여 소환 불가능");
+            Debug.Log("모든 플레이트에 소환수가 있습니다.");
         }
     }
 
-    //플레이어는 버튼 클릭을 통해서만 턴종료를 시킨다.
-    public void PlayerTurnOverBtn() //버튼에 넣을 메소드
+    private bool SummonTurnCanUseCheck()
     {
-        //공격중이거나 소환(재소환포함)중에는 클릭안되게
-        if (summonController.isSummoning || battleController.getIsAttaking()) return;
-
-
-        // 플레이어 턴일 때만 턴 종료 가능
-        if (turnController.getCurrentTurn() == TurnController.Turn.PlayerTurn)
+        if (!hasSummonedThisTurn)
         {
-            Debug.Log("플레이어 턴 종료");
-            turnController.EndTurn();
-            clickSound.Play();
+            return true;
         }
-        else
+
+        failSound.Play();
+        Debug.Log("이 턴에서는 이미 소환을 했습니다. 다음 턴에 소환할 수 있습니다.");
+        return false;
+    }
+
+    private bool SummonManaCanUseCheck()
+    {
+        if (mana > 0)
         {
-            failSound.Play();
-            Debug.Log("플레이어 턴이 아닙니다.");
+            return true;
         }
+
+        failSound.Play();
+        Debug.Log("마나가 부족하여 소환 불가능");
+        return false;
+    }
+
+    private bool PlayerEmptyPlateSummonTry()
+    {
+        for (int i = 0; i < plateController.GetPlayerPlates().Count; i++)
+        {
+            if (!plateController.GetPlayerPlates()[i].GetIsInSummon())
+            {
+                PlayerPlateSummonStart(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void PlayerPlateSummonStart(int plateIndex)
+    {
+        Debug.Log(plateIndex + "번째 플레이트에 소환 예정");
+        summonController.StartSummon(plateIndex, false);
+        mana -= 1;
+        hasSummonedThisTurn = true;
+        UpdateManaUI();
+        clickSound.Play();
+        SummonButtonDisabledShow();
+    }
+
+    private void SummonButtonDisabledShow()
+    {
+        summonButton.image.color = new Color32(137, 125, 115, 255);
+        summonButtonText.color = new Color32(159, 159, 159, 255);
+    }
+
+    public void PlayerTurnOverBtn()
+    {
+        if (PlayerActionBlockedCheck()) return;
+
+        if (!PlayerTurnCanEndCheck())
+        {
+            return;
+        }
+
+        PlayerTurnEnd();
+    }
+
+    private bool PlayerTurnCanEndCheck()
+    {
+        if (turnController.GetCurrentTurn() == TurnController.Turn.PlayerTurn)
+        {
+            return true;
+        }
+
+        failSound.Play();
+        Debug.Log("플레이어 턴이 아닙니다.");
+        return false;
+    }
+
+    private void PlayerTurnEnd()
+    {
+        Debug.Log("플레이어 턴 종료");
+        turnController.EndTurn();
+        clickSound.Play();
     }
 
     public void OnRedrawButtonClick()
     {
-        //공격중이거나 소환(재소환포함)중에는 클릭안되게
-        if (summonController.isSummoning || battleController.getIsAttaking()) return;
+        if (PlayerActionBlockedCheck()) return;
 
-        if (mana >= usedMana) {
-            if (summonController.StartRedraw())
-            { //재소환 시작
-              //마나 차감
-                mana -= usedMana;
-                usedMana += 1;
-                UpdateManaUI();
-                clickSound.Play();
-            }           
-        }
-        else
+        if (!RedrawManaCanUseCheck())
         {
-            failSound.Play();
-            Debug.Log("재소환시 필요한 마나가 모자랍니다.");
-        }
-    }
-
-
-    public void OnAttackBtnClick() //일반공격
-    {
-        //공격중이거나 소환(재소환포함)중에는 클릭안되게
-        if (summonController.isSummoning || battleController.getIsAttaking()) return;
-
-        Summon attackSummon = battleController.attackStart(0); //공격할 소환수를 받아온다.
-        if (attackSummon == null)
-        {
-            failSound.Play();
             return;
         }
 
-        if (!attackSummon.getIsAttack() || attackSummon.IsStun()) {
+        RedrawStartTry();
+    }
+
+    private bool RedrawManaCanUseCheck()
+    {
+        if (mana >= usedMana)
+        {
+            return true;
+        }
+
+        failSound.Play();
+        Debug.Log("재소환시 필요한 마나가 모자랍니다.");
+        return false;
+    }
+
+    private void RedrawStartTry()
+    {
+        if (!summonController.StartRedraw())
+        {
+            return;
+        }
+
+        RedrawManaUse();
+    }
+
+    private void RedrawManaUse()
+    {
+        mana -= usedMana;
+        usedMana += 1;
+        UpdateManaUI();
+        clickSound.Play();
+    }
+
+    public void OnAttackBtnClick()
+    {
+        if (PlayerActionBlockedCheck()) return;
+
+        Summon attackSummon = NormalAttackSummonGet();
+        if (attackSummon == null)
+        {
+            return;
+        }
+
+        NormalAttackExecute(attackSummon);
+        PlayerAttackAfterProcess();
+    }
+
+    private bool PlayerActionBlockedCheck()
+    {
+        return summonController.isSummoning || battleController.GetIsAttacking();
+    }
+
+    private Summon NormalAttackSummonGet()
+    {
+        Summon attackSummon = battleController.AttackStart(0);
+        if (attackSummon == null)
+        {
+            failSound.Play();
+            return null;
+        }
+
+        if (!NormalAttackCanUse(attackSummon))
+        {
             Debug.Log("공격할 수 없습니다. ");
             failSound.Play();
-            return; 
+            return null;
         }
 
-        if (attackSummon != null)
-        {
-            // 일반 공격 수행(플레이트, 공격할 인덱스)
-            attackSummon.normalAttack(plateController.getEnermyPlates() ,selectedPlateIndex);
-            clickSound.Play();
-        }
-        else
-        {
-            Debug.Log("선택된 plate에 소환수가 없습니다.");
-        }
+        return attackSummon;
+    }
 
-        // 승리 조건 1
-        if (plateController.IsEnermyPlateClear() && (clearTurn >= currentTurn))
-        {
-            Debug.Log("승리!");
-            battleResultController.Clear();
-        }
+    private bool NormalAttackCanUse(Summon attackSummon)
+    {
+        return attackSummon.GetIsAttack() && !attackSummon.IsStun();
+    }
+
+    private void NormalAttackExecute(Summon attackSummon)
+    {
+        attackSummon.NormalAttack(plateController.GetEnermyPlates(), selectedPlateIndex);
+        clickSound.Play();
+    }
+
+    private void PlayerAttackAfterProcess()
+    {
+        BattleClearResultTry();
         plateController.CompactEnermyPlates();
         statePanel.gameObject.SetActive(false);
     }
 
-    public void OnSpecialAttackBtnClick() //특수공격
+    public void OnSpecialAttackBtnClick()
     {
-        //공격중이거나 소환(재소환포함)중에는 클릭안되게
-        if (summonController.isSummoning || battleController.getIsAttaking()) return;
+        if (PlayerActionBlockedCheck()) return;
 
-        Summon attackSummon = battleController.attackStart(0); // 공격할 소환수를 가져옴
+        Summon attackSummon = SpecialAttackSummonGet();
         if (attackSummon == null)
         {
-            failSound.Play();
             return;
         }
 
-        if (battleController.getNowSpecialAttackInfo() == null)
+        if (!SpecialAttackExecuteOrTargetSelect(attackSummon))
+        {
+            return;
+        }
+
+        PlayerAttackAfterProcess();
+    }
+
+    private Summon SpecialAttackSummonGet()
+    {
+        Summon attackSummon = battleController.AttackStart(0);
+        if (attackSummon == null)
+        {
+            failSound.Play();
+            return null;
+        }
+
+        if (!battleController.HasCurrentSpecialAttackInfo())
         {
             Debug.Log("사용 가능한 특수 공격이 없습니다.");
             failSound.Play();
-            return;
+            return null;
         }
 
-        if (!attackSummon.getIsAttack() || attackSummon.IsStun())
+        if (!SpecialAttackCanUse(attackSummon))
         {
             Debug.Log("공격할 수 없습니다. ");
             failSound.Play();
+            return null;
+        }
+
+        return attackSummon;
+    }
+
+    private bool SpecialAttackCanUse(Summon attackSummon)
+    {
+        return attackSummon.GetIsAttack() && !attackSummon.IsStun();
+    }
+
+    private bool SpecialAttackExecuteOrTargetSelect(Summon attackSummon)
+    {
+        IAttackStrategy attackStrategy = attackSummon.GetSpecialAttackStrategy()[0];
+
+        if (SpecialAttackCooldownCheck(attackStrategy))
+        {
+            Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
+            failSound.Play();
+            return false;
+        }
+
+        if (attackStrategy is TargetedAttackStrategy)
+        {
+            TargetedSpecialAttackStart(attackSummon);
+            return true;
+        }
+
+        ImmediateSpecialAttackExecute(attackSummon);
+        return true;
+    }
+
+    private bool SpecialAttackCooldownCheck(IAttackStrategy attackStrategy)
+    {
+        return attackStrategy.GetCurrentCooldown() > 0;
+    }
+
+    private void TargetedSpecialAttackStart(Summon attackSummon)
+    {
+        int specialAttackIndex = battleController.GetCurrentSpecialAttackInfoIndex();
+        clickSound.Play();
+
+        if (battleController.DoesCurrentSpecialAttackTargetPlayerPlate())
+        {
+            PlayerPlateTargetSelectionStart(attackSummon, specialAttackIndex);
             return;
         }
 
-        if (attackSummon != null)
-        {
+        EnermyPlateTargetSelectionStart(attackSummon, specialAttackIndex);
+    }
 
-            IAttackStrategy attackStrategy = attackSummon.getSpecialAttackStrategy()[0];
+    private void PlayerPlateTargetSelectionStart(Summon attackSummon, int specialAttackIndex)
+    {
+        Debug.Log("아군의 플레이트를 선택하세요.");
+        StartCoroutine(WaitForPlayerPlateSelection(attackSummon, specialAttackIndex));
+    }
 
-            // 스킬이 쿨타임 중인지 확인
-            if (attackStrategy.getCurrentCooldown() > 0)
-            {
-                Debug.Log("특수 스킬이 쿨타임 중입니다. 사용할 수 없습니다.");
-                failSound.Play();
-                return;
-            }
-            
-            // TargetedAttackStrategy를 사용하는지 확인
-            if (attackStrategy is TargetedAttackStrategy targetedAttack)
-            {
-                battleController.setIsAttaking(true);
-                StatusType attackStatusType = targetedAttack.getStatusType();
-                clickSound.Play();
-                if (attackStatusType == StatusType.Heal || attackStatusType == StatusType.Upgrade || attackStatusType == StatusType.Shield) //타겟중에 힐일경우
-                {
-                    Debug.Log("TargetedAttackStrategy의 Heal을 사용합니다. 아군의 플레이트를 선택하세요.");
-                    // 아군의 플레이트를 선택하는 코루틴 실행
-                    StartCoroutine(WaitForPlayerPlateSelection(attackSummon, battleController.getNowSpecialAttackInfo().getAttackInfoIndex()));
-                }
-                else
-                {
-                    Debug.Log("TargetedAttackStrategy를 사용합니다. 적의 플레이트를 선택하세요.");
-                    // 적의 플레이트를 선택하는 코루틴 실행
-                    StartCoroutine(WaitForEnermyPlateSelection(attackSummon, battleController.getNowSpecialAttackInfo().getAttackInfoIndex()));
-                }
-            }
-            else
-            {
-                // TargetedAttackStrategy가 아닌 경우 바로 공격 실행
-                //공격할 소환수, 공격할 플레이트 인덱스, 특수스킬 배열인덱스, 플레이어 공격
-                battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, 0,true);
-                clickSound.Play();
-            }
-        }
-        else
-        {
-            Debug.Log("선택된 plate에 소환수가 없습니다.");
-        }
+    private void EnermyPlateTargetSelectionStart(Summon attackSummon, int specialAttackIndex)
+    {
+        Debug.Log("적의 플레이트를 선택하세요.");
+        StartCoroutine(WaitForEnermyPlateSelection(attackSummon, specialAttackIndex));
+    }
 
-        // 승리 조건 2
-        if (plateController.IsEnermyPlateClear() && (clearTurn >= currentTurn))
-        {
-            Debug.Log("승리!");
-            battleResultController.Clear();
-        }
-        plateController.CompactEnermyPlates();
-        statePanel.gameObject.SetActive(false);
+    private void ImmediateSpecialAttackExecute(Summon attackSummon)
+    {
+        battleController.SpecialAttackExecute(attackSummon, selectedPlateIndex, 0, true);
+        clickSound.Play();
     }
 
     private IEnumerator WaitForEnermyPlateSelection(Summon attackSummon, int SpecialAttackArrayIndex)
     {
-        battleController.setIsAttaking(true); // 공격 시작
-        summonController.OnDarkBackground(true); // 배경 어둡게 처리
-        plateController.DownTransparencyForWhoPlate(true); // 아군 소환수 투명화
-        selectedPlateIndex = -1; // 선택한 플레이트 초기화
-
-        Debug.Log("적의 플레이트를 선택하는 중입니다...");
-
-        // 선택된 플레이트가 없을 때까지 기다림
-        while (selectedPlateIndex < 0)
-        {
-            // 공격이 활성화된 상태에서 마우스 클릭 감지
-            if (battleController.getIsAttaking())
-            {
-                // 플레이트 선택 시 루프 탈출
-                if (selectedPlateIndex >= 0)
-                {
-                    Debug.Log($"적의 플레이트 {selectedPlateIndex}가 선택되었습니다.");
-                    break;
-                }
-
-                // 마우스 클릭 위치가 플레이트 외부일 때 선택 취소
-                if (Input.GetMouseButtonDown(0))
-                {
-                    Vector2 mousePosition = Input.mousePosition;
-                    bool clickedOutside = true;
-
-                    foreach (var plate in plateController.getEnermyPlates())
-                    {
-                        RectTransform plateRect = plate.GetComponent<RectTransform>();
-                        if (RectTransformUtility.RectangleContainsScreenPoint(plateRect, mousePosition))
-                        {
-                            clickedOutside = false;
-                            break;
-                        }
-                    }
-
-                    if (clickedOutside)
-                    {
-                        Debug.Log("적 플레이트 외부 클릭으로 선택 취소");
-                        summonController.OnDarkBackground(false); // 배경 복원
-                        battleController.setIsAttaking(false); // 공격 상태 해제
-                        yield break; // 코루틴 종료
-                    }
-                }
-            }
-
-            yield return null; // 한 프레임 대기
-        }
-
-        // 선택된 플레이트로 공격 수행
-        if (selectedPlateIndex >= 0)
-        {
-            Debug.Log($"공격을 준비 중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");
-            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true);
-            summonController.OnDarkBackground(false); // 배경 복원
-            selectedPlateIndex = -1; // 선택한 플레이트 초기화
-        }
-        else
-        {
-            Debug.LogError("공격할 적의 플레이트 인덱스가 유효하지 않습니다.");
-        }
+        return WaitForTargetPlateSelection(
+            attackSummon,
+            SpecialAttackArrayIndex,
+            plateController.GetEnermyPlates(),
+            true,
+            "적의 플레이트를 선택하는 중입니다...",
+            "적 플레이트 외부 클릭으로 선택 취소",
+            "공격을 준비 중입니다. 선택된 플레이트 인덱스: {0}",
+            "공격할 적의 플레이트 인덱스가 유효하지 않습니다.");
     }
 
     private IEnumerator WaitForPlayerPlateSelection(Summon attackSummon, int SpecialAttackArrayIndex)
     {
-        battleController.setIsAttaking(true); // 공격 시작
-        summonController.OnDarkBackground(true); // 배경 어둡게 처리
-        plateController.DownTransparencyForWhoPlate(false); // 적 소환수 투명화
-        selectedPlateIndex = -1; // 선택한 플레이트 초기화
+        return WaitForTargetPlateSelection(
+            attackSummon,
+            SpecialAttackArrayIndex,
+            plateController.GetPlayerPlates(),
+            false,
+            "아군의 플레이트를 선택하는 중입니다...",
+            "플레이트 외부 클릭으로 선택 취소",
+            "아군에게 버프를 준비중입니다. 선택된 플레이트 인덱스: {0}",
+            "아군의 플레이트 인덱스가 유효하지 않습니다.");
+    }
 
-        Debug.Log("아군의 플레이트를 선택하는 중입니다...");
+    private IEnumerator WaitForTargetPlateSelection(
+        Summon attackSummon,
+        int specialAttackArrayIndex,
+        List<Plate> targetPlates,
+        bool downTransparencyForPlayerPlate,
+        string waitLog,
+        string outsideClickLog,
+        string executeLogFormat,
+        string invalidLog)
+    {
+        battleController.SetIsAttacking(true);
+        summonController.OnDarkBackground(true);
+        plateController.DownTransparencyForWhoPlate(downTransparencyForPlayerPlate);
+        selectedPlateIndex = -1;
+        Debug.Log(waitLog);
 
-        // 선택된 플레이트가 없을 때까지 기다림
         while (selectedPlateIndex < 0)
         {
-            // 공격이 활성화된 상태에서 마우스 클릭 감지
-            if (battleController.getIsAttaking())
+            if (battleController.GetIsAttacking() &&
+                Input.GetMouseButtonDown(0) &&
+                !MousePositionInsidePlates(targetPlates))
             {
-                // 플레이트 선택 시 루프 탈출
-                if (selectedPlateIndex >= 0)
-                {
-                    Debug.Log($"아군의 플레이트 {selectedPlateIndex}가 선택되었습니다.");
-                    break;
-                }
-
-                // 마우스 클릭 위치가 플레이트 외부일 때 선택 취소
-                if (Input.GetMouseButtonDown(0))
-                {
-                    Vector2 mousePosition = Input.mousePosition;
-                    bool clickedOutside = true;
-
-                    foreach (var plate in plateController.getPlayerPlates())
-                    {
-                        RectTransform plateRect = plate.GetComponent<RectTransform>();
-                        if (RectTransformUtility.RectangleContainsScreenPoint(plateRect, mousePosition))
-                        {
-                            clickedOutside = false;
-                            break;
-                        }
-                    }
-
-                    if (clickedOutside)
-                    {
-                        Debug.Log("플레이트 외부 클릭으로 선택 취소");
-                        summonController.OnDarkBackground(false); // 배경 복원
-                        battleController.setIsAttaking(false); // 공격 상태 해제
-                        yield break; // 코루틴 종료
-                    }
-                }
+                Debug.Log(outsideClickLog);
+                summonController.OnDarkBackground(false);
+                battleController.SetIsAttacking(false);
+                yield break;
             }
 
-            yield return null; // 한 프레임 대기
+            yield return null;
         }
 
-        // 선택한 플레이트로 로직 수행
         if (selectedPlateIndex >= 0)
         {
-            Debug.Log($"아군에게 버프를 준비중입니다. 선택된 플레이트 인덱스: {selectedPlateIndex}");
-            battleController.SpecialAttackLogic(attackSummon, selectedPlateIndex, SpecialAttackArrayIndex, true);
-            summonController.OnDarkBackground(false); // 배경 복원
-            selectedPlateIndex = -1; // 선택한 플레이트 초기화
+            Debug.Log(string.Format(executeLogFormat, selectedPlateIndex));
+            battleController.SpecialAttackExecute(attackSummon, selectedPlateIndex, specialAttackArrayIndex, true);
+            summonController.OnDarkBackground(false);
+            selectedPlateIndex = -1;
         }
         else
         {
-            Debug.LogError("아군의 플레이트 인덱스가 유효하지 않습니다.");
+            Debug.LogError(invalidLog);
         }
     }
 
-    public void SetHasSummonedThisTurn(bool value) //이번턴에 소환했는지 여부
+    private bool MousePositionInsidePlates(List<Plate> targetPlates)
+    {
+        Vector2 mousePosition = Input.mousePosition;
+
+        foreach (var plate in targetPlates)
+        {
+            RectTransform plateRect = plate.GetComponent<RectTransform>();
+            if (RectTransformUtility.RectangleContainsScreenPoint(plateRect, mousePosition))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void SetHasSummonedThisTurn(bool value)
     {
         hasSummonedThisTurn = value;
     }
@@ -436,8 +511,7 @@ public class Player : Character
             manaList[i].texture = (i < mana) ? haveTexture : notHaveTexture;
         }
 
-        // 소환 버튼 색상 초기화
-        if (mana > 0 && !hasSummonedThisTurn)   //  소환할 마나가 남아있고 이번 턴 소환을 하지 않았다면
+        if (mana > 0 && !hasSummonedThisTurn)
         {
             summonButton.image.color = new Color32(227, 138, 64, 255);
             summonButtonText.color = new Color32(233, 197, 135, 255);
@@ -453,20 +527,32 @@ public class Player : Character
         UpdateManaUI();
     }
 
-    public void setSelectedPlateIndex(int sel)
+    public void SetSelectedPlateIndex(int selectedPlateIndex)
     {
-        this.selectedPlateIndex = sel;
+        this.selectedPlateIndex = selectedPlateIndex;
     }
 
-    public PlateController getPlateController()
+    public PlateController GetPlateController()
     {
         return plateController;
     }
 
     public void TurnOver()
     {
-        Debug.Log("패배!");
-        battleResultController.Fail();
+        BattleFailResultTry();
+    }
+
+    private void BattleClearResultTry()
+    {
+        battleResultController.ClearResultTry(
+            plateController.IsEnermyPlateClear(),
+            clearTurn,
+            currentTurn);
+    }
+
+    private void BattleFailResultTry()
+    {
+        battleResultController.FailResultTry(clearTurn, currentTurn);
     }
 
     private void EnsureBattleResultController()

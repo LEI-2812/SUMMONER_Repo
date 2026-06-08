@@ -12,7 +12,7 @@ namespace Summoner.EditModeTests
 
             Assert.IsFalse(text.Contains("StageController"), "TurnController should not depend on StageController in fight scenes.");
             StringAssert.Contains("BattleResultController", text);
-            StringAssert.Contains("battleResultController.Clear()", text);
+            StringAssert.Contains("battleResultController.ClearResultTry(", text);
         }
 
         [Test]
@@ -58,8 +58,8 @@ namespace Summoner.EditModeTests
             string text = File.ReadAllText("Assets/Script/Battle/Unit/Player.cs");
 
             StringAssert.Contains("BattleResultController", text);
-            StringAssert.Contains("battleResultController.Clear()", text);
-            StringAssert.Contains("battleResultController.Fail()", text);
+            StringAssert.Contains("battleResultController.ClearResultTry(", text);
+            StringAssert.Contains("battleResultController.FailResultTry(", text);
             Assert.IsFalse(text.Contains("BattleResultAlertView battleResultAlertView"), "Player should not call the alert view directly.");
             Assert.IsFalse(text.Contains("ShowClearResultAlert(stageNum)"), "Player should not pass stage numbers to the alert view.");
             Assert.IsFalse(text.Contains("ShowFailResultAlert(stageNum)"), "Player should not pass stage numbers to the alert view.");

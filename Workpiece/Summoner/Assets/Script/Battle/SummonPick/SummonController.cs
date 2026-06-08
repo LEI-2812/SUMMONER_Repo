@@ -83,7 +83,7 @@ public class SummonController : MonoBehaviour
 
         if (selectedSummon != null) //3개중에 고른것
         {
-            plateController.getPlayerPlates()[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: false);
+            plateController.GetPlayerPlates()[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: false);
             player.SetHasSummonedThisTurn(true); // 플레이어가 소환했음을 알림
             Debug.Log($"플레이트 {plateIndex}에 소환 완료.");
         }
@@ -105,7 +105,7 @@ public class SummonController : MonoBehaviour
 
         if (selectedSummon != null)
         {
-            plateController.getPlayerPlates()[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: true);
+            plateController.GetPlayerPlates()[plateIndex].SummonPlaceOnPlate(selectedSummon, isResummon: true);
             player.SetHasSummonedThisTurn(true); // 플레이어가 소환했음을 알림
             Debug.Log($"플레이트 {plateIndex}에 재소환 완료.");
         }
@@ -124,7 +124,7 @@ public class SummonController : MonoBehaviour
     //차례로 재소환 로직
     public bool StartRedraw()
     {
-        if (plateController.getPlayerPlates()[0].getCurrentSummon() == null && plateController.getPlayerPlates()[1].getCurrentSummon() == null && plateController.getPlayerPlates()[2].getCurrentSummon() == null)
+        if (plateController.IsPlayerPlateClear())
         {
             Debug.Log("플레이트에 소환수가 없습니다.");
             return false;
@@ -148,15 +148,14 @@ public class SummonController : MonoBehaviour
     //재소환 중일때 플레이트 클릭시 이 메소드가 호출됨. 선택한 플레이트의 번호를 가져옴
     public void SelectPlate(Plate plate)
     {
-        for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
+        selectedPlateIndex = plateController.GetPlayerPlateIndex(plate);
+        if (selectedPlateIndex < 0)
         {
-            if (plateController.getPlayerPlates()[i] == plate)
-            {
-                selectedPlateIndex = i; //선택한 플레이트의 번호를 넣는다.
-                StartRedrawOptionSelection();
-                break;
-            }
+            Debug.Log("선택한 플레이트가 플레이어 플레이트가 아닙니다.");
+            return;
         }
+
+        StartRedrawOptionSelection();
         clickSound.Play();
         Debug.Log($"플레이트 {selectedPlateIndex}가 선택되었습니다.");
     }
@@ -171,19 +170,7 @@ public class SummonController : MonoBehaviour
     private void OpenDrawOptions()
     {
         drawPanel.SetActive(true);
-        List<Summon> drawOptions = CreateDrawOptions();
-
-        for (int i = 0; i < drawOptionPanels.Count && i < drawOptions.Count; i++)
-        {
-            Summon summon = drawOptions[i];
-            drawOptionPanels[i].setAssignedSummon(summon);
-
-            if (summon.getImage() != null && summon.getImage().sprite != null)
-            {
-                drawOptionPanels[i].SetSummonImage(summon.getImage());
-            }
-        }
-
+        ShowDrawOptions(drawOptionPanels);
         selectedSummon = null;
     }
 
@@ -192,20 +179,24 @@ public class SummonController : MonoBehaviour
     {
         plateController.HideAllPlates();
         redrawPanel.SetActive(true);
+        ShowDrawOptions(redrawOptionPanels);
+        selectedSummon = null;
+    }
+
+    private void ShowDrawOptions(List<DrawOptionPanelView> optionPanels)
+    {
         List<Summon> drawOptions = CreateDrawOptions();
 
-        for (int i = 0; i < redrawOptionPanels.Count && i < drawOptions.Count; i++)
+        for (int i = 0; i < optionPanels.Count && i < drawOptions.Count; i++)
         {
             Summon summon = drawOptions[i];
-            redrawOptionPanels[i].setAssignedSummon(summon);
+            optionPanels[i].SetAssignedSummon(summon);
 
-            if (summon.getImage() != null && summon.getImage().sprite != null)
+            if (summon.GetImage() != null && summon.GetImage().sprite != null)
             {
-                redrawOptionPanels[i].SetSummonImage(summon.getImage());
+                optionPanels[i].SetSummonImage(summon.GetImage());
             }
         }
-
-        selectedSummon = null;
     }
 
     // 3마리의 소환수를 확률에 따라 선택하는 메소드
@@ -262,7 +253,7 @@ public class SummonController : MonoBehaviour
         // 소환수 리스트에서 해당 등급의 소환수들만 필터링
         foreach (Summon summon in summons)
         {
-            if (summon.getSummonRank() == rank)
+            if (summon.GetSummonRank() == rank)
             {
                 availableSummons.Add(summon);
             }
@@ -289,14 +280,14 @@ public class SummonController : MonoBehaviour
     public void OnSelectSummon(Summon summon)
     {
         selectedSummon = summon;
-        Debug.Log($"{selectedSummon.getSummonName()} 소환수를 선택했습니다.");
+        Debug.Log($"{selectedSummon.GetSummonName()} 소환수를 선택했습니다.");
         // 소환수가 있는 플레이트만 강조 및 투명도 되돌리기
-        for (int i = 0; i < plateController.getPlayerPlates().Count; i++)
+        for (int i = 0; i < plateController.GetPlayerPlates().Count; i++)
         {
-            if (plateController.getPlayerPlates()[i].getIsInSummon())
+            if (plateController.GetPlayerPlates()[i].GetIsInSummon())
             {
-                plateController.getPlayerPlates()[i].Unhighlight(); //색상 되돌리기
-                plateController.getPlayerPlates()[i].SetSummonImageTransparency(1.0f); //투명도 되돌리기
+                plateController.GetPlayerPlates()[i].Unhighlight(); //색상 되돌리기
+                plateController.GetPlayerPlates()[i].SetSummonImageTransparency(1.0f); //투명도 되돌리기
             }
         }
         drawPanel.SetActive(false);
@@ -310,24 +301,24 @@ public class SummonController : MonoBehaviour
         darkBackground.SetActive(onOff);
     }
 
-    public bool getIsSummoningBackGroundActive()
+    public bool GetIsSummoningBackGroundActive()
     {
         return darkBackground.activeSelf;
     }
 
     public int GetPlayerPlateIndex(Plate selectedPlate)
     {
-        return plateController.getPlayerPlates().IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
+        return plateController.GetPlayerPlateIndex(selectedPlate);
     }
 
     public int GetEnermyPlateIndex(Plate selectedPlate)
     {
-        return plateController.getEnermyPlates().IndexOf(selectedPlate);  // 플레이어 플레이트 리스트에서 인덱스 찾기
+        return plateController.GetEnermyPlateIndex(selectedPlate);
     }
 
-    public void setPlayerSelectedIndex(int index)
+    public void SetPlayerSelectedIndex(int index)
     {
-        player.setSelectedPlateIndex(index);
+        player.SetSelectedPlateIndex(index);
     }
 
 }

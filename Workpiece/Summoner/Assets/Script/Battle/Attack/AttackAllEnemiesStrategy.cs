@@ -35,7 +35,7 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
                 continue;
             }
 
-            Summon target = plate.getCurrentSummon();
+            Summon target = plate.GetCurrentSummon();
             if (target != null)
             {
                 attackEffect.AttackEffectApply(attacker, target, SpecialAttackArrayIndex);
@@ -43,29 +43,29 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
         }
     }
 
-    public bool isBenefitEffect(AttackAllEnemiesStrategy strategy)
+    public bool IsBenefitEffect(AttackAllEnemiesStrategy strategy)
     {
         return BenefitEffectCheck();
     }
 
     public bool BenefitEffectCheck() => attackEffect.BenefitEffectCheck();
 
-    public double getSpecialDamage()
+    public double GetSpecialDamage()
     {
         return Damage;
     }
 
-    public StatusType getStatusType()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int getCooltime()
+    public int GetCooltime()
     {
         return cooltime;
     }
 
-    public int getCurrentCooldown() => currentCooldown;
+    public int GetCurrentCooldown() => currentCooldown;
 
     // 쿨타임을 초기화한다. (스킬 사용 후 적용)
     public void ApplyCooldown() => currentCooldown = cooltime;

@@ -37,73 +37,73 @@ public class AttackPrediction
     }
 
     // Getter 및 Setter 메소드
-    public Summon getAttackSummon()
+    public Summon GetAttackSummon()
     {
         return attackSummon;
     }
 
-    public void setAttackSummon(Summon attackSummon)
+    public void SetAttackSummon(Summon attackSummon)
     {
         this.attackSummon = attackSummon;
     }
 
-    public int getAttackSummonPlateIndex()
+    public int GetAttackSummonPlateIndex()
     {
         return attackSummonPlateIndex;
     }
 
-    public void setAttackSummonPlateIndex(int attackSummonPlateIndex)
+    public void SetAttackSummonPlateIndex(int attackSummonPlateIndex)
     {
         this.attackSummonPlateIndex = attackSummonPlateIndex;
     }
 
-    public IAttackStrategy getAttackStrategy()
+    public IAttackStrategy GetAttackStrategy()
     {
         return attackStrategy;
     }
 
-    public void setAttackStrategy(IAttackStrategy attackStrategy)
+    public void SetAttackStrategy(IAttackStrategy attackStrategy)
     {
         this.attackStrategy = attackStrategy;
     }
 
-    public int getSpecialAttackArrayIndex()
+    public int GetSpecialAttackArrayIndex()
     {
         return specialAttackArrayIndex;
     }
 
-    public void setSpecialAttackArrayIndex(int specialAttackArrayIndex)
+    public void SetSpecialAttackArrayIndex(int specialAttackArrayIndex)
     {
         this.specialAttackArrayIndex = specialAttackArrayIndex;
     }
 
 
-    public List<Plate> getTargetPlate()
+    public List<Plate> GetTargetPlate()
     {
         return targetPlate;
     }
 
-    public void setTargetPlate(List<Plate> targetPlate)
+    public void SetTargetPlate(List<Plate> targetPlate)
     {
         this.targetPlate = targetPlate;
     }
 
-    public int getTargetPlateIndex()
+    public int GetTargetPlateIndex()
     {
         return targetPlateIndex;
     }
 
-    public void setTargetPlateIndex(int targetPlateIndex)
+    public void SetTargetPlateIndex(int targetPlateIndex)
     {
         this.targetPlateIndex = targetPlateIndex;
     }
 
-    public AttackProbability getAttackProbability()
+    public AttackProbability GetAttackProbability()
     {
         return attackProbability;
     }
 
-    public void setAttackProbability(AttackProbability attackProbability)
+    public void SetAttackProbability(AttackProbability attackProbability)
     {
         this.attackProbability = attackProbability;
     }

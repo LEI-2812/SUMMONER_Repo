@@ -6,46 +6,46 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 {
  
 
-    public SummonType getPreSummonType()
+    public SummonType GetPreSummonType()
     {
         return SummonType.Rabbit;
     }
 
-    public AttackPrediction getAttackPrediction(Summon rabbit, int rabbitPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon rabbit, int rabbitPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
-        int attackIndex = getClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        int attackIndex = GetClosestEnermyIndex(enermyPlates);
+        AttackPrediction attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         if (GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex) != -1) //소환수 중 한쪽이 다른 쪽과 체력을 비교했을 때 30% 이상 낮은가?
         {
             attackIndex = GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex);
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "토끼 소환수중 한쪽이 다른 쪽과 비교할때 30% 낮음");
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
-        else if (getIndexOfLowerHealthIfAllDown30(playerPlates) != -1) //소환수 모두의 체력이 30% 이하인가?
+        else if (GetIndexOfLowerHealthIfAllDown30(playerPlates) != -1) //소환수 모두의 체력이 30% 이하인가?
         {
-            attackIndex = getIndexOfLowerHealthIfAllDown30(playerPlates);
+            attackIndex = GetIndexOfLowerHealthIfAllDown30(playerPlates);
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "토끼 소환수의 체력이 모두 30% 이하");
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
         else if (AllPlayerSummonOver70Percent(playerPlates))
         {
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "토끼 모든 플레이어 소환수 체력이 70% 이상");
-            attackIndex = getIndexOfLowestHealthSummon(playerPlates);
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+            attackIndex = GetIndexOfLowestHealthSummon(playerPlates);
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
-        else if (getIndexOfNormalAttackCanKill(rabbit, enermyPlates) != -1)
+        else if (GetIndexOfNormalAttackCanKill(rabbit, enermyPlates) != -1)
         {
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "토끼 일반공격으로 처치가능");
-            attackIndex = getIndexOfLowestHealthSummon(playerPlates);
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+            attackIndex = GetIndexOfLowestHealthSummon(playerPlates);
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
         else// 모두 조건이 안맞으면 가장 낮은 체력 아군 힐
         {
-            attackIndex = getIndexOfLowestHealthSummon(playerPlates);
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.getSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+            attackIndex = GetIndexOfLowestHealthSummon(playerPlates);
+            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
 
 
@@ -68,23 +68,23 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             if (i == rabbitIndex) continue; // rabbitIndex는 제외
 
-            Summon currentSummon = playerPlates[i].getCurrentSummon();
+            Summon currentSummon = playerPlates[i].GetCurrentSummon();
             if (currentSummon == null) continue;
 
             for (int j = 0; j < playerPlates.Count; j++)
             {
                 if (i == j || j == rabbitIndex) continue; // 자기 자신과 rabbitIndex는 제외
 
-                Summon compareSummon = playerPlates[j].getCurrentSummon();
+                Summon compareSummon = playerPlates[j].GetCurrentSummon();
                 if (compareSummon == null) continue;
 
                 // 현재 소환수의 체력 비율 계산 (자기 체력 / 비교 소환수 체력)
-                double healthRatio = currentSummon.getNowHP() / compareSummon.getNowHP();
+                double healthRatio = currentSummon.GetNowHP() / compareSummon.GetNowHP();
 
                 // 조건을 만족하는 경우 중에서 가장 낮은 체력을 가진 소환수의 인덱스를 추적
-                if (healthRatio <= 0.7 && currentSummon.getNowHP() < lowestHealth)
+                if (healthRatio <= 0.7 && currentSummon.GetNowHP() < lowestHealth)
                 {
-                    lowestHealth = currentSummon.getNowHP();
+                    lowestHealth = currentSummon.GetNowHP();
                     lowestHealthIndex = i;
                 }
             }
@@ -95,17 +95,17 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 모든 플레이어 소환수 중 체력이 30% 이하인 소환수 중 가장 낮은 체력을 가진 소환수의 인덱스를 반환하는 메소드
-    public int getIndexOfLowerHealthIfAllDown30(List<Plate> playerPlates)
+    public int GetIndexOfLowerHealthIfAllDown30(List<Plate> playerPlates)
     {
         double minHealthRatio = double.MaxValue;
         int indexOfMinHealth = -1;
 
         for (int i = 0; i < playerPlates.Count; i++)
         {
-            Summon playerSummon = playerPlates[i].getCurrentSummon();
+            Summon playerSummon = playerPlates[i].GetCurrentSummon();
             if (playerSummon != null)
             {
-                double healthRatio = playerSummon.getNowHP() / playerSummon.getMaxHP();
+                double healthRatio = playerSummon.GetNowHP() / playerSummon.GetMaxHP();
 
                 // 모든 소환수가 체력 30% 이하인지 확인
                 if (healthRatio > 0.3f)
@@ -130,10 +130,10 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
     {
         foreach (Plate plate in playerPlates)
         {
-            Summon playerSummon = plate.getCurrentSummon();
+            Summon playerSummon = plate.GetCurrentSummon();
             if (playerSummon != null)
             {
-                double healthRatio = playerSummon.getNowHP() / playerSummon.getMaxHP();
+                double healthRatio = playerSummon.GetNowHP() / playerSummon.GetMaxHP();
                 if (healthRatio < 0.7f)
                 {
                     return false; // 하나라도 70% 이하이면 false 반환
@@ -144,17 +144,17 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 가장 낮은 체력을 가진 소환수의 인덱스를 반환하는 메소드
-    public int getIndexOfLowestHealthSummon(List<Plate> playerPlates)
+    public int GetIndexOfLowestHealthSummon(List<Plate> playerPlates)
     {
         double minHealthRatio = double.MaxValue;
         int indexOfMinHealth = -1;
 
         for (int i = 0; i < playerPlates.Count; i++)
         {
-            Summon summon = playerPlates[i].getCurrentSummon();
+            Summon summon = playerPlates[i].GetCurrentSummon();
             if (summon != null)
             {
-                double healthRatio = summon.getNowHP() / summon.getMaxHP();
+                double healthRatio = summon.GetNowHP() / summon.GetMaxHP();
 
                 // 가장 낮은 체력을 가진 소환수의 인덱스 기록
                 if (healthRatio < minHealthRatio)
@@ -169,16 +169,16 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 가장 가까운 적을 공격했을 때 물리칠 수 있는지 확인하는 메소드
-    public int getIndexOfNormalAttackCanKill(Summon rabbit, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon rabbit, List<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
-        int closestIndex = getClosestEnermyIndex(enermyPlates);
+        int closestIndex = GetClosestEnermyIndex(enermyPlates);
 
         if (closestIndex != -1)
         {
-            Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
+            Summon closestEnermySummon = enermyPlates[closestIndex].GetCurrentSummon();
             // 가장 가까운 적의 소환수가 있고, 일반 공격으로 물리칠 수 있는지 확인
-            if (closestEnermySummon != null && rabbit.getAttackPower() >= closestEnermySummon.getNowHP())
+            if (closestEnermySummon != null && rabbit.GetAttackPower() >= closestEnermySummon.GetNowHP())
             {
                 return closestIndex; // 공격으로 물리칠 수 있으면 인덱스 반환
             }
@@ -188,11 +188,11 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
 
-    public int getClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
             if (enermySummon != null)
             {
                 return i; // 가장 가까운(첫 번째로 발견된) 적 소환수의 인덱스 반환

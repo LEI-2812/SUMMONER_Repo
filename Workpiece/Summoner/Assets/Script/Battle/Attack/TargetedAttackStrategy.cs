@@ -35,7 +35,7 @@ public class TargetedAttackStrategy : IAttackStrategy
             return;
         }
 
-        Summon target = targetPlate.getCurrentSummon();
+        Summon target = targetPlate.GetCurrentSummon();
 
         if (target != null)
         {
@@ -47,26 +47,26 @@ public class TargetedAttackStrategy : IAttackStrategy
         }
     }
 
-    public bool isBenefitEffect(TargetedAttackStrategy strategy)
+    public bool IsBenefitEffect(TargetedAttackStrategy strategy)
     {
         return BenefitEffectCheck();
     }
 
     public bool BenefitEffectCheck() => attackEffect.BenefitEffectCheck();
 
-    public double getSpecialDamage()
+    public double GetSpecialDamage()
     {
         return damage;
     }
 
-    public StatusType getStatusType()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int getCooltime() { return cooltime; }
+    public int GetCooltime() { return cooltime; }
 
-    public int getCurrentCooldown() => currentCooldown;
+    public int GetCurrentCooldown() => currentCooldown;
 
     // 쿨타임을 초기화한다. (스킬 사용 후 적용)
     public void ApplyCooldown() => currentCooldown = cooltime;

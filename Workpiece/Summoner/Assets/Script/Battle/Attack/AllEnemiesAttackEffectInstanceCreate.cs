@@ -32,8 +32,8 @@ public static class AllEnemiesAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) 전체 공격합니다.");
-            target.takeDamage(attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage());
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}을(를) 전체 공격합니다.");
+            target.TakeDamage(attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage());
         }
     }
 
@@ -50,10 +50,10 @@ public static class AllEnemiesAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            double poisonDamage = target.getMaxHP() * attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage();
+            double poisonDamage = target.GetMaxHP() * attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage();
             StatusEffect poisonEffect = StatusEffectInstanceCreate.Create(StatusType.Poison, statusTime, poisonDamage);
             target.ApplyStatusEffect(poisonEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 중독 상태를 부여하여 매 턴 {poisonDamage} 데미지를 입힙니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게 중독 상태를 부여하여 매 턴 {poisonDamage} 데미지를 입힙니다.");
         }
     }
 
@@ -70,10 +70,10 @@ public static class AllEnemiesAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            double burnDamage = target.getMaxHP() * attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage();
+            double burnDamage = target.GetMaxHP() * attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage();
             StatusEffect burnEffect = StatusEffectInstanceCreate.Create(StatusType.Burn, statusTime, burnDamage);
             target.ApplyStatusEffect(burnEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 화상을 입혀 매 턴 {burnDamage} 데미지를 입힙니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게 화상을 입혀 매 턴 {burnDamage} 데미지를 입힙니다.");
         }
     }
 
@@ -90,10 +90,10 @@ public static class AllEnemiesAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            double upgradeAttackPower = attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage();
+            double upgradeAttackPower = attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage();
             StatusEffect upgradeEffect = StatusEffectInstanceCreate.Create(StatusType.Upgrade, statusTime, upgradeAttackPower);
             target.ApplyStatusEffect(upgradeEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {(int)(target.getAttackPower() * upgradeAttackPower)} 만큼 상승 시켰습니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게 공격력 {(int)(target.GetAttackPower() * upgradeAttackPower)} 만큼 상승 시켰습니다.");
         }
     }
 
@@ -103,10 +103,10 @@ public static class AllEnemiesAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            double healAmount = target.getMaxHP() * attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage();
+            double healAmount = target.GetMaxHP() * attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage();
             StatusEffect healEffect = StatusEffectInstanceCreate.Create(StatusType.Heal, 0, healAmount);
             target.ApplyStatusEffect(healEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) {healAmount}만큼 치유했습니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}을(를) {healAmount}만큼 치유했습니다.");
         }
     }
 

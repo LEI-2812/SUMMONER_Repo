@@ -71,7 +71,7 @@ namespace Summoner.PlayModeTests
             yield return WaitUntilSceneLoaded(StageSelectSceneName);
 
             MonoBehaviour stageSelectView = FindMonoBehaviour("StageSelectView");
-            Invoke(stageSelectView, "stageLoader", 2);
+            Invoke(stageSelectView, "StageLoader", 2);
             yield return null;
 
             object gameSaveController = GetSingletonInstance("GameSaveController", "instance");
@@ -127,6 +127,44 @@ namespace Summoner.PlayModeTests
             Assert.IsNotNull(FindMonoBehaviour("BattleResultAlertView"), "BattleResultAlertView must exist.");
             Assert.IsNotNull(GetSingletonInstance("GameSaveController", "instance"), "GameSaveController must stay alive after scene load.");
             Assert.IsNotNull(GetSingletonInstance("StageFlowController", "instance"), "StageFlowController must stay alive after scene load.");
+        }
+
+        [UnityTest]
+        public IEnumerator FightScene_PlayerAndEnemyTurns_ExchangeTwoOrThreeTimes()
+        {
+            ResetSaveData();
+            SaveStage(1);
+
+            yield return LoadScene(StartSceneName);
+
+            MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+            Invoke(stageFlowController, "SendFight", 1);
+            yield return WaitUntilSceneLoaded("Fight Screen_1Stage");
+            yield return null;
+
+            MonoBehaviour player = FindMonoBehaviour("Player");
+            MonoBehaviour turnController = FindMonoBehaviour("TurnController");
+
+            AssertTurnState(turnController, "PlayerTurn", 1);
+
+            int clearTurn = (int)Invoke(turnController, "GetClearTurn");
+            int lastExpectedTurnCount = Mathf.Min(4, clearTurn);
+            Assert.GreaterOrEqual(lastExpectedTurnCount, 3, "Fight Screen_1Stage must allow at least two turn exchanges before fail.");
+
+            for (int expectedTurnCount = 2; expectedTurnCount <= lastExpectedTurnCount; expectedTurnCount++)
+            {
+                LogAssert.Expect(LogType.Log, "플레이어 턴 종료");
+                LogAssert.Expect(LogType.Log, "적 턴 시작");
+                LogAssert.Expect(LogType.Log, "리스트를 가져와서 적 대응시작");
+                LogAssert.Expect(LogType.Log, "적 턴 종료");
+                LogAssert.Expect(LogType.Log, "현재 턴: " + expectedTurnCount);
+                LogAssert.Expect(LogType.Log, "플레이어 턴 시작");
+
+                Invoke(player, "PlayerTurnOverBtn");
+                yield return null;
+
+                AssertTurnState(turnController, "PlayerTurn", expectedTurnCount);
+            }
         }
 
         [UnityTest]
@@ -262,6 +300,12 @@ namespace Summoner.PlayModeTests
             FieldInfo fieldInfo = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public);
             Assert.IsNotNull(fieldInfo, target.GetType().Name + "." + fieldName + " field was not found.");
             return (int)fieldInfo.GetValue(target);
+        }
+
+        private static void AssertTurnState(object turnController, string expectedTurn, int expectedTurnCount)
+        {
+            Assert.AreEqual(expectedTurn, Invoke(turnController, "GetCurrentTurn").ToString());
+            Assert.AreEqual(expectedTurnCount, (int)Invoke(turnController, "GetTurnCount"));
         }
 
         private static Button[] GetButtonArray(object target, string fieldName)

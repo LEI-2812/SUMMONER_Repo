@@ -1,57 +1,44 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enermy : Character
 {
-    private List<Plate> enermyPlates; // 적이 사용할 플레이트 목록
-
     [Header("컨트롤러")]
     [SerializeField] private TurnController turnController;
     [SerializeField] private PlateController plateController;
     private EnermyAttackController enermyAttackController;
-    //private EnermyAlgorithm enermyAlgorithm;
-
-    //private int stageNum;
-    //private int currentTurn;
-
     private void Awake()
     {
         enermyAttackController = GetComponent<EnermyAttackController>();
-        //enermyAlgorithm = GetComponent<EnermyAlgorithm>();
     }
 
-    public  void startTurn()
+    public void EnermyTurnStart()
     {
         Debug.Log("적 턴 시작");
-        // 적의 행동을 자동으로 결정함 (예: 플레이어를 공격)
-        takeAction();
+        EnermyActionTake();
     }
 
-    public void takeAction() //여기에 AI로직 작성
+    private void EnermyActionTake()
     {
-        //플레이어의 예측공격 리스트를 가져오고
-        List<AttackPrediction> playerAttackPredictionsList = enermyAttackController.getEnermyAlgorithmController().getPlayerAttackPredictionsList();
+        List<AttackPrediction> playerAttackPredictionsList = enermyAttackController.GetEnermyAlgorithmController().GetPlayerAttackPredictionsList();
         if(playerAttackPredictionsList.Count == 0)
         {
             Debug.Log("예측 리스트가 비어있습니다.");
         }
         Debug.Log("리스트를 가져와서 적 대응시작");
-        //적의 공격 시작
         enermyAttackController.EnermyAttackStart(playerAttackPredictionsList);
 
-        EndTurn();
+        EnermyTurnEnd();
     }
 
-    public void EndTurn()
+    private void EnermyTurnEnd()
     {
         Debug.Log("적 턴 종료");
         turnController.EndTurn();
     }
 
 
-    public EnermyAttackController getEnermyAttackController()
+    public EnermyAttackController GetEnermyAttackController()
     {
         return enermyAttackController;
     }

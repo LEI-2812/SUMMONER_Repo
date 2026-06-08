@@ -38,98 +38,107 @@ public class Plate : MonoBehaviour,
         originalColor = plateImage.color; // 원래 색상 저장
     }
 
-    // 소환수를 플레이트에 배치
     public void SummonPlaceOnPlate(Summon summon, bool isResummon = false)
     {
-        bool isAttack = true;
-        // 이미 소환수가 있어도 재소환이면 진행
-        if (!isInSummon || isResummon)
+        if (!CanPlaceSummon(isResummon))
         {
-            // 기존 소환수가 있으면 파괴 (재소환 시)
-            if (currentSummon != null && isResummon)
-            {
-                isAttack = currentSummon.getIsAttack();
-                // 이전 소환수에서 옵저버 해제
-                currentSummon.RemoveObserver(statePanelScript);
-
-                Destroy(currentSummon.gameObject);
-                Debug.Log("기존 소환수가 파괴되었습니다.");
-            }
-
-            // 소환수 프리팹을 클론하여 생성
-            Summon summonClone = Instantiate(summon, spawnTransform.localPosition ,spawnTransform.rotation);
- 
-            // 클론을 현재 플레이트의 자식으로 배치
-            summonClone.transform.SetParent(this.transform, false);
-            if (spawnTransform.localPosition == null)
-            {
-                summonClone.transform.localPosition = Vector3.zero;  // 필요한 경우 위치 초기화
-            }
-            // 클론된 소환수를 currentSummon으로 설정
-            currentSummon = summonClone;
-            isInSummon = true;
-
-            // 소환수 옵저버로 등록하여 상태 업데이트 가능하게 설정
-            if (statePanelScript != null)
-            {
-                currentSummon.AddObserver(statePanelScript);
-                NotifyObservers();
-            }
-            else
-            {
-                Debug.LogError("statePanelScript가 null임");
-            }
-
-            // 소환수 초기화 로직 호출 (초기 능력치나 스킬 설정)
-            summonClone.summonInitialize();
-
-            // 재소환된 소환수의 공격 상태를 비활성화
-            if (isResummon)
-            {
-                currentSummon.setIsAttack(isAttack); //이전 소환수의 공격상태를 받아온다.
-                statePanelScript.setStatePanel(currentSummon, false);
-            }
-
-            Debug.Log($"소환수 {summonClone.getSummonName()} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
+            return;
         }
-        else
-        {
-            Debug.Log("이미 이 플레이트에 소환수가 있습니다.");
-        }
+
+        bool previousAttackState = GetPreviousAttackState();
+        RemoveCurrentSummonForRedraw(isResummon);
+
+        Summon summonClone = CreateSummonInstance(summon);
+        SetCurrentSummon(summonClone);
+        ConnectCurrentSummonStatePanel();
+        summonClone.SummonInitialize();
+
+        RestoreRedrawSummonState(isResummon, previousAttackState);
+        Debug.Log($"소환수 {summonClone.GetSummonName()} 을 {(isResummon ? "재소환" : "소환")}했습니다.");
     }
 
-    // 소환수가 사망하거나 플레이트에서 떠날 때
     public void RemoveSummon()
     {
-        currentSummon = null; // 소환수 연결 해제
-        isInSummon = false;
+        SetCurrentSummon(null);
         Debug.Log("소환수 제거.");
     }
+
     public void DirectMoveSummon(Summon summon)
     {
         if (summon == null) return;
 
-        // 현재 소환수를 설정 (현재 상태 유지)
-        currentSummon = summon;
-        isInSummon = true;
-
-        // 소환수의 부모를 재설정하여 위치 이동
+        SetCurrentSummon(summon);
         currentSummon.transform.SetParent(this.transform, false);
-        currentSummon.transform.localPosition = Vector3.zero; // 위치 초기화
+        currentSummon.transform.localPosition = Vector3.zero;
 
-        //// 소환수 이미지 설정 (초기화 없이 그대로 사용)
-        //if (summon.getImage() != null)
-        //{
-        //    if (summonImg != null && summon.getImage().sprite != null)
-        //    {
-        //        summonImg.sprite = summon.getImage().sprite;
-        //        Color plateColor = summonImg.color;
-        //        plateColor.a = 1.0f; // 완전 불투명
-        //        summonImg.color = plateColor;
-        //    }
-        //}
+        Debug.Log($"소환수 {summon.GetSummonName()} 이(가) 새 위치로 이동했습니다.");
+    }
 
-        Debug.Log($"소환수 {summon.getSummonName()} 이(가) 새 위치로 이동했습니다.");
+    private bool CanPlaceSummon(bool isResummon)
+    {
+        if (!isInSummon || isResummon)
+        {
+            return true;
+        }
+
+        Debug.Log("이미 이 플레이트에 소환수가 있습니다.");
+        return false;
+    }
+
+    private bool GetPreviousAttackState()
+    {
+        if (currentSummon == null)
+        {
+            return true;
+        }
+
+        return currentSummon.GetIsAttack();
+    }
+
+    private void RemoveCurrentSummonForRedraw(bool isResummon)
+    {
+        if (!isResummon || currentSummon == null)
+        {
+            return;
+        }
+
+        currentSummon.RemoveObserver(statePanelScript);
+        Destroy(currentSummon.gameObject);
+        SetCurrentSummon(null);
+        Debug.Log("기존 소환수가 파괴되었습니다.");
+    }
+
+    private Summon CreateSummonInstance(Summon summon)
+    {
+        Summon summonClone = Instantiate(summon, spawnTransform.localPosition, spawnTransform.rotation);
+        summonClone.transform.SetParent(transform, false);
+        return summonClone;
+    }
+
+    private void ConnectCurrentSummonStatePanel()
+    {
+        if (statePanelScript == null)
+        {
+            Debug.LogError("statePanelScript가 null임");
+            return;
+        }
+
+        currentSummon.AddObserver(statePanelScript);
+        NotifyObservers();
+    }
+
+    private void RestoreRedrawSummonState(bool isResummon, bool previousAttackState)
+    {
+        if (!isResummon)
+        {
+            return;
+        }
+
+        currentSummon.SetIsAttack(previousAttackState);
+        if (statePanelScript != null)
+        {
+            statePanelScript.SetStatePanel(currentSummon, false);
+        }
     }
 
 
@@ -146,141 +155,189 @@ public class Plate : MonoBehaviour,
     }
 
 
-    //마우스 올렸을때 이벤트
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (currentSummon != null) //소환수가 있으면
-        {
-            SetSummonImageTransparency(1.0f); // 투명도를 높여 더 진하게 보이게
-        }
-        if (isInSummon && summonController.IsSummoning()) //소환수가 플레이트에 있고 소환중
-        {
-            Highlight(); // 플레이트 강조
-            SetSummonImageTransparency(1.0f); // 투명도 높이기
-        }
-       
-        //타겟공격을 위한 마우스 효과
-        if (isInSummon && battleController.getIsAttaking()){ //공격중일때
-            if (battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Heal
-                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Upgrade
-                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Shield)//힐이면서 아군플레이트만 강조
-            { //힐일때
-                if (IsPlayerPlate())
-                {
-                    Highlight(); // 플레이트 강조
-                }
-                else
-                {
-                    SetSummonImageTransparency(0.5f); //적 플레이트 투명도 높이기
-                }
-            }
-            else //타겟공격일때
-            {
-                if (IsEnermyPlate())
-                {
-                    Highlight();
-                }
-                else
-                {
-                    SetSummonImageTransparency(0.5f); // 투명도 높이기
-                }
-            }
-        }
-
+        ShowSummonHoverEnter();
+        ShowSummonSelectionHoverEnter();
+        ShowAttackTargetHoverEnter();
     }
 
-
-    //마우스가 벗어날때
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (currentSummon != null && summonController.IsSummoning()) //소환수가 플레이트에 있고 소환중
-        {
-            Unhighlight(); // 강조 해제
-            SetSummonImageTransparency(0.5f); // 다시 흐리게
-        }
-
-        //타겟공격을 위한 마우스 효과
-        if (isInSummon && battleController.getIsAttaking())
-        {
-            Unhighlight();// 플레이트 강조해제
-        }
-
+        ShowSummonSelectionHoverExit();
+        ShowAttackTargetHoverExit();
     }
 
-    //해당 플레이트 클릭시 이벤트
     public void OnPointerClick(PointerEventData eventData)
     {
-        // 플레이어가 재소환 중이라면 상태 패널을 뜨지 않도록 함
-        if (summonController.IsSummoning() && isInSummon)
+        if (TrySelectRedrawPlate())
         {
-            summonController.SelectPlate(this);
-            Unhighlight(); // 강조 해제
-            SetSummonImageTransparency(1.0f); //투명도 되돌리기
+            PlayClickSound();
+            return;
         }
 
-        //상태창 활성화
-        else if (currentSummon != null && !summonController.IsSummoning() && !battleController.getIsAttaking())
+        if (TrySelectAttackTargetPlate())
         {
-            Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.getSummonName());
-            statePanel.SetActive(true); //상태 패널 활성화
-
-            // 현재 plate의 인덱스를 설정 (플레이트 리스트에서 자신을 찾음)
-            int plateIndex = summonController.GetPlayerPlateIndex(this);  // GetPlateIndex 메소드를 통해 자신이 몇 번째인지 확인
-            // BattleController에 선택된 플레이트 인덱스 전달
-            summonController.setPlayerSelectedIndex(plateIndex);
-
-            statePanelScript.setStatePanel(currentSummon, IsEnermyPlate()); // 패널에 소환수 정보 전달
+            PlayClickSound();
+            return;
         }
 
-        // 공격 중에 클릭할 경우
-        if (battleController.getIsAttaking() && isInSummon && battleController)
+        TryOpenSummonStatePanel();
+        PlayClickSound();
+    }
+
+    private void PlayClickSound()
+    {
+        if (clickSound != null)
         {
-            //힐일때
-            if (battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Heal
-                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Upgrade
-                || battleController.getAttakingSummon().getSpecialAttackStrategy()[0].getStatusType() == StatusType.Shield) //힐, 업그레이드, 쉴드
-            {
-                if (IsPlayerPlate())
-                {
-                    // 아군의 플레이트 인덱스를 가져옴
-                    int plateIndex = summonController.GetPlayerPlateIndex(this);
-
-                    if (plateIndex >= 0)
-                    {
-                        // BattleController에 선택된 플레이트 인덱스 전달
-                        summonController.setPlayerSelectedIndex(plateIndex);
-                        Debug.Log($"아군의 플레이트 {plateIndex}가 선택되었습니다.");
-                        Unhighlight(); // 강조 해제
-                    }
-                    else
-                    {
-                        Debug.Log("유효한 아군의 플레이트가 선택되지 않았습니다.");
-                    }
-                }
-
-            }
-            else //데미지 공격일때
-            {
-                if (IsEnermyPlate()) //적 플레이트인지 검사
-                {
-                    // 적의 플레이트 인덱스를 가져옴
-                    int plateIndex = summonController.GetEnermyPlateIndex(this);
-
-                    if (plateIndex >= 0)
-                    {
-                        // BattleController에 선택된 플레이트 인덱스 전달
-                        summonController.setPlayerSelectedIndex(plateIndex);
-                        Debug.Log($"적의 플레이트 {plateIndex}가 선택되었습니다.");
-                        Unhighlight(); // 강조 해제
-                    }
-                    else
-                    {
-                        Debug.Log("유효한 적의 플레이트가 선택되지 않았습니다.");
-                    }
-                }
-            }
+            clickSound.Play();
         }
-        clickSound.Play();
+    }
+
+    private void ShowSummonHoverEnter()
+    {
+        if (currentSummon == null)
+        {
+            return;
+        }
+
+        SetSummonImageTransparency(1.0f);
+    }
+
+    private void ShowSummonSelectionHoverEnter()
+    {
+        if (!isInSummon || !IsSummonSelectionActive())
+        {
+            return;
+        }
+
+        Highlight();
+        SetSummonImageTransparency(1.0f);
+    }
+
+    private void ShowAttackTargetHoverEnter()
+    {
+        if (!BattleAttackActiveOnPlate())
+        {
+            return;
+        }
+
+        if (TryGetAttackTargetPlate(out _, out _))
+        {
+            Highlight();
+            return;
+        }
+
+        SetSummonImageTransparency(0.5f);
+    }
+
+    private void ShowSummonSelectionHoverExit()
+    {
+        if (currentSummon == null || !IsSummonSelectionActive())
+        {
+            return;
+        }
+
+        Unhighlight();
+        SetSummonImageTransparency(0.5f);
+    }
+
+    private void ShowAttackTargetHoverExit()
+    {
+        if (!BattleAttackActiveOnPlate())
+        {
+            return;
+        }
+
+        Unhighlight();
+    }
+
+    private bool TrySelectRedrawPlate()
+    {
+        if (!IsSummonSelectionActive() || !isInSummon)
+        {
+            return false;
+        }
+
+        summonController.SelectPlate(this);
+        Unhighlight();
+        SetSummonImageTransparency(1.0f);
+        return true;
+    }
+
+    private void TryOpenSummonStatePanel()
+    {
+        if (currentSummon == null || IsSummonSelectionActive() || IsBattleAttacking())
+        {
+            return;
+        }
+
+        Debug.Log("클릭된 플레이트의 소환수:" + currentSummon.GetSummonName());
+        statePanel.SetActive(true);
+
+        int plateIndex = GetPlayerPlateIndex();
+        summonController.SetPlayerSelectedIndex(plateIndex);
+        statePanelScript.SetStatePanel(currentSummon, IsCurrentEnermyPlate());
+    }
+
+    private bool TrySelectAttackTargetPlate()
+    {
+        if (!BattleAttackActiveOnPlate())
+        {
+            return false;
+        }
+
+        if (!TryGetAttackTargetPlate(out int plateIndex, out string plateName))
+        {
+            Debug.Log("유효한 플레이트가 선택되지 않았습니다.");
+            return false;
+        }
+
+        summonController.SetPlayerSelectedIndex(plateIndex);
+        Debug.Log($"{plateName}의 플레이트 {plateIndex}가 선택되었습니다.");
+        Unhighlight();
+        return true;
+    }
+
+    private bool TryGetAttackTargetPlate(out int plateIndex, out string plateName)
+    {
+        plateIndex = -1;
+        plateName = "알 수 없음";
+
+        PlateController plateController = GetPlateController();
+        if (plateController == null)
+        {
+            return false;
+        }
+
+        bool targetsPlayerPlate = AttackingSummonTargetsPlayerPlate();
+        return plateController.TryGetAttackTargetPlate(this, targetsPlayerPlate, out plateIndex, out plateName);
+    }
+
+    private bool BattleAttackActiveOnPlate()
+    {
+        return isInSummon && IsBattleAttacking();
+    }
+
+    private bool AttackingSummonTargetsPlayerPlate()
+    {
+        return battleController != null && battleController.DoesCurrentSpecialAttackTargetPlayerPlate();
+    }
+
+    private bool IsSummonSelectionActive()
+    {
+        return summonController != null && summonController.IsSummoning();
+    }
+
+    private bool IsBattleAttacking()
+    {
+        return battleController != null && battleController.GetIsAttacking();
+    }
+
+    private int GetPlayerPlateIndex()
+    {
+        PlateController plateController = GetPlateController();
+        return plateController == null ? -1 : plateController.GetPlayerPlateIndex(this);
     }
 
     // 소환수 이미지 투명도 설정
@@ -295,30 +352,30 @@ public class Plate : MonoBehaviour,
     }
 
     // 현재 플레이트가 적의 플레이트인지 검사하는 메소드
-    public bool IsEnermyPlate()
+    private bool IsCurrentEnermyPlate()
     {
-        PlateController plateController = battleController.GetPlateController(); // summonController를 통해 PlateController에 접근
-        return plateController.getEnermyPlates().Contains(this);
+        PlateController plateController = GetPlateController();
+        return plateController != null && plateController.ContainsEnermyPlate(this);
     }
 
-    // 현재 플레이트가 플레이어의 플레이트인지 검사하는 메소드
-    public bool IsPlayerPlate()
+    private PlateController GetPlateController()
     {
-        PlateController plateController = battleController.GetPlateController(); // summonController를 통해 PlateController에 접근
-        return plateController.getPlayerPlates().Contains(this);
+        return battleController == null ? null : battleController.GetPlateController();
     }
 
 
-    public Summon getCurrentSummon() //플레이트의 소환수를 반환
+    public Summon GetCurrentSummon()
     {
         return currentSummon;
     }
-    public void setCurrentSummon(Summon currentSummon)
+
+    public void SetCurrentSummon(Summon currentSummon)
     {
         this.currentSummon = currentSummon;
         isInSummon = currentSummon != null;
     }
-    public bool getIsInSummon()
+
+    public bool GetIsInSummon()
     {
         return isInSummon;
     }

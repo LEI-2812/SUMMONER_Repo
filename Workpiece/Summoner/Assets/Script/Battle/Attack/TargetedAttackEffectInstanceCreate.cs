@@ -42,11 +42,11 @@ public static class TargetedAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            double healAmount = (int)target.getMaxHP() * 0.3;
+            double healAmount = (int)target.GetMaxHP() * 0.3;
             healAmount = Math.Floor(healAmount);
             StatusEffect healEffect = StatusEffectInstanceCreate.Create(StatusType.Heal, 0, healAmount);
             target.ApplyStatusEffect(healEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) {healAmount}만큼 치유했습니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}을(를) {healAmount}만큼 치유했습니다.");
         }
     }
 
@@ -56,8 +56,8 @@ public static class TargetedAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}을(를) 강력하게 공격합니다.");
-            target.takeDamage(attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage());
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}을(를) 강력하게 공격합니다.");
+            target.TakeDamage(attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage());
         }
     }
 
@@ -74,10 +74,10 @@ public static class TargetedAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            double lifeDrainDamage = target.getMaxHP() * 0.1;
+            double lifeDrainDamage = target.GetMaxHP() * 0.1;
             StatusEffect drainEffect = StatusEffectInstanceCreate.Create(StatusType.LifeDrain, statusTime, lifeDrainDamage, attacker);
             target.ApplyStatusEffect(drainEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 흡혈을 사용하여 {lifeDrainDamage} 데미지를 입히고 회복합니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게 흡혈을 사용하여 {lifeDrainDamage} 데미지를 입히고 회복합니다.");
         }
     }
 
@@ -99,7 +99,7 @@ public static class TargetedAttackEffectInstanceCreate
             target = attacker;
             StatusEffect shieldEffect = StatusEffectInstanceCreate.Create(StatusType.Shield, statusTime, damage);
             target.ApplyStatusEffect(shieldEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 {damage} 만큼 보호막을 부여합니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게 {damage} 만큼 보호막을 부여합니다.");
         }
     }
 
@@ -116,10 +116,10 @@ public static class TargetedAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            double upgradeAttackPower = attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage();
+            double upgradeAttackPower = attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage();
             StatusEffect upgradeEffect = StatusEffectInstanceCreate.Create(StatusType.Upgrade, statusTime, upgradeAttackPower);
             target.ApplyStatusEffect(upgradeEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 공격력 {(int)(target.getAttackPower() * upgradeAttackPower)} 만큼 상승 시켰습니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게 공격력 {(int)(target.GetAttackPower() * upgradeAttackPower)} 만큼 상승 시켰습니다.");
         }
     }
 
@@ -148,11 +148,11 @@ public static class TargetedAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            double curseAttackPower = attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage();
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게  공격력 {curseAttackPower * 100} 만큼 저주를 걸었습니다.");
+            double curseAttackPower = attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage();
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게  공격력 {curseAttackPower * 100} 만큼 저주를 걸었습니다.");
             StatusEffect curseEffect = StatusEffectInstanceCreate.Create(StatusType.Curse, statusTime, curseAttackPower);
             target.ApplyStatusEffect(curseEffect);
-            target.takeDamage(attacker.getSpecialAttackStrategy()[specialAttackArrayIndex].getSpecialDamage());
+            target.TakeDamage(attacker.GetSpecialAttackStrategy()[specialAttackArrayIndex].GetSpecialDamage());
         }
     }
 
@@ -171,7 +171,7 @@ public static class TargetedAttackEffectInstanceCreate
         {
             StatusEffect stunEffect = StatusEffectInstanceCreate.Create(StatusType.Stun, statusTime, 0);
             target.ApplyStatusEffect(stunEffect);
-            Debug.Log($"{attacker.getSummonName()}이(가) {target.getSummonName()}에게 혼란을 적용했습니다.");
+            Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게 혼란을 적용했습니다.");
         }
     }
 

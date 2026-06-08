@@ -7,17 +7,17 @@ using UnityEngine;
 public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 {
 
-    public SummonType getPreSummonType()
+    public SummonType GetPreSummonType()
     {
         return SummonType.Wolf;
     }
 
-    public AttackPrediction getAttackPrediction(Summon wolf, int wolfPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon wolf, int wolfPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
-        int attackIndex = getClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        int attackIndex = GetClosestEnermyIndex(enermyPlates);
+        AttackPrediction attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         if (IsEnermyCountTwoOrMore(enermyPlates)) //적이 2마리 이상인가?
         {
@@ -50,15 +50,15 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "늑대 적이 1마리뿐");
 
-            if (getIndexOfNormalAttackCanKill(wolf, enermyPlates) != -1) //일반 공격으로 몬스터를 물리칠 수 있는가?
+            if (GetIndexOfNormalAttackCanKill(wolf, enermyPlates) != -1) //일반 공격으로 몬스터를 물리칠 수 있는가?
             {
-                attackIndex = getIndexOfNormalAttackCanKill(wolf, enermyPlates);
+                attackIndex = GetIndexOfNormalAttackCanKill(wolf, enermyPlates);
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "늑대 일반 공격으로 처치가능");
             }
             else
             {
                 //일반 공격과 특수공격중 피해를 더 줄 수 있는 공격을 반환했을 때 일반 공격일경우
-                if (getMostDamageAttack(wolf, enermyPlates) == AttackType.NormalAttack)
+                if (GetMostDamageAttack(wolf, enermyPlates) == AttackType.NormalAttack)
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "늑대 일반 공격이 더 많은 피해를 입힘");
                 }
@@ -69,7 +69,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
             }
         }
 
-        attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         return attackPrediction;
     }
 
@@ -81,12 +81,12 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
         foreach (Plate plate in enermyPlates)
         {
-            Summon enermySummon = plate.getCurrentSummon();
+            Summon enermySummon = plate.GetCurrentSummon();
 
             if (enermySummon != null) // 살아있는 소환수만 검사
             {
                 hasAliveEnermy = true; // 살아있는 소환수가 있음
-                double healthRatio = (double)enermySummon.getNowHP() / enermySummon.getMaxHP();
+                double healthRatio = (double)enermySummon.GetNowHP() / enermySummon.GetMaxHP();
 
                 if (healthRatio < 0.5) // 체력 비율이 50% 미만인 경우
                 {
@@ -105,12 +105,12 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
         foreach (Plate plate in enermyPlates)
         {
-            Summon enermySummon = plate.getCurrentSummon();
+            Summon enermySummon = plate.GetCurrentSummon();
 
             if (enermySummon != null)
             {
                 hasAliveEnermy = true; // 살아있는 소환수가 존재함을 확인
-                if (enermySummon.getNowHP() / enermySummon.getMaxHP() > 0.5f)
+                if (enermySummon.GetNowHP() / enermySummon.GetMaxHP() > 0.5f)
                 {
                     return false; // 체력이 50% 초과인 소환수가 있으면 false 반환
                 }
@@ -130,23 +130,23 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon currentSummon = enermyPlates[i].getCurrentSummon();
+            Summon currentSummon = enermyPlates[i].GetCurrentSummon();
             if (currentSummon == null) continue;
 
             for (int j = 0; j < enermyPlates.Count; j++)
             {
                 if (i == j) continue; // 자기 자신은 비교하지 않음
 
-                Summon compareSummon = enermyPlates[j].getCurrentSummon();
+                Summon compareSummon = enermyPlates[j].GetCurrentSummon();
                 if (compareSummon == null) continue;
 
                 // 현재 소환수의 체력 비율 계산 (자기 체력 / 비교 몬스터 체력)
-                double healthRatio = currentSummon.getNowHP() / compareSummon.getNowHP();
+                double healthRatio = currentSummon.GetNowHP() / compareSummon.GetNowHP();
 
                 // 조건을 만족하는 경우 중에서 가장 낮은 체력을 가진 소환수의 인덱스를 추적
-                if (healthRatio <= 0.7 && currentSummon.getNowHP() < lowestHealth)
+                if (healthRatio <= 0.7 && currentSummon.GetNowHP() < lowestHealth)
                 {
-                    lowestHealth = currentSummon.getNowHP();
+                    lowestHealth = currentSummon.GetNowHP();
                     lowestHealthIndex = i;
                 }
             }
@@ -163,7 +163,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         if (enermyPlates.Count < 2) return false;
 
         //가장 가까운 인덱스 반환
-        int closetIndex = getClosestEnermyIndex(attackingSummon, enermyPlates);
+        int closetIndex = GetClosestEnermyIndex(attackingSummon, enermyPlates);
 
         if (closetIndex == lowestIndex)
             return true;
@@ -172,11 +172,11 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 가장 가까운 적 소환수의 인덱스를 반환하는 메소드
-    public int getClosestEnermyIndex(Summon attackingSummon, List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(Summon attackingSummon, List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
             if (enermySummon != null && enermySummon != attackingSummon)
             {
                 return i; // 첫 번째로 만나는 유효한 적 소환수의 인덱스를 반환
@@ -195,7 +195,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null) // Plate에 소환수가 있는지 확인
+            if (plate.GetCurrentSummon() != null) // Plate에 소환수가 있는지 확인
             {
                 enermyCount++;
                 if (enermyCount >= 2) return true; // 2마리 이상이면 true 반환
@@ -212,7 +212,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null) // Plate에 소환수가 있는지 확인
+            if (plate.GetCurrentSummon() != null) // Plate에 소환수가 있는지 확인
             {
                 enermyCount++;
                 if (enermyCount > 1) return false; // 2마리 이상이면 false 반환
@@ -233,17 +233,17 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             for(int i=wolfPlateIndex+1; i< playerPlates.Count; i++)
             {
-                Summon playerSummon = playerPlates[i].getCurrentSummon();
+                Summon playerSummon = playerPlates[i].GetCurrentSummon();
                 // 자기 자신을 제외하고 검사
                 if (playerSummon != null && playerSummon != self)
                 {
                     // 소환수의 사용 가능한 특수 공격들을 가져옴
-                    IAttackStrategy[] availableSpecialAttacks = playerSummon.getAvailableSpecialAttacks();
+                    IAttackStrategy[] availableSpecialAttacks = playerSummon.GetAvailableSpecialAttacks();
 
                     // 사용 가능한 특수 공격 중 특정 상태가 있는지 확인
                     foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
                     {
-                        if (specialAttack != null && specificStatuses.Contains(specialAttack.getStatusType()))
+                        if (specialAttack != null && specificStatuses.Contains(specialAttack.GetStatusType()))
                         {
                             // 특정 상태가 있는 특수 공격이 있다면 true 반환
                             return true;
@@ -256,13 +256,13 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
 
-    public AttackType getMostDamageAttack(Summon attackingSummon, List<Plate> enermyPlates)
+    public AttackType GetMostDamageAttack(Summon attackingSummon, List<Plate> enermyPlates)
     {
-        double maxDamage = attackingSummon.getAttackPower(); // 기본값: 일반 공격의 데미지
+        double maxDamage = attackingSummon.GetAttackPower(); // 기본값: 일반 공격의 데미지
 
 
         // 사용 가능한 특수 공격 목록 가져오기
-        IAttackStrategy[] availableSpecialAttacks = attackingSummon.getAvailableSpecialAttacks();
+        IAttackStrategy[] availableSpecialAttacks = attackingSummon.GetAvailableSpecialAttacks();
 
         // 각 특수 공격 확인
         foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
@@ -272,10 +272,10 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
             // 적 플레이트에 있는 모든 소환수에게 특수 공격 시 예상 피해 축적
             foreach (Plate plate in enermyPlates)
             {
-                Summon enermySummon = plate.getCurrentSummon();
+                Summon enermySummon = plate.GetCurrentSummon();
                 if (enermySummon != null)
                 {
-                    totalSpecialAttackDamage += specialAttack.getSpecialDamage();
+                    totalSpecialAttackDamage += specialAttack.GetSpecialDamage();
                 }
             }
 
@@ -291,16 +291,16 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 가장 가까운 적을 공격했을 때 물리칠 수 있는지 확인하는 메소드
-    public int getIndexOfNormalAttackCanKill(Summon wolf, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon wolf, List<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
-        int closestIndex = getClosestEnermyIndex(enermyPlates);
+        int closestIndex = GetClosestEnermyIndex(enermyPlates);
 
         if (closestIndex != -1)
         {
-            Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
+            Summon closestEnermySummon = enermyPlates[closestIndex].GetCurrentSummon();
             // 가장 가까운 적의 소환수가 있고, 일반 공격으로 물리칠 수 있는지 확인
-            if (closestEnermySummon != null && wolf.getAttackPower() >= closestEnermySummon.getNowHP())
+            if (closestEnermySummon != null && wolf.GetAttackPower() >= closestEnermySummon.GetNowHP())
             {
                 return closestIndex; // 공격으로 물리칠 수 있으면 인덱스 반환
             }
@@ -310,11 +310,11 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
 
-    public int getClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
             if (enermySummon != null)
             {
                 return i; // 가장 가까운(첫 번째로 발견된) 적 소환수의 인덱스 반환

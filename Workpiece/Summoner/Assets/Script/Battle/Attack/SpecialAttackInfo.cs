@@ -18,20 +18,20 @@ public class SpecialAttackInfo
     }
 
 
-    public IAttackStrategy getAttackInfoStrategy()
+    public IAttackStrategy GetAttackInfoStrategy()
     {
         return attackStrategy;
     }
-    public void setAttackInfoStrategy(IAttackStrategy strategy)
+    public void SetAttackInfoStrategy(IAttackStrategy strategy)
     {
         this.attackStrategy = strategy;
     }
 
-    public int getAttackInfoIndex()
+    public int GetAttackInfoIndex()
     {
         return index;
     }
-    public void setAttackInfoIndex(int index)
+    public void SetAttackInfoIndex(int index)
     {
         this.index = index;
     }

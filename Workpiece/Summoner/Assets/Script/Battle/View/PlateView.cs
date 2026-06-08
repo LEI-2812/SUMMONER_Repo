@@ -94,6 +94,6 @@ public class PlateView : MonoBehaviour
 
     private bool HasSummon(Plate plate)
     {
-        return plate != null && plate.getCurrentSummon() != null;
+        return plate != null && plate.GetCurrentSummon() != null;
     }
 }

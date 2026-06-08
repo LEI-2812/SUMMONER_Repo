@@ -109,6 +109,40 @@ namespace Summoner.EditModeTests
         }
 
         [Test]
+        public void Player_DelegatesSpecialAttackTargetTypeToBattleController()
+        {
+            string playerText = File.ReadAllText("Assets/Script/Battle/Unit/Player.cs");
+            string battleText = File.ReadAllText("Assets/Script/Battle/Flow/BattleController.cs");
+
+            StringAssert.Contains("battleController.HasCurrentSpecialAttackInfo()", playerText);
+            StringAssert.Contains("battleController.GetCurrentSpecialAttackInfoIndex()", playerText);
+            StringAssert.Contains("battleController.DoesCurrentSpecialAttackTargetPlayerPlate()", playerText);
+            Assert.IsFalse(playerText.Contains("PlayerTargetSpecialAttackCheck"), "Player should not keep its own target status type check.");
+            Assert.IsFalse(playerText.Contains("StatusType.Heal"), "Player should not decide benefit target status types directly.");
+            Assert.IsFalse(playerText.Contains("StatusType.Upgrade"), "Player should not decide benefit target status types directly.");
+            Assert.IsFalse(playerText.Contains("StatusType.Shield"), "Player should not decide benefit target status types directly.");
+
+            StringAssert.Contains("public bool HasCurrentSpecialAttackInfo()", battleText);
+            StringAssert.Contains("public SpecialAttackInfo GetCurrentSpecialAttackInfo()", battleText);
+            StringAssert.Contains("public int GetCurrentSpecialAttackInfoIndex()", battleText);
+            StringAssert.Contains("public bool DoesCurrentSpecialAttackTargetPlayerPlate()", battleText);
+        }
+
+        [Test]
+        public void Player_UsesSingleTargetPlateSelectionWaitFlow()
+        {
+            string playerText = File.ReadAllText("Assets/Script/Battle/Unit/Player.cs");
+
+            StringAssert.Contains("return WaitForTargetPlateSelection(", playerText);
+            StringAssert.Contains("private IEnumerator WaitForTargetPlateSelection(", playerText);
+            StringAssert.Contains("private bool MousePositionInsidePlates(List<Plate> targetPlates)", playerText);
+            StringAssert.Contains("plateController.GetEnermyPlates(),", playerText);
+            StringAssert.Contains("plateController.GetPlayerPlates(),", playerText);
+            StringAssert.Contains("plateController.DownTransparencyForWhoPlate(downTransparencyForPlayerPlate);", playerText);
+            Assert.AreEqual(1, CountOccurrences(playerText, "foreach (var plate in targetPlates)"), "Player should keep one shared mouse-position plate loop.");
+        }
+
+        [Test]
         public void FightScenes_UseRedrawButtonHandlerInUnityEvents()
         {
             string[] scenePaths =
@@ -135,13 +169,13 @@ namespace Summoner.EditModeTests
         public void Plate_SetCurrentSummonSynchronizesOccupancy()
         {
             string text = File.ReadAllText("Assets/Script/Battle/Unit/Plate.cs");
-            int methodIndex = text.IndexOf("public void setCurrentSummon(Summon currentSummon)");
+            int methodIndex = text.IndexOf("public void SetCurrentSummon(Summon currentSummon)");
             int assignIndex = text.IndexOf("this.currentSummon = currentSummon;", methodIndex);
             int occupancyIndex = text.IndexOf("isInSummon = currentSummon != null;", methodIndex);
 
-            Assert.GreaterOrEqual(methodIndex, 0, "setCurrentSummon method should exist.");
-            Assert.Greater(assignIndex, methodIndex, "setCurrentSummon should assign the summon reference.");
-            Assert.Greater(occupancyIndex, assignIndex, "setCurrentSummon should synchronize occupancy after assigning the summon.");
+            Assert.GreaterOrEqual(methodIndex, 0, "SetCurrentSummon method should exist.");
+            Assert.Greater(assignIndex, methodIndex, "SetCurrentSummon should assign the summon reference.");
+            Assert.Greater(occupancyIndex, assignIndex, "SetCurrentSummon should synchronize occupancy after assigning the summon.");
         }
 
         [Test]
@@ -149,14 +183,12 @@ namespace Summoner.EditModeTests
         {
             string text = File.ReadAllText("Assets/Script/Battle/Unit/Plate.cs");
             int methodIndex = text.IndexOf("public void RemoveSummon()");
-            int clearSummonIndex = text.IndexOf("currentSummon = null;", methodIndex);
-            int clearOccupancyIndex = text.IndexOf("isInSummon = false;", methodIndex);
+            int clearSummonIndex = text.IndexOf("SetCurrentSummon(null);", methodIndex);
             int directMoveIndex = text.IndexOf("public void DirectMoveSummon", methodIndex);
             string methodBody = text.Substring(methodIndex, directMoveIndex - methodIndex);
 
             Assert.GreaterOrEqual(methodIndex, 0, "RemoveSummon method should exist.");
-            Assert.Greater(clearSummonIndex, methodIndex, "RemoveSummon should clear the summon reference.");
-            Assert.Greater(clearOccupancyIndex, clearSummonIndex, "RemoveSummon should clear occupancy after clearing the summon reference.");
+            Assert.Greater(clearSummonIndex, methodIndex, "RemoveSummon should clear slot state through SetCurrentSummon.");
             Assert.IsFalse(methodBody.Contains("if (isInSummon)"), "RemoveSummon should always clear slot state, even if occupancy was already inconsistent.");
         }
 
@@ -170,7 +202,7 @@ namespace Summoner.EditModeTests
             int upperGuardIndex = text.IndexOf("selectedPlateIndex >= targetPlates.Count", methodIndex);
             int accessIndex = text.IndexOf("targetPlates[selectedPlateIndex]", methodIndex);
             int targetPlateNullGuardIndex = text.IndexOf("targetPlate == null", methodIndex);
-            int summonAccessIndex = text.IndexOf("targetPlate.getCurrentSummon()", methodIndex);
+            int summonAccessIndex = text.IndexOf("targetPlate.GetCurrentSummon()", methodIndex);
 
             Assert.GreaterOrEqual(methodIndex, 0, "TargetedAttackStrategy.Attack method should exist.");
             Assert.Greater(nullGuardIndex, methodIndex, "TargetedAttackStrategy should guard null target plate lists.");
@@ -192,7 +224,7 @@ namespace Summoner.EditModeTests
             int areaNullGuardIndex = areaText.IndexOf("targetPlates == null", areaMethodIndex);
             int areaLoopIndex = areaText.IndexOf("foreach (var plate in targetPlates)", areaMethodIndex);
             int areaPlateGuardIndex = areaText.IndexOf("plate == null", areaMethodIndex);
-            int areaSummonAccessIndex = areaText.IndexOf("plate.getCurrentSummon()", areaMethodIndex);
+            int areaSummonAccessIndex = areaText.IndexOf("plate.GetCurrentSummon()", areaMethodIndex);
 
             Assert.GreaterOrEqual(areaMethodIndex, 0, "AttackAllEnemiesStrategy.Attack method should exist.");
             Assert.Greater(areaNullGuardIndex, areaMethodIndex, "AttackAllEnemiesStrategy should guard null target plate lists.");
@@ -207,7 +239,7 @@ namespace Summoner.EditModeTests
             int closestHelperIndex = closestText.IndexOf("private Summon GetClosestEnemySummon(List<Plate> targetPlates)");
             int helperNullGuardIndex = closestText.IndexOf("targetPlates == null", closestHelperIndex);
             int helperPlateGuardIndex = closestText.IndexOf("targetPlates[i] == null", closestHelperIndex);
-            int helperSummonAccessIndex = closestText.IndexOf("targetPlates[i].getCurrentSummon()", closestHelperIndex);
+            int helperSummonAccessIndex = closestText.IndexOf("targetPlates[i].GetCurrentSummon()", closestHelperIndex);
 
             Assert.GreaterOrEqual(closestMethodIndex, 0, "ClosestEnemyAttackStrategy.Attack method should exist.");
             Assert.Greater(closestNullGuardIndex, closestMethodIndex, "ClosestEnemyAttackStrategy should guard null target plate lists.");
@@ -224,7 +256,7 @@ namespace Summoner.EditModeTests
 
             StringAssert.Contains("if (specialAttackStrategies == null)", text);
             StringAssert.Contains("return availableSpecialAttacks.ToArray();", text);
-            StringAssert.Contains("public int getSpecialAttackCount() => specialAttackStrategies == null ? 0 : specialAttackStrategies.Length;", text);
+            StringAssert.Contains("public int GetSpecialAttackCount() => specialAttackStrategies == null ? 0 : specialAttackStrategies.Length;", text);
         }
 
         [Test]
@@ -270,7 +302,7 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("plate.SetSummonImageTransparency(0.5f)", text);
             StringAssert.Contains("plate.SetSummonImageTransparency(1.0f)", text);
             StringAssert.Contains("private bool HasSummon(Plate plate)", text);
-            StringAssert.Contains("plate != null && plate.getCurrentSummon() != null", text);
+            StringAssert.Contains("plate != null && plate.GetCurrentSummon() != null", text);
         }
 
         [Test]
@@ -293,16 +325,16 @@ namespace Summoner.EditModeTests
         public void PlateController_ClosestEnemyPlateQueryUsesEnemyPlates()
         {
             string text = File.ReadAllText("Assets/Script/Battle/PlateControl/PlateController.cs");
-            int methodIndex = text.IndexOf("public int getClosestEnermyPlatesIndex(Summon attackingSummon)");
-            int nextMethodIndex = text.IndexOf("public int getPlayerSummonCount()", methodIndex);
+            int methodIndex = text.IndexOf("public int GetClosestEnermyPlateIndexExcept(Summon attackingSummon)");
+            int nextMethodIndex = text.IndexOf("public int GetPlayerSummonCount()", methodIndex);
 
-            Assert.GreaterOrEqual(methodIndex, 0, "getClosestEnermyPlatesIndex method should exist.");
-            Assert.Greater(nextMethodIndex, methodIndex, "getClosestEnermyPlatesIndex should be followed by getPlayerSummonCount.");
+            Assert.GreaterOrEqual(methodIndex, 0, "GetClosestEnermyPlateIndexExcept method should exist.");
+            Assert.Greater(nextMethodIndex, methodIndex, "GetClosestEnermyPlateIndexExcept should be followed by GetPlayerSummonCount.");
 
             string methodBody = text.Substring(methodIndex, nextMethodIndex - methodIndex);
-            StringAssert.Contains("i < enermyPlates.Count", methodBody);
-            StringAssert.Contains("enermyPlates[i].getCurrentSummon()", methodBody);
-            Assert.IsFalse(methodBody.Contains("playerPlates[i].getCurrentSummon()"), "Enemy plate query should not read player plates.");
+            StringAssert.Contains("return FindClosestOccupiedPlateIndex(enermyPlates, attackingSummon);", methodBody);
+            StringAssert.Contains("targetPlates[i].GetCurrentSummon()", text);
+            Assert.IsFalse(methodBody.Contains("playerPlates[i].GetCurrentSummon()"), "Enemy plate query should not read player plates.");
         }
 
         [Test]
@@ -310,9 +342,65 @@ namespace Summoner.EditModeTests
         {
             string text = File.ReadAllText("Assets/Script/Battle/Prediction/PlayerAttackPrediction.cs");
 
-            StringAssert.Contains("int attackIndex = plateController.getClosestEnermyPlatesIndex(summon);", text);
+            StringAssert.Contains("int attackIndex = plateController.GetClosestEnermyPlateIndexExcept(summon);", text);
             StringAssert.Contains("enermyPlates, //타겟 플레이트", text);
-            Assert.IsFalse(text.Contains("int attackIndex = plateController.getClosestPlayerPlateIndex();"), "Player attack prediction should not target a player plate index.");
+            Assert.IsFalse(text.Contains("int attackIndex = plateController.GetClosestPlayerPlateIndex();"), "Player attack prediction should not target a player plate index.");
+        }
+
+        [Test]
+        public void Plate_DelegatesAttackTargetDecisionToPlateController()
+        {
+            string plateText = File.ReadAllText("Assets/Script/Battle/Unit/Plate.cs");
+            string controllerText = File.ReadAllText("Assets/Script/Battle/PlateControl/PlateController.cs");
+
+            StringAssert.Contains("private bool TrySelectAttackTargetPlate()", plateText);
+            StringAssert.Contains("private bool TryGetAttackTargetPlate(out int plateIndex, out string plateName)", plateText);
+            StringAssert.Contains("TryGetAttackTargetPlate(out _, out _)", plateText);
+            StringAssert.Contains("plateController.TryGetAttackTargetPlate(this, targetsPlayerPlate, out plateIndex, out plateName)", plateText);
+            StringAssert.Contains("Debug.Log($\"{plateName}의 플레이트 {plateIndex}가 선택되었습니다.\");", plateText);
+            Assert.IsFalse(plateText.Contains("plateController.CanSelectAttackTargetPlate(this, AttackingSummonTargetsPlayerPlate())"), "Plate should use one attack target lookup path for hover and click.");
+
+            StringAssert.Contains("public bool CanSelectAttackTargetPlate(Plate plate, bool targetsPlayerPlate)", controllerText);
+            StringAssert.Contains("public int GetAttackTargetPlateIndex(Plate plate, bool targetsPlayerPlate)", controllerText);
+            StringAssert.Contains("public string GetAttackTargetPlateName(bool targetsPlayerPlate)", controllerText);
+            StringAssert.Contains("public bool TryGetAttackTargetPlate(", controllerText);
+            StringAssert.Contains("out int plateIndex", controllerText);
+            StringAssert.Contains("out string plateName", controllerText);
+            StringAssert.Contains("? ContainsPlayerPlate(plate)", controllerText);
+            StringAssert.Contains(": ContainsEnermyPlate(plate)", controllerText);
+        }
+
+        [Test]
+        public void Plate_DelegatesCurrentSpecialAttackTargetTypeToBattleController()
+        {
+            string plateText = File.ReadAllText("Assets/Script/Battle/Unit/Plate.cs");
+            string battleText = File.ReadAllText("Assets/Script/Battle/Flow/BattleController.cs");
+
+            StringAssert.Contains("battleController.DoesCurrentSpecialAttackTargetPlayerPlate()", plateText);
+            Assert.IsFalse(plateText.Contains("StatusType.Heal"), "Plate should not decide benefit target status types directly.");
+            Assert.IsFalse(plateText.Contains("StatusType.Upgrade"), "Plate should not decide benefit target status types directly.");
+            Assert.IsFalse(plateText.Contains("StatusType.Shield"), "Plate should not decide benefit target status types directly.");
+
+            StringAssert.Contains("public bool DoesCurrentSpecialAttackTargetPlayerPlate()", battleText);
+            StringAssert.Contains("public SpecialAttackInfo GetCurrentSpecialAttackInfo()", battleText);
+            StringAssert.Contains("private bool DoesAttackStrategyTargetPlayerPlate(IAttackStrategy attackStrategy)", battleText);
+            StringAssert.Contains("StatusType.Heal", battleText);
+            StringAssert.Contains("StatusType.Upgrade", battleText);
+            StringAssert.Contains("StatusType.Shield", battleText);
+        }
+
+        private static int CountOccurrences(string text, string value)
+        {
+            int count = 0;
+            int index = 0;
+
+            while ((index = text.IndexOf(value, index)) >= 0)
+            {
+                count++;
+                index += value.Length;
+            }
+
+            return count;
         }
     }
 }

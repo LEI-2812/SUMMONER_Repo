@@ -21,62 +21,26 @@ public class PlateController : MonoBehaviour
     }
 
     // 플레이어의 플레이트에 있는 모든 소환수들을 반환하는 메소드
-    public List<Summon> getPlayerSummons()
+    public List<Summon> GetPlayerSummons()
     {
-        List<Summon> playerSummons = new List<Summon>();
-        foreach (Plate plate in playerPlates)
-        {
-            Summon summon = plate.getCurrentSummon();
-            if (summon != null)
-            {
-                playerSummons.Add(summon);
-            }
-        }
-        return playerSummons;
+        return GetSummonsFromPlates(playerPlates);
     }
 
     // 적의 플레이트에 있는 모든 소환수들을 반환하는 메소드
-    public List<Summon> getEnermySummons()
+    public List<Summon> GetEnermySummons()
     {
-        List<Summon> enermySummons = new List<Summon>();
-        foreach (Plate plate in enermyPlates)
-        {
-            Summon summon = plate.getCurrentSummon();
-            if (summon != null)
-            {
-                enermySummons.Add(summon);
-            }
-        }
-        return enermySummons;
+        return GetSummonsFromPlates(enermyPlates);
     }
 
     //적 플레이트에 소환수가 존재하는지
     public bool IsEnermyPlateClear()
     {
-        foreach (Plate plate in enermyPlates) //플레이트를 순환
-        {
-            Summon summon = plate.getCurrentSummon(); //플레이트마다 소환수를 가져온다
-            if (summon != null) //만약 소환수가 하나라도 있다면 true를 반환
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return ArePlatesClear(enermyPlates);
     }
 
     public bool IsPlayerPlateClear()
     {
-        foreach (Plate plate in playerPlates) //플레이트를 순환
-        {
-            Summon summon = plate.getCurrentSummon(); //플레이트마다 소환수를 가져온다
-            if (summon != null) //만약 소환수가 하나라도 있다면 true를 반환
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return ArePlatesClear(playerPlates);
     }
 
     // 적 소환수의 빈 플레이트를 앞당기는 로직
@@ -86,7 +50,7 @@ public class PlateController : MonoBehaviour
 
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon summon = enermyPlates[i].getCurrentSummon();
+            Summon summon = enermyPlates[i].GetCurrentSummon();
             if (summon != null)
             {
                 // 만약 현재 인덱스와 nextAvailableIndex가 다르면 소환수를 앞으로 옮긴다.
@@ -184,76 +148,29 @@ public class PlateController : MonoBehaviour
         plateView.ShowPlates(plates);
     }
 
-    public int getClosestPlayerPlatesIndex(Summon attackingSummon) //플레이어 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
+    public int GetClosestPlayerPlateIndexExcept(Summon attackingSummon) //플레이어 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
     {
-        for (int i = 0; i < playerPlates.Count; i++)
-        {
-            Summon currentSummon = playerPlates[i].getCurrentSummon();
-            if (currentSummon != null && currentSummon != attackingSummon) // 현재 소환수가 존재하고, 공격하는 소환수와 같지 않은 경우
-            {
-                return i;
-            }
-        }
-
-        return -1; // 공격할 소환수가 없으면 -1 반환
+        return FindClosestOccupiedPlateIndex(playerPlates, attackingSummon);
     }
 
-    public int getClosestPlayerPlateIndex()
+    public int GetClosestPlayerPlateIndex()
     {
-        List<Plate> playerPlates = getPlayerPlates(); // playerPlates 리스트를 가져옴
-        for (int i = 0; i < playerPlates.Count; i++)
-        {
-            Summon playerSummon = playerPlates[i].getCurrentSummon();
-            if (playerSummon != null)
-            {
-                return i; // 가장 가까운(첫 번째로 발견된) 소환수의 인덱스 반환
-            }
-        }
-        return -1; // 소환수가 없으면 -1 반환
+        return FindClosestOccupiedPlateIndex(playerPlates, null);
     }
 
-    public int getClosestEnermyPlatesIndex(Summon attackingSummon) //적 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
+    public int GetClosestEnermyPlateIndexExcept(Summon attackingSummon) //적 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
     {
-        for (int i = 0; i < enermyPlates.Count; i++)
-        {
-            Summon currentSummon = enermyPlates[i].getCurrentSummon();
-            if (currentSummon != null && currentSummon != attackingSummon) // 현재 소환수가 존재하고, 공격하는 소환수와 같지 않은 경우
-            {
-                return i;
-            }
-        }
-
-        return -1; // 공격할 소환수가 없으면 -1 반환
+        return FindClosestOccupiedPlateIndex(enermyPlates, attackingSummon);
     }
 
-    public int getPlayerSummonCount()
+    public int GetPlayerSummonCount()
     {
-        int summonCount = 0;
-
-        foreach (Plate plate in playerPlates)
-        {
-            if (plate.getCurrentSummon() != null) // 플레이트에 소환수가 있는 경우만 카운트
-            {
-                summonCount++;
-            }
-        }
-
-        return summonCount;
+        return CountSummonsOnPlates(playerPlates);
     }
 
-    public int getEnermySummonCount()
+    public int GetEnermySummonCount()
     {
-        int summonCount = 0;
-
-        foreach (Plate plate in enermyPlates)
-        {
-            if (plate.getCurrentSummon() != null) // 플레이트에 소환수가 있는 경우만 카운트
-            {
-                summonCount++;
-            }
-        }
-
-        return summonCount;
+        return CountSummonsOnPlates(enermyPlates);
     }
 
 
@@ -281,40 +198,86 @@ public class PlateController : MonoBehaviour
 
 
     // 아군 플레이트 중 가장 체력이 낮은 소환수의 인덱스를 반환하는 메소드
-    public int getLowestHealthPlayerPlateIndex()
+    public int GetLowestHealthPlayerPlateIndex()
     {
-        int lowestHealthIndex = -1;
-        double lowestHealth = double.MaxValue;
-
-        for (int i = 0; i < playerPlates.Count; i++)
-        {
-            Summon currentSummon = playerPlates[i].getCurrentSummon();
-            if (currentSummon != null)
-            {
-                double currentHealth = currentSummon.getNowHP();
-                if (currentHealth < lowestHealth)
-                {
-                    lowestHealth = currentHealth;
-                    lowestHealthIndex = i;
-                }
-            }
-        }
-
-        return lowestHealthIndex;
+        return FindLowestHealthPlateIndex(playerPlates);
     }
 
     // 적 플레이트 중 가장 체력이 낮은 소환수의 인덱스를 반환하는 메소드
-    public int getLowestHealthEnermyPlateIndex()
+    public int GetLowestHealthEnermyPlateIndex()
+    {
+        return FindLowestHealthPlateIndex(enermyPlates);
+    }
+
+    private List<Summon> GetSummonsFromPlates(List<Plate> targetPlates)
+    {
+        List<Summon> summons = new List<Summon>();
+
+        foreach (Plate plate in targetPlates)
+        {
+            Summon summon = plate.GetCurrentSummon();
+            if (summon != null)
+            {
+                summons.Add(summon);
+            }
+        }
+
+        return summons;
+    }
+
+    private bool ArePlatesClear(List<Plate> targetPlates)
+    {
+        foreach (Plate plate in targetPlates)
+        {
+            if (plate.GetCurrentSummon() != null)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private int FindClosestOccupiedPlateIndex(List<Plate> targetPlates, Summon exceptSummon)
+    {
+        for (int i = 0; i < targetPlates.Count; i++)
+        {
+            Summon currentSummon = targetPlates[i].GetCurrentSummon();
+            if (currentSummon != null && currentSummon != exceptSummon)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private int CountSummonsOnPlates(List<Plate> targetPlates)
+    {
+        int summonCount = 0;
+
+        foreach (Plate plate in targetPlates)
+        {
+            if (plate.GetCurrentSummon() != null)
+            {
+                summonCount++;
+            }
+        }
+
+        return summonCount;
+    }
+
+    private int FindLowestHealthPlateIndex(List<Plate> targetPlates)
     {
         int lowestHealthIndex = -1;
         double lowestHealth = double.MaxValue;
 
-        for (int i = 0; i < enermyPlates.Count; i++)
+        for (int i = 0; i < targetPlates.Count; i++)
         {
-            Summon currentSummon = enermyPlates[i].getCurrentSummon();
+            Summon currentSummon = targetPlates[i].GetCurrentSummon();
             if (currentSummon != null)
             {
-                double currentHealth = currentSummon.getNowHP();
+                double currentHealth = currentSummon.GetNowHP();
                 if (currentHealth < lowestHealth)
                 {
                     lowestHealth = currentHealth;
@@ -349,22 +312,74 @@ public class PlateController : MonoBehaviour
         }
     }
 
-    public List<Plate> getPlayerPlates()
+    public List<Plate> GetPlayerPlates()
     {
         return playerPlates;
     }
-    public List<Plate> getEnermyPlates()
+
+    public bool ContainsPlayerPlate(Plate plate)
+    {
+        return playerPlates != null && playerPlates.Contains(plate);
+    }
+
+    public bool ContainsEnermyPlate(Plate plate)
+    {
+        return enermyPlates != null && enermyPlates.Contains(plate);
+    }
+
+    public int GetPlayerPlateIndex(Plate plate)
+    {
+        return playerPlates == null ? -1 : playerPlates.IndexOf(plate);
+    }
+
+    public int GetEnermyPlateIndex(Plate plate)
+    {
+        return enermyPlates == null ? -1 : enermyPlates.IndexOf(plate);
+    }
+
+    public bool CanSelectAttackTargetPlate(Plate plate, bool targetsPlayerPlate)
+    {
+        return targetsPlayerPlate
+            ? ContainsPlayerPlate(plate)
+            : ContainsEnermyPlate(plate);
+    }
+
+    public int GetAttackTargetPlateIndex(Plate plate, bool targetsPlayerPlate)
+    {
+        return targetsPlayerPlate
+            ? GetPlayerPlateIndex(plate)
+            : GetEnermyPlateIndex(plate);
+    }
+
+    public string GetAttackTargetPlateName(bool targetsPlayerPlate)
+    {
+        return targetsPlayerPlate ? "아군" : "적";
+    }
+
+    public bool TryGetAttackTargetPlate(
+        Plate plate,
+        bool targetsPlayerPlate,
+        out int plateIndex,
+        out string plateName)
+    {
+        plateIndex = GetAttackTargetPlateIndex(plate, targetsPlayerPlate);
+        plateName = GetAttackTargetPlateName(targetsPlayerPlate);
+
+        return plateIndex >= 0;
+    }
+
+    public List<Plate> GetEnermyPlates()
     {
         return enermyPlates;
     }
     // 플레이어 플레이트 리스트를 설정하는 메서드
-    public void setPlayerPlates(List<Plate> plates)
+    public void SetPlayerPlates(List<Plate> plates)
     {
         playerPlates = plates;
     }
 
     // 적 플레이트 리스트를 설정하는 메서드
-    public void setEnermyPlates(List<Plate> plates)
+    public void SetEnermyPlates(List<Plate> plates)
     {
         enermyPlates = plates;
     }

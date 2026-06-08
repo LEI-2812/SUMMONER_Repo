@@ -5,32 +5,32 @@ using UnityEngine;
 public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 {
 
-    public SummonType getPreSummonType()
+    public SummonType GetPreSummonType()
     {
         return SummonType.Snake;
     }
 
     //뱀 예측공격
-    public AttackPrediction getAttackPrediction(Summon snake, int snakePlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon snake, int snakePlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
-        int attackIndex = getClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        int attackIndex = GetClosestEnermyIndex(enermyPlates);
+        AttackPrediction attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         if (IsEnermyAlreadyPoisoned(enermyPlates))
         { //몬스터들이 이미 중독 상태인가?
             attackProbability = new AttackProbability(100f, 0f);
-            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.getAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
+            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.GetAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
         }
-        else if (!canUseSpecialAttack(snake)) //특수공격을 사용할 수 있는가?
+        else if (!CanUseSpecialAttack(snake)) //특수공격을 사용할 수 있는가?
         {
             attackProbability = new AttackProbability(100f, 0f);
-            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.getAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
+            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.GetAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
         }
         else
         {
-            if (isEnermyCountOverTwo(enermyPlates)) //적이 2마리 이상인가?
+            if (IsEnermyCountOverTwo(enermyPlates)) //적이 2마리 이상인가?
             {
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적이 2마리 이상");
                 if (AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
@@ -41,7 +41,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 적의 체력이 모두 50%가 아님");
                 }
-                if (hasMonsterWithMoreThan3Attacks(enermyPlates)) //몬스터 중 공격의 개수가 3개 이상인 몹이 존재하는가?
+                if (HasMonsterWithMoreThan3Attacks(enermyPlates)) //몬스터 중 공격의 개수가 3개 이상인 몹이 존재하는가?
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 몬스터중 공격이 3개 이상인 몹이 있는가");
                 }
@@ -53,12 +53,12 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 50% 이상");
                 }
-                if (getIndexOfNormalAttackCanKill(snake, enermyPlates) != -1) //일반 공격 시 몬스터를 물리칠 수 있는가?
+                if (GetIndexOfNormalAttackCanKill(snake, enermyPlates) != -1) //일반 공격 시 몬스터를 물리칠 수 있는가?
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 일반 공격시 처치가능");
                 }
             }
-            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.getSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         }
 
         return attackPrediction;
@@ -71,8 +71,8 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
     {
         foreach (Plate plate in enermyPlates)
         {
-            Summon enermySummon = plate.getCurrentSummon();
-            if (enermySummon != null && enermySummon.getAllStatusTypes().Contains(StatusType.Poison))
+            Summon enermySummon = plate.GetCurrentSummon();
+            if (enermySummon != null && enermySummon.GetAllStatusTypes().Contains(StatusType.Poison))
             {
                 return true;
             }
@@ -82,9 +82,9 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 특수 공격을 사용할 수 있는지 확인하는 메소드
-    public bool canUseSpecialAttack(Summon snake)
+    public bool CanUseSpecialAttack(Summon snake)
     {
-        var availableSpecialAttacks = snake.getAvailableSpecialAttacks();
+        var availableSpecialAttacks = snake.GetAvailableSpecialAttacks();
         return availableSpecialAttacks.Length > 0;
     }
 
@@ -95,10 +95,10 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
     {
         foreach (Plate plate in enermyPlates)
         {
-            Summon enermySummon = plate.getCurrentSummon();
+            Summon enermySummon = plate.GetCurrentSummon();
             if (enermySummon != null)
             {
-                double healthRatio = enermySummon.getNowHP() / enermySummon.getMaxHP();
+                double healthRatio = enermySummon.GetNowHP() / enermySummon.GetMaxHP();
                 if (healthRatio < 0.5)
                 {
                     return false; // 하나라도 50% 이하이면 false 반환
@@ -111,12 +111,12 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 적 중에 공격 개수가 4개 이상인 소환수가 있는지 확인하는 메소드
-    public bool hasMonsterWithMoreThan3Attacks(List<Plate> enermyPlates)
+    public bool HasMonsterWithMoreThan3Attacks(List<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
-            Summon enermySummon = plate.getCurrentSummon();
-            if (enermySummon != null && enermySummon.getSpecialAttackCount() >= 3)
+            Summon enermySummon = plate.GetCurrentSummon();
+            if (enermySummon != null && enermySummon.GetSpecialAttackCount() >= 3)
             {
                 return true;
             }
@@ -126,12 +126,12 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 적이 2마리 이상 있는지 확인하는 메소드
-    public bool isEnermyCountOverTwo(List<Plate> enermyPlates)
+    public bool IsEnermyCountOverTwo(List<Plate> enermyPlates)
     {
         int count = 0;
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null)
+            if (plate.GetCurrentSummon() != null)
             {
                 count++;
                 if (count >= 2) return true;
@@ -141,11 +141,11 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 적이 1마리 이상 있는지 확인하는 메소드
-    public bool isEnermyCountOnlyOne(List<Plate> enermyPlates)
+    public bool IsEnermyCountOnlyOne(List<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
-            if (plate.getCurrentSummon() != null)
+            if (plate.GetCurrentSummon() != null)
             {
                 return true;
             }
@@ -155,16 +155,16 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 가장 가까운 적을 공격했을 때 물리칠 수 있는지 확인하는 메소드
-    public int getIndexOfNormalAttackCanKill(Summon snake, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon snake, List<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
-        int closestIndex = getClosestEnermyIndex(enermyPlates);
+        int closestIndex = GetClosestEnermyIndex(enermyPlates);
 
         if (closestIndex != -1)
         {
-            Summon closestEnermySummon = enermyPlates[closestIndex].getCurrentSummon();
+            Summon closestEnermySummon = enermyPlates[closestIndex].GetCurrentSummon();
             // 가장 가까운 적의 소환수가 있고, 일반 공격으로 물리칠 수 있는지 확인
-            if (closestEnermySummon != null && snake.getAttackPower() >= closestEnermySummon.getNowHP())
+            if (closestEnermySummon != null && snake.GetAttackPower() >= closestEnermySummon.GetNowHP())
             {
                 return closestIndex; // 공격으로 물리칠 수 있으면 인덱스 반환
             }
@@ -174,11 +174,11 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
 
-    public int getClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
-            Summon enermySummon = enermyPlates[i].getCurrentSummon();
+            Summon enermySummon = enermyPlates[i].GetCurrentSummon();
             if (enermySummon != null)
             {
                 return i; // 가장 가까운(첫 번째로 발견된) 적 소환수의 인덱스 반환

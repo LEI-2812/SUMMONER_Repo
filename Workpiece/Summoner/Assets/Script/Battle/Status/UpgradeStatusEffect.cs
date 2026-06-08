@@ -39,12 +39,12 @@ public class UpgradeStatusEffect : StatusEffect, IStatusEffect
 
     public void StatusApply(IStatusEffectTarget target)
     {
-        setOriginAttack(target.AttackPowerGet());
+        SetOriginAttack(target.AttackPowerGet());
 
-        if (shouldApplyOnce())
+        if (ShouldApplyOnce())
         {
             target.AttackPowerUpgrade(damagePerTurn);
-            setApplyOnce();
+            SetApplyOnce();
             target.StatusChangedNotify();
             target.BuffSoundPlay();
         }
@@ -60,7 +60,7 @@ public class UpgradeStatusEffect : StatusEffect, IStatusEffect
     public void StatusExpire(IStatusEffectTarget target)
     {
         Debug.Log("공격력 복구");
-        target.AttackPowerRestore(getOriginAttack());
+        target.AttackPowerRestore(GetOriginAttack());
         Debug.Log($"{target.StatusTargetNameGet()}의 강화 상태이상이 종료되었습니다.");
     }
 }

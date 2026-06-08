@@ -52,7 +52,7 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
                 continue;
             }
 
-            Summon enemySummon = targetPlates[i].getCurrentSummon();
+            Summon enemySummon = targetPlates[i].GetCurrentSummon();
             if (enemySummon != null)
             {
                 return enemySummon; // 첫 번째로 존재하는 소환수를 바로 반환
@@ -62,19 +62,19 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
         return null; // 적 소환수가 없으면 null 반환
     }
 
-    public double getSpecialDamage()
+    public double GetSpecialDamage()
     {
         return damage;
     }
 
     public bool BenefitEffectCheck() => attackEffect.BenefitEffectCheck();
 
-    public StatusType getStatusType() { return statusType; }
-    public void setStatusType(StatusType type) { statusType = type; }
+    public StatusType GetStatusType() { return statusType; }
+    public void SetStatusType(StatusType type) { statusType = type; }
     
-    public int getCooltime() { return cooltime; }
+    public int GetCooltime() { return cooltime; }
 
-    public int getCurrentCooldown() => currentCooldown;
+    public int GetCurrentCooldown() => currentCooldown;
 
     // 쿨타임을 초기화 (스킬 사용 후 적용)
     public void ApplyCooldown() => currentCooldown = cooltime;

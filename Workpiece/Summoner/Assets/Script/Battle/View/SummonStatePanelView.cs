@@ -32,7 +32,7 @@ public class SummonStatePanelView: MonoBehaviour, stateObserver
 
 
     //상태 판넬에 소환수정보 설정
-    public void setStatePanel(Summon stateSummon, bool isEnemyPlate)
+    public void SetStatePanel(Summon stateSummon, bool isEnemyPlate)
     {
         statePanel.gameObject.SetActive(true);
         this.stateSummon = stateSummon;
@@ -40,15 +40,15 @@ public class SummonStatePanelView: MonoBehaviour, stateObserver
 
 
         // 소환수의 이미지를 패널에 설정
-        if (summonImage != null && stateSummon != null && stateSummon.getImage() != null)
+        if (summonImage != null && stateSummon != null && stateSummon.GetImage() != null)
         {
-            summonImage.sprite = stateSummon.getImage().sprite; // 소환수 이미지를 패널로 전달
+            summonImage.sprite = stateSummon.GetImage().sprite; // 소환수 이미지를 패널로 전달
         }
 
         // 소환수의 HP를 패널에 표시
         if (HPSlider != null && stateSummon != null)
         {
-            float sliderHP = (float) (stateSummon.getNowHP() / stateSummon.getMaxHP());  // 체력 비율 계산
+            float sliderHP = (float) (stateSummon.GetNowHP() / stateSummon.GetMaxHP());  // 체력 비율 계산
             HPSlider.value = sliderHP;  // 체력 비율에 따른 슬라이더 값 설정
         }
 
@@ -73,7 +73,7 @@ public class SummonStatePanelView: MonoBehaviour, stateObserver
     }
 
 
-    public Summon getStatePanelSummon()
+    public Summon GetStatePanelSummon()
     {
         return stateSummon;
     }
@@ -87,7 +87,7 @@ public class SummonStatePanelView: MonoBehaviour, stateObserver
         if (stateSummon != null)
         {
             // 소환수가 사망 상태인지 체크
-            if (stateSummon.getNowHP() <= 0)
+            if (stateSummon.GetNowHP() <= 0)
             {
                 // 사망 시 상태 패널 비활성화
                 gameObject.SetActive(false);
@@ -95,8 +95,8 @@ public class SummonStatePanelView: MonoBehaviour, stateObserver
             }
 
             // HP 슬라이더 업데이트
-            float currentHP = (float)stateSummon.getNowHP();
-            float maxHP = (float)stateSummon.getMaxHP();
+            float currentHP = (float)stateSummon.GetNowHP();
+            float maxHP = (float)stateSummon.GetMaxHP();
 
             // 체력 비율을 0과 1 사이로 설정
             float sliderHP = currentHP / maxHP;
@@ -104,7 +104,7 @@ public class SummonStatePanelView: MonoBehaviour, stateObserver
             //Debug.Log("체력 슬라이더 최종 값: " + HPSlider.value);
 
             // 쉴드 비율 계산
-            float shieldAmount = (float)stateSummon.getShield(); // 현재 쉴드량
+            float shieldAmount = (float)stateSummon.GetShield(); // 현재 쉴드량
             float initialShieldAmount = (float)stateSummon.GetInitialShield();
             //Debug.Log("현재 쉴드량 : " + shieldAmount + ", 초기 쉴드량 : " + initialShieldAmount);
 
@@ -134,7 +134,7 @@ public class SummonStatePanelView: MonoBehaviour, stateObserver
     {
         if (HPSlider != null && stateSummon != null)
         {
-            float sliderHP = (float)(stateSummon.getNowHP() / stateSummon.getMaxHP());
+            float sliderHP = (float)(stateSummon.GetNowHP() / stateSummon.GetMaxHP());
             HPSlider.value = Mathf.Clamp(sliderHP, 0f, 1f);
         }
     }
