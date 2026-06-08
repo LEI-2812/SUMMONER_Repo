@@ -4,7 +4,7 @@ using UnityEngine;
 public class Cat : Summon
 {
 
-    public override void summonInitialize()
+    public override void SummonInitialize()
     {
         if (SummonDataApply(SummonDataGet()))
         {

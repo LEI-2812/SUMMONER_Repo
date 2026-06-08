@@ -8,6 +8,11 @@ public class HighDevil : Summon
     {
         base.Awake();
 
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "HighDevil"; //이름 하급악마
         maxHP = 1000; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
@@ -16,6 +21,7 @@ public class HighDevil : Summon
         summonRank = SummonRank.Special; //일반 적 몬스터
 
         // 일반 공격: 가장 가까운 적 공격
+        summonType = SummonType.HighDevil;
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
         // 특수 공격: 타겟 지정 공격
         specialAttackStrategies = new IAttackStrategy[] {
@@ -32,14 +38,14 @@ public class HighDevil : Summon
 
 
 
-    public override void die()
+    public override void Die()
     {
-        base.die();
+        base.Die();
     }
 
-    public override void takeDamage(double damage)
+    public override void TakeDamage(double damage)
     {
-        base.takeDamage(damage);
+        base.TakeDamage(damage);
     }
 
 

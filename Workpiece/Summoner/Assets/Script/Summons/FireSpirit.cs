@@ -22,13 +22,13 @@ public class FireSpirit : Summon
     }
 
 
-    public override void die()
+    public override void Die()
     {
-        base.die();
+        base.Die();
     }
 
-    public override void takeDamage(double damage)
+    public override void TakeDamage(double damage)
     {
-        base.takeDamage(damage);
+        base.TakeDamage(damage);
     }
 }

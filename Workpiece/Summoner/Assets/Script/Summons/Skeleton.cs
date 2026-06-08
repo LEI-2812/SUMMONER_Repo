@@ -8,6 +8,11 @@ public class Skeleton : Summon
     {
         base.Awake();
 
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "Skeleton"; //이름 스켈레톤
         maxHP = 650; //최대체력 650
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
@@ -17,19 +22,20 @@ public class Skeleton : Summon
 
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0); //근접공격
+        summonType = SummonType.Skeleton;
         specialAttackStrategies = new IAttackStrategy[] {
             new TargetedAttackStrategy(StatusType.None, 160,0) //타겟공격 160데미지
         };
     }
 
 
-    public override void die()
+    public override void Die()
     {
-        base.die();
+        base.Die();
     }
 
-    public override void takeDamage(double damage)
+    public override void TakeDamage(double damage)
     {
-        base.takeDamage(damage);
+        base.TakeDamage(damage);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Eagle : Summon
 {
 
-    public override void summonInitialize()
+    public override void SummonInitialize()
     {
         if (SummonDataApply(SummonDataGet()))
         {
@@ -37,14 +37,14 @@ public class Eagle : Summon
         heavyAttakPower = (int)(heavyAttakPower * multiple);
     }
 
-    public override void die()
+    public override void Die()
     {
-        base.die();
+        base.Die();
     }
 
-    public override void takeDamage(double damage)
+    public override void TakeDamage(double damage)
     {
-        base.takeDamage(damage);
+        base.TakeDamage(damage);
     }
 
 }

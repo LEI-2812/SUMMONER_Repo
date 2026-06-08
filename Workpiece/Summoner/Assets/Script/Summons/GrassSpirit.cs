@@ -8,12 +8,18 @@ public class GrassSpirit : Summon
     {
         base.Awake();
 
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
         summonName = "GrassSpirit"; //이름 풀정령
         maxHP = 350; //최대체력 200
         nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
         attackPower = 80; //일반공격
         heavyAttakPower = 110;
         summonRank = SummonRank.Normal; // 일반 소환수
+        summonType = SummonType.GrassSpirit;
 
         // 일반 공격: 가장 가까운 적 공격
         attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
@@ -21,13 +27,13 @@ public class GrassSpirit : Summon
     }
 
 
-    public override void die()
+    public override void Die()
     {
-        base.die();
+        base.Die();
     }
 
-    public override void takeDamage(double damage)
+    public override void TakeDamage(double damage)
     {
-        base.takeDamage(damage);
+        base.TakeDamage(damage);
     }
 }

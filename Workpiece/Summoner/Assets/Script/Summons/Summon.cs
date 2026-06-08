@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +11,11 @@ public enum SummonRank
 
 public enum SummonType
 {
-    Cat, Rabbit, Wolf, Eagle, Snake, Fox
+    Cat, Rabbit, Wolf, Eagle, Snake, Fox,
+    Slime, Skeleton,
+    LowDevil, HighDevil,
+    KingSlime,
+    WaterSpirit, GrassSpirit
 }
 
 [RequireComponent(typeof(SummonStatusView))]
@@ -81,7 +85,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public void SetSprite(int index) => imageView.SpriteSet(index);
 
 
-    public void normalAttack(List<Plate> targetPlates, int selectedPlateIndex)
+    public void NormalAttack(List<Plate> targetPlates, int selectedPlateIndex)
     {
         if (!AttackCanUse(attackStrategy))
         {
@@ -207,28 +211,28 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         if (AttackCooldownCheck(specialAttack))
         {
             specialAttack.ReduceCooldown();
-            Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 특수 공격 남은 쿨타임: {specialAttack.getCurrentCooldown()}턴");
+            Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 특수 공격 남은 쿨타임: {specialAttack.GetCurrentCooldown()}턴");
             return;
         }
 
         Debug.Log($"{summonName}의 {specialAttack.GetType().Name} 특수 공격 쿨타임이 종료되었습니다.");
     }
 
-    public bool getIsAttack() => isAttack;
-    public void setIsAttack(bool isAttack) => this.isAttack = isAttack;
+    public bool GetIsAttack() => isAttack;
+    public void SetIsAttack(bool isAttack) => this.isAttack = isAttack;
 
     public string StatusTargetNameGet() => summonName;
     public double HealthGet() => nowHP;
     public double AttackPowerGet() => attackPower;
-    public void DamageTake(double damage) => takeDamage(damage);
+    public void DamageTake(double damage) => TakeDamage(damage);
     public void HealReceive(double healAmount) => Heal(healAmount);
-    public void AttackAvailableSet(bool canAttack) => setIsAttack(canAttack);
+    public void AttackAvailableSet(bool canAttack) => SetIsAttack(canAttack);
     public void ShieldAdd(double shieldAmount) => AddShield(shieldAmount);
     public void ShieldSet(double shieldAmount) => shield = shieldAmount;
     public void AttackPowerUpgrade(double multiplier) => UpgradeAttackPower(multiplier);
     public void AttackPowerCurse(double curseRate) => Cursed(curseRate);
     public void AttackPowerRestore(double originAttack) => attackPower = originAttack;
-    public void OnceInvincibilitySet(bool isInvincibility) => setOnceInvincibility(isInvincibility);
+    public void OnceInvincibilitySet(bool isInvincibility) => SetOnceInvincibility(isInvincibility);
     public void StatusHitColorShow() => statusView.StatusHitColorShow();
 
     public void DebuffSoundPlay() => soundView.DebuffSoundPlay();
@@ -239,7 +243,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     public void StatusChangedNotify() => NotifyObservers();
 
-    public SummonType getSummonType() => summonType;
+    public SummonType GetSummonType() => summonType;
     
 
     public void UpgradeAttackPower(double multiplier)
@@ -275,7 +279,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     }
 
 
-    public virtual void takeDamage(double damage) // 피해 받기
+    public virtual void TakeDamage(double damage) // 피해 받기
     {
         damage = DamageRoundDown(damage);
 
@@ -351,7 +355,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         {
             nowHP = 0;
             Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
-            die();
+            Die();
             return;
         }
 
@@ -359,7 +363,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     }
 
     // 소환수 초기화 메서드
-    public virtual void summonInitialize()
+    public virtual void SummonInitialize()
     {
         NotifyObservers();
     }
@@ -396,7 +400,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     }
 
 
-    public virtual void die()
+    public virtual void Die()
     {
         Debug.Log($"{summonName}의 체력이 모두 소진되어 사라집니다.");
         // Plate에서 소환수를 제거하기 위해 부모 Plate를 가져옴
@@ -423,45 +427,45 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         Debug.Log("보호막 부여. 현재 보호막: " + shield);
         NotifyObservers();
     }
-    public double getShield() => shield; // 현재 보호막 값을 반환
+    public double GetShield() => shield; // 현재 보호막 값을 반환
     public double GetInitialShield() => initialShield; // 초기 보호막 값을 반환
 
-    public string getSummonName() => summonName;
-    public void setSummonName(string name) => this.summonName = name;
+    public string GetSummonName() => summonName;
+    public void SetSummonName(string name) => this.summonName = name;
 
-    public double getHeavyAttackPower() => heavyAttakPower;
-    public void setHeavyAttackPower(double value) => this.heavyAttakPower = value;
+    public double GetHeavyAttackPower() => heavyAttakPower;
+    public void SetHeavyAttackPower(double value) => this.heavyAttakPower = value;
 
-    public IAttackStrategy[] getSpecialAttackStrategy() => specialAttackStrategies;
-    public IAttackStrategy getAttackStrategy() => attackStrategy;
+    public IAttackStrategy[] GetSpecialAttackStrategy() => specialAttackStrategies;
+    public IAttackStrategy GetAttackStrategy() => attackStrategy;
 
-    public bool getInvincibilityOnce() => onceInvincibility;
-    public void setOnceInvincibility(bool isinvincibility) => this.onceInvincibility = isinvincibility;
+    public bool GetInvincibilityOnce() => onceInvincibility;
+    public void SetOnceInvincibility(bool isinvincibility) => this.onceInvincibility = isinvincibility;
 
-    public void setMaxHP(double hp) => this.maxHP = hp;
-    public double getMaxHP() => maxHP;
+    public void SetMaxHP(double hp) => this.maxHP = hp;
+    public double GetMaxHP() => maxHP;
 
     // nowHP 관련 메서드
-    public void setNowHP(double hp) => this.nowHP = hp;
-    public double getNowHP() => nowHP;
+    public void SetNowHP(double hp) => this.nowHP = hp;
+    public double GetNowHP() => nowHP;
 
     // attackPower 관련 메서드
-    public void setAttackPower(double power) => this.attackPower = power;
-    public double getAttackPower() => attackPower;
+    public void SetAttackPower(double power) => this.attackPower = power;
+    public double GetAttackPower() => attackPower;
 
-    public SummonRank getSummonRank() => summonRank;
-    public void setSummonRank(SummonRank rank) => this.summonRank = rank;
+    public SummonRank GetSummonRank() => summonRank;
+    public void SetSummonRank(SummonRank rank) => this.summonRank = rank;
 
-    public void setImage(Image image)
+    public void SetImage(Image image)
     {
         imageView.ImageSet(image);
     }
 
-    public Image getImage() => imageView.ImageGet();
+    public Image GetImage() => imageView.ImageGet();
 
 
     // 특수 공격 쿨타임 확인
-    public bool isSpecialAttackCool(IAttackStrategy specialAttack)
+    public bool IsSpecialAttackCool(IAttackStrategy specialAttack)
     {
         return AttackCooldownCheck(specialAttack);
     }
@@ -473,10 +477,10 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     private bool AttackCooldownCheck(IAttackStrategy attackStrategy)
     {
-        return attackStrategy != null && attackStrategy.getCurrentCooldown() > 0;
+        return attackStrategy != null && attackStrategy.GetCurrentCooldown() > 0;
     }
 
-    public List<StatusType> getAllStatusTypes()
+    public List<StatusType> GetAllStatusTypes()
     {
         StatusEffectControllerEnsure();
 
@@ -522,7 +526,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         return false;
     }
 
-    public IAttackStrategy[] getAvailableSpecialAttacks()
+    public IAttackStrategy[] GetAvailableSpecialAttacks()
     {
         List<IAttackStrategy> availableSpecialAttacks = new List<IAttackStrategy>();
 
@@ -544,7 +548,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     }
 
 
-    public int getSpecialAttackCount() => specialAttackStrategies == null ? 0 : specialAttackStrategies.Length;
+    public int GetSpecialAttackCount() => specialAttackStrategies == null ? 0 : specialAttackStrategies.Length;
 
     public void AddObserver(stateObserver observer) => observers.Add(observer);
 
