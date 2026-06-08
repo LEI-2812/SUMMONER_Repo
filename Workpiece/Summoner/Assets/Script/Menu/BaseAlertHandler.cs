@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 
@@ -24,14 +24,14 @@ public abstract class BaseAlertHandler : MonoBehaviour, IAlertHandler
 
     protected IEnumerator WaitForAlertResult(System.Action<bool> callback)
     {
-        while (!alertScript.getIsClicked())
+        while (!alertScript.GetIsClicked())
         {
             yield return null;
         }
 
         alertObject.SetActive(false);
         alertClick?.Play();
-        callback(alertScript.getResult());
+        callback(alertScript.GetResult());
     }
 }
 

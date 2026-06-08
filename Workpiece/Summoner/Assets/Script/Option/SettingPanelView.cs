@@ -106,7 +106,7 @@ public class SettingPanelView : MonoBehaviour
     }
 
     // 설정창 열기/닫기
-    public void openOption()
+    public void OpenOption()
     {
         if (settingPanel.activeSelf)
         {

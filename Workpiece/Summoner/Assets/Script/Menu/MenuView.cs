@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,12 +47,12 @@ public class MenuView : MonoBehaviour
         {
             if (setting == null || !setting.settingPanel.activeSelf)
             {
-                openCloseMenu();
+                OpenCloseMenu();
             }
         }
     }
 
-    public void openCloseMenu()
+    public void OpenCloseMenu()
     {
         if (menuPanel.activeSelf)
         {
@@ -66,7 +66,7 @@ public class MenuView : MonoBehaviour
         }
     }
 
-    public void toMainAlert()
+    public void ToMainAlert()
     {
         toMain.SetActive(true);
         menuClick.Play();
@@ -78,7 +78,7 @@ public class MenuView : MonoBehaviour
             {
                 alertClick.Play();
                 SceneManager.LoadScene("Start Screen");
-                openCloseMenu();
+                OpenCloseMenu();
             }
             else
             {
@@ -88,7 +88,7 @@ public class MenuView : MonoBehaviour
         }));
     }
 
-    public void toQuitAlert()
+    public void ToQuitAlert()
     {
         toQuit.SetActive(true);
         menuClick.Play();
@@ -110,9 +110,9 @@ public class MenuView : MonoBehaviour
         }));
     }
 
-    public void openSettingCanvas()
+    public void OpenSettingCanvas()
     {
-        setting.openOption();
+        setting.OpenOption();
         menuClick.Play();
     }
 
@@ -120,12 +120,12 @@ public class MenuView : MonoBehaviour
     {
         alertObject.SetActive(true);
 
-        while (!alertScript.getIsClicked())
+        while (!alertScript.GetIsClicked())
         {
             yield return null;
         }
 
         alertObject.SetActive(false);
-        callback(alertScript.getResult());
+        callback(alertScript.GetResult());
     }
 }

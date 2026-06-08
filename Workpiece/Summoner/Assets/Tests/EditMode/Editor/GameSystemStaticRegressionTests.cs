@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Summoner.EditModeTests
 {
@@ -134,6 +137,32 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("PlayerPrefs.SetInt(prefsKey, 0)", text);
         }
 
+        [TestCase("resolutionIndex", -1, 3)]
+        [TestCase("resolutionIndex", 3, 3)]
+        [TestCase("screenModeIndex", -1, 3)]
+        [TestCase("screenModeIndex", 3, 3)]
+        public void VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(string prefsKey, int savedIndex, int itemCount)
+        {
+            PlayerPrefs.SetInt(prefsKey, savedIndex);
+
+            int validIndex = InvokeGetValidSavedIndex(prefsKey, itemCount);
+
+            Assert.AreEqual(0, validIndex);
+            Assert.AreEqual(0, PlayerPrefs.GetInt(prefsKey));
+        }
+
+        [TestCase("resolutionIndex", 1, 3)]
+        [TestCase("screenModeIndex", 2, 3)]
+        public void VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs(string prefsKey, int savedIndex, int itemCount)
+        {
+            PlayerPrefs.SetInt(prefsKey, savedIndex);
+
+            int validIndex = InvokeGetValidSavedIndex(prefsKey, itemCount);
+
+            Assert.AreEqual(savedIndex, validIndex);
+            Assert.AreEqual(savedIndex, PlayerPrefs.GetInt(prefsKey));
+        }
+
         [Test]
         public void GameplaySettingStore_OwnsGameplayPlayerPrefsKeys()
         {
@@ -170,6 +199,23 @@ namespace Summoner.EditModeTests
         private static string NormalizePath(string path)
         {
             return path.Replace('\\', '/');
+        }
+
+        private static int InvokeGetValidSavedIndex(string prefsKey, int itemCount)
+        {
+            Type videoSettingViewType = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .Select(assembly => assembly.GetType("VideoSettingView"))
+                .FirstOrDefault(type => type != null);
+
+            Assert.IsNotNull(videoSettingViewType, "VideoSettingView type was not found.");
+
+            MethodInfo methodInfo = videoSettingViewType.GetMethod(
+                "GetValidSavedIndex",
+                BindingFlags.Static | BindingFlags.NonPublic);
+
+            Assert.IsNotNull(methodInfo, "VideoSettingView.GetValidSavedIndex was not found.");
+            return (int)methodInfo.Invoke(null, new object[] { prefsKey, itemCount });
         }
     }
 }

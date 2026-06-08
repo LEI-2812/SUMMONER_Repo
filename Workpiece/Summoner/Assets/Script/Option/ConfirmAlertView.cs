@@ -25,12 +25,12 @@ public class ConfirmAlertView : MonoBehaviour
         isClicked = true;
     }
 
-    public bool getIsClicked()
+    public bool GetIsClicked()
     {
         return isClicked;
     }
 
-    public bool getResult()
+    public bool GetResult()
     {
         return result;
     }

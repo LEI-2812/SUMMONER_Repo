@@ -30,7 +30,7 @@ public class GameplaySettingView : MonoBehaviour
         }
     }
 
-    public void storySkip()
+    public void StorySkip()
     {
         audioSource.Play();
         if (isStorySkip.isOn)
@@ -41,7 +41,7 @@ public class GameplaySettingView : MonoBehaviour
         gameplaySettingStore.SaveStorySkipEnabled(isStorySkip.isOn);
     }
 
-    public void onlyUseMouse()
+    public void OnlyUseMouse()
     {
         if (isOnlyMouse.isOn)
         {
@@ -51,16 +51,16 @@ public class GameplaySettingView : MonoBehaviour
         gameplaySettingStore.SaveOnlyMouseEnabled(isOnlyMouse.isOn);
     }
 
-    public void onClickSound()
+    public void OnClickSound()
     {
         audioSource.Play();
     }
 
-    public bool getIsStorySkip() { return isStorySkip.isOn; }
+    public bool GetIsStorySkip() { return isStorySkip.isOn; }
 
-    public void setIsStorySkip(bool isSkip) { this.isStorySkip.isOn = isSkip; }
+    public void SetIsStorySkip(bool isSkip) { this.isStorySkip.isOn = isSkip; }
 
-    public bool getIsOnlyMouse() { return isOnlyMouse.isOn; }
+    public bool GetIsOnlyMouse() { return isOnlyMouse.isOn; }
 
-    public void setIsOnlyMouse(bool isMouse) { this.isOnlyMouse.isOn = isMouse; }
+    public void SetIsOnlyMouse(bool isMouse) { this.isOnlyMouse.isOn = isMouse; }
 }

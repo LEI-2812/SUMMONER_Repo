@@ -24,7 +24,7 @@ public class SettingHandler : MonoBehaviour, ISettingHandler
             return;
         }
 
-        setting.openOption();
+        setting.OpenOption();
         settingPanel.SetActive(true);
         menuClick?.Play();
     }
