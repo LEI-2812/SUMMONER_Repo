@@ -1,33 +1,26 @@
-# ==================================================
-# Codex 기본 설정
-#   never         # 자동 진행
-#   on-request    # 승인 확인 모드
-# ==================================================
+# Codex
+# never
+# on-request
 
 approval_policy = "never"
 sandbox_mode = "workspace-write"
 
+[windows]
+sandbox = "unelevated"
 
-# ==================================================
-# Unity MCP 서버
-# ==================================================
+[sandbox_workspace_write]
+  writable_roots = [
+    'D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner', # Summoner 작업 공간
+    'D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\.codex', # Codex 작업 공간
+    'D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\.agents', # Agent 작업 공간
+    'D:\GitRepo\SUMMONER_Refactor\.git', # 깃
+  ]
+
+# Unity MCP
 
 [mcp_servers.mcp-unity]
 command = "node"
-# 데탑: args = ["D:/UnityProjects/SUMMONER_Repo/Workpiece/Summoner/LocalPackages/com.gamelovers.mcp-unity/Server~/build/index.js"]
-args = ["D:/GitRepo/SUMMONER_Refactor/Workpiece/Summoner/LocalPackages/com.gamelovers.mcp-unity/Server~/build/index.js"]
-
-# 이 서버의 MCP tool은 기본 자동 실행
-default_tools_approval_mode = "auto"
-
-# ==================================================
-# Unity MCP Tools
-# auto    = 자동 실행
-# approve = 승인 받고 실행
-# ==================================================
-
-[mcp_servers.mcp-unity.tools.get_console_logs]
-approval_mode = "auto"
+args = ["LocalPackages/com.gamelovers.mcp-unity/Server~/build/index.js"]
 
 [mcp_servers.mcp-unity.tools.recompile_scripts]
 approval_mode = "auto"
@@ -35,50 +28,11 @@ approval_mode = "auto"
 [mcp_servers.mcp-unity.tools.run_tests]
 approval_mode = "auto"
 
+[mcp_servers.mcp-unity.tools.list_assets]
+approval_mode = "auto"
+
+[mcp_servers.mcp-unity.tools.find_assets]
+approval_mode = "auto"
+
 [mcp_servers.mcp-unity.tools.get_scene_info]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.get_gameobject]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.get_all_gameobjects]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.get_all_components]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.get_component]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.get_component_value]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.set_component_value]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.add_component]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.update_gameobject]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.update_component]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.reparent_gameobject]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.delete_gameobject]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.save_scene]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.load_scene]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.execute_menu_item]
-approval_mode = "auto"
-
-[mcp_servers.mcp-unity.tools.send_console_log]
-approval_mode = "auto"
+approval_mode = "approve"

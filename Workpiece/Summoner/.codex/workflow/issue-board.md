@@ -1,24 +1,35 @@
 # Issue Board
 
-## Source Rule
+현재 개발 판단에 필요한 이슈만 짧게 관리한다.
 
-이 문서는 열린 문제의 요약 인덱스다.
-QA 상세 상태의 원본은 `.codex/qa/active-qa.md`다.
-QA 항목 상태가 달라지면 `active-qa.md`를 먼저 갱신하고, 이 문서는 요약만 맞춘다.
-이 문서는 전체 QA 목록이 아니라 지금 우선 처리할 상위 이슈만 담는다.
-Done 항목은 `.codex/workflow/change-summary.md`나 `.codex/dev-log/YYYY-MM-DD.md`에 남기고 이 표에서는 제거한다.
+완료된 DEV/QA 이력은 `.codex/records/`의 CSV를 기준으로 확인한다.
 
-| ID | 상태 | 우선순위 | 담당 에이전트 | 제목 | 다음 행동 |
+| ID | 상태 | 우선순위 | 담당 | 이슈 | 다음 행동 |
 |---|---|---|---|---|---|
-| QA-004 | Fixed | High | QAAgent | Only Mouse 옵션 재검증 | ON/OFF와 클릭 입력 유지 확인 |
-| QA-006 | Fixed | High | QAAgent | 오디오 볼륨 0 재검증 | 사용자 수동 확인 완료, done archive 이동 대기 |
-| QA-007 | Fixed | Medium | QAAgent | 비디오 저장 인덱스 재검증 | 실제 옵션 UI 조작 확인 |
-| MCP-001 | Hold | High | TestAgent | Unity MCP timeout | 안정화 후 Console/EditMode/PlayMode 재시도 |
+| BACKLOG-001 | Done | 중 | FlowAgent | `PlateController`의 플레이어/적 플레이트 순회 메서드 중복 검토 | 기존 private 메서드 정리와 DEV-018~020 기록 기준으로 후속 후보에서 제외 |
+| BACKLOG-002 | Done | 중 | FlowAgent | `Player` 특수공격 시작 흐름의 로그 문구와 상태 변경 순서 정리 검토 | 작은 private 리팩터링 기준으로 QAReviewAgent 생략. 컴파일 0 warning, Plate EditMode 22/22 통과 |
+| BACKLOG-003 | In Progress | 낮음 | DevAgent | `SummonController`의 소문자 getter/setter 계열과 공격 예측 계열 네이밍 정리 | `AttackPrediction` getter/setter 네이밍 정리 진행. 예측 알고리즘 의미 변경과 `Summon.getAttackStrategy`는 제외 |
+| BACKLOG-004 | Backlog | 낮음 | FlowAgent | 재소환 선택 흐름의 `PlateSelectionController` 분리 필요성 검토 | 인덱스 조회/빈 플레이트 확인 하위 작업 완료. 새 컨트롤러 분리는 새 파일/구조 변경 가능성이 있어 별도 승인 범위 필요 |
 
-## 상태값
+## 제외 항목
 
-- Open: 아직 해결 안 됨
-- Fixed: DevAgent가 수정했고 QA 재검증 대기
-- Retest: 코드 수정 없이 다시 확인 필요
-- Hold: 환경이나 실행 조건 때문에 보류
-- Done: 확인 완료
+- 2~7스테이지 씬 수정은 당분간 진행하지 않는다.
+- 예측 알고리즘과 공격 로직 수정은 다음 작업 선정 전까지 제외한다.
+
+## 완료 이력
+
+완료된 DEV/QA 이력은 아래 파일을 기준으로 확인한다.
+
+- `.codex/records/dev-records.csv`
+- `.codex/records/qa-records.csv`
+
+## 운영 기준
+
+- `Ready`: 다음 행동이 정해져 바로 착수 가능
+- `Backlog`: 지금 당장 진행하지 않음
+- `In Progress`: 현재 작업 중
+- `Done`: 완료 요약만 남김
+- `Pass`: QA 통과 요약만 남김
+- `검증부족`: 사전에 정한 QA 깊이 기준 중 확인하지 못한 항목이 남음
+- `Blocked`: 코드 문제와 도구/환경 문제를 구분해서 기록
+- 완료 요약은 `issue-board.md`에 누적하지 않고 records CSV로 보낸다.
