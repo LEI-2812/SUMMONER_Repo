@@ -35,10 +35,12 @@ public class SummonController : MonoBehaviour
 
     [Header("소환수 프리팹 목록")]
     private Summon selectedSummon; // 선택된 소환수
+    private PlateSelectionController plateSelectionController;
 
 
     private void Awake()
     {
+        plateSelectionController = new PlateSelectionController(plateController);
         ConnectOptionPanels(drawOptionPanels);
         ConnectOptionPanels(redrawOptionPanels);
     }
@@ -124,34 +126,21 @@ public class SummonController : MonoBehaviour
     //차례로 재소환 로직
     public bool StartRedraw()
     {
-        if (plateController.IsPlayerPlateClear())
+        if (!plateSelectionController.CanStartRedrawSelection())
         {
-            Debug.Log("플레이트에 소환수가 없습니다.");
             return false;
         }
 
-        OpenRedrawPlateSelection();
-        return true;
-    }
-
-    //소환수가 있는 플레이트만 강조
-    private void OpenRedrawPlateSelection()
-    {
-        // 재소환 진행 중 표시와 백그라운드 활성화
         isSummoning = true;
-        darkBackground.SetActive(true);
-
-        // PlateController에서 소환수가 있는 플레이트만 강조
-        plateController.HighlightPlayerPlates();
+        plateSelectionController.ShowRedrawSelectablePlates(darkBackground);
+        return true;
     }
 
     //재소환 중일때 플레이트 클릭시 이 메소드가 호출됨. 선택한 플레이트의 번호를 가져옴
     public void SelectPlate(Plate plate)
     {
-        selectedPlateIndex = plateController.GetPlayerPlateIndex(plate);
-        if (selectedPlateIndex < 0)
+        if (!plateSelectionController.TryGetPlayerPlateIndex(plate, out selectedPlateIndex))
         {
-            Debug.Log("선택한 플레이트가 플레이어 플레이트가 아닙니다.");
             return;
         }
 
@@ -253,7 +242,7 @@ public class SummonController : MonoBehaviour
         // 소환수 리스트에서 해당 등급의 소환수들만 필터링
         foreach (Summon summon in summons)
         {
-            if (summon.GetSummonRank() == rank)
+            if (summon.GetDrawRank() == rank)
             {
                 availableSummons.Add(summon);
             }

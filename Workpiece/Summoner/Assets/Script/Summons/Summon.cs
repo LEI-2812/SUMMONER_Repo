@@ -15,7 +15,10 @@ public enum SummonType
     Slime, Skeleton,
     LowDevil, HighDevil,
     KingSlime,
-    WaterSpirit, GrassSpirit
+    WaterSpirit, GrassSpirit,
+    FireSpirit,
+    QueenSpirit,
+    DarkDragon
 }
 
 [RequireComponent(typeof(SummonStatusView))]
@@ -24,25 +27,25 @@ public enum SummonType
 public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 {
     [SerializeField] private SummonData summonData;
-    [SerializeField] protected GameObject shieldImage;
-    [SerializeField] protected Animator animator;
+    [SerializeField] private GameObject shieldImage;
+    [SerializeField] private Animator animator;
 
-    protected string summonName; // 이름
-    public Sprite normalAttackSprite; // 일반 공격 스프라이트
-    public Sprite specialAttackSprite; // 특수 공격 스프라이트
-    public double attackPower; // 일반 공격력
-    public double heavyAttakPower; // 강공격력
-    protected SummonRank summonRank; // 등급
-    protected SummonType summonType;
-    protected double maxHP; // 최대 체력
-    public double nowHP; // 현재 체력
-    protected double shield = 0; // 보호막
+    private string summonName; // 이름
+    [SerializeField] private Sprite normalAttackSprite; // 일반 공격 스프라이트
+    [SerializeField] private Sprite specialAttackSprite; // 특수 공격 스프라이트
+    [SerializeField] private double attackPower; // 일반 공격력
+    [SerializeField] private double heavyAttakPower; // 강공격력
+    private SummonRank summonRank; // 등급
+    private SummonType summonType;
+    private double maxHP; // 최대 체력
+    [SerializeField] protected double nowHP; // 현재 체력
+    private double shield = 0; // 보호막
     private double initialShield; // 초기 보호막 값
-    protected bool onceInvincibility = false;
-    public bool isAttack = true; // 상태이상 중 공격 가능 여부
+    private bool onceInvincibility = false;
+    [SerializeField] private bool isAttack = true; // 상태이상 중 공격 가능 여부
 
-    protected IAttackStrategy attackStrategy;
-    protected IAttackStrategy[] specialAttackStrategies;
+    private IAttackStrategy attackStrategy;
+    private IAttackStrategy[] specialAttackStrategies;
     private StatusEffectController statusEffectController;
     private SummonImageView imageView;
     private SummonStatusView statusView;
@@ -83,6 +86,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     }
 
     public void SetSprite(int index) => imageView.SpriteSet(index);
+    public Sprite GetNormalAttackSprite() => normalAttackSprite;
+    public Sprite GetSpecialAttackSprite() => specialAttackSprite;
 
 
     public void NormalAttack(List<Plate> targetPlates, int selectedPlateIndex)
@@ -390,7 +395,33 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         return true;
     }
 
-    public static double multiple=5; // 배수 설정
+    protected void FallbackStatusSet(
+        string name,
+        SummonRank rank,
+        SummonType type,
+        double maxHp,
+        double normalAttackPower,
+        double heavyAttackPower)
+    {
+        summonName = name;
+        summonRank = rank;
+        summonType = type;
+        maxHP = maxHp;
+        nowHP = maxHP;
+        attackPower = normalAttackPower;
+        heavyAttakPower = heavyAttackPower;
+    }
+
+    protected void AttackStrategiesSet(IAttackStrategy normalAttack, params IAttackStrategy[] specialAttacks)
+    {
+        attackStrategy = normalAttack;
+        specialAttackStrategies = specialAttacks;
+    }
+
+    private static double multiple=5; // 배수 설정
+    public static double StatMultiplierGet() => multiple;
+    public static void StatMultiplierSet(double value) => multiple = value;
+
     public virtual void ApplayMultiple(double m)
     {
         maxHP = (int)(maxHP * m);
@@ -454,6 +485,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public double GetAttackPower() => attackPower;
 
     public SummonRank GetSummonRank() => summonRank;
+    public SummonRank GetDrawRank()
+    {
+        return summonData == null ? summonRank : summonData.SummonRankGet();
+    }
+
     public void SetSummonRank(SummonRank rank) => this.summonRank = rank;
 
     public void SetImage(Image image)

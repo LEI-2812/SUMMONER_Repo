@@ -5,12 +5,6 @@ using UnityEngine.UI;
 
 public class Rabbit : Summon
 {
-
-    private void Start()
-    {
-        SummonInitialize();
-    }
-
     public override void SummonInitialize()
     {
         if (SummonDataApply(SummonDataGet()))
@@ -18,37 +12,13 @@ public class Rabbit : Summon
             return;
         }
 
-        summonName = "Rabbit";
-        maxHP = 300;
-        nowHP = maxHP;
-        attackPower = 37; //일반공격
-        summonRank = SummonRank.Medium; // 중급 소환수
-        summonType = SummonType.Rabbit;
+        FallbackStatusSet("Rabbit", SummonRank.Medium, SummonType.Rabbit, 300, 37, 0);
+        ApplayMultiple(StatMultiplierGet());
 
-        ApplayMultiple(multiple);
+        AttackStrategiesSet(
+            new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(),1), //근접공격
+            new TargetedAttackStrategy(StatusType.Heal, 0.3, 3));
 
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower,1); //근접공격
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Heal, 0.3, 3) };
-
-    }
-
-    public override void ApplayMultiple(double multiple)
-    {
-        maxHP = (int)(maxHP * multiple);
-        nowHP = maxHP;
-        attackPower = (int)(attackPower * multiple); //일반공격
-        heavyAttakPower = (int)(heavyAttakPower * multiple);
-    }
-
-
-    public override void Die()
-    {
-        base.Die();
-    }
-
-    public override void TakeDamage(double damage)
-    {
-        base.TakeDamage(damage);
     }
 
 }

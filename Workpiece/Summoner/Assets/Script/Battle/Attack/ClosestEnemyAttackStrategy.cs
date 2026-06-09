@@ -4,6 +4,8 @@ using UnityEngine;
 public class ClosestEnemyAttackStrategy : IAttackStrategy
 {
     private StatusType statusType;
+    // 실제 근접 피해는 effect에서 attacker.GetAttackPower()로 계산한다.
+    // 이 값은 예측/표시/데이터 기준값으로 보존한다.
     private double damage;
     private int cooltime;
     private int currentCooldown;

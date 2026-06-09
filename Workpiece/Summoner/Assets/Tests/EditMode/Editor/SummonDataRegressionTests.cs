@@ -158,6 +158,29 @@ namespace Summoner.EditModeTests
                 AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 80, 0),
                 AttackExpectedCreate("AttackAllEnemiesStrategy", "Heal", 0.1, 3)),
                 "Awake");
+
+            AssertSummon(SummonExpectedCreate(
+                "FireSpirit", "Normal", 350, 60, 130,
+                AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 60, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "Upgrade", 0.1, 3)),
+                "Awake");
+
+            AssertSummon(SummonExpectedCreate(
+                "QueenSpirit", "Special", 400, 100, 140,
+                AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 100, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "None", 70, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "Heal", 0.2, 3),
+                AttackExpectedCreate("TargetedAttackStrategy", "Stun", 0, 3)),
+                "Awake");
+
+            AssertSummon(SummonExpectedCreate(
+                "DarkDragon", "Boss", 3000, 400, 500,
+                AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 400, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "None", 370, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "Burn", 0.2, 5),
+                AttackExpectedCreate("TargetedAttackStrategy", "None", 450, 0),
+                AttackExpectedCreate("TargetedAttackStrategy", "LifeDrain", 0.2, 4)),
+                "Awake");
         }
 
         [Test]
@@ -174,6 +197,100 @@ namespace Summoner.EditModeTests
             AssertAttackDataCreatesStrategy(
                 AttackDataCreate("AllEnemies", "Poison", 0.1, 3, 2),
                 "AttackAllEnemiesStrategy", "Poison", 0.1, 3);
+        }
+
+        [Test]
+        public void PlayerSummons_RemoveRedundantDamageAndDeathOverrides()
+        {
+            string[] summonNames = { "Rabbit", "Snake", "Wolf", "Eagle", "Fox" };
+
+            foreach (string summonName in summonNames)
+            {
+                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+
+                Assert.IsFalse(text.Contains("public override void Die()"), $"{summonName} should inherit Die without a pass-through override.");
+                Assert.IsFalse(text.Contains("public override void TakeDamage(double damage)"), $"{summonName} should inherit TakeDamage without a pass-through override.");
+            }
+        }
+
+        [Test]
+        public void EnemyAndSpiritSummons_RemoveRedundantDamageAndDeathOverrides()
+        {
+            string[] summonNames =
+            {
+                "Slime", "Skeleton", "LowDevil", "HighDevil", "KingSlime",
+                "WaterSpirit", "GrassSpirit", "FireSpirit", "QueenSpirit", "DarkDragon"
+            };
+
+            foreach (string summonName in summonNames)
+            {
+                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+
+                Assert.IsFalse(text.Contains("public override void Die()"), $"{summonName} should inherit Die without a pass-through override.");
+                Assert.IsFalse(text.Contains("public override void TakeDamage(double damage)"), $"{summonName} should inherit TakeDamage without a pass-through override.");
+            }
+        }
+
+        [Test]
+        public void PlayerDrawSummons_DoNotInitializeThroughSummonController()
+        {
+            string controllerText = File.ReadAllText("Assets/Script/Battle/SummonPick/SummonController.cs");
+
+            Assert.IsFalse(controllerText.Contains("DrawSummonsInitialize();"));
+            Assert.IsFalse(controllerText.Contains("private void DrawSummonsInitialize()"));
+            Assert.IsFalse(controllerText.Contains("summon.SummonInitialize();"));
+        }
+
+        [Test]
+        public void PlayerDrawSummons_SelectRankFromSummonData()
+        {
+            string summonText = File.ReadAllText("Assets/Script/Summons/Summon.cs");
+            string controllerText = File.ReadAllText("Assets/Script/Battle/SummonPick/SummonController.cs");
+
+            Assert.IsTrue(summonText.Contains("public SummonRank GetDrawRank()"));
+            Assert.IsTrue(summonText.Contains("return summonData == null ? summonRank : summonData.SummonRankGet();"));
+            Assert.IsTrue(controllerText.Contains("summon.GetDrawRank() == rank"));
+            Assert.IsFalse(controllerText.Contains("summon.GetSummonRank() == rank"));
+        }
+
+        [Test]
+        public void PlayerSummons_DoNotInitializeFromStart()
+        {
+            string[] summonNames = { "Cat", "Rabbit", "Snake", "Wolf", "Eagle", "Fox" };
+
+            foreach (string summonName in summonNames)
+            {
+                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+
+                Assert.IsFalse(text.Contains("void Start()"), $"{summonName} should not own draw-list initialization through Start.");
+                Assert.IsFalse(text.Contains("SummonInitialize();\r\n    }"), $"{summonName} should leave draw-list initialization to SummonController.");
+            }
+        }
+
+        [Test]
+        public void EnemySummons_DoNotKeepHealthLogOnlyStart()
+        {
+            string[] summonNames = { "LowDevil", "HighDevil" };
+
+            foreach (string summonName in summonNames)
+            {
+                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+
+                Assert.IsFalse(text.Contains("private void Start()"), $"{summonName} should not keep a Start method only for health logging.");
+                Assert.IsFalse(text.Contains("Debug.Log(\"남은 체력: \" + nowHP);"), $"{summonName} should not log health from Start.");
+            }
+        }
+
+        [Test]
+        public void PlayerSummons_UseAssignedSummonData_CoversAllPlayerTypes()
+        {
+            string testText = File.ReadAllText("Assets/Tests/EditMode/Editor/SummonDataRegressionTests.cs");
+            string[] summonNames = { "Cat", "Rabbit", "Snake", "Wolf", "Eagle", "Fox" };
+
+            foreach (string summonName in summonNames)
+            {
+                Assert.IsTrue(testText.Contains($"{summonName}CurrentDataCreate()"), $"{summonName} needs assigned data test data.");
+            }
         }
 
         [Test]
@@ -217,6 +334,58 @@ namespace Summoner.EditModeTests
                 UnityEngine.Object.DestroyImmediate(testObject);
                 UnityEngine.Object.DestroyImmediate(data);
             }
+        }
+
+        [Test]
+        public void PlayerSummons_UseAssignedSummonData()
+        {
+            AssertAssignedPlayerSummonData(
+                "Cat",
+                CatCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "Cat", "Low", 1250, 150, 200,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 150, 1),
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 200, 1)));
+
+            AssertAssignedPlayerSummonData(
+                "Rabbit",
+                RabbitCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "Rabbit", "Medium", 1500, 185, 0,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 185, 1),
+                    AttackExpectedCreate("TargetedAttackStrategy", "Heal", 0.3, 3)));
+
+            AssertAssignedPlayerSummonData(
+                "Snake",
+                SnakeCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "Snake", "Medium", 1500, 200, 0,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 40, 1),
+                    AttackExpectedCreate("AttackAllEnemiesStrategy", "Poison", 0.1, 3)));
+
+            AssertAssignedPlayerSummonData(
+                "Wolf",
+                WolfCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "Wolf", "High", 1750, 250, 150,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 250, 1),
+                    AttackExpectedCreate("AttackAllEnemiesStrategy", "None", 150, 2)));
+
+            AssertAssignedPlayerSummonData(
+                "Eagle",
+                EagleCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "Eagle", "High", 1750, 225, 150,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 225, 1),
+                    AttackExpectedCreate("TargetedAttackStrategy", "None", 150, 2)));
+
+            AssertAssignedPlayerSummonData(
+                "Fox",
+                FoxCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "Fox", "Low", 1250, 175, 0,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 175, 0),
+                    AttackExpectedCreate("TargetedAttackStrategy", "Upgrade", 0.3, 3)));
         }
 
         [Test]
@@ -280,6 +449,35 @@ namespace Summoner.EditModeTests
                     "GrassSpirit", "Normal", 350, 80, 110,
                     AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 80, 0),
                     AttackExpectedCreate("AttackAllEnemiesStrategy", "Heal", 0.1, 3)));
+
+            AssertAssignedEnemySummonData(
+                "FireSpirit",
+                FireSpiritCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "FireSpirit", "Normal", 350, 60, 130,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 60, 0),
+                    AttackExpectedCreate("AttackAllEnemiesStrategy", "Upgrade", 0.1, 3)));
+
+            AssertAssignedEnemySummonData(
+                "QueenSpirit",
+                QueenSpiritCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "QueenSpirit", "Special", 400, 100, 140,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 100, 0),
+                    AttackExpectedCreate("AttackAllEnemiesStrategy", "None", 70, 0),
+                    AttackExpectedCreate("AttackAllEnemiesStrategy", "Heal", 0.2, 3),
+                    AttackExpectedCreate("TargetedAttackStrategy", "Stun", 0, 3)));
+
+            AssertAssignedEnemySummonData(
+                "DarkDragon",
+                DarkDragonCurrentDataCreate(),
+                SummonExpectedCreate(
+                    "DarkDragon", "Boss", 3000, 400, 500,
+                    AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 400, 0),
+                    AttackExpectedCreate("AttackAllEnemiesStrategy", "None", 370, 0),
+                    AttackExpectedCreate("AttackAllEnemiesStrategy", "Burn", 0.2, 5),
+                    AttackExpectedCreate("TargetedAttackStrategy", "None", 450, 0),
+                    AttackExpectedCreate("TargetedAttackStrategy", "LifeDrain", 0.2, 4)));
         }
 
         [Test]
@@ -301,6 +499,9 @@ namespace Summoner.EditModeTests
             AssertSummonDataReference("LowDevil", "LowDevil", "83d2caf7c8624db3a10f3b719abc3223");
             AssertSummonDataReference("HighDevil", "HighDevil", "94e3db08d9734ec4b21f4c82abcd4334");
             AssertSummonDataReference("KingSlime", "KingSlime", "a5f4ec19ea844fd5b32f5d93abcd5445");
+            AssertSummonDataReference("FireSpirit", "FireSpirit", "d8c7bf4c1d1742e8e65f8fc6abcd8778");
+            AssertSummonDataReference("QueenSpirit", "QueenSpirit", "e9d8c05d2e2843f9f76a9fd7abcd9889");
+            AssertSummonDataReference("DarkDragon", "DarkDragon", "fae9d16e3f3944a8a87b0fe8abcd0990");
         }
 
         [Test]
@@ -343,6 +544,26 @@ namespace Summoner.EditModeTests
                 "GrassSpirit", "Normal", 350, 80, 110,
                 AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 80, 0),
                 AttackExpectedCreate("AttackAllEnemiesStrategy", "Heal", 0.1, 3)));
+
+            AssertSummonDataAsset(SummonExpectedCreate(
+                "FireSpirit", "Normal", 350, 60, 130,
+                AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 60, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "Upgrade", 0.1, 3)));
+
+            AssertSummonDataAsset(SummonExpectedCreate(
+                "QueenSpirit", "Special", 400, 100, 140,
+                AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 100, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "None", 70, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "Heal", 0.2, 3),
+                AttackExpectedCreate("TargetedAttackStrategy", "Stun", 0, 3)));
+
+            AssertSummonDataAsset(SummonExpectedCreate(
+                "DarkDragon", "Boss", 3000, 400, 500,
+                AttackExpectedCreate("ClosestEnemyAttackStrategy", "None", 400, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "None", 370, 0),
+                AttackExpectedCreate("AttackAllEnemiesStrategy", "Burn", 0.2, 5),
+                AttackExpectedCreate("TargetedAttackStrategy", "None", 450, 0),
+                AttackExpectedCreate("TargetedAttackStrategy", "LifeDrain", 0.2, 4)));
         }
 
         private ExpectedSummon SummonExpectedCreate(
@@ -431,6 +652,12 @@ namespace Summoner.EditModeTests
                 return;
             }
 
+            if (expected.SpecialAttacks.Length >= 3)
+            {
+                AssertSummonWithExpectedAttacks(expected.TypeName, expected, initializeMethodName);
+                return;
+            }
+
             Assert.Fail(expected.TypeName + " expected special attack count is not supported.");
         }
 
@@ -487,7 +714,36 @@ namespace Summoner.EditModeTests
                 return;
             }
 
+            if (expected.SpecialAttacks.Length >= 3)
+            {
+                AssertAssignedEnemySummonDataWithExpectedAttacks(summonTypeName, data, expected);
+                return;
+            }
+
             Assert.Fail(expected.TypeName + " expected special attack count is not supported.");
+        }
+
+        private void AssertAssignedPlayerSummonData(
+            string summonTypeName,
+            ScriptableObject data,
+            ExpectedSummon expected)
+        {
+            GameObject testObject = new GameObject(summonTypeName);
+
+            try
+            {
+                Component summon = testObject.AddComponent(TypeGet(summonTypeName));
+                FieldSet(summon, "summonData", data);
+
+                Invoke(summon, "SummonInitialize");
+
+                AssertSummonValues(summon, expected);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(testObject);
+                UnityEngine.Object.DestroyImmediate(data);
+            }
         }
 
         private void AssertSummonDataAsset(ExpectedSummon expected)
@@ -535,6 +791,12 @@ namespace Summoner.EditModeTests
                     expected.SpecialAttacks[1].StatusType,
                     expected.SpecialAttacks[1].Damage,
                     expected.SpecialAttacks[1].Cooltime);
+                return;
+            }
+
+            if (expected.SpecialAttacks.Length >= 3)
+            {
+                AssertSummonDataAssetWithExpectedAttacks(expected);
                 return;
             }
 
@@ -962,6 +1224,112 @@ namespace Summoner.EditModeTests
                 expectedSecondSpecialAttackCooltime);
         }
 
+        private void AssertSummonWithExpectedAttacks(
+            string summonTypeName,
+            ExpectedSummon expected,
+            string initializeMethodName)
+        {
+            GameObject testObject = new GameObject(summonTypeName);
+
+            try
+            {
+                Component summon = testObject.AddComponent(TypeGet(summonTypeName));
+                Invoke(summon, initializeMethodName);
+
+                AssertSummonValues(summon, expected);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(testObject);
+            }
+        }
+
+        private void AssertAssignedEnemySummonDataWithExpectedAttacks(
+            string summonTypeName,
+            ScriptableObject data,
+            ExpectedSummon expected)
+        {
+            GameObject testObject = new GameObject(summonTypeName);
+            testObject.SetActive(false);
+
+            try
+            {
+                Component summon = testObject.AddComponent(TypeGet(summonTypeName));
+                FieldSet(summon, "summonData", data);
+
+                Invoke(summon, "Awake");
+
+                AssertSummonValues(summon, expected);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(testObject);
+                UnityEngine.Object.DestroyImmediate(data);
+            }
+        }
+
+        private void AssertSummonDataAssetWithExpectedAttacks(ExpectedSummon expected)
+        {
+            UnityEngine.Object data = AssetDatabase.LoadAssetAtPath(
+                $"Assets/Script/Summons/Data/{expected.TypeName}SummonData.asset",
+                TypeGet("SummonData"));
+
+            Assert.NotNull(data);
+            Assert.AreEqual(expected.Name, Invoke(data, "SummonNameGet"));
+            Assert.AreEqual(expected.Rank, Invoke(data, "SummonRankGet").ToString());
+            Assert.AreEqual(expected.SummonType, Invoke(data, "SummonTypeGet").ToString());
+            Assert.AreEqual(expected.MaxHp, Invoke(data, "MaxHpGet"));
+            Assert.AreEqual(expected.AttackPower, Invoke(data, "AttackPowerGet"));
+            Assert.AreEqual(expected.HeavyAttackPower, Invoke(data, "HeavyAttackPowerGet"));
+
+            AssertAttackStrategy(
+                Invoke(data, "NormalAttackStrategyCreate"),
+                expected.NormalAttack.StrategyTypeName,
+                expected.NormalAttack.StatusType,
+                expected.NormalAttack.Damage,
+                expected.NormalAttack.Cooltime);
+
+            Array specialAttacks = (Array)Invoke(data, "SpecialAttackStrategiesCreate");
+            AssertSpecialAttacks(specialAttacks, expected.SpecialAttacks);
+        }
+
+        private void AssertSummonValues(Component summon, ExpectedSummon expected)
+        {
+            Assert.AreEqual(expected.Name, Invoke(summon, "GetSummonName"));
+            Assert.AreEqual(expected.Rank, Invoke(summon, "GetSummonRank").ToString());
+            Assert.AreEqual(expected.SummonType, Invoke(summon, "GetSummonType").ToString());
+            Assert.AreEqual(expected.MaxHp, Invoke(summon, "GetMaxHP"));
+            Assert.AreEqual(expected.AttackPower, Invoke(summon, "GetAttackPower"));
+            Assert.AreEqual(expected.HeavyAttackPower, Invoke(summon, "GetHeavyAttackPower"));
+
+            AssertAttackStrategy(
+                Invoke(summon, "GetAttackStrategy"),
+                expected.NormalAttack.StrategyTypeName,
+                expected.NormalAttack.StatusType,
+                expected.NormalAttack.Damage,
+                expected.NormalAttack.Cooltime);
+
+            Array specialAttacks = (Array)Invoke(summon, "GetSpecialAttackStrategy");
+            AssertSpecialAttacks(specialAttacks, expected.SpecialAttacks);
+        }
+
+        private void AssertSpecialAttacks(Array actualSpecialAttacks, ExpectedAttack[] expectedSpecialAttacks)
+        {
+            Assert.NotNull(actualSpecialAttacks);
+            Assert.AreEqual(expectedSpecialAttacks.Length, actualSpecialAttacks.Length);
+
+            for (int i = 0; i < expectedSpecialAttacks.Length; i++)
+            {
+                ExpectedAttack expectedAttack = expectedSpecialAttacks[i];
+                AssertAttackStrategy(
+                    actualSpecialAttacks.GetValue(i),
+                    expectedAttack.StrategyTypeName,
+                    expectedAttack.StatusType,
+                    expectedAttack.Damage,
+                    expectedAttack.Cooltime);
+            }
+        }
+
         private void AssertAttackStrategy(
             object attackStrategy,
             string expectedTypeName,
@@ -1004,6 +1372,91 @@ namespace Summoner.EditModeTests
 
             Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 1);
             specialAttacks.SetValue(AttackDataCreate("ClosestEnemy", "None", 200, 1), 0);
+            FieldSet(data, "specialAttacks", specialAttacks);
+            return data;
+        }
+
+        private ScriptableObject RabbitCurrentDataCreate()
+        {
+            ScriptableObject data = ScriptableObject.CreateInstance(TypeGet("SummonData"));
+            FieldSet(data, "summonName", "Rabbit");
+            FieldSet(data, "summonRank", EnumValue("SummonRank", "Medium"));
+            FieldSet(data, "summonType", EnumValue("SummonType", "Rabbit"));
+            FieldSet(data, "maxHp", 1500d);
+            FieldSet(data, "attackPower", 185d);
+            FieldSet(data, "heavyAttackPower", 0d);
+            FieldSet(data, "normalAttack", AttackDataCreate("ClosestEnemy", "None", 185, 1));
+
+            Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 1);
+            specialAttacks.SetValue(AttackDataCreate("Targeted", "Heal", 0.3, 3), 0);
+            FieldSet(data, "specialAttacks", specialAttacks);
+            return data;
+        }
+
+        private ScriptableObject SnakeCurrentDataCreate()
+        {
+            ScriptableObject data = ScriptableObject.CreateInstance(TypeGet("SummonData"));
+            FieldSet(data, "summonName", "Snake");
+            FieldSet(data, "summonRank", EnumValue("SummonRank", "Medium"));
+            FieldSet(data, "summonType", EnumValue("SummonType", "Snake"));
+            FieldSet(data, "maxHp", 1500d);
+            FieldSet(data, "attackPower", 200d);
+            FieldSet(data, "heavyAttackPower", 0d);
+            FieldSet(data, "normalAttack", AttackDataCreate("ClosestEnemy", "None", 40, 1));
+
+            Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 1);
+            specialAttacks.SetValue(AttackDataCreate("AllEnemies", "Poison", 0.1, 3, 2), 0);
+            FieldSet(data, "specialAttacks", specialAttacks);
+            return data;
+        }
+
+        private ScriptableObject WolfCurrentDataCreate()
+        {
+            ScriptableObject data = ScriptableObject.CreateInstance(TypeGet("SummonData"));
+            FieldSet(data, "summonName", "Wolf");
+            FieldSet(data, "summonRank", EnumValue("SummonRank", "High"));
+            FieldSet(data, "summonType", EnumValue("SummonType", "Wolf"));
+            FieldSet(data, "maxHp", 1750d);
+            FieldSet(data, "attackPower", 250d);
+            FieldSet(data, "heavyAttackPower", 150d);
+            FieldSet(data, "normalAttack", AttackDataCreate("ClosestEnemy", "None", 250, 1));
+
+            Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 1);
+            specialAttacks.SetValue(AttackDataCreate("AllEnemies", "None", 150, 2), 0);
+            FieldSet(data, "specialAttacks", specialAttacks);
+            return data;
+        }
+
+        private ScriptableObject EagleCurrentDataCreate()
+        {
+            ScriptableObject data = ScriptableObject.CreateInstance(TypeGet("SummonData"));
+            FieldSet(data, "summonName", "Eagle");
+            FieldSet(data, "summonRank", EnumValue("SummonRank", "High"));
+            FieldSet(data, "summonType", EnumValue("SummonType", "Eagle"));
+            FieldSet(data, "maxHp", 1750d);
+            FieldSet(data, "attackPower", 225d);
+            FieldSet(data, "heavyAttackPower", 150d);
+            FieldSet(data, "normalAttack", AttackDataCreate("ClosestEnemy", "None", 225, 1));
+
+            Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 1);
+            specialAttacks.SetValue(AttackDataCreate("Targeted", "None", 150, 2), 0);
+            FieldSet(data, "specialAttacks", specialAttacks);
+            return data;
+        }
+
+        private ScriptableObject FoxCurrentDataCreate()
+        {
+            ScriptableObject data = ScriptableObject.CreateInstance(TypeGet("SummonData"));
+            FieldSet(data, "summonName", "Fox");
+            FieldSet(data, "summonRank", EnumValue("SummonRank", "Low"));
+            FieldSet(data, "summonType", EnumValue("SummonType", "Fox"));
+            FieldSet(data, "maxHp", 1250d);
+            FieldSet(data, "attackPower", 175d);
+            FieldSet(data, "heavyAttackPower", 0d);
+            FieldSet(data, "normalAttack", AttackDataCreate("ClosestEnemy", "None", 175, 0));
+
+            Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 1);
+            specialAttacks.SetValue(AttackDataCreate("Targeted", "Upgrade", 0.3, 3, 1), 0);
             FieldSet(data, "specialAttacks", specialAttacks);
             return data;
         }
@@ -1126,6 +1579,62 @@ namespace Summoner.EditModeTests
 
             Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 1);
             specialAttacks.SetValue(AttackDataCreate("AllEnemies", "Heal", 0.1, 3), 0);
+            FieldSet(data, "specialAttacks", specialAttacks);
+            return data;
+        }
+
+        private ScriptableObject FireSpiritCurrentDataCreate()
+        {
+            ScriptableObject data = ScriptableObject.CreateInstance(TypeGet("SummonData"));
+            FieldSet(data, "summonName", "FireSpirit");
+            FieldSet(data, "summonRank", EnumValue("SummonRank", "Normal"));
+            FieldSet(data, "summonType", EnumValue("SummonType", "FireSpirit"));
+            FieldSet(data, "maxHp", 350d);
+            FieldSet(data, "attackPower", 60d);
+            FieldSet(data, "heavyAttackPower", 130d);
+            FieldSet(data, "normalAttack", AttackDataCreate("ClosestEnemy", "None", 60, 0));
+
+            Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 1);
+            specialAttacks.SetValue(AttackDataCreate("AllEnemies", "Upgrade", 0.1, 3, 1), 0);
+            FieldSet(data, "specialAttacks", specialAttacks);
+            return data;
+        }
+
+        private ScriptableObject QueenSpiritCurrentDataCreate()
+        {
+            ScriptableObject data = ScriptableObject.CreateInstance(TypeGet("SummonData"));
+            FieldSet(data, "summonName", "QueenSpirit");
+            FieldSet(data, "summonRank", EnumValue("SummonRank", "Special"));
+            FieldSet(data, "summonType", EnumValue("SummonType", "QueenSpirit"));
+            FieldSet(data, "maxHp", 400d);
+            FieldSet(data, "attackPower", 100d);
+            FieldSet(data, "heavyAttackPower", 140d);
+            FieldSet(data, "normalAttack", AttackDataCreate("ClosestEnemy", "None", 100, 0));
+
+            Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 3);
+            specialAttacks.SetValue(AttackDataCreate("AllEnemies", "None", 70, 0), 0);
+            specialAttacks.SetValue(AttackDataCreate("AllEnemies", "Heal", 0.2, 3), 1);
+            specialAttacks.SetValue(AttackDataCreate("Targeted", "Stun", 0, 3, 1), 2);
+            FieldSet(data, "specialAttacks", specialAttacks);
+            return data;
+        }
+
+        private ScriptableObject DarkDragonCurrentDataCreate()
+        {
+            ScriptableObject data = ScriptableObject.CreateInstance(TypeGet("SummonData"));
+            FieldSet(data, "summonName", "DarkDragon");
+            FieldSet(data, "summonRank", EnumValue("SummonRank", "Boss"));
+            FieldSet(data, "summonType", EnumValue("SummonType", "DarkDragon"));
+            FieldSet(data, "maxHp", 3000d);
+            FieldSet(data, "attackPower", 400d);
+            FieldSet(data, "heavyAttackPower", 500d);
+            FieldSet(data, "normalAttack", AttackDataCreate("ClosestEnemy", "None", 400, 0));
+
+            Array specialAttacks = Array.CreateInstance(TypeGet("SummonAttackData"), 4);
+            specialAttacks.SetValue(AttackDataCreate("AllEnemies", "None", 370, 0), 0);
+            specialAttacks.SetValue(AttackDataCreate("AllEnemies", "Burn", 0.2, 5, 2), 1);
+            specialAttacks.SetValue(AttackDataCreate("Targeted", "None", 450, 0), 2);
+            specialAttacks.SetValue(AttackDataCreate("Targeted", "LifeDrain", 0.2, 4, 2), 3);
             FieldSet(data, "specialAttacks", specialAttacks);
             return data;
         }

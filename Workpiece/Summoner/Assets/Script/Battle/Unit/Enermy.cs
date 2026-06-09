@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enermy : Character
+public class Enermy : MonoBehaviour
 {
     [Header("컨트롤러")]
     [SerializeField] private TurnController turnController;

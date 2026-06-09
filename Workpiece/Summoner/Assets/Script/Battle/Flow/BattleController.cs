@@ -96,137 +96,69 @@ public class BattleController : MonoBehaviour
     //타겟지정 로직
     private void HandleTargetedAttack(Summon attackSummon, TargetedAttackStrategy targetedAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
+        List<Plate> targetPlates = SpecialAttackTargetPlatesGet(targetedAttack, isPlayer);
 
-        if (isPlayer) //플레이어
+        if (!targetedAttack.BenefitEffectCheck() && !IsValidPlateIndex(selectedPlateIndex, targetPlates.Count))
         {
-            //아군 버프에 대한 것일경우
-            if (targetedAttack.BenefitEffectCheck())
-            {
-                SpecialAttackApply(
-                    attackSummon,
-                    plateController.GetPlayerPlates(),
-                    selectedPlateIndex,
-                    selectSpecialAttackIndex,
-                    $"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
-                return;
-            }
-            //공격에 대한 것일경우
-            if (!IsValidPlateIndex(selectedPlateIndex, plateController.GetEnermyPlates().Count))
-            {
-                Debug.Log("유효한 적의 플레이트 인덱스가 선택되지 않았습니다.");
-                return;
-            }
-            else
-            {
-                SpecialAttackApply(
-                    attackSummon,
-                    plateController.GetEnermyPlates(),
-                    selectedPlateIndex,
-                    selectSpecialAttackIndex,
-                    $"플레이어가 선택한 적의 플레이트 {selectedPlateIndex}가 공격 대상입니다.");
-            }
+            Debug.Log(TargetedAttackInvalidLogGet(isPlayer));
+            return;
         }
-        else //적
-        {
-            if (targetedAttack.BenefitEffectCheck())
-            {
-                SpecialAttackApply(
-                    attackSummon,
-                    plateController.GetEnermyPlates(),
-                    selectedPlateIndex,
-                    selectSpecialAttackIndex,
-                    $"적이 선택한 적의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다.");
-                return;
-            }
-            if (!IsValidPlateIndex(selectedPlateIndex, plateController.GetPlayerPlates().Count))
-            {
-                Debug.Log("유효한 플레이어의 플레이트 인덱스가 선택되지 않았습니다.");
-                return;
-            }
-            else
-            {
-                SpecialAttackApply(
-                    attackSummon,
-                    plateController.GetPlayerPlates(),
-                    selectedPlateIndex,
-                    selectSpecialAttackIndex,
-                    $"적이 선택한 플레이어의 플레이트 {selectedPlateIndex}가 공격 대상입니다.");
-            }
 
-        }
+        SpecialAttackApply(
+            attackSummon,
+            targetPlates,
+            selectedPlateIndex,
+            selectSpecialAttackIndex,
+            TargetedAttackSuccessLogGet(targetedAttack, selectedPlateIndex, isPlayer));
     }
 
 
     //전체공격 로직
     private void HandleAttackAll(Summon attackSummon, AttackAllEnemiesStrategy allAttackstrategy, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
+        List<Plate> targetPlates = SpecialAttackTargetPlatesGet(allAttackstrategy, isPlayer);
 
         if (isPlayer)
         {
-            if(allAttackstrategy.BenefitEffectCheck()) //힐, 보호막, 강화 인지 묻기
-            {
-                SpecialAttackApply(
-                    attackSummon,
-                    plateController.GetPlayerPlates(),
-                    selectedPlateIndex,
-                    selectSpecialAttackIndex,
-                    "아군의 특수 전체 공격이 성공적으로 수행되었습니다.");
-            }
-            else
-            {
-                SpecialAttackApply(
-                    attackSummon,
-                    plateController.GetEnermyPlates(),
-                    selectedPlateIndex,
-                    selectSpecialAttackIndex,
-                    "아군의 특수 전체 공격이 성공적으로 수행되었습니다.");
-            }
+            SpecialAttackApply(
+                attackSummon,
+                targetPlates,
+                selectedPlateIndex,
+                selectSpecialAttackIndex,
+                "아군의 특수 전체 공격이 성공적으로 수행되었습니다.");
+            return;
         }
-        else
-        {
-            if (allAttackstrategy.BenefitEffectCheck()) //힐, 보호막, 강화 인지 묻기
-            {
-                SpecialAttackApply(
-                    attackSummon,
-                    plateController.GetEnermyPlates(),
-                    selectedPlateIndex,
-                    selectSpecialAttackIndex,
-                    "적의 특수 전체 공격이 성공적으로 수행되었습니다.");
-            }
-            else
-            {
-                SpecialAttackApply(
-                    attackSummon,
-                    plateController.GetPlayerPlates(),
-                    selectedPlateIndex,
-                    selectSpecialAttackIndex,
-                    "적의 특수 전체 공격이 성공적으로 수행되었습니다.");
-            }
-        }
+
+        SpecialAttackApply(
+            attackSummon,
+            targetPlates,
+            selectedPlateIndex,
+            selectSpecialAttackIndex,
+            "적의 특수 전체 공격이 성공적으로 수행되었습니다.");
     }
 
     //근접공격 로직
     private void HandleClosestEnemyAttack(Summon attackSummon, ClosestEnemyAttackStrategy closestAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
+        List<Plate> targetPlates = SpecialAttackTargetPlatesGet(closestAttack, isPlayer);
 
         if (isPlayer)
         {
             SpecialAttackApply(
                 attackSummon,
-                plateController.GetEnermyPlates(),
+                targetPlates,
                 selectedPlateIndex,
                 selectSpecialAttackIndex,
                 "아군의 특수 근접 공격이 성공적으로 수행되었습니다.");
+            return;
         }
-        else
-        {
-            SpecialAttackApply(
-                attackSummon,
-                plateController.GetPlayerPlates(),
-                selectedPlateIndex,
-                selectSpecialAttackIndex,
-                "적의 특수 근접 공격이 성공적으로 수행되었습니다.");
-        }
+
+        SpecialAttackApply(
+            attackSummon,
+            targetPlates,
+            selectedPlateIndex,
+            selectSpecialAttackIndex,
+            "적의 특수 근접 공격이 성공적으로 수행되었습니다.");
     }
 
 
@@ -234,6 +166,39 @@ public class BattleController : MonoBehaviour
     private bool IsValidPlateIndex(int selectedPlateIndex, int plateCount)
     {
         return selectedPlateIndex >= 0 && selectedPlateIndex < plateCount;
+    }
+
+    private List<Plate> SpecialAttackTargetPlatesGet(IAttackStrategy attackStrategy, bool isPlayer)
+    {
+        bool targetsOwnPlates = attackStrategy.BenefitEffectCheck();
+
+        if (isPlayer == targetsOwnPlates)
+        {
+            return plateController.GetPlayerPlates();
+        }
+
+        return plateController.GetEnermyPlates();
+    }
+
+    private string TargetedAttackSuccessLogGet(TargetedAttackStrategy targetedAttack, int selectedPlateIndex, bool isPlayer)
+    {
+        if (isPlayer)
+        {
+            return targetedAttack.BenefitEffectCheck()
+                ? $"플레이어가 선택한 아군의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다."
+                : $"플레이어가 선택한 적의 플레이트 {selectedPlateIndex}가 공격 대상입니다.";
+        }
+
+        return targetedAttack.BenefitEffectCheck()
+            ? $"적이 선택한 적의 플레이트 {selectedPlateIndex}가 이로운 효과 대상입니다."
+            : $"적이 선택한 플레이어의 플레이트 {selectedPlateIndex}가 공격 대상입니다.";
+    }
+
+    private string TargetedAttackInvalidLogGet(bool isPlayer)
+    {
+        return isPlayer
+            ? "유효한 적의 플레이트 인덱스가 선택되지 않았습니다."
+            : "유효한 플레이어의 플레이트 인덱스가 선택되지 않았습니다.";
     }
 
     private void SpecialAttackApply(

@@ -14,27 +14,12 @@ public class WaterSpirit : Summon
             return;
         }
 
-        summonName = "WaterSpirit"; //이름 물정령
-        maxHP = 350; //최대체력 350
-        nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
-        attackPower = 70; //일반공격 70
-        heavyAttakPower = 120; //강공격
-        summonRank = SummonRank.Normal; // 일반 소환수
-        summonType = SummonType.WaterSpirit;
+        FallbackStatusSet("WaterSpirit", SummonRank.Normal, SummonType.WaterSpirit, 350, 70, 120);
 
         // 일반 공격: 가장 가까운 적 공격
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] { new TargetedAttackStrategy(StatusType.Shield, 80, 2)};//쉴드
+        AttackStrategiesSet(
+            new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0),
+            new TargetedAttackStrategy(StatusType.Shield, 80, 2));//쉴드
     }
 
-
-    public override void Die()
-    {
-        base.Die();
-    }
-
-    public override void TakeDamage(double damage)
-    {
-        base.TakeDamage(damage);
-    }
 }

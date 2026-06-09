@@ -8,31 +8,20 @@ public class DarkDragon : Summon
     {
         base.Awake();
 
-        summonName = "DarkDragon"; //이름 다크 드래곤
-        maxHP = 3000; //최대체력 200
-        nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
-        attackPower = 400; //일반공격
-        heavyAttakPower = 500;
-        summonRank = SummonRank.Boss; // 특급 소환수
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
+        FallbackStatusSet("DarkDragon", SummonRank.Boss, SummonType.DarkDragon, 3000, 400, 500);
 
         // 일반 공격: 가장 가까운 적 공격
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] {
+        AttackStrategiesSet(
+            new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0),
             new AttackAllEnemiesStrategy(StatusType.None, 370, 0), //전체공격 데미지 370
             new AttackAllEnemiesStrategy(StatusType.Burn, 0.2, 5,2), //화상, 체력 20% 데미지, 쿨타임 5턴, 지속시간 2턴
             new TargetedAttackStrategy(StatusType.None, 450, 0), //저격, 데미지450
-            new TargetedAttackStrategy(StatusType.LifeDrain, 0.2, 4, 2) //대상에게 흡혈, 쿨타임 4턴, 지속시간 2턴
-        };
+            new TargetedAttackStrategy(StatusType.LifeDrain, 0.2, 4, 2)); //대상에게 흡혈, 쿨타임 4턴, 지속시간 2턴
     }
 
-
-    public override void Die()
-    {
-        base.Die();
-    }
-
-    public override void TakeDamage(double damage)
-    {
-        base.TakeDamage(damage);
-    }
 }

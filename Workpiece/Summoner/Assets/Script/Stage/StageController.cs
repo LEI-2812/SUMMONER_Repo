@@ -55,37 +55,37 @@ public class StageController : MonoBehaviour
         {
             case 1:
                 SendStory(stage);
-                Summon.multiple = 1;
+                Summon.StatMultiplierSet(1);
                 SaveStage(1);
                 break;
             case 2:
                 SendStory(stage);
-                Summon.multiple = 1;
+                Summon.StatMultiplierSet(1);
                 SaveStage(2);
                 break;
             case 3:
                 SendStory(stage);
-                Summon.multiple = 1.2;
+                Summon.StatMultiplierSet(1.2);
                 SaveStage(3);
                 break;
             case 4:
                 SendFight(stage);
-                Summon.multiple = 1.2;
+                Summon.StatMultiplierSet(1.2);
                 SaveStage(4);
                 break;
             case 5:
                 SendStory(stage);
-                Summon.multiple = 1.5;
+                Summon.StatMultiplierSet(1.5);
                 SaveStage(5);
                 break;
             case 6:
                 SendFight(stage);
-                Summon.multiple = 1.5;
+                Summon.StatMultiplierSet(1.5);
                 SaveStage(6);
                 break;
             case 7:
                 SendStory(stage);
-                Summon.multiple = 2.5;
+                Summon.StatMultiplierSet(2.5);
                 SaveStage(7);
                 break;
             // 필요한 스테이지만큼 추가
@@ -100,31 +100,31 @@ public class StageController : MonoBehaviour
         {
             case 1:
                 SendFight(stage);
-                Summon.multiple = 1;
+                Summon.StatMultiplierSet(1);
                 break;
             case 2:
                 SendFight(stage);
-                Summon.multiple = 1;
+                Summon.StatMultiplierSet(1);
                 break;
             case 3:
                 SendFight(stage);
-                Summon.multiple = 1.5;
+                Summon.StatMultiplierSet(1.5);
                 break;
             case 4:
                 SendFight(stage);
-                Summon.multiple = 1.5;
+                Summon.StatMultiplierSet(1.5);
                 break;
             case 5:
                 SendFight(stage);
-                Summon.multiple = 2;
+                Summon.StatMultiplierSet(2);
                 break;
             case 6:
                 SendFight(stage);
-                Summon.multiple = 2;
+                Summon.StatMultiplierSet(2);
                 break;
             case 7:
                 SendFight(stage);
-                Summon.multiple = 4;
+                Summon.StatMultiplierSet(4);
                 break;
             // 필요한 스테이지만큼 추가
             default:

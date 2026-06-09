@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class getParenSummontImage : MonoBehaviour
+public class ParentSummonImage : MonoBehaviour
 {
     [Header("적 소환수 넣기")]
     [SerializeField] private Summon summon; // 적 소환수 직접 할당

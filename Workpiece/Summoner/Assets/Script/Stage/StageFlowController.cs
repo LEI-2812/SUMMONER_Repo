@@ -38,31 +38,31 @@ public class StageFlowController : MonoBehaviour
         switch (stage)
         {
             case 1:
-                Summon.multiple = 1;
+                Summon.StatMultiplierSet(1);
                 SendStory(stage);
                 break;
             case 2:
-                Summon.multiple = 1;
+                Summon.StatMultiplierSet(1);
                 SendStory(stage);
                 break;
             case 3:
-                Summon.multiple = 1.2;
+                Summon.StatMultiplierSet(1.2);
                 SendStory(stage);
                 break;
             case 4:
-                Summon.multiple = 1.2;
+                Summon.StatMultiplierSet(1.2);
                 SendFight(stage);
                 break;
             case 5:
-                Summon.multiple = 1.5;
+                Summon.StatMultiplierSet(1.5);
                 SendStory(stage);
                 break;
             case 6:
-                Summon.multiple = 1.5;
+                Summon.StatMultiplierSet(1.5);
                 SendFight(stage);
                 break;
             case 7:
-                Summon.multiple = 2.5;
+                Summon.StatMultiplierSet(2.5);
                 SendStory(stage);
                 break;
             default:

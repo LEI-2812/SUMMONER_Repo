@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 
-public class Player : Character
+public class Player : MonoBehaviour
 {
     [Header("마나UI")]
     [SerializeField] private List<RawImage> manaList;

@@ -14,6 +14,11 @@ sandbox = "unelevated"
     'D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\.codex', # Codex 작업 공간
     'D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\.agents', # Agent 작업 공간
     'D:\GitRepo\SUMMONER_Refactor\.git', # 깃
+
+    'D:\UnityProjects\SUMMONER_Repo\Workpiece\Summoner',
+    'D:\UnityProjects\SUMMONER_Repo\Workpiece\Summoner\.codex',
+    'D:\UnityProjects\SUMMONER_Repo\Workpiece\Summoner\.agents',
+    'D:\UnityProjects\SUMMONER_Repo\.git'
   ]
 
 # Unity MCP
@@ -35,4 +40,4 @@ approval_mode = "auto"
 approval_mode = "auto"
 
 [mcp_servers.mcp-unity.tools.get_scene_info]
-approval_mode = "approve"
+approval_mode = "auto"

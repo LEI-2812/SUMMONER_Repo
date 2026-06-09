@@ -38,6 +38,8 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("private List<Summon> CreateDrawOptions()", text);
             StringAssert.Contains("private Summon SelectDrawOptionByRank()", text);
             StringAssert.Contains("private Summon SelectRandomSummonByRank(SummonRank rank)", text);
+            StringAssert.Contains("summon.GetDrawRank() == rank", text);
+            Assert.IsFalse(text.Contains("summon.GetSummonRank() == rank"), "Draw option selection should read rank from SummonData without initializing summon state.");
             Assert.IsFalse(text.Contains("TakeSummonSelection"), "Internal draw coroutine should not use old Take naming.");
             Assert.IsFalse(text.Contains("ReSummonSelection"), "Internal redraw coroutine should not use old ReSummon selection naming.");
             Assert.IsFalse(text.Contains("ReSummonPanelOpenAndHighlight"), "Internal redraw plate selection should use Redraw naming.");
@@ -96,6 +98,19 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("optionPanel.SetSelectionHandler(OnSelectSummon)", controllerText);
             Assert.IsFalse(controllerText.Contains("public static SummonController Instance"), "SummonController should not keep an unused global Instance.");
             Assert.IsFalse(controllerText.Contains("Instance = this"), "SummonController should not keep singleton assignment after panel selection uses handlers.");
+        }
+
+        [Test]
+        public void SummonController_DelegatesRedrawPlateSelection()
+        {
+            string controllerText = File.ReadAllText("Assets/Script/Battle/SummonPick/SummonController.cs");
+            string selectionText = File.ReadAllText("Assets/Script/Battle/SummonPick/PlateSelectionController.cs");
+
+            StringAssert.Contains("private PlateSelectionController plateSelectionController;", controllerText);
+            StringAssert.Contains("plateSelectionController.CanStartRedrawSelection()", controllerText);
+            StringAssert.Contains("plateSelectionController.ShowRedrawSelectablePlates(darkBackground)", controllerText);
+            StringAssert.Contains("plateSelectionController.TryGetPlayerPlateIndex(plate, out selectedPlateIndex)", controllerText);
+            StringAssert.Contains("public class PlateSelectionController", selectionText);
         }
 
         [Test]
@@ -387,6 +402,77 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("StatusType.Heal", battleText);
             StringAssert.Contains("StatusType.Upgrade", battleText);
             StringAssert.Contains("StatusType.Shield", battleText);
+        }
+
+        [Test]
+        public void BattleController_UsesSharedSpecialAttackTargetPlateResolution()
+        {
+            string battleText = File.ReadAllText("Assets/Script/Battle/Flow/BattleController.cs");
+
+            StringAssert.Contains("private List<Plate> SpecialAttackTargetPlatesGet(IAttackStrategy attackStrategy, bool isPlayer)", battleText);
+            StringAssert.Contains("SpecialAttackTargetPlatesGet(targetedAttack, isPlayer)", battleText);
+            StringAssert.Contains("SpecialAttackTargetPlatesGet(allAttackstrategy, isPlayer)", battleText);
+            StringAssert.Contains("SpecialAttackTargetPlatesGet(closestAttack, isPlayer)", battleText);
+            StringAssert.Contains("bool targetsOwnPlates = attackStrategy.BenefitEffectCheck();", battleText);
+        }
+
+        [Test]
+        public void EnermyAlgorithm_UsesSharedNormalAttackExecution()
+        {
+            string algorithmText = File.ReadAllText("Assets/Script/Battle/EnemyAction/EnermyAlgorithm.cs");
+
+            StringAssert.Contains("private void EnemyNormalAttackExecute(Summon attacker, int targetPlateIndex)", algorithmText);
+            StringAssert.Contains("private void EnemyHeavyNormalAttackExecute(Summon attacker)", algorithmText);
+            Assert.AreEqual(2, CountOccurrences(algorithmText, "EnemyNormalAttackExecute(attacker, targetPlateIndex);"));
+            Assert.AreEqual(1, CountOccurrences(algorithmText, "attacker.SetAttackPower(attacker.GetHeavyAttackPower());"));
+            StringAssert.Contains("attacker.NormalAttack(plateController.GetPlayerPlates(), targetPlateIndex);", algorithmText);
+            StringAssert.Contains("attacker.SetAttackPower(originPower);", algorithmText);
+        }
+
+        [Test]
+        public void EnermyAlgorithm_UsesSharedSpecialAttackExecutionLog()
+        {
+            string algorithmText = File.ReadAllText("Assets/Script/Battle/EnemyAction/EnermyAlgorithm.cs");
+
+            StringAssert.Contains("private void EnemySpecialAttackExecute(Summon attacker, int targetPlateIndex, int specialAttackIndex, string logMessage)", algorithmText);
+            StringAssert.Contains("battleController.SpecialAttackExecute(attacker, targetPlateIndex, specialAttackIndex);", algorithmText);
+            StringAssert.Contains("Debug.Log(logMessage);", algorithmText);
+            Assert.LessOrEqual(CountOccurrences(algorithmText, "battleController.SpecialAttackExecute(attacker,"), 1);
+            StringAssert.Contains("EnemySpecialAttackExecute(attacker, targetPlateIndex, i,", algorithmText);
+            StringAssert.Contains("EnemySpecialAttackExecute(attacker, attackingEnermyPlateIndex, i,", algorithmText);
+            StringAssert.Contains("EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i,", algorithmText);
+        }
+
+        [Test]
+        public void ClosestEnemyAttack_UsesCurrentAttackPowerForBuffedDamage()
+        {
+            string effectText = File.ReadAllText("Assets/Script/Battle/Attack/ClosestEnemyAttackEffectInstanceCreate.cs");
+            int effectMethodIndex = effectText.IndexOf("public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)");
+            int takeDamageIndex = effectText.IndexOf("target.TakeDamage(attacker.GetAttackPower());", effectMethodIndex);
+            int specialDamageIndex = effectText.IndexOf("GetSpecialDamage()", effectMethodIndex);
+
+            Assert.GreaterOrEqual(effectMethodIndex, 0, "Closest enemy attack effect should have an apply method.");
+            Assert.Greater(takeDamageIndex, effectMethodIndex, "Closest enemy attack should use current attack power so buffs and curses affect damage.");
+            Assert.AreEqual(-1, specialDamageIndex, "Closest enemy attack should not use fixed strategy damage for runtime damage.");
+            StringAssert.Contains("버프/저주/강공격 전환이 반영된 현재 공격력을 사용한다.", effectText);
+        }
+
+        [Test]
+        public void CatSpecialAttack_KeepsHeavyAttackOnCurrentAttackPowerPath()
+        {
+            string catText = File.ReadAllText("Assets/Script/Summons/Cat.cs");
+            int methodIndex = catText.IndexOf("private void CatSpecialAttackWithHeavyAttackPowerExecute");
+            int originIndex = catText.IndexOf("double originAttackPower = GetAttackPower();", methodIndex);
+            int heavyPowerIndex = catText.IndexOf("SetAttackPower(GetHeavyAttackPower());", methodIndex);
+            int attackIndex = catText.IndexOf("specialAttack.Attack(this, enemyPlates, selectedPlateIndex, specialAttackArrayIndex);", methodIndex);
+            int restoreIndex = catText.IndexOf("SetAttackPower(originAttackPower);", methodIndex);
+
+            Assert.GreaterOrEqual(methodIndex, 0, "Cat should keep a dedicated heavy attack execution path.");
+            Assert.Greater(originIndex, methodIndex, "Cat should save current attack power before heavy attack conversion.");
+            Assert.Greater(heavyPowerIndex, originIndex, "Cat should place heavy attack power on the current attack power path.");
+            Assert.Greater(attackIndex, heavyPowerIndex, "Cat should attack after heavy attack conversion.");
+            Assert.Greater(restoreIndex, attackIndex, "Cat should restore current attack power after the attack.");
+            StringAssert.Contains("강공격도 버프/저주가 반영되는 현재 공격력 경로로 실행한다.", catText);
         }
 
         private static int CountOccurrences(string text, string value)

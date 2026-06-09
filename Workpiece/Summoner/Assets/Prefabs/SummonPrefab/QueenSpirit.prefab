@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 968215f92af478f4b9992479f99f35b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  summonData: {fileID: 11400000, guid: e9d8c05d2e2843f9f76a9fd7abcd9889, type: 2}
   shieldImage: {fileID: 1657134635101431524}
   animator: {fileID: 8208020497896623717}
   normalAttackSprite: {fileID: 0}

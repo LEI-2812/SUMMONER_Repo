@@ -152,14 +152,12 @@ public class EnermyAlgorithm : MonoBehaviour
                 if (attackStrategy[i].GetStatusType() == StatusType.Heal) //타겟플레이트가 적이 되어야함
                 {
                     int targetPlateIndex = plateController.GetLowestHealthEnermyPlateIndex();
-                    battleController.SpecialAttackExecute(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.GetSummonName()}가 힐 특수 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, targetPlateIndex, i, $"{attacker.GetSummonName()}가 힐 특수 공격을 실행했습니다.");
                     return true;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //저격공격인지 검사
                 {
-                    battleController.SpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i); //저격공격
-                    Debug.Log($"{attacker.GetSummonName()}가 특수 저격 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i, $"{attacker.GetSummonName()}가 특수 저격 공격을 실행했습니다.");
                     return true;
                 }
             }
@@ -188,20 +186,17 @@ public class EnermyAlgorithm : MonoBehaviour
                 }
                 if (attackStrategy[i].GetStatusType() == StatusType.Stun)
                 {
-                    battleController.SpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i);
-                    Debug.Log($"{attacker.GetSummonName()}가 스턴 특수 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i, $"{attacker.GetSummonName()}가 스턴 특수 공격을 실행했습니다.");
                     return true;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.Shield)
                 {
-                    battleController.SpecialAttackExecute(attacker, attackingEnermyPlateIndex, i);
-                    Debug.Log($"{attacker.GetSummonName()}가 쉴드 특수 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, attackingEnermyPlateIndex, i, $"{attacker.GetSummonName()}가 쉴드 특수 공격을 실행했습니다.");
                     return true;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.Heal)
                 {
-                    battleController.SpecialAttackExecute(attacker, attackingEnermyPlateIndex, i);
-                    Debug.Log($"{attacker.GetSummonName()}가 힐 특수 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, attackingEnermyPlateIndex, i, $"{attacker.GetSummonName()}가 힐 특수 공격을 실행했습니다.");
                     return true;
                 }
             }
@@ -230,21 +225,17 @@ public class EnermyAlgorithm : MonoBehaviour
                 }
                 if (attackStrategy[i].GetStatusType() == StatusType.Stun)
                 {
-                    battleController.SpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i); //공격한 대상에게 스턴
-
-                    Debug.Log($"{attacker.GetSummonName()}가 스턴 특수 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i, $"{attacker.GetSummonName()}가 스턴 특수 공격을 실행했습니다.");
                     return true;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.Shield) //가장 체력이 낮은 적에게 쉴드
                 {
-                    battleController.SpecialAttackExecute(attacker, attackingEnermyPlateIndex, i); //자기 자신에게 쉴드
-                    Debug.Log($"{attacker.GetSummonName()}가 쉴드 특수 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, attackingEnermyPlateIndex, i, $"{attacker.GetSummonName()}가 쉴드 특수 공격을 실행했습니다.");
                     return true;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.Heal)
                 {
-                    battleController.SpecialAttackExecute(attacker, attackingEnermyPlateIndex, i); //자기자신에게 힐
-                    Debug.Log($"{attacker.GetSummonName()}가 힐 특수 스킬을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, attackingEnermyPlateIndex, i, $"{attacker.GetSummonName()}가 힐 특수 스킬을 실행했습니다.");
                     return true;
                 }
             }
@@ -272,14 +263,12 @@ public class EnermyAlgorithm : MonoBehaviour
                 }
                 if (attackStrategy[i].GetStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //타겟공격인지 검사
                 {
-                    battleController.SpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i);
-                    Debug.Log($"{attacker.GetSummonName()}가 특수 저격 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i, $"{attacker.GetSummonName()}가 특수 저격 공격을 실행했습니다.");
                     return true;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.None && attackStrategy[i] is AttackAllEnemiesStrategy) //전체공격인지 검사
                 {
-                    battleController.SpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i);
-                    Debug.Log($"{attacker.GetSummonName()}가 특수 전체 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i, $"{attacker.GetSummonName()}가 특수 전체 공격을 실행했습니다.");
                     return true;
                 }
             }
@@ -307,16 +296,12 @@ public class EnermyAlgorithm : MonoBehaviour
                 }
                 if (attackStrategy[i].GetStatusType() == StatusType.Curse) //저주공격인지 검사
                 {
-                    battleController.SpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i);
-                    //specialAttackExecuted = true;
-                    Debug.Log($"{attacker.GetSummonName()}가 특수 저주 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i, $"{attacker.GetSummonName()}가 특수 저주 공격을 실행했습니다.");
                     return true;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.None && attackStrategy[i] is TargetedAttackStrategy) //저격공격인지 검사
                 {
-                    battleController.SpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i);
-                   // specialAttackExecuted = true;
-                    Debug.Log($"{attacker.GetSummonName()}가 특수 저격 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i, $"{attacker.GetSummonName()}가 특수 저격 공격을 실행했습니다.");
                     return true;
                 }
             }
@@ -329,22 +314,9 @@ public class EnermyAlgorithm : MonoBehaviour
     private void HandleReactNormalAttack(Summon attacker, int attackingEnermyPlateIndex, int targetPlateIndex)
     {
         IAttackStrategy[] attackStrategy = attacker.GetSpecialAttackStrategy(); //해당 소환수의 스킬 가져오기
-        float randomValue;
         if (attackStrategy == null)
         {
-            randomValue = UnityEngine.Random.Range(0f, 100f); // 0에서 100 사이의 무작위 값
-            if (randomValue < 30f) //강공격
-            {
-                Debug.Log($"{attacker.name} 의 강공격");
-                double originPower = attacker.GetAttackPower();
-                attacker.SetAttackPower(attacker.GetHeavyAttackPower()); //공격력을 강공격력으로 전환
-                attacker.NormalAttack(plateController.GetPlayerPlates(), plateController.GetClosestPlayerPlateIndexExcept(attacker)); //일반공격수행
-                attacker.SetAttackPower(originPower); //원래 공격력으로 되돌리기
-            }
-            else //일반 공격력으로 공격
-            {
-                attacker.NormalAttack(plateController.GetPlayerPlates(), targetPlateIndex); //일반공격 수행
-            }
+            EnemyNormalAttackExecute(attacker, targetPlateIndex);
             Debug.Log($"{attacker.GetSummonName()}가 일반 공격을 실행했습니다.");
             return;
         }
@@ -363,8 +335,7 @@ public class EnermyAlgorithm : MonoBehaviour
                     }
                     if (attackStrategy[i].GetStatusType() == StatusType.LifeDrain) //흡혈 공격인지 검사
                     {
-                        battleController.SpecialAttackExecute(attacker, index, i);
-                        Debug.Log($"{attacker.GetSummonName()}가 특수 흡혈 공격을 실행했습니다.");
+                        EnemySpecialAttackExecute(attacker, index, i, $"{attacker.GetSummonName()}가 특수 흡혈 공격을 실행했습니다.");
                         return;
                     }
                 }
@@ -379,20 +350,17 @@ public class EnermyAlgorithm : MonoBehaviour
                     }
                     if (attackStrategy[i].GetStatusType() == StatusType.Upgrade) //강화 공격인지 검사
                     {
-                        battleController.SpecialAttackExecute(attacker, targetPlateIndex, i);
-                        Debug.Log($"{attacker.GetSummonName()}가 특수 강화 공격을 실행했습니다.");
+                        EnemySpecialAttackExecute(attacker, targetPlateIndex, i, $"{attacker.GetSummonName()}가 특수 강화 공격을 실행했습니다.");
                         return;
                     }
                     else if (attackStrategy[i].GetStatusType() == StatusType.Burn) //화상 공격인지 검사
                     {
-                        battleController.SpecialAttackExecute(attacker, targetPlateIndex, i);
-                        Debug.Log($"{attacker.GetSummonName()}가 특수 화상 공격을 실행했습니다.");
+                        EnemySpecialAttackExecute(attacker, targetPlateIndex, i, $"{attacker.GetSummonName()}가 특수 화상 공격을 실행했습니다.");
                         return;
                     }
                     else if (attackStrategy[i].GetStatusType() == StatusType.None && attackStrategy[i] is AttackAllEnemiesStrategy) //전체 공격인지 검사
                     {
-                        battleController.SpecialAttackExecute(attacker, targetPlateIndex, i);
-                        Debug.Log($"{attacker.GetSummonName()}가 특수 전체 공격을 실행했습니다.");
+                        EnemySpecialAttackExecute(attacker, targetPlateIndex, i, $"{attacker.GetSummonName()}가 특수 전체 공격을 실행했습니다.");
                         return;
                     }
                 }
@@ -408,20 +376,17 @@ public class EnermyAlgorithm : MonoBehaviour
                 }
                 if (attackStrategy[i].GetStatusType() == StatusType.Curse)
                 {
-                    battleController.SpecialAttackExecute(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.GetSummonName()}가 특수 저주 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, targetPlateIndex, i, $"{attacker.GetSummonName()}가 특수 저주 공격을 실행했습니다.");
                     return;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.Stun)
                 {
-                    battleController.SpecialAttackExecute(attacker, targetPlateIndex, i);
-                    Debug.Log($"{attacker.GetSummonName()}가 특수 혼란 공격을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, targetPlateIndex, i, $"{attacker.GetSummonName()}가 특수 혼란 공격을 실행했습니다.");
                     return;
                 }
                 else if (attackStrategy[i].GetStatusType() == StatusType.Shield)
                 {
-                    battleController.SpecialAttackExecute(attacker, attackingEnermyPlateIndex, i); //자기 자신에게 쉴드
-                    Debug.Log($"{attacker.GetSummonName()}가 특수 쉴드 스킬을 실행했습니다.");
+                    EnemySpecialAttackExecute(attacker, attackingEnermyPlateIndex, i, $"{attacker.GetSummonName()}가 특수 쉴드 스킬을 실행했습니다.");
                     return;
                 }
             }
@@ -429,23 +394,37 @@ public class EnermyAlgorithm : MonoBehaviour
         
 
 
-        randomValue = UnityEngine.Random.Range(0f, 100f); // 0에서 100 사이의 무작위 값
-        if (randomValue < 30f) //강공격
-        {
-            Debug.Log($"{attacker.name} 의 강공격");
-            double originPower = attacker.GetAttackPower();
-            attacker.SetAttackPower(attacker.GetHeavyAttackPower()); //공격력을 강공격력으로 전환
-            attacker.NormalAttack(plateController.GetPlayerPlates(), plateController.GetClosestPlayerPlateIndexExcept(attacker)); //일반공격수행
-            attacker.SetAttackPower(originPower); //원래 공격력으로 되돌리기
-        }
-        else //일반 공격력으로 공격
-        {
-            attacker.NormalAttack(plateController.GetPlayerPlates(), targetPlateIndex); //일반공격 수행
-        }
+        EnemyNormalAttackExecute(attacker, targetPlateIndex);
         Debug.Log($"{attacker.GetSummonName()}가 일반 공격을 실행했습니다.");
 
     }
 
+    private void EnemyNormalAttackExecute(Summon attacker, int targetPlateIndex)
+    {
+        float randomValue = UnityEngine.Random.Range(0f, 100f); // 0에서 100 사이의 무작위 값
+        if (randomValue < 30f) //강공격
+        {
+            EnemyHeavyNormalAttackExecute(attacker);
+            return;
+        }
+
+        attacker.NormalAttack(plateController.GetPlayerPlates(), targetPlateIndex); //일반공격 수행
+    }
+
+    private void EnemyHeavyNormalAttackExecute(Summon attacker)
+    {
+        Debug.Log($"{attacker.name} 의 강공격");
+        double originPower = attacker.GetAttackPower();
+        attacker.SetAttackPower(attacker.GetHeavyAttackPower()); //공격력을 강공격력으로 전환
+        attacker.NormalAttack(plateController.GetPlayerPlates(), plateController.GetClosestPlayerPlateIndexExcept(attacker)); //일반공격수행
+        attacker.SetAttackPower(originPower); //원래 공격력으로 되돌리기
+    }
+
+    private void EnemySpecialAttackExecute(Summon attacker, int targetPlateIndex, int specialAttackIndex, string logMessage)
+    {
+        battleController.SpecialAttackExecute(attacker, targetPlateIndex, specialAttackIndex);
+        Debug.Log(logMessage);
+    }
 
     private bool HasPlayerSummonOverMediumRank(List<Plate> plates)
     {

@@ -9,30 +9,19 @@ public class QueenSpirit : Summon
     {
         base.Awake();
 
-        summonName = "QueenSpirit"; //이름 정령여왕
-        maxHP = 400; //최대체력 400
-        nowHP = maxHP; //현재체력 // 깨어날땐 최대체력으로 설정
-        attackPower = 100; //일반공격
-        heavyAttakPower = 140;
-        summonRank = SummonRank.Special; // 특급 소환수
+        if (SummonDataApply(SummonDataGet()))
+        {
+            return;
+        }
+
+        FallbackStatusSet("QueenSpirit", SummonRank.Special, SummonType.QueenSpirit, 400, 100, 140);
 
         // 일반 공격: 가장 가까운 적 공격
-        attackStrategy = new ClosestEnemyAttackStrategy(StatusType.None, attackPower, 0);
-        specialAttackStrategies = new IAttackStrategy[] {
+        AttackStrategiesSet(
+            new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0),
             new AttackAllEnemiesStrategy(StatusType.None, 70, 0), //전체공격 데미지 70
             new AttackAllEnemiesStrategy(StatusType.Heal, 0.2, 3), //아군 전체 20% 회복 쿨타임 3턴
-            new TargetedAttackStrategy(StatusType.Stun,0,3,1) //대상에게 혼란, 쿨타임 3턴, 지속시간 1턴
-        };
+            new TargetedAttackStrategy(StatusType.Stun,0,3,1)); //대상에게 혼란, 쿨타임 3턴, 지속시간 1턴
     }
 
-
-    public override void Die()
-    {
-        base.Die();
-    }
-
-    public override void TakeDamage(double damage)
-    {
-        base.TakeDamage(damage);
-    }
 }

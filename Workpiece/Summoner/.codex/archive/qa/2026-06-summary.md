@@ -16,6 +16,12 @@
 | QA-014 | Pass | 2026-06-05 | LowDevil/HighDevil SummonData 연결 확인 |
 | QA-015 | Pass | 2026-06-05 | KingSlime SummonData 연결 확인 |
 | QA-017 | Pass | 2026-06-06 | DEV-007B 1스테이지 PlayMode Smoke에서 Slime 2회 배치와 첫 플레이어 턴 시작 확인 |
+| QA-022 | Pass | 2026-06-08 | FireSpirit SummonData 값과 prefab 참조 확인, Unity compile 0 warning, SummonDataRegressionTests 8/8 통과 |
+| QA-023 | Pass | 2026-06-08 | QueenSpirit SummonData 값과 3개 특수공격 prefab 참조 확인, Unity compile 0 warning, SummonDataRegressionTests 8/8 통과 |
+| QA-024 | Pass | 2026-06-08 | DarkDragon SummonData 값과 4개 특수공격 prefab 참조 확인, Unity compile 0 warning, SummonDataRegressionTests 8/8 통과 |
+| QA-025 | Pass | 2026-06-08 | BattleController 특수공격 대상 plate 선택 helper 분리 확인, Unity compile 0 warning, PlateSummonDrawStaticRegressionTests 24/24 통과 |
+| QA-026 | Pass | 2026-06-08 | EnermyAlgorithm 적 일반공격/강공격 helper 분리 확인, Unity compile 0 warning, PlateSummonDrawStaticRegressionTests 25/25 통과 |
+| QA-027 | Pass | 2026-06-08 | EnermyAlgorithm 적 특수공격 실행/로그 helper 분리 확인, Unity compile 0 warning, PlateSummonDrawStaticRegressionTests 26/26 통과 |
 
 ## 운영 기준
 

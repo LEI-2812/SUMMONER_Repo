@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5882041df34156b3306a08522c6ce0, type: 3}
+  m_Name: QueenSpiritSummonData
+  m_EditorClassIdentifier: 
+  summonName: QueenSpirit
+  summonRank: 4
+  summonType: 14
+  maxHp: 400
+  attackPower: 100
+  heavyAttackPower: 140
+  normalAttack:
+    strategyType: 0
+    statusType: 0
+    damage: 100
+    cooltime: 0
+    statusTime: 0
+  specialAttacks:
+  - strategyType: 2
+    statusType: 0
+    damage: 70
+    cooltime: 0
+    statusTime: 0
+  - strategyType: 2
+    statusType: 3
+    damage: 0.2
+    cooltime: 3
+    statusTime: 0
+  - strategyType: 1
+    statusType: 1
+    damage: 0
+    cooltime: 3
+    statusTime: 1

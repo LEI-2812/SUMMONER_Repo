@@ -63,8 +63,8 @@ public class SummonStatePanelView: MonoBehaviour, stateObserver
             NormalAttackButton.gameObject.SetActive(true);
             SpecialAttackButton.gameObject.SetActive(true);
 
-            NormalAttackButton.image.sprite = stateSummon.normalAttackSprite;   // 일반 공격 스프라이트 설정
-            SpecialAttackButton.image.sprite = stateSummon.specialAttackSprite; // 특수 공격 스프라이트 설정
+            NormalAttackButton.image.sprite = stateSummon.GetNormalAttackSprite();   // 일반 공격 스프라이트 설정
+            SpecialAttackButton.image.sprite = stateSummon.GetSpecialAttackSprite(); // 특수 공격 스프라이트 설정
         }
 
         UpdateHealthSlider();
