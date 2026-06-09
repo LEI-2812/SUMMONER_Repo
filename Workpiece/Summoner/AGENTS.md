@@ -15,12 +15,35 @@ FlowAgent
 → FlowAgent
 ```
 
+다음 작업을 묻는 요청은 FlowAgent가 후보만 말하고 끝내지 않는다.
+FlowAgent가 다음 DEV 작업을 선정했으면 같은 응답 안에서 DevAgent 관점으로 이어서 수정 대상, 수정 이유, 예상 변경 범위, 책임 분리 관점, diff 또는 변경 전/후 코드를 제안한다.
+사용자가 단순 상태 보고만 요청했을 때만 DevAgent 제안 없이 현재 상태와 다음 액션을 짧게 보고한다.
+
 QAReviewAgent는 모든 개발 작업에 자동으로 포함하지 않는다.
 작은 private 리팩터링, 네이밍 정리, 로그 문구 정리, 중복 제거처럼 public API와 런타임 의미를 바꾸지 않는 작업은 DevAgent의 컴파일/관련 테스트 확인만으로 FlowAgent에 돌려보낸다.
 
 QAReviewAgent는 public API 변경, 공격 판정/예측/데이터/씬/프리팹 변경, 저장 데이터 구조 변경, 컴파일/테스트 실패, 새 테스트가 필요한 기능 변경, 사용자의 명시적 QA/리뷰 요청이 있을 때만 호출한다.
 
 간단한 질문 답변, 코드 설명, 단순 파일 확인, 명령 출력 요청은 workflow 문서 갱신 없이 답변만 한다.
+
+## 도메인 유지보수 연속성 기준
+
+기능 개발이나 리팩터링을 시작하면 해당 작업이 속한 도메인을 먼저 정한다.
+예: `Summons`, `Battle`, `Stage`, `UI`, `Data`, `Workflow`.
+
+FlowAgent는 하나의 DEV가 끝났다고 바로 다른 도메인으로 넘어가지 않는다.
+같은 도메인 안에 남은 유지보수 문제가 있는지 먼저 확인한다.
+
+같은 도메인 안에 아래 항목이 남아 있으면 다음 작업도 같은 도메인에서 고른다.
+
+- 같은 패턴의 중복 코드가 남아 있음
+- 데이터화는 됐지만 fallback, 초기화, 테스트 정리가 남아 있음
+- 클래스 책임이 아직 여러 개로 섞여 있음
+- public API나 런타임 의미를 바꾸지 않고도 더 작은 정리가 가능함
+- 사용자가 특정 도메인의 유지보수 품질을 문제 삼았음
+
+다른 도메인으로 넘어가려면 FlowAgent가 `current-task.md`에 이유를 남긴다.
+예: “Summons 도메인은 현재 완료 조건 기준 잔여 후보가 없으므로 Battle 도메인으로 전환한다.”
 
 ## 문서 읽기 정책
 
@@ -30,7 +53,7 @@ QAReviewAgent는 public API 변경, 공격 판정/예측/데이터/씬/프리팹
 |---|---|
 | 간단한 질문, 코드 설명 | 추가 문서 없음 |
 | 현재 상태 확인 | `.codex/workflow/current-task.md`, `.codex/workflow/agent-status.md` |
-| 다음 작업 선정 | `.agents/roles/FlowAgent.md`, workflow 3종 |
+| 다음 작업 선정 | `.agents/roles/FlowAgent.md`, `.agents/roles/DevAgent.md`, workflow 3종, 관련 코드 |
 | 코드 변경 제안/적용 | `.agents/roles/DevAgent.md`, 관련 코드 |
 | 검증/리뷰 | `.agents/roles/QAReviewAgent.md`, `active-qa.md`, 관련 코드/테스트 |
 | 자동 루프 | `.agents/AgentWorkflow.md`, `.codex/workflow/automation-rule.md`, 현재 `Ready` role |
@@ -41,6 +64,7 @@ QAReviewAgent는 public API 변경, 공격 판정/예측/데이터/씬/프리팹
 ## 세션 명령
 
 - `세션 시작`: `AGENTS.md`, `.agents/README.md`, `current-task.md`, `issue-board.md`, `agent-status.md`, `active-qa.md`만 확인하고 현재 작업과 다음 액션을 짧게 보고한다.
+- `새로운 세션 다음작업`, `다음 작업`: 위 문서를 확인한 뒤 FlowAgent가 다음 DEV 작업을 선정하고, 이어서 DevAgent가 수정 대상/이유/범위/diff 제안까지 보고한다. 사용자가 상태만 요청한 경우에만 diff 제안을 생략한다.
 - `세션 시작하고 진행해`: 위 문서를 확인한 뒤 현재 `Ready` 에이전트 문서 하나를 읽고 diff 제안까지 진행한다.
 - `자동 루프 시작`, `자동으로 계속 진행해`, `에이전트 자동화 진행해`: `automation-rule.md` 기준으로 `Ready` 에이전트를 실제 수행한다.
 

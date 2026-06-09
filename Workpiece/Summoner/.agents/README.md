@@ -14,7 +14,7 @@
 |---|---|
 | 간단한 질문, 코드 설명, 명령 출력 | 추가 role 문서 없음 |
 | 현재 상태 확인 | `.codex/workflow/current-task.md`, `.codex/workflow/agent-status.md` |
-| 다음 기능 목표 선정 | `roles/FlowAgent.md`, workflow 3종 |
+| 다음 기능 목표 선정 | `roles/FlowAgent.md`, `roles/DevAgent.md`, workflow 3종, 관련 코드 |
 | 코드 변경 제안/적용 | `roles/DevAgent.md`, 관련 코드/테스트 |
 | 검증/리뷰 | `roles/QAReviewAgent.md`, `.codex/qa/active-qa.md`, 관련 코드/테스트 |
 | 자동 루프 | `AgentWorkflow.md`, `.codex/workflow/automation-rule.md`, 현재 `Ready` role |
@@ -39,6 +39,7 @@
 - 에이전트 문서는 작업 방식과 책임만 설명한다.
 - 전체 흐름은 필요할 때만 `AgentWorkflow.md`를 기준으로 확인한다.
 - 평소에는 현재 `Ready` 에이전트 문서 하나만 자세히 읽는다.
+- 다음 작업 선정을 요청받으면 FlowAgent가 후보만 말하고 멈추지 않는다. 다음 DEV 작업을 정한 뒤 DevAgent 관점의 수정 대상, 수정 이유, 예상 변경 범위, diff 또는 변경 전/후 코드 제안까지 이어간다.
 - 현재 작업 내용은 `.codex/workflow/current-task.md`에 둔다.
 - 현재 QA 내용은 `.codex/qa/active-qa.md`에 둔다.
 - 날짜별 작업 요약은 `.codex/dev-log/`에 둔다.
