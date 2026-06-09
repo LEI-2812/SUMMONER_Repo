@@ -16,40 +16,41 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = GetClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
-        if (GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex) != -1) //소환수 중 한쪽이 다른 쪽과 체력을 비교했을 때 30% 이상 낮은가?
+        int lowerHealthDifferenceIndex = GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex);
+        int allDownHealthIndex = GetIndexOfLowerHealthIfAllDown30(playerPlates);
+
+        if (lowerHealthDifferenceIndex != -1) //소환수 중 한쪽이 다른 쪽과 체력을 비교했을 때 30% 이상 낮은가?
         {
-            attackIndex = GetIndexOfLowerHealthIfDifferenceOver30(playerPlates, rabbitPlateIndex);
+            attackIndex = lowerHealthDifferenceIndex;
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "토끼 소환수중 한쪽이 다른 쪽과 비교할때 30% 낮음");
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+            return new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
-        else if (GetIndexOfLowerHealthIfAllDown30(playerPlates) != -1) //소환수 모두의 체력이 30% 이하인가?
+        else if (allDownHealthIndex != -1) //소환수 모두의 체력이 30% 이하인가?
         {
-            attackIndex = GetIndexOfLowerHealthIfAllDown30(playerPlates);
+            attackIndex = allDownHealthIndex;
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "토끼 소환수의 체력이 모두 30% 이하");
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+            return new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
-        else if (AllPlayerSummonOver70Percent(playerPlates))
+
+        int lowestHealthSummonIndex = GetIndexOfLowestHealthSummon(playerPlates);
+
+        if (AllPlayerSummonOver70Percent(playerPlates))
         {
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "토끼 모든 플레이어 소환수 체력이 70% 이상");
-            attackIndex = GetIndexOfLowestHealthSummon(playerPlates);
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
-        else if (GetIndexOfNormalAttackCanKill(rabbit, enermyPlates) != -1)
+        else
         {
-            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "토끼 일반공격으로 처치가능");
-            attackIndex = GetIndexOfLowestHealthSummon(playerPlates);
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
-        }
-        else// 모두 조건이 안맞으면 가장 낮은 체력 아군 힐
-        {
-            attackIndex = GetIndexOfLowestHealthSummon(playerPlates);
-            attackPrediction = new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
+            int normalAttackKillIndex = GetIndexOfNormalAttackCanKill(rabbit, enermyPlates);
+
+            if (normalAttackKillIndex != -1)
+            {
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "토끼 일반공격으로 처치가능");
+            }
         }
 
-
-        return attackPrediction;
+        attackIndex = lowestHealthSummonIndex;
+        return new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
     }
 
 

@@ -19,59 +19,70 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = GetClosestEnermyIndex(enermyPlates); //가장 가까운적의 인덱스 기본값
 
-        //소환수, 소환수의 플레이트 번호, 소환수의 특수공격첫번째, 특수공격배열 인덱스번호, 타겟플레이트, 타겟플레이트 변호, 확률
-        AttackPrediction attackPrediction = new AttackPrediction(eagle, eaglePlateIndex, eagle.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
-
         if (IsTwoOrMoreEnemies(enermyPlates)) //적이 2마리 이상인가?
         {
-            if (IsEnermyHealthDifferenceOver30(enermyPlates) != -1) //몬스터 한 쪽이 다른쪽과 비교했을 때 30% 이상 낮은가?
+            int lowestHealthDifferenceIndex = IsEnermyHealthDifferenceOver30(enermyPlates);
+
+            if (lowestHealthDifferenceIndex != -1) //몬스터 한 쪽이 다른쪽과 비교했을 때 30% 이상 낮은가?
             {
-                int lowestIndex = IsEnermyHealthDifferenceOver30(enermyPlates);
-                if (CanNormalAttack(eagle, enermyPlates, lowestIndex) != -1) //일반 공격으로 체력이 낮은 쪽을 공격할 수 있는가?
+                int normalAttackLowestIndex = CanNormalAttack(eagle, enermyPlates, lowestHealthDifferenceIndex);
+
+                if (normalAttackLowestIndex != -1) //일반 공격으로 체력이 낮은 쪽을 공격할 수 있는가?
                 {
-                    attackIndex = CanNormalAttack(eagle, enermyPlates, lowestIndex);
+                    attackIndex = normalAttackLowestIndex;
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "독수리 일반공격으로 체력이 낮은 적 공격 가능");
                 }
                 else
                 {
-                    attackIndex = lowestIndex;
+                    attackIndex = lowestHealthDifferenceIndex;
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 일반공격으로 체력이 낮은쪽 공격 불가능");
                 }
             }
-            else if (AreEnermyHealthWithin10Percent(eagle,enermyPlates) != -1) //몬스터의 체력이 서로 비슷한가? (10%이내)
+            else
             {
-                attackIndex = AreEnermyHealthWithin10Percent(eagle,enermyPlates);
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 몬스터 체력이 10퍼이내로 비슷함");
+                int healthWithin10PercentIndex = AreEnermyHealthWithin10Percent(eagle, enermyPlates);
+
+                if (healthWithin10PercentIndex != -1) //몬스터의 체력이 서로 비슷한가? (10%이내)
+                {
+                    attackIndex = healthWithin10PercentIndex;
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 몬스터 체력이 10퍼이내로 비슷함");
+                }
             }
         }
         else if (IsOnlyOneEnemy(enermyPlates)) //적이 1마리 인가?
         {
-            if (GetIndexOfNormalAttackCanKill(eagle, enermyPlates) != -1)
+            int normalAttackKillIndex = GetIndexOfNormalAttackCanKill(eagle, enermyPlates);
+
+            if (normalAttackKillIndex != -1)
             {
-                attackIndex = GetIndexOfNormalAttackCanKill(eagle, enermyPlates);
+                attackIndex = normalAttackKillIndex;
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "독수리 일반공격으로 사냥가능");
-            }
-            else if (GetSpecialAttackKillIndex(eagle, enermyPlates) != -1)
-            {
-                attackIndex = GetSpecialAttackKillIndex(eagle, enermyPlates);
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 특수공격으로 사냥가능");
             }
             else
             {
-                if (GetTypeOfMoreAttackDamage(eagle, enermyPlates) == AttackType.NormalAttack)//일반공격과 특수공격 중 피해를 많이 줄 공격에 5%상승
+                int specialAttackKillIndex = GetSpecialAttackKillIndex(eagle, enermyPlates);
+
+                if (specialAttackKillIndex != -1)
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "독수리 일반공격이 더 큰 피해를 입힘");
+                    attackIndex = specialAttackKillIndex;
+                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "독수리 특수공격으로 사냥가능");
                 }
                 else
                 {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "독수리 일반공격이 더 큰 피해를 입힘");
+                    if (GetTypeOfMoreAttackDamage(eagle, enermyPlates) == AttackType.NormalAttack)//일반공격과 특수공격 중 피해를 많이 줄 공격에 5%상승
+                    {
+                        attackProbability = AdjustAttackProbabilities(attackProbability, 5f, true, "독수리 일반공격이 더 큰 피해를 입힘");
+                    }
+                    else
+                    {
+                        attackProbability = AdjustAttackProbabilities(attackProbability, 5f, false, "독수리 일반공격이 더 큰 피해를 입힘");
+                    }
                 }
             }
         }
 
-        attackPrediction = new AttackPrediction(eagle, eaglePlateIndex, eagle.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
         Debug.Log("독수리 겨냥: " + attackIndex);
-        return attackPrediction;
+        return new AttackPrediction(eagle, eaglePlateIndex, eagle.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
     }
 
 
@@ -274,7 +285,7 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
 
     public AttackType GetTypeOfMoreAttackDamage(Summon eagle, List<Plate> enermyPlates)
     {
-        double maxDamage = eagle.GetAttackPower(); // 기본값: 일반 공격의 데미지
+        double normalAttackDamage = eagle.GetAttackPower(); // 기본값: 일반 공격의 데미지
 
         // 사용 가능한 특수 공격 목록 가져오기
         IAttackStrategy[] availableSpecialAttacks = eagle.GetAvailableSpecialAttacks();
@@ -294,10 +305,9 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
                 }
             }
 
-            // 특수 공격으로 총 피해가 일반 공격보다 크다면 업데이트
-            if (totalSpecialAttackDamage > maxDamage)
+            // 특수 공격 총 피해가 일반 공격보다 크면 특수 공격 선택
+            if (totalSpecialAttackDamage > normalAttackDamage)
             {
-                maxDamage = totalSpecialAttackDamage;
                 return AttackType.SpecialAttack;
             }
         }

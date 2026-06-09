@@ -16,52 +16,43 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = GetClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
-        if (IsEnermyAlreadyPoisoned(enermyPlates))
-        { //몬스터들이 이미 중독 상태인가?
-            attackProbability = new AttackProbability(100f, 0f);
-            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.GetAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
-        }
-        else if (!CanUseSpecialAttack(snake)) //특수공격을 사용할 수 있는가?
+        if (IsEnermyAlreadyPoisoned(enermyPlates) || !CanUseSpecialAttack(snake))
         {
             attackProbability = new AttackProbability(100f, 0f);
-            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.GetAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
-        }
-        else
-        {
-            if (IsEnermyCountOverTwo(enermyPlates)) //적이 2마리 이상인가?
-            {
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적이 2마리 이상");
-                if (AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
-                {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 모두 50%이상");
-                }
-                else
-                {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 적의 체력이 모두 50%가 아님");
-                }
-                if (HasMonsterWithMoreThan3Attacks(enermyPlates)) //몬스터 중 공격의 개수가 3개 이상인 몹이 존재하는가?
-                {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 몬스터중 공격이 3개 이상인 몹이 있는가");
-                }
-            }
-            else //1마리 일때
-            {
-                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 적이 1마리 뿐");
-                if (AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
-                {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 50% 이상");
-                }
-                if (GetIndexOfNormalAttackCanKill(snake, enermyPlates) != -1) //일반 공격 시 몬스터를 물리칠 수 있는가?
-                {
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 일반 공격시 처치가능");
-                }
-            }
-            attackPrediction = new AttackPrediction(snake, snakePlateIndex, snake.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+            return new AttackPrediction(snake, snakePlateIndex, snake.GetAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability); //일반공격으로
         }
 
-        return attackPrediction;
+        if (IsEnermyCountOverTwo(enermyPlates)) //적이 2마리 이상인가?
+        {
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적이 2마리 이상");
+            if (AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
+            {
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 모두 50%이상");
+            }
+            else
+            {
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 적의 체력이 모두 50%가 아님");
+            }
+            if (HasMonsterWithMoreThan3Attacks(enermyPlates)) //몬스터 중 공격의 개수가 3개 이상인 몹이 존재하는가?
+            {
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 몬스터중 공격이 3개 이상인 몹이 있는가");
+            }
+        }
+        else //1마리 일때
+        {
+            attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 적이 1마리 뿐");
+            if (AllEnermyHealthOver50(enermyPlates)) //적의 체력이 모두 50% 이상인가?
+            {
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "뱀 적의 체력이 50% 이상");
+            }
+            if (GetIndexOfNormalAttackCanKill(snake, enermyPlates) != -1) //일반 공격 시 몬스터를 물리칠 수 있는가?
+            {
+                attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "뱀 일반 공격시 처치가능");
+            }
+        }
+
+        return new AttackPrediction(snake, snakePlateIndex, snake.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
     }
 
 

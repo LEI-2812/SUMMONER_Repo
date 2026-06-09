@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 public class PlayerAttackPrediction : MonoBehaviour
@@ -41,7 +40,7 @@ public class PlayerAttackPrediction : MonoBehaviour
 
                     AttackPrediction attackPrediction = new AttackPrediction(
                         summon, //공격하는 소환수
-                        plateController.GetPlateIndex(plate), //자기 자신의 플레이트 번호
+                        attackSummonPlateIndex, //자기 자신의 플레이트 번호
                         summon.GetAttackStrategy(), //일반공격
                         0, //특수공격 번호
                         enermyPlates, //타겟 플레이트

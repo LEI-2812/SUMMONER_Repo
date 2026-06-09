@@ -17,7 +17,6 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = GetClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
 
         if (IsEnermyCountTwoOrMore(enermyPlates)) //적이 2마리 이상인가?
         {
@@ -33,14 +32,15 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "늑대 적 몬스터 체력이 모두 50% 아래고 소환수 중 공격형이 뒤에 존재");
                 }
             }
-            else if (IsEnermyHealthDifferenceOver30(enermyPlates) != -1) //몬스터 한쪽이 다른 쪽에비해 체력이 30% 이상 낮은가? 존재하면 가장 낮은 인덱스 반환
+            else
             {
-                int lowestIndex = IsEnermyHealthDifferenceOver30(enermyPlates);
-                if (IsLowestHealthEnermyClosest(wolf, enermyPlates, lowestIndex)) //낮은쪽의 인덱스가 근접공격하는 인덱스와 동일한가?
+                int lowestHealthDifferenceIndex = IsEnermyHealthDifferenceOver30(enermyPlates);
+
+                if (lowestHealthDifferenceIndex != -1 && IsLowestHealthEnermyClosest(wolf, enermyPlates, lowestHealthDifferenceIndex)) //몬스터 한쪽이 다른 쪽에비해 체력이 30% 이상 낮고 낮은쪽의 인덱스가 근접공격하는 인덱스와 동일한가?
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 20f, true, "늑대 낮은쪽으로 공격하는 인덱스가 동일");
                 }
-                else
+                else if (lowestHealthDifferenceIndex != -1)
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "늑대 일반공격으로 공격하는 인덱스가 불일치");
                 }
@@ -50,9 +50,11 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "늑대 적이 1마리뿐");
 
-            if (GetIndexOfNormalAttackCanKill(wolf, enermyPlates) != -1) //일반 공격으로 몬스터를 물리칠 수 있는가?
+            int normalAttackKillIndex = GetIndexOfNormalAttackCanKill(wolf, enermyPlates);
+
+            if (normalAttackKillIndex != -1) //일반 공격으로 몬스터를 물리칠 수 있는가?
             {
-                attackIndex = GetIndexOfNormalAttackCanKill(wolf, enermyPlates);
+                attackIndex = normalAttackKillIndex;
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "늑대 일반 공격으로 처치가능");
             }
             else
@@ -69,8 +71,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
             }
         }
 
-        attackPrediction = new AttackPrediction(wolf, wolfPlateIndex, wolf.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
-        return attackPrediction;
+        return new AttackPrediction(wolf, wolfPlateIndex, wolf.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
     }
 
 
@@ -258,7 +259,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
     public AttackType GetMostDamageAttack(Summon attackingSummon, List<Plate> enermyPlates)
     {
-        double maxDamage = attackingSummon.GetAttackPower(); // 기본값: 일반 공격의 데미지
+        double normalAttackDamage = attackingSummon.GetAttackPower(); // 기본값: 일반 공격의 데미지
 
 
         // 사용 가능한 특수 공격 목록 가져오기
@@ -279,10 +280,9 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
                 }
             }
 
-            // 특수 공격으로 총 피해가 일반 공격보다 크다면 업데이트
-            if (totalSpecialAttackDamage > maxDamage)
+            // 특수 공격 총 피해가 일반 공격보다 크면 특수 공격 선택
+            if (totalSpecialAttackDamage > normalAttackDamage)
             {
-                maxDamage = totalSpecialAttackDamage;
                 return AttackType.SpecialAttack;
             }
         }

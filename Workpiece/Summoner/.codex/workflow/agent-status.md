@@ -9,9 +9,9 @@
 
 | Agent | 상태 | 현재 초점 | 다음 행동 |
 |---|---|---|---|
-| FlowAgent | Done | BACKLOG-003 `AttackPrediction` 범위 선정 | DevAgent 결과를 받아 완료 정리 |
-| DevAgent | Ready | `AttackPrediction` getter/setter 네이밍 정리 | 선언과 호출부를 대문자 시작 함수명으로 통일 |
-| QAReviewAgent | Done | 작은 private 리팩터링 기준으로 호출 생략 | QA필요 작업이 생길 때까지 대기 |
+| FlowAgent | Ready | DEV-046 완료 정리 | Battle/Prediction 도메인의 damage 비교 예측 정리 완료 여부 확인 |
+| DevAgent | Done | DEV-046 Eagle/Wolf damage 비교 주석 정리 | 특수공격 선택 조건 주석을 현재 코드 의미에 맞게 정리하고 검증 완료 |
+| QAReviewAgent | Done | DEV-029 Unity Test Runner 재검증 | MCP compile warning 0, PlateSummonDrawStaticRegressionTests 28/28 통과 |
 
 ## 상태 기준
 

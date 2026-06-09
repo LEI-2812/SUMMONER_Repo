@@ -14,21 +14,23 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = GetClosestEnermyIndex(enermyPlates);
-        AttackPrediction attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+
+        int normalAttackKillIndex = GetIndexOfNormalAttackCanKill(cat, enermyPlates);
+        int specialAttackKillIndex = GetIndexOfSpecialCanKill(cat, enermyPlates);
 
         // 일반 공격으로 처치 가능하면 일반 공격 확률 10% 증가
-        if (GetIndexOfNormalAttackCanKill(cat, enermyPlates) != -1)
+        if (normalAttackKillIndex != -1)
         {
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "고양이가 일반 공격으로 처치 가능");
-            attackIndex = GetIndexOfNormalAttackCanKill(cat, enermyPlates); // 일반 공격으로 처치 가능한 인덱스 받기
+            attackIndex = normalAttackKillIndex; // 일반 공격으로 처치 가능한 인덱스 받기
         }
         else
         {
             // 특수 공격으로 처치 가능하면 특수 공격 확률 증가
-            if (GetIndexOfSpecialCanKill(cat, enermyPlates) != -1)
+            if (specialAttackKillIndex != -1)
             {
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, false, "고양이가 특수 공격으로 처치 가능");
-                attackIndex = GetIndexOfSpecialCanKill(cat, enermyPlates); // 특수 공격으로 처치 가능한 인덱스 받기
+                attackIndex = specialAttackKillIndex; // 특수 공격으로 처치 가능한 인덱스 받기
             }
             else
             {
@@ -45,8 +47,7 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
             }
         }
 
-        attackPrediction = new AttackPrediction(cat, catPlateIndex, cat.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
-        return attackPrediction;
+        return new AttackPrediction(cat, catPlateIndex, cat.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
     }
 
     public AttackType GetMostDamageAttack(Summon attackingSummon)
@@ -57,12 +58,6 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
         // 각 특수 공격 확인
         foreach (IAttackStrategy specialAttack in availableSpecialAttacks)
         {
-            // 특수 공격이 null이면 일반 공격 반환
-            if (availableSpecialAttacks == null)
-            {
-                return AttackType.NormalAttack;
-            }
-
             // 일반 공격력이 더 세면 일반 공격 반환. 고양이는 단일 타깃 공격이기 때문에 공격력만 비교
             if (attackingSummon.GetAttackPower() > specialAttack.GetSpecialDamage())
                 return AttackType.NormalAttack;

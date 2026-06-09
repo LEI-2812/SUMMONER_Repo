@@ -18,15 +18,12 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
         int attackIndex = GetClosestEnermyIndex(enermyPlates);
         List<Plate> targetPlate = enermyPlates;
 
-        //소환수, 소환수의 플레이트 번호, 소환수의 특수공격첫번째, 특수공격배열 인덱스번호, 타겟플레이트, 타겟플레이트 변호, 확률
-        AttackPrediction attackPrediction = new AttackPrediction(fox, foxPlateIndex, fox.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
+        int cursedSummonIndex = GetIndexOfSummonWithCurseStatus(playerPlates);
 
-
-        if (GetIndexOfSummonWithCurseStatus(playerPlates) != -1) //소환수중 저주상태에 걸려있는 몹이 있는가?
+        if (cursedSummonIndex != -1) //소환수중 저주상태에 걸려있는 몹이 있는가?
         {
-            int targetIndex = GetIndexOfSummonWithCurseStatus(playerPlates);
             attackProbability = new AttackProbability(0f, 100f); //특수공격 100%
-            return attackPrediction = new AttackPrediction(fox, foxPlateIndex, fox.GetSpecialAttackStrategy()[0], 0, playerPlates, targetIndex, attackProbability);
+            return new AttackPrediction(fox, foxPlateIndex, fox.GetSpecialAttackStrategy()[0], 0, playerPlates, cursedSummonIndex, attackProbability);
         }
 
         else if (IsTwoOrMoreEnemies(enermyPlates)) //적이 2마리 이상 존재하는가?
@@ -40,13 +37,19 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
                     attackIndex = foxPlateIndex;
                 }
             }
-            else if (IsAnyEnemyHealthDown30Percent(enermyPlates) != -1) //적의 체력이 하나만 30% 아래인가
+            else
             {
                 int under30Index = IsAnyEnemyHealthDown30Percent(enermyPlates);
-                if (GetIndexOfNormalAttack30PerCanKill(fox, enermyPlates, under30Index) != -1) //일반공격시 처치할 수 있는가?
+
+                if (under30Index != -1) //적의 체력이 하나만 30% 아래인가
                 {
-                    attackIndex = under30Index;
-                    attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "여우 일반공격시 처치가능");
+                    int normalAttack30PerKillIndex = GetIndexOfNormalAttack30PerCanKill(fox, enermyPlates, under30Index);
+
+                    if (normalAttack30PerKillIndex != -1) //일반공격시 처치할 수 있는가?
+                    {
+                        attackIndex = under30Index;
+                        attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "여우 일반공격시 처치가능");
+                    }
                 }
             }
         }
@@ -61,23 +64,22 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
                     attackIndex = foxPlateIndex;
                 }
             }
-            else if (GetIndexOfNormalAttackCanKill(fox, enermyPlates) != -1) //일반공격시 몬스터를 물리칠 수 있는가?
+            else
             {
-                if (GetIndexOfNormalAttackCanKill(fox, enermyPlates) != -1) //일반공격시 처치할 수 있는가?
+                int normalAttackKillIndex = GetIndexOfNormalAttackCanKill(fox, enermyPlates);
+
+                if (normalAttackKillIndex != -1) //일반공격시 몬스터를 물리칠 수 있는가?
                 {
                     attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "여우 적 1마리 일반공격시 가까운적 처치 가능");
-                    attackPrediction = new AttackPrediction(fox, foxPlateIndex, fox.GetSpecialAttackStrategy()[0], 0, enermyPlates, attackIndex, attackProbability);
                 }
             }
         }
         else
         {
             attackIndex = GetIndexOfHighestAttackPower(playerPlates);
-            attackPrediction = new AttackPrediction(fox, foxPlateIndex, fox.GetSpecialAttackStrategy()[0], 0, playerPlates, attackIndex, attackProbability);
         }
 
-        attackPrediction = new AttackPrediction(fox, foxPlateIndex, fox.GetSpecialAttackStrategy()[0], 0, targetPlate, attackIndex, attackProbability);
-        return attackPrediction;
+        return new AttackPrediction(fox, foxPlateIndex, fox.GetSpecialAttackStrategy()[0], 0, targetPlate, attackIndex, attackProbability);
     }
 
     // 소환수 중 저주 상태 이상에 걸려있는 몹이 존재하는가?
