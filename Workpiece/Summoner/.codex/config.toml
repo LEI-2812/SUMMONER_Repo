@@ -28,10 +28,10 @@ command = "node"
 args = ["LocalPackages/com.gamelovers.mcp-unity/Server~/build/index.js"]
 
 [mcp_servers.mcp-unity.tools.recompile_scripts]
-approval_mode = "auto"
+approval_mode = "approve"
 
 [mcp_servers.mcp-unity.tools.run_tests]
-approval_mode = "auto"
+approval_mode = "approve"
 
 [mcp_servers.mcp-unity.tools.list_assets]
 approval_mode = "auto"
@@ -40,4 +40,4 @@ approval_mode = "auto"
 approval_mode = "auto"
 
 [mcp_servers.mcp-unity.tools.get_scene_info]
-approval_mode = "auto"
+approval_mode = "approve"

@@ -1,47 +1,35 @@
 # Agents
 
-이 폴더는 에이전트의 역할과 협업 기준을 정의한다.
-
-`.agents`는 "누가 어떤 기준으로 일하는가"를 설명한다.
-현재 작업 상태나 완료 이력은 이 폴더에 두지 않는다.
+이 폴더는 선택 호출형 에이전트 역할만 설명한다.
+현재 작업 상태와 완료 이력은 두지 않는다.
 
 ## 빠른 라우팅
 
-모든 에이전트 문서를 매번 읽지 않는다.
-현재 요청에 필요한 문서만 읽는다.
-
 | 상황 | 읽을 문서 |
 |---|---|
-| 간단한 질문, 코드 설명, 명령 출력 | 추가 role 문서 없음 |
-| 현재 상태 확인 | `.codex/workflow/current-task.md`, `.codex/workflow/agent-status.md` |
-| 다음 기능 목표 선정 | `roles/FlowAgent.md`, `roles/DevAgent.md`, workflow 3종, 관련 코드 |
-| 코드 변경 제안/적용 | `roles/DevAgent.md`, 관련 코드/테스트 |
-| 검증/리뷰 | `roles/QAReviewAgent.md`, `.codex/qa/active-qa.md`, 관련 코드/테스트 |
-| 자동 루프 | `AgentWorkflow.md`, `.codex/workflow/automation-rule.md`, 현재 `Ready` role |
+| 기능 슬라이스 선정 | `.agents/roles/CoordinatorAgent.md`, 관련 코드 |
+| 코드 개발 | `.agents/roles/DevAgent.md`, 관련 코드 |
+| 설계/QA 검증 | `.agents/roles/VerificationAgent.md`, 변경 코드/테스트 |
+| 문서 정리 | `.agents/roles/DocumentationAgent.md`, 변경 요약 |
+| 릴리즈 | `.agents/roles/ReleaseAgent.md`, dev-log/검증 상태 |
 
-## 역할 경계
+## 운영 원칙
 
-- `.agents`: 에이전트 역할, 책임, 인계 기준
-- `.codex/workflow`: 현재 진행 중인 작업판
-- `.codex/qa`: 현재 확인이 필요한 QA
-- `.codex/dev-log`: 날짜별 작업 요약
-- `.codex/archive`: 완료된 상세 이력과 과거 기록
+- CoordinatorAgent가 필요한 에이전트만 선택 호출한다.
+- CoordinatorAgent는 사용자 판단이 필요한 내용만 보여주고, 문서 갱신과 다음 에이전트 인계는 바로 처리한다.
+- DevAgent가 기본 개발 흐름이다.
+- DevAgent는 코드 변경 전에 적용 예정 diff를 보여주고 진행 여부를 확인한다.
+- 문서 상태 기록은 사용자 진행 승인 없이 바로 수행한다.
+- VerificationAgent는 review mode 또는 QA mode가 필요할 때만 호출한다.
+- DocumentationAgent는 상시 기록 담당이 아니다.
+- 작은 변경마다 기존 기능 전체를 테스트하지 않는다.
+- active 문서에는 현재 슬라이스와 다음 호출 대상만 둔다.
 
-## 에이전트 문서
+## 하지 말 것
 
-- `AgentWorkflow.md`: 전체 협업 흐름과 기록 기준
-- `roles/FlowAgent.md`: 작업 범위와 인계 정리
-- `roles/DevAgent.md`: 유지보수성 검토, diff 제안, 승인된 변경 적용
-- `roles/QAReviewAgent.md`: 기능 목표 완료 후 검증, QA, 리뷰, 회귀 위험 검토
-
-## 운영 기준
-
-- 에이전트 문서는 작업 방식과 책임만 설명한다.
-- 전체 흐름은 필요할 때만 `AgentWorkflow.md`를 기준으로 확인한다.
-- 평소에는 현재 `Ready` 에이전트 문서 하나만 자세히 읽는다.
-- 다음 작업 선정을 요청받으면 FlowAgent가 후보만 말하고 멈추지 않는다. 다음 DEV 작업을 정한 뒤 DevAgent 관점의 수정 대상, 수정 이유, 예상 변경 범위, diff 또는 변경 전/후 코드 제안까지 이어간다.
-- 현재 작업 내용은 `.codex/workflow/current-task.md`에 둔다.
-- 현재 QA 내용은 `.codex/qa/active-qa.md`에 둔다.
-- 날짜별 작업 요약은 `.codex/dev-log/`에 둔다.
-- 완료된 상세 작업 기록은 `.codex/archive/`에 둔다.
-- 사용자 승인 전에는 코드, 씬, 에셋을 수정하지 않는다.
+- 에이전트를 고정 파이프라인으로 계속 이어가기
+- DevAgent가 diff 승인 없이 코드 변경하기
+- 기능 개발 중간마다 VerificationAgent 호출하기
+- DocumentationAgent를 매 작업마다 붙이기
+- 현재 판단에 필요 없는 문서까지 읽기
+- `AgentModes.md`, `teams/`, `templates` 같은 참고 문서 다시 늘리기

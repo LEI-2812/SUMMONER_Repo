@@ -22,6 +22,10 @@
 | QA-025 | Pass | 2026-06-08 | BattleController 특수공격 대상 plate 선택 helper 분리 확인, Unity compile 0 warning, PlateSummonDrawStaticRegressionTests 24/24 통과 |
 | QA-026 | Pass | 2026-06-08 | EnermyAlgorithm 적 일반공격/강공격 helper 분리 확인, Unity compile 0 warning, PlateSummonDrawStaticRegressionTests 25/25 통과 |
 | QA-027 | Pass | 2026-06-08 | EnermyAlgorithm 적 특수공격 실행/로그 helper 분리 확인, Unity compile 0 warning, PlateSummonDrawStaticRegressionTests 26/26 통과 |
+| QA-031 | Pass | 2026-06-12 | 보호막 지속시간 갱신 계약 확인, MCP EditMode SummonFeedbackSeparationTests 9/9 통과 |
+| QA-032 | Pass | 2026-06-12 | 공격 대상 선택과 상태 효과 적용 책임 분리 확인, MCP EditMode SummonFeedbackSeparationTests 9/9 통과 |
+| QA-033 | Pass | 2026-06-12 | BattleController 특수공격 대상 판정을 BenefitEffectCheck 계약으로 정리, MCP EditMode PlateSummonDrawStaticRegressionTests 30/30 통과 |
+| QA-034 | Pass | 2026-06-12 | EnermyAlgorithm 특수공격 쿨타임 후보 검사를 CanUseSpecialAttack helper로 정리, MCP EditMode PlateSummonDrawStaticRegressionTests 30/30 통과 |
 
 ## 운영 기준
 

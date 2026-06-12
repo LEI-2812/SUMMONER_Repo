@@ -1,0 +1,39 @@
+date,kind,id_range,domain,title,summary,verification,source
+2026-05-30,Policy,WORKFLOW,Docs,로드맵과 작업 로그 역할 분리,현재 작업판과 과거 작업 로그의 역할을 분리하고 과거 완료 요약을 WorkLogs로 이관했다.,문서 구조와 작업 로그 확인,.codex/dev-log/2026-05-30.md
+2026-05-31,Refactor,WORKLOG,Battle,전투 상태이상과 공격 처리 책임 분리,전투 상태이상 처리와 공격 처리 흐름을 더 작은 책임 단위로 나눴다.,정적 검토와 관련 기록 확인,.codex/dev-log/2026-05-31.md
+2026-05-31,Refactor,WORKLOG,Battle,승리/패배 처리 흐름 분리,Battle 결과 처리와 Alert/진행 저장 흐름의 책임 경계를 정리했다.,관련 작업 기록과 QA 기록 확인,.codex/dev-log/2026-05-31.md
+2026-05-31,Refactor,WORKLOG,UI,소환수 표시와 Draw 흐름 정리,소환수 표시 책임과 Draw 진행 상태/이름/옵션 패널 흐름을 정리했다.,관련 작업 기록 확인,.codex/dev-log/2026-05-31.md
+2026-05-31,Refactor,WORKLOG,Plate,Plate 슬롯 상태와 표시 책임 정리,Plate 슬롯 상태와 제거 상태 방어 및 PlateController 표시 책임을 정리했다.,관련 작업 기록 확인,.codex/dev-log/2026-05-31.md
+2026-05-31,Policy,WORKLOG,Workflow,DevAgent와 QAAgent 역할 분리,개발 수정과 QA 검증 책임을 분리하고 warning 확인 기준을 추가했다.,관련 작업 기록 확인,.codex/dev-log/2026-05-31.md
+2026-06-02,Refactor,DEV-001~DEV-002,Summons,SummonData 초기 데이터화,Slime/Skeleton/LowDevil/HighDevil/KingSlime의 데이터 기반 초기화와 fallback 유지 흐름을 추가했다.,SummonData 회귀 기록 확인,.codex/dev-log/2026-06-02.md
+2026-06-02,Fix,QA-006,Options,볼륨 0 음소거와 복구 안정화,AudioSettingView의 0 볼륨 처리와 복구 흐름을 안정화했다.,사용자 수동 확인 기준 Pass,.codex/dev-log/2026-06-02.md
+2026-06-02,Refactor,WORKFLOW,QA,QA 문서 구조 정리,QA active/current 기준과 완료 기록 위치를 정리했다.,문서 구조 확인,.codex/dev-log/2026-06-02.md
+2026-06-04,Policy,WORKFLOW,Docs,에이전트 운영 문서 최소화,active 문서와 과거 문서의 역할을 나누고 세션 진입 문서 부담을 줄였다.,문서 변경 범위 확인,.codex/dev-log/2026-06-04.md
+2026-06-04,Fix,QA-003,MCP,MCP PlayMode 연결 유지 수정,PlayMode 연결 유지와 MCP WebSocket 오류를 코드 실패와 분리하는 기준을 정리했다.,PlayMode 전체 테스트 25/25 및 warning 확인,.codex/archive/qa/2026-06-summary.md
+2026-06-04,QA,QA-002~QA-012,QA,전투 결과/UI/저장/스테이지 QA 묶음,전투 결과 Alert/입력 차단/Story Skip/비디오 저장/Fight 1Stage 연결 등을 확인했다.,각 QA Pass 요약 확인,.codex/archive/qa/2026-06-summary.md
+2026-06-06,Refactor,DEV-007A~DEV-008A,Battle,전투 시작과 턴 흐름 정리,BattleStartController 진입과 TurnController 턴 분기 흐름을 정리했다.,PlayMode Smoke 및 관련 기록 확인,.codex/dev-log/2026-06-06.md
+2026-06-06,Refactor,DEV-010C~DEV-010F,Battle/Player,Player 버튼 조건과 색상 갱신 분리,소환/재소환/턴 종료 버튼 조건과 색상 갱신 흐름을 작은 책임으로 나눴다.,정적 검토 및 관련 QA 기록 확인,.codex/dev-log/2026-06-06.md
+2026-06-06,Refactor,DEV-012C~DEV-020,Battle/Plate,Plate 책임과 공격 대상 선택 흐름 정리,Plate 관련 리스트/카운트 네이밍, 특수공격 타겟 판단, 공격 대상 클릭/호버 조회를 정리했다.,Unity compile 0 warning 및 Plate EditMode/PlayMode 기록 확인,.codex/dev-log/2026-06-06.md
+2026-06-06,Policy,WORKFLOW,Workflow,에이전트 개발 흐름 정책 정리,개발 흐름, QA 전환 조건, 기록 책임, active 문서 운영 기준을 정리했다.,문서 변경 및 rg 확인,.codex/dev-log/2026-06-06.md
+2026-06-07,Refactor,DEV-021,Battle/Player,Player 특수공격 시작 흐름 정리,대상 선택 경로 결정을 private 메서드로 나눠 Player 특수공격 시작 흐름을 명확히 했다.,Unity compile 0 warning 및 Plate EditMode 22/22 통과,.codex/dev-log/2026-06-07.md
+2026-06-07,Refactor,BACKLOG-003,UI,DrawOptionPanelView와 Summon 네이밍 정리,DrawOptionPanelView와 Summon getter/setter 이름을 대문자 시작 규칙으로 정리했다.,검색 0건 및 Plate EditMode 22/22 통과,.codex/dev-log/2026-06-07.md
+2026-06-07,Refactor,BACKLOG-004,Summons,SummonController 재소환 흐름 정리,재소환 플레이트 인덱스 조회와 빈 플레이트 확인을 PlateController 경로로 위임했다.,Unity compile 0 warning 및 Plate EditMode 22/22 통과,.codex/dev-log/2026-06-07.md
+2026-06-07,Policy,WORKFLOW,Docs,날짜별 dev-log와 records CSV 도입,날짜별 dev-log 기준을 만들고 완료 이력 CSV를 시도했으나 CSV append 권한 문제가 남았다.,문서 변경 확인,.codex/dev-log/2026-06-07.md
+2026-06-08,Refactor,DEV-022~DEV-024,Summons,스피릿/보스 SummonData 적용,FireSpirit/QueenSpirit/DarkDragon에 SummonData와 prefab 참조를 연결하고 fallback을 유지했다.,Unity compile 0 warning 및 SummonDataRegressionTests 8/8 통과,.codex/dev-log/2026-06-08.md
+2026-06-08,QA,QA-022~QA-024,Summons,SummonData 연결 QA,FireSpirit/QueenSpirit/DarkDragon 데이터 값과 prefab 참조가 기존 fallback과 일치하는지 확인했다.,각 QA Pass 및 SummonDataRegressionTests 8/8 통과,.codex/archive/qa/2026-06-summary.md
+2026-06-08,Refactor,DEV-025~DEV-027,Battle,공격 실행 helper 분리,BattleController 특수공격 대상 선택과 EnermyAlgorithm 일반/특수공격 실행 중복을 helper로 분리했다.,Unity compile 0 warning 및 Plate EditMode 24/24~26/26 통과,.codex/dev-log/2026-06-08.md
+2026-06-08,QA,QA-025~QA-027,Battle,공격 실행 helper QA,특수공격 대상 선택, 적 일반공격/강공격, 적 특수공격 실행 로그 helper가 기존 계약을 유지하는지 확인했다.,각 QA Pass 및 Plate EditMode 24/24~26/26 통과,.codex/archive/qa/2026-06-summary.md
+2026-06-08,Policy,WORKFLOW,Workflow,도메인 유지보수 연속성 기준 추가,Summons 잔여 정리가 끝나기 전 Battle로 넘어가지 않도록 같은 도메인 잔여 후보 우선 기준을 추가했다.,문서 반영 확인,.codex/dev-log/2026-06-08.md
+2026-06-08,Refactor,DEV-028A~DEV-028S,Summons,Summons 잔여 구조 정리,단순 override/Start 초기화/직접 필드 접근/fallback 세팅/공개 필드 범위를 정리했다.,Unity compile 0 warning 및 SummonData/Plate 정적 회귀 통과,.codex/dev-log/2026-06-08.md
+2026-06-08,Refactor,DEV-028O,Summons,Cat 전용 특수공격 우회 위치 재조정,Cat 전용 임시 공격력 교체 흐름을 공통 Summon 본체가 아니라 Cat private 메서드로 내렸다.,Unity compile 0 warning 및 SummonDataRegressionTests 1/1 통과,.codex/dev-log/2026-06-08.md
+2026-06-08,Planning,DEV-029,Battle/Attack,공격 전략 damage source 정리 착수,ClosestEnemyAttackStrategy damage와 실제 피해 적용 기준을 분류하는 다음 작업을 선정했다.,코드 변경 없음,.codex/dev-log/2026-06-08.md
+2026-06-09,QA,QA-029,Battle/Attack,공격 전략 damage source 재검증,실제 근접 피해는 attacker.GetAttackPower 기준으로 유지하고 전략 damage는 예측/표시/데이터 기준값으로 확정했다.,Unity compile 0 warning 및 Plate EditMode 28/28 통과,.codex/dev-log/2026-06-09.md
+2026-06-09,Analysis,DEV-030,Battle/Prediction,Cat 예측 damage 기준 정합성 검토,Cat 일반/특수공격 예측 damage 기준이 실제 공격 피해 기준과 일치함을 확인했다.,코드 변경 없음,.codex/dev-log/2026-06-09.md
+2026-06-09,Refactor,DEV-031~DEV-036,Battle/Prediction,예측 인덱스 반복 계산 정리,Cat/Fox/Eagle/Wolf/Rabbit 예측에서 반복 계산하던 target index를 지역 변수 흐름으로 줄였다.,Unity compile 0 warning 및 Plate EditMode 28/28 통과,.codex/dev-log/2026-06-09.md
+2026-06-09,Refactor,DEV-037~DEV-041,Battle/Prediction,예측 분기와 중간 대입 정리,Snake 중복 분기, 미사용 AttackPrediction 대입, 직접 반환, fallback plate index 반복 계산을 정리했다.,Unity compile 0 warning 및 Plate EditMode 28/28 통과,.codex/dev-log/2026-06-09.md
+2026-06-09,Cleanup,DEV-042~DEV-046,Battle/Prediction,예측 코드 잔여 정리,미사용 using/null 방어/damage 대입/변수명/주석을 현재 의미에 맞게 정리했다.,Unity compile 0 warning 및 Plate EditMode 28/28 통과,.codex/dev-log/2026-06-09.md
+2026-06-11,Policy,WORKFLOW,Agents,에이전트 흐름과 다음 작업 보고 기준 정리,CoordinatorAgent->DevAgent->CoordinatorAgent 흐름과 다음 작업 3줄 보고 기준을 확정했다.,문서 검색 확인,.codex/dev-log/2026-06-11.md
+2026-06-11,Refactor,DEV-047~DEV-048,Battle/Attack,공격 전략 상태 보관 책임 정리,AttackCooldownState를 추가하고 공격 전략의 미사용 statusTime private 필드를 제거했다.,Unity compile 0 warning 및 Plate EditMode 29/29~30/30 통과,.codex/dev-log/2026-06-11.md
+2026-06-11,Policy,WORKFLOW,Docs,에이전트와 문서 최소화,AgentModes/teams/templates/과거 next-session note를 제거하고 active 문서와 날짜별 dev-log 기준을 단단히 했다.,파일 목록 및 참조 검색 확인,.codex/dev-log/2026-06-11.md
+2026-06-11,Refactor,DEV-058,Summons/Data,소환수 데이터 적용 흐름 마무리,Summon.TryApplyAssignedSummonData로 assigned data 적용 책임을 모으고 16개 파생 소환수의 data/fallback 분기 흐름을 정리했다.,Unity compile 0 warning 및 SummonDataRegressionTests 23/23 통과,.codex/dev-log/2026-06-11.md
+2026-06-11,Planning,DEV-059,Coordinator,다음 기능 슬라이스 선정,단순 네이밍 후보를 제외하고 IStatusEffectTarget의 상태 변경/피드백/알림 책임 혼합을 다음 Battle/Status 후보로 선정했다.,코드 검색 및 history-summary 확인,.codex/dev-log/2026-06-11.md

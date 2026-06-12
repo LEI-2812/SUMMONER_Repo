@@ -1,86 +1,88 @@
 # Agent Workflow
 
-이 문서는 에이전트 협업 흐름의 최소 기준만 정의한다.
-세부 실행 기준은 현재 `Ready`인 `roles/*.md` 하나만 확인한다.
+이 문서는 전체 하네스만 둔다.
+세부 기준은 현재 호출된 역할 문서 하나와 관련 코드로 판단한다.
 
-## 기본 흐름
+## 기본 구조
 
 ```text
-FlowAgent
-→ DevAgent
-→ DevAgent 반복 가능
-→ 기능 목표 완료 후 QAReviewAgent
-→ FlowAgent
+CoordinatorAgent
+-> DevAgent
+-> CoordinatorAgent
 ```
 
-다음 작업 선정을 요청받은 경우에는 FlowAgent가 다음 DEV 후보만 보고하고 멈추지 않는다.
-FlowAgent가 작업 범위와 완료 기준을 정하면, 같은 응답 안에서 DevAgent가 수정 대상, 수정 이유, 예상 변경 범위, 책임 분리 관점, diff 또는 변경 전/후 코드를 제안한다.
-사용자가 단순 상태 보고만 요청한 경우에만 DevAgent 제안을 생략한다.
+CoordinatorAgent가 필요하다고 판단할 때만 확장 에이전트를 호출한다.
+CoordinatorAgent는 사용자를 대신해 흐름을 라우팅한다.
+사용자 판단이 필요한 내용은 보여주고, 문서 갱신과 다음 에이전트 인계는 바로 처리한다.
 
-QAReviewAgent는 DevAgent 뒤에 매번 실행하지 않는다.
-기능 목표가 완료됐거나 사용자가 `검증해`, `QA해`, `테스트해`처럼 요청했을 때 실행한다.
+```text
+CoordinatorAgent -> VerificationAgent
+CoordinatorAgent -> DocumentationAgent
+CoordinatorAgent -> ReleaseAgent
+```
 
-## 품질 게이트
+## 역할
 
-구현완료는 아래 세 가지가 모두 충족될 때만 사용한다.
+- CoordinatorAgent: 기능 슬라이스와 호출 대상 결정.
+- DevAgent: 기능 슬라이스 안에서 코드 구현.
+- VerificationAgent: review mode와 QA mode로 검증 게이트 수행.
+- DocumentationAgent: 기능 완료, handoff, release note 문서 정리.
+- ReleaseAgent: 릴리즈/배포/버전 정리.
 
-1. 기능이 요구대로 동작한다.
-2. 설계 품질 상태가 `적정`이다.
-3. QA 깊이 상태가 `검증완료`다.
+## 상태 하네스
 
-FlowAgent는 개발 전에 `기능 완료 조건`, `설계 품질 기준`, `QA 깊이 기준`을 정리한다.
-DevAgent는 책임분리, SOLID 최소 기준, 타 클래스 public 접근 영향을 확인한다.
-QAReviewAgent는 사전 QA 깊이 기준을 만족하지 못하면 `Pass`가 아니라 `검증부족`으로 기록한다.
-
-## 상태 기준
-
-| 상태 | 의미 | 다음 에이전트 |
+| 상태 | 통과 조건 | 다음 |
 |---|---|---|
-| 시작전 | 기능 목표만 정해짐 | FlowAgent 또는 DevAgent |
-| 진행중 | DevAgent가 개발 중 | DevAgent |
-| 동작완료 | 기능 동작은 연결됐지만 설계 품질 또는 QA 깊이 확인이 남음 | DevAgent 또는 QAReviewAgent |
-| 검증대기 | 개발 중간 단계라 최종 QA 전 | DevAgent |
-| QA필요 | 기능 구현과 설계 품질 기준을 충족했고 QA 대기 | QAReviewAgent |
-| QA진행중 | QAReviewAgent 검증 중 | QAReviewAgent |
-| QA완료 | QA 통과 후 FlowAgent 정리 대기 | FlowAgent |
-| 구현완료 | 기능, 설계 품질, QA, 정리가 모두 끝남 | FlowAgent |
-| 보류 | 사용자 결정이나 외부 조건 때문에 멈춤 | FlowAgent |
-| 후속작업대기 | 진행 중인 기능 없음 | FlowAgent |
+| Coordinator Ready | 기능 슬라이스, 제외 범위, 호출 대상 확정 | DevAgent 또는 선택 에이전트 |
+| Dev ChangeProposal | 수정 대상, 변경 범위, 적용 예정 diff, 검증 게이트 제시 | 사용자 승인 또는 Coordinator Ready |
+| Dev InProgress | 승인된 diff 범위 안에서 기능 슬라이스 구현, 필요한 검색/컴파일 1차 확인 | Coordinator Ready |
+| Verification Gate | review mode 또는 QA mode 결과 정리 | Coordinator Ready 또는 DevAgent |
+| Documentation Gate | 필요한 문서 정리 | Coordinator Ready |
+| Release Gate | 릴리즈 위험과 검증 상태 정리 | Coordinator Ready |
 
-## 문서 원칙
+- Ready는 하나만 둔다.
+- CoordinatorAgent는 보고 가치가 낮은 문서 갱신과 에이전트 인계를 사용자 승인 없이 진행한다.
+- CoordinatorAgent는 코드 diff 승인, 위험 작업, 제품 판단, 환경/코드 실패 분류처럼 사용자 판단이 필요한 것만 보여준다.
+- DevAgent는 코드 변경 전에 적용 예정 diff를 보여주고 진행 여부를 확인한다.
+- 승인 전에는 제품 코드, 테스트 코드, 에셋을 수정하지 않는다.
+- 문서 상태 기록은 승인 대기 없이 최소 범위로 바로 진행한다.
+- 승인은 제시된 diff와 변경 범위에만 적용한다.
+- 작업 중 diff 범위가 넓어지면 새 ChangeProposal로 되돌린다.
+- DevAgent 뒤에 VerificationAgent를 자동으로 붙이지 않는다.
+- VerificationAgent는 호출 조건이 있을 때만 사용한다.
+- DocumentationAgent는 상시 기록 담당이 아니다.
 
-- 현재 판단은 `.codex/workflow/`에 남긴다.
-- 진행 중 QA는 `.codex/qa/active-qa.md`에만 둔다.
-- 코드 리뷰는 QAReviewAgent 결과에 포함해 기록한다.
-- 완료된 DEV/QA 이력 인덱스는 `.codex/records/`의 CSV에 남긴다.
-- 완료 상세는 `.codex/archive/`와 `.codex/archive/qa/`로 보낸다.
-- 완료 요약과 구조 결정은 `.codex/dev-log/YYYY-MM-DD.md`에 짧게 남긴다.
-- active 문서에는 과거 이력을 길게 누적하지 않는다.
+## Verification 호출 조건
 
-## 승인 기준
+- public API, 호출 계약, 책임 경계, 구조 변경.
+- 저장 데이터, 씬, 프리팹, ScriptableObject asset 값 영향.
+- Unity 생명주기, UI/사운드/애니메이션, 전투 런타임 연결 영향.
+- 기능 슬라이스 완료 후 검증 게이트 필요.
+- 테스트 실패 또는 MCP/환경 실패 분류 필요.
+- 사용자가 검증, QA, 리뷰를 요청.
 
-협업 모드에서는 실제 변경 전 아래를 먼저 제안한다.
+## 검증 게이트
 
-1. 수정 대상 파일
-2. 수정 이유
-3. 예상 변경 범위
-4. 책임 분리 관점의 개선 이유
-5. diff 또는 변경 전/후 코드
+- 검색: 기계적 이름 정리, 호출부 이관, private/protected helper 정리.
+- 컴파일: 타입/호출 계약 변경, 인터페이스 구현.
+- EditMode: 순수 로직, 데이터 매핑, 전략 생성, 예측 계산.
+- PlayMode: Unity 생명주기, 씬/프리팹 연결, UI/사운드/애니메이션, 전투 런타임 연결.
 
-사용자가 `적용해`, `수정해`, `진행해`, `그렇게해`처럼 명확히 승인한 뒤에만 실제 변경한다.
+EditMode와 PlayMode는 작은 변경마다 반복하지 않는다.
+같은 기능 슬라이스 안에서는 기능 게이트에서 한 번 실행하는 것이 기본이다.
 
-## 자동 진행 기준
+## 문서 최소화
 
-- 자동 개발 모드와 자동 루프는 사용자가 명시적으로 요청했을 때만 사용한다.
-- 자동 루프는 `.codex/workflow/automation-rule.md`를 기준으로 한다.
-- `agent-status.md`의 `Ready` 에이전트를 실제 수행한 뒤 다음 에이전트로 넘긴다.
-- 실제 작업 없이 상태만 넘기지 않는다.
-- 위험 작업은 자동으로 진행하지 않고 멈춘다.
+- active 문서는 현재 기능 슬라이스와 다음 호출 대상만 둔다.
+- 완료 상세는 active 문서에 누적하지 않는다.
+- 의미 있는 완료만 `.codex/dev-log/YYYY-MM-DD.md`에 짧게 남긴다.
+- DocumentationAgent는 기능 완료, handoff, release note 때만 호출한다.
+- current-task, agent-status, issue-board, active-qa, dev-log 갱신은 사용자 진행 승인 없이 바로 수행한다.
 
-위험 작업:
-- 파일 삭제
-- 씬 변경
-- 에셋 삭제 또는 대량 이동
-- 저장 데이터 구조 변경
-- 외부 API 또는 유료 서비스 연결
-- 대규모 폴더 구조 변경
+## 하지 말 것
+
+- 모든 기능을 Coordinator -> Dev -> Review -> QA 파이프라인으로 고정하기
+- 네이밍 정리를 독립 작업으로 계속 고르기
+- 작은 변경마다 EditMode/PlayMode 반복 실행
+- 기능 개발 중간마다 VerificationAgent 호출
+- DocumentationAgent를 상시 기록 담당으로 붙이기
