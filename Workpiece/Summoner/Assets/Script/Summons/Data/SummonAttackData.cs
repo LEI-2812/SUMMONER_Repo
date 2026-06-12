@@ -7,39 +7,39 @@ public class SummonAttackData
     [SerializeField] private SummonAttackStrategyType strategyType;
     [SerializeField] private StatusType statusType;
     [SerializeField] private double damage;
-    [SerializeField] private int cooltime;
+    [SerializeField] private int cooldownDuration;
     [SerializeField] private int statusTime;
 
     public SummonAttackData(
         SummonAttackStrategyType strategyType,
         StatusType statusType,
         double damage,
-        int cooltime,
+        int cooldownDuration,
         int statusTime = 0)
     {
         this.strategyType = strategyType;
         this.statusType = statusType;
         this.damage = damage;
-        this.cooltime = cooltime;
+        this.cooldownDuration = cooldownDuration;
         this.statusTime = statusTime;
     }
 
-    public SummonAttackStrategyType StrategyTypeGet() => strategyType;
-    public StatusType StatusTypeGet() => statusType;
-    public double DamageGet() => damage;
-    public int CooltimeGet() => cooltime;
-    public int StatusTimeGet() => statusTime;
+    public SummonAttackStrategyType GetStrategyType() => strategyType;
+    public StatusType GetStatusType() => statusType;
+    public double GetDamage() => damage;
+    public int GetCooltime() => cooldownDuration;
+    public int GetStatusTime() => statusTime;
 
-    public IAttackStrategy AttackStrategyCreate()
+    public IAttackStrategy CreateAttackStrategy()
     {
         switch (strategyType)
         {
             case SummonAttackStrategyType.ClosestEnemy:
-                return new ClosestEnemyAttackStrategy(statusType, damage, cooltime, statusTime);
+                return new ClosestEnemyAttackStrategy(statusType, damage, cooldownDuration, statusTime);
             case SummonAttackStrategyType.Targeted:
-                return new TargetedAttackStrategy(statusType, damage, cooltime, statusTime);
+                return new TargetedAttackStrategy(statusType, damage, cooldownDuration, statusTime);
             case SummonAttackStrategyType.AllEnemies:
-                return new AttackAllEnemiesStrategy(statusType, damage, cooltime, statusTime);
+                return new AttackAllEnemiesStrategy(statusType, damage, cooldownDuration, statusTime);
             default:
                 throw new ArgumentOutOfRangeException(nameof(strategyType), strategyType, "Unknown summon attack strategy type.");
         }

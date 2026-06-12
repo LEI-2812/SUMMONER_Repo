@@ -5,12 +5,12 @@ public class OnceInvincibilityStatusEffect : StatusEffect, IStatusEffect
     {
     }
 
-    public StatusType StatusTypeGet()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int RemainingTurnGet()
+    public int GetRemainingTurn()
     {
         return 0;
     }
@@ -30,14 +30,14 @@ public class OnceInvincibilityStatusEffect : StatusEffect, IStatusEffect
         return false;
     }
 
-    public string AlreadyAppliedMessageGet(string targetName)
+    public string GetAlreadyAppliedMessage(string targetName)
     {
         return $"{targetName}은 이미 1회 무적 상태입니다.";
     }
 
     public void StatusApply(IStatusEffectTarget target)
     {
-        target.OnceInvincibilitySet(true);
+        target.SetOnceInvincibility(true);
     }
 
     public void StatusTurnUpdate(IStatusEffectTarget target)

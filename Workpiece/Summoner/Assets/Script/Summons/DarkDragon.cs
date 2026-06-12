@@ -8,15 +8,15 @@ public class DarkDragon : Summon
     {
         base.Awake();
 
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("DarkDragon", SummonRank.Boss, SummonType.DarkDragon, 3000, 400, 500);
+        SetFallbackStatus("DarkDragon", SummonRank.Boss, SummonType.DarkDragon, 3000, 400, 500);
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0),
             new AttackAllEnemiesStrategy(StatusType.None, 370, 0), //전체공격 데미지 370
             new AttackAllEnemiesStrategy(StatusType.Burn, 0.2, 5,2), //화상, 체력 20% 데미지, 쿨타임 5턴, 지속시간 2턴

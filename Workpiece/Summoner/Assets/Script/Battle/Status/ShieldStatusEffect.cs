@@ -7,12 +7,12 @@ public class ShieldStatusEffect : StatusEffect, IStatusEffect
     {
     }
 
-    public StatusType StatusTypeGet()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int RemainingTurnGet()
+    public int GetRemainingTurn()
     {
         return effectTime;
     }
@@ -29,9 +29,9 @@ public class ShieldStatusEffect : StatusEffect, IStatusEffect
             return false;
         }
 
-        target.ShieldSet(existingEffect.damagePerTurn);
+        target.SetShield(existingEffect.damagePerTurn);
         target.BuffSoundPlay();
-        Debug.Log($"{target.StatusTargetNameGet()}의 보호막을 다시 채웠습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}의 보호막을 다시 채웠습니다.");
         return true;
     }
 
@@ -40,7 +40,7 @@ public class ShieldStatusEffect : StatusEffect, IStatusEffect
         return false;
     }
 
-    public string AlreadyAppliedMessageGet(string targetName)
+    public string GetAlreadyAppliedMessage(string targetName)
     {
         return $"{targetName}에게 이미 보호막이 있습니다.";
     }
@@ -49,16 +49,15 @@ public class ShieldStatusEffect : StatusEffect, IStatusEffect
     {
         target.ShieldAdd(damagePerTurn);
         target.BuffSoundPlay();
-        Debug.Log($"{target.StatusTargetNameGet()}에게 보호막이 생겼습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}에게 보호막이 생겼습니다.");
     }
 
     public void StatusTurnUpdate(IStatusEffectTarget target)
     {
-        effectTime--;
     }
 
     public void StatusExpire(IStatusEffectTarget target)
     {
-        Debug.Log($"{target.StatusTargetNameGet()}의 보호막 상태이상이 종료되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}의 보호막 상태이상이 종료되었습니다.");
     }
 }

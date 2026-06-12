@@ -82,7 +82,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     {
         StatusEffectControllerEnsure();
 
-        statusView.StatusEffectsShow(statusEffectController.ActiveStatusEffectsGet());
+        statusView.StatusEffectsShow(statusEffectController.GetActiveStatusEffects());
     }
 
     public void SetSprite(int index) => imageView.SpriteSet(index);
@@ -226,18 +226,16 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public bool GetIsAttack() => isAttack;
     public void SetIsAttack(bool isAttack) => this.isAttack = isAttack;
 
-    public string StatusTargetNameGet() => summonName;
-    public double HealthGet() => nowHP;
-    public double AttackPowerGet() => attackPower;
+    public string GetStatusTargetName() => summonName;
+    public double GetHealth() => nowHP;
     public void DamageTake(double damage) => TakeDamage(damage);
     public void HealReceive(double healAmount) => Heal(healAmount);
-    public void AttackAvailableSet(bool canAttack) => SetIsAttack(canAttack);
+    public void SetAttackAvailable(bool canAttack) => SetIsAttack(canAttack);
     public void ShieldAdd(double shieldAmount) => AddShield(shieldAmount);
-    public void ShieldSet(double shieldAmount) => shield = shieldAmount;
+    public void SetShield(double shieldAmount) => shield = shieldAmount;
     public void AttackPowerUpgrade(double multiplier) => UpgradeAttackPower(multiplier);
     public void AttackPowerCurse(double curseRate) => Cursed(curseRate);
     public void AttackPowerRestore(double originAttack) => attackPower = originAttack;
-    public void OnceInvincibilitySet(bool isInvincibility) => SetOnceInvincibility(isInvincibility);
     public void StatusHitColorShow() => statusView.StatusHitColorShow();
 
     public void DebuffSoundPlay() => soundView.DebuffSoundPlay();
@@ -373,29 +371,27 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         NotifyObservers();
     }
 
-    protected SummonData SummonDataGet() => summonData;
-
-    protected bool SummonDataApply(SummonData data)
+    protected bool TryApplyAssignedSummonData()
     {
-        if (data == null)
+        if (summonData == null)
         {
             return false;
         }
 
-        summonName = data.SummonNameGet();
-        summonRank = data.SummonRankGet();
-        summonType = data.SummonTypeGet();
-        maxHP = data.MaxHpGet();
+        summonName = summonData.GetSummonName();
+        summonRank = summonData.GetSummonRank();
+        summonType = summonData.GetSummonType();
+        maxHP = summonData.GetMaxHp();
         nowHP = maxHP;
-        attackPower = data.AttackPowerGet();
-        heavyAttakPower = data.HeavyAttackPowerGet();
-        attackStrategy = data.NormalAttackStrategyCreate();
-        specialAttackStrategies = data.SpecialAttackStrategiesCreate();
+        attackPower = summonData.GetAttackPower();
+        heavyAttakPower = summonData.GetHeavyAttackPower();
+        attackStrategy = summonData.CreateNormalAttackStrategy();
+        specialAttackStrategies = summonData.CreateSpecialAttackStrategies();
         NotifyObservers();
         return true;
     }
 
-    protected void FallbackStatusSet(
+    protected void SetFallbackStatus(
         string name,
         SummonRank rank,
         SummonType type,
@@ -412,14 +408,14 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         heavyAttakPower = heavyAttackPower;
     }
 
-    protected void AttackStrategiesSet(IAttackStrategy normalAttack, params IAttackStrategy[] specialAttacks)
+    protected void SetAttackStrategies(IAttackStrategy normalAttack, params IAttackStrategy[] specialAttacks)
     {
         attackStrategy = normalAttack;
         specialAttackStrategies = specialAttacks;
     }
 
     private static double multiple=5; // 배수 설정
-    public static double StatMultiplierGet() => multiple;
+    public static double GetStatMultiplier() => multiple;
     public static void StatMultiplierSet(double value) => multiple = value;
 
     public virtual void ApplayMultiple(double m)
@@ -487,7 +483,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public SummonRank GetSummonRank() => summonRank;
     public SummonRank GetDrawRank()
     {
-        return summonData == null ? summonRank : summonData.SummonRankGet();
+        return summonData == null ? summonRank : summonData.GetSummonRank();
     }
 
     public void SetSummonRank(SummonRank rank) => this.summonRank = rank;
@@ -497,7 +493,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         imageView.ImageSet(image);
     }
 
-    public Image GetImage() => imageView.ImageGet();
+    public Image GetImage() => imageView.GetImage();
 
 
     // 특수 공격 쿨타임 확인
@@ -520,7 +516,14 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     {
         StatusEffectControllerEnsure();
 
-        return statusEffectController.StatusTypesGet();
+        return statusEffectController.GetStatusTypes();
+    }
+
+    public IReadOnlyList<StatusEffect> GetActiveStatusEffects()
+    {
+        StatusEffectControllerEnsure();
+
+        return statusEffectController.GetActiveStatusEffects();
     }
 
     public bool IsCursed()

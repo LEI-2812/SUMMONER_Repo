@@ -7,17 +7,17 @@ public class Eagle : Summon
 
     public override void SummonInitialize()
     {
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("Eagle", SummonRank.High, SummonType.Eagle, 350, 45, 30);
+        SetFallbackStatus("Eagle", SummonRank.High, SummonType.Eagle, 350, 45, 30);
 
-        ApplayMultiple(StatMultiplierGet());
+        ApplayMultiple(GetStatMultiplier());
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 1),
             new TargetedAttackStrategy(StatusType.None, GetHeavyAttackPower(), 2)); //저격 30데미지, 쿨타임 2턴
 

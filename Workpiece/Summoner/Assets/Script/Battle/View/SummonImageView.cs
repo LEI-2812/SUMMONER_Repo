@@ -47,7 +47,7 @@ public class SummonImageView : MonoBehaviour
         ImageEnsure();
     }
 
-    public Image ImageGet()
+    public Image GetImage()
     {
         ImageEnsure();
         return image;

@@ -7,16 +7,16 @@ public class Fox : Summon
 
     public override void SummonInitialize()
     {
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("Fox", SummonRank.Low, SummonType.Fox, 250, 35, 0);
-        ApplayMultiple(StatMultiplierGet());
+        SetFallbackStatus("Fox", SummonRank.Low, SummonType.Fox, 250, 35, 0);
+        ApplayMultiple(GetStatMultiplier());
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0),
             new TargetedAttackStrategy(StatusType.Upgrade, 0.3, 3, 1));//공격력 강화, 20% 상승, 쿨타임 3턴 //지속시간 1턴
 

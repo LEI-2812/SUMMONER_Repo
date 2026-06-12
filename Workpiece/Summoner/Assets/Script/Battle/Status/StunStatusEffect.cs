@@ -7,12 +7,12 @@ public class StunStatusEffect : StatusEffect, IStatusEffect
     {
     }
 
-    public StatusType StatusTypeGet()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int RemainingTurnGet()
+    public int GetRemainingTurn()
     {
         return effectTime;
     }
@@ -32,7 +32,7 @@ public class StunStatusEffect : StatusEffect, IStatusEffect
         return updateTiming == StatusUpdateTiming.StunAndCurse;
     }
 
-    public string AlreadyAppliedMessageGet(string targetName)
+    public string GetAlreadyAppliedMessage(string targetName)
     {
         return $"{targetName}은 이미 스턴 상태입니다.";
     }
@@ -40,23 +40,23 @@ public class StunStatusEffect : StatusEffect, IStatusEffect
     public void StatusApply(IStatusEffectTarget target)
     {
         target.StatusHitColorShow();
-        target.AttackAvailableSet(false);
+        target.SetAttackAvailable(false);
         target.StatusChangedNotify();
         target.DebuffSoundPlay();
 
-        Debug.Log($"{target.StatusTargetNameGet()}이 스턴 상태가 되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}이 스턴 상태가 되었습니다.");
     }
 
     public void StatusTurnUpdate(IStatusEffectTarget target)
     {
-        target.AttackAvailableSet(false);
-        Debug.Log($"{target.StatusTargetNameGet()}은 스턴 상태로 공격할 수 없습니다.");
+        target.SetAttackAvailable(false);
+        Debug.Log($"{target.GetStatusTargetName()}은 스턴 상태로 공격할 수 없습니다.");
         effectTime--;
     }
 
     public void StatusExpire(IStatusEffectTarget target)
     {
-        target.AttackAvailableSet(true);
-        Debug.Log($"{target.StatusTargetNameGet()}의 스턴이 해제되었습니다. 공격 가능");
+        target.SetAttackAvailable(true);
+        Debug.Log($"{target.GetStatusTargetName()}의 스턴이 해제되었습니다. 공격 가능");
     }
 }

@@ -22,11 +22,11 @@ MonoBehaviour:
     strategyType: 0
     statusType: 0
     damage: 40
-    cooltime: 1
+    cooldownDuration: 1
     statusTime: 0
   specialAttacks:
   - strategyType: 2
     statusType: 2
     damage: 0.1
-    cooltime: 3
+    cooldownDuration: 3
     statusTime: 2

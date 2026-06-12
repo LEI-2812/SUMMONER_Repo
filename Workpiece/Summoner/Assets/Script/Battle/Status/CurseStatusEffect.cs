@@ -7,12 +7,12 @@ public class CurseStatusEffect : StatusEffect, IStatusEffect
     {
     }
 
-    public StatusType StatusTypeGet()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int RemainingTurnGet()
+    public int GetRemainingTurn()
     {
         return effectTime;
     }
@@ -32,7 +32,7 @@ public class CurseStatusEffect : StatusEffect, IStatusEffect
         return updateTiming == StatusUpdateTiming.StunAndCurse;
     }
 
-    public string AlreadyAppliedMessageGet(string targetName)
+    public string GetAlreadyAppliedMessage(string targetName)
     {
         return $"{targetName}은 이미 저주 상태입니다.";
     }
@@ -49,7 +49,7 @@ public class CurseStatusEffect : StatusEffect, IStatusEffect
         }
 
         target.DebuffSoundPlay();
-        Debug.Log($"{target.StatusTargetNameGet()}에게 저주 상태이상이 적용되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}에게 저주 상태이상이 적용되었습니다.");
     }
 
     public void StatusTurnUpdate(IStatusEffectTarget target)
@@ -59,6 +59,6 @@ public class CurseStatusEffect : StatusEffect, IStatusEffect
 
     public void StatusExpire(IStatusEffectTarget target)
     {
-        Debug.Log($"{target.StatusTargetNameGet()}의 저주 상태이상이 종료되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}의 저주 상태이상이 종료되었습니다.");
     }
 }

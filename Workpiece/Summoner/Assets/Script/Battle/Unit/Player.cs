@@ -242,7 +242,7 @@ public class Player : MonoBehaviour
     {
         if (PlayerActionBlockedCheck()) return;
 
-        Summon attackSummon = NormalAttackSummonGet();
+        Summon attackSummon = GetNormalAttackSummon();
         if (attackSummon == null)
         {
             return;
@@ -257,7 +257,7 @@ public class Player : MonoBehaviour
         return summonController.isSummoning || battleController.GetIsAttacking();
     }
 
-    private Summon NormalAttackSummonGet()
+    private Summon GetNormalAttackSummon()
     {
         Summon attackSummon = battleController.AttackStart(0);
         if (attackSummon == null)
@@ -298,7 +298,7 @@ public class Player : MonoBehaviour
     {
         if (PlayerActionBlockedCheck()) return;
 
-        Summon attackSummon = SpecialAttackSummonGet();
+        Summon attackSummon = GetSpecialAttackSummon();
         if (attackSummon == null)
         {
             return;
@@ -312,7 +312,7 @@ public class Player : MonoBehaviour
         PlayerAttackAfterProcess();
     }
 
-    private Summon SpecialAttackSummonGet()
+    private Summon GetSpecialAttackSummon()
     {
         Summon attackSummon = battleController.AttackStart(0);
         if (attackSummon == null)

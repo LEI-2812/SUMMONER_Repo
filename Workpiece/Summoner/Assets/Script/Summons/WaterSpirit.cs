@@ -9,15 +9,15 @@ public class WaterSpirit : Summon
     {
         base.Awake();
 
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("WaterSpirit", SummonRank.Normal, SummonType.WaterSpirit, 350, 70, 120);
+        SetFallbackStatus("WaterSpirit", SummonRank.Normal, SummonType.WaterSpirit, 350, 70, 120);
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0),
             new TargetedAttackStrategy(StatusType.Shield, 80, 2));//쉴드
     }

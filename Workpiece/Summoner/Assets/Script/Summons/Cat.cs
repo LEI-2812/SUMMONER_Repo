@@ -6,16 +6,16 @@ public class Cat : Summon
 
     public override void SummonInitialize()
     {
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("Cat", SummonRank.Low, SummonType.Cat, 250, 30, 40);
-        ApplayMultiple(StatMultiplierGet());
+        SetFallbackStatus("Cat", SummonRank.Low, SummonType.Cat, 250, 30, 40);
+        ApplayMultiple(GetStatMultiplier());
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower() ,1),
             new ClosestEnemyAttackStrategy(StatusType.None, GetHeavyAttackPower(), 1)); //근접공격, 20데미지, 쿨타임1턴
 

@@ -7,12 +7,12 @@ public class HealStatusEffect : StatusEffect, IStatusEffect
     {
     }
 
-    public StatusType StatusTypeGet()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int RemainingTurnGet()
+    public int GetRemainingTurn()
     {
         return 0;
     }
@@ -32,7 +32,7 @@ public class HealStatusEffect : StatusEffect, IStatusEffect
         return false;
     }
 
-    public string AlreadyAppliedMessageGet(string targetName)
+    public string GetAlreadyAppliedMessage(string targetName)
     {
         return $"{targetName}은 이미 회복 효과를 받았습니다.";
     }
@@ -40,7 +40,7 @@ public class HealStatusEffect : StatusEffect, IStatusEffect
     public void StatusApply(IStatusEffectTarget target)
     {
         target.HealReceive(damagePerTurn);
-        Debug.Log($"{target.StatusTargetNameGet()}이 {damagePerTurn}만큼 회복했습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}이 {damagePerTurn}만큼 회복했습니다.");
     }
 
     public void StatusTurnUpdate(IStatusEffectTarget target)

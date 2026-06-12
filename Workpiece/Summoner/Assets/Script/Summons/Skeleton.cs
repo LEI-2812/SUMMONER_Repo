@@ -8,15 +8,15 @@ public class Skeleton : Summon
     {
         base.Awake();
 
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("Skeleton", SummonRank.Normal, SummonType.Skeleton, 650, 150, 170);
+        SetFallbackStatus("Skeleton", SummonRank.Normal, SummonType.Skeleton, 650, 150, 170);
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0), //근접공격
             new TargetedAttackStrategy(StatusType.None, 160,0)); //타겟공격 160데미지
     }

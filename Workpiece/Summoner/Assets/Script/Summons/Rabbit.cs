@@ -7,15 +7,15 @@ public class Rabbit : Summon
 {
     public override void SummonInitialize()
     {
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("Rabbit", SummonRank.Medium, SummonType.Rabbit, 300, 37, 0);
-        ApplayMultiple(StatMultiplierGet());
+        SetFallbackStatus("Rabbit", SummonRank.Medium, SummonType.Rabbit, 300, 37, 0);
+        ApplayMultiple(GetStatMultiplier());
 
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(),1), //근접공격
             new TargetedAttackStrategy(StatusType.Heal, 0.3, 3));
 

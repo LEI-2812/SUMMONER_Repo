@@ -7,12 +7,12 @@ public class LifeDrainStatusEffect : StatusEffect, IStatusEffect
     {
     }
 
-    public StatusType StatusTypeGet()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int RemainingTurnGet()
+    public int GetRemainingTurn()
     {
         return effectTime;
     }
@@ -32,7 +32,7 @@ public class LifeDrainStatusEffect : StatusEffect, IStatusEffect
         return updateTiming == StatusUpdateTiming.Damage;
     }
 
-    public string AlreadyAppliedMessageGet(string targetName)
+    public string GetAlreadyAppliedMessage(string targetName)
     {
         return $"{targetName}은 이미 흡혈 상태입니다.";
     }
@@ -44,7 +44,7 @@ public class LifeDrainStatusEffect : StatusEffect, IStatusEffect
         target.StatusChangedNotify();
         target.DebuffSoundPlay();
 
-        Debug.Log($"{target.StatusTargetNameGet()}에게 흡혈 상태이상이 적용되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}에게 흡혈 상태이상이 적용되었습니다.");
     }
 
     public void StatusTurnUpdate(IStatusEffectTarget target)
@@ -60,7 +60,7 @@ public class LifeDrainStatusEffect : StatusEffect, IStatusEffect
 
     public void StatusExpire(IStatusEffectTarget target)
     {
-        Debug.Log($"{target.StatusTargetNameGet()}의 흡혈 상태이상이 종료되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}의 흡혈 상태이상이 종료되었습니다.");
     }
 
     private void LifeDrainApply(IStatusEffectTarget target)
@@ -75,6 +75,6 @@ public class LifeDrainStatusEffect : StatusEffect, IStatusEffect
 
         target.DamageTake(damagePerTurn);
         attacker.HealReceive(damagePerTurn);
-        Debug.Log($"{target.StatusTargetNameGet()}에게서 {damagePerTurn} 만큼 흡혈합니다. 현재 체력: {attacker.HealthGet()}");
+        Debug.Log($"{target.GetStatusTargetName()}에게서 {damagePerTurn} 만큼 흡혈합니다. 현재 체력: {attacker.GetHealth()}");
     }
 }

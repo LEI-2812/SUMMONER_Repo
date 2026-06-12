@@ -7,12 +7,12 @@ public class UpgradeStatusEffect : StatusEffect, IStatusEffect
     {
     }
 
-    public StatusType StatusTypeGet()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int RemainingTurnGet()
+    public int GetRemainingTurn()
     {
         return effectTime;
     }
@@ -32,14 +32,14 @@ public class UpgradeStatusEffect : StatusEffect, IStatusEffect
         return updateTiming == StatusUpdateTiming.Upgrade;
     }
 
-    public string AlreadyAppliedMessageGet(string targetName)
+    public string GetAlreadyAppliedMessage(string targetName)
     {
         return $"{targetName}은 이미 강화 상태입니다.";
     }
 
     public void StatusApply(IStatusEffectTarget target)
     {
-        SetOriginAttack(target.AttackPowerGet());
+        SetOriginAttack(target.GetAttackPower());
 
         if (ShouldApplyOnce())
         {
@@ -49,7 +49,7 @@ public class UpgradeStatusEffect : StatusEffect, IStatusEffect
             target.BuffSoundPlay();
         }
 
-        Debug.Log($"{target.StatusTargetNameGet()}의 공격력이 강화되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}의 공격력이 강화되었습니다.");
     }
 
     public void StatusTurnUpdate(IStatusEffectTarget target)
@@ -61,6 +61,6 @@ public class UpgradeStatusEffect : StatusEffect, IStatusEffect
     {
         Debug.Log("공격력 복구");
         target.AttackPowerRestore(GetOriginAttack());
-        Debug.Log($"{target.StatusTargetNameGet()}의 강화 상태이상이 종료되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}의 강화 상태이상이 종료되었습니다.");
     }
 }

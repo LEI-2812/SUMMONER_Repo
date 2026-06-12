@@ -20,9 +20,9 @@ namespace Summoner.EditModeTests
         {
             testObject = new GameObject("SummonStatusView Test");
             image = testObject.AddComponent<Image>();
-            view = testObject.AddComponent(TypeGet("SummonStatusView"));
-            statusTypeType = TypeGet("StatusType");
-            statusEffectType = TypeGet("StatusEffect");
+            view = testObject.AddComponent(GetTypeByName("SummonStatusView"));
+            statusTypeType = GetTypeByName("StatusType");
+            statusEffectType = GetTypeByName("StatusEffect");
         }
 
         [TearDown]
@@ -90,7 +90,7 @@ namespace Summoner.EditModeTests
             return effects;
         }
 
-        private static Type TypeGet(string typeName)
+        private static Type GetTypeByName(string typeName)
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {

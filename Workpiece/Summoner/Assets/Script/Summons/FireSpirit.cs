@@ -9,15 +9,15 @@ public class FireSpirit : Summon
     {
         base.Awake();
 
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("FireSpirit", SummonRank.Normal, SummonType.FireSpirit, 350, 60, 130);
+        SetFallbackStatus("FireSpirit", SummonRank.Normal, SummonType.FireSpirit, 350, 60, 130);
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0),
             new AttackAllEnemiesStrategy(StatusType.Upgrade, 0.1, 3, 1)); //공격력의 0.1만큼 강화, 쿨타임 1턴, 지속시간 1턴
     }

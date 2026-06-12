@@ -9,14 +9,14 @@ public class Slime : Summon
     {
         base.Awake();
 
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("Slime", SummonRank.Normal, SummonType.Slime, 200, 25, 40);
+        SetFallbackStatus("Slime", SummonRank.Normal, SummonType.Slime, 200, 25, 40);
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 1),
             new TargetedAttackStrategy(StatusType.Shield, 50, 2));
     }

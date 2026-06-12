@@ -12,21 +12,21 @@ public class SummonData : ScriptableObject
     [SerializeField] private SummonAttackData normalAttack;
     [SerializeField] private SummonAttackData[] specialAttacks;
 
-    public string SummonNameGet() => summonName;
-    public SummonRank SummonRankGet() => summonRank;
-    public SummonType SummonTypeGet() => summonType;
-    public double MaxHpGet() => maxHp;
-    public double AttackPowerGet() => attackPower;
-    public double HeavyAttackPowerGet() => heavyAttackPower;
-    public SummonAttackData NormalAttackGet() => normalAttack;
-    public SummonAttackData[] SpecialAttacksGet() => specialAttacks;
+    public string GetSummonName() => summonName;
+    public SummonRank GetSummonRank() => summonRank;
+    public SummonType GetSummonType() => summonType;
+    public double GetMaxHp() => maxHp;
+    public double GetAttackPower() => attackPower;
+    public double GetHeavyAttackPower() => heavyAttackPower;
+    public SummonAttackData GetNormalAttack() => normalAttack;
+    public SummonAttackData[] GetSpecialAttacks() => specialAttacks;
 
-    public IAttackStrategy NormalAttackStrategyCreate()
+    public IAttackStrategy CreateNormalAttackStrategy()
     {
-        return normalAttack == null ? null : normalAttack.AttackStrategyCreate();
+        return normalAttack == null ? null : normalAttack.CreateAttackStrategy();
     }
 
-    public IAttackStrategy[] SpecialAttackStrategiesCreate()
+    public IAttackStrategy[] CreateSpecialAttackStrategies()
     {
         if (specialAttacks == null)
         {
@@ -36,7 +36,7 @@ public class SummonData : ScriptableObject
         IAttackStrategy[] attackStrategies = new IAttackStrategy[specialAttacks.Length];
         for (int i = 0; i < specialAttacks.Length; i++)
         {
-            attackStrategies[i] = specialAttacks[i] == null ? null : specialAttacks[i].AttackStrategyCreate();
+            attackStrategies[i] = specialAttacks[i] == null ? null : specialAttacks[i].CreateAttackStrategy();
         }
 
         return attackStrategies;

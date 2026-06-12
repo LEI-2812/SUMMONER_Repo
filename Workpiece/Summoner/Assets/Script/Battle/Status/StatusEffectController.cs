@@ -15,12 +15,12 @@ public class StatusEffectController
         this.activeStatusEffects = activeStatusEffects;
     }
 
-    public IReadOnlyList<StatusEffect> ActiveStatusEffectsGet()
+    public IReadOnlyList<StatusEffect> GetActiveStatusEffects()
     {
         return activeStatusEffects;
     }
 
-    public List<StatusType> StatusTypesGet()
+    public List<StatusType> GetStatusTypes()
     {
         List<StatusType> statusTypes = new List<StatusType>();
 
@@ -45,7 +45,7 @@ public class StatusEffectController
     {
         if (statusEffect == null)
         {
-            Debug.Log($"{target.StatusTargetNameGet()}에게 적용할 상태이상이 없습니다.");
+            Debug.Log($"{target.GetStatusTargetName()}에게 적용할 상태이상이 없습니다.");
             return;
         }
 
@@ -53,7 +53,7 @@ public class StatusEffectController
 
         if (statusEffectObject == null)
         {
-            Debug.Log($"{target.StatusTargetNameGet()}에게 적용할 수 없는 상태이상입니다.");
+            Debug.Log($"{target.GetStatusTargetName()}에게 적용할 수 없는 상태이상입니다.");
             return;
         }
 
@@ -117,13 +117,13 @@ public class StatusEffectController
 
         if (statusEffectObject.SameStatusCanApply(existingEffect) == false)
         {
-            Debug.Log(statusEffectObject.AlreadyAppliedMessageGet(target.StatusTargetNameGet()));
+            Debug.Log(statusEffectObject.GetAlreadyAppliedMessage(target.GetStatusTargetName()));
             return;
         }
 
         statusEffectObject.StatusApply(target);
 
-        if (statusEffectObject.RemainingTurnGet() > 0)
+        if (statusEffectObject.GetRemainingTurn() > 0)
         {
             activeStatusEffects.Add(statusEffect);
         }
@@ -175,7 +175,7 @@ public class StatusEffectController
 
         statusEffect.StatusTurnUpdate(target);
 
-        if (statusEffect.RemainingTurnGet() <= 0)
+        if (statusEffect.GetRemainingTurn() <= 0)
         {
             expiredEffects.Add(effect);
         }
@@ -207,6 +207,6 @@ public class StatusEffectController
             return;
         }
 
-        Debug.Log($"{target.StatusTargetNameGet()}의 {expired.statusType} 상태이상이 종료되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}의 {expired.statusType} 상태이상이 종료되었습니다.");
     }
 }

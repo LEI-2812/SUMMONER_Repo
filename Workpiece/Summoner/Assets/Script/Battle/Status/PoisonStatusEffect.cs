@@ -7,12 +7,12 @@ public class PoisonStatusEffect : StatusEffect, IStatusEffect
     {
     }
 
-    public StatusType StatusTypeGet()
+    public StatusType GetStatusType()
     {
         return statusType;
     }
 
-    public int RemainingTurnGet()
+    public int GetRemainingTurn()
     {
         return effectTime;
     }
@@ -32,7 +32,7 @@ public class PoisonStatusEffect : StatusEffect, IStatusEffect
         return updateTiming == StatusUpdateTiming.Damage;
     }
 
-    public string AlreadyAppliedMessageGet(string targetName)
+    public string GetAlreadyAppliedMessage(string targetName)
     {
         return $"{targetName}은 이미 중독 상태입니다.";
     }
@@ -45,7 +45,7 @@ public class PoisonStatusEffect : StatusEffect, IStatusEffect
         target.StatusChangedNotify();
         target.DebuffSoundPlay();
 
-        Debug.Log($"{target.StatusTargetNameGet()}에게 중독 상태이상이 적용되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}에게 중독 상태이상이 적용되었습니다.");
     }
 
     public void StatusTurnUpdate(IStatusEffectTarget target)
@@ -55,13 +55,13 @@ public class PoisonStatusEffect : StatusEffect, IStatusEffect
             return;
         }
 
-        Debug.Log($"{target.StatusTargetNameGet()}이 중독 상태로 인해 {damagePerTurn} 피해를 입습니다. 남은 상태이상 시간: {effectTime}턴");
+        Debug.Log($"{target.GetStatusTargetName()}이 중독 상태로 인해 {damagePerTurn} 피해를 입습니다. 남은 상태이상 시간: {effectTime}턴");
         target.DamageTake(damagePerTurn);
         effectTime--;
     }
 
     public void StatusExpire(IStatusEffectTarget target)
     {
-        Debug.Log($"{target.StatusTargetNameGet()}의 중독 상태이상이 종료되었습니다.");
+        Debug.Log($"{target.GetStatusTargetName()}의 중독 상태이상이 종료되었습니다.");
     }
 }

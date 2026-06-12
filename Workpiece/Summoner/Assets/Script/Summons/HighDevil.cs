@@ -8,15 +8,15 @@ public class HighDevil : Summon
     {
         base.Awake();
 
-        if (SummonDataApply(SummonDataGet()))
+        if (TryApplyAssignedSummonData())
         {
             return;
         }
 
-        FallbackStatusSet("HighDevil", SummonRank.Special, SummonType.HighDevil, 1000, 200, 250);
+        SetFallbackStatus("HighDevil", SummonRank.Special, SummonType.HighDevil, 1000, 200, 250);
 
         // 일반 공격: 가장 가까운 적 공격
-        AttackStrategiesSet(
+        SetAttackStrategies(
             new ClosestEnemyAttackStrategy(StatusType.None, GetAttackPower(), 0),
             new AttackAllEnemiesStrategy(StatusType.None, 140,0), //전체공격 140
             new TargetedAttackStrategy(StatusType.None,230,0)); //타겟공격 230
