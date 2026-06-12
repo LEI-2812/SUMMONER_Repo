@@ -164,9 +164,9 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         if (enermyPlates.Count < 2) return false;
 
         //가장 가까운 인덱스 반환
-        int closetIndex = GetClosestEnermyIndex(attackingSummon, enermyPlates);
+        int closestIndex = GetClosestEnermyIndex(attackingSummon, enermyPlates);
 
-        if (closetIndex == lowestIndex)
+        if (closestIndex == lowestIndex)
             return true;
 
         return false;  

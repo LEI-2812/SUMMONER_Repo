@@ -7,20 +7,20 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
     // 실제 근접 피해는 effect에서 attacker.GetAttackPower()로 계산한다.
     // 이 값은 예측/표시/데이터 기준값으로 보존한다.
     private double damage;
-    private int cooltime;
-    private int currentCooldown;
+    private AttackCooldownState cooldownState;
     private IAttackEffect attackEffect;
+    private IAttackTargetSelector targetSelector;
 
-    public ClosestEnemyAttackStrategy(StatusType statusType,double damage, int cooltime, int statusTime=0)
+    public ClosestEnemyAttackStrategy(StatusType statusType, double damage, int cooldownDuration, int statusTime=0)
     {
         this.statusType = statusType;
         this.damage = damage;
-        this.cooltime = cooltime;
-        this.currentCooldown = 0;
+        this.cooldownState = new AttackCooldownState(cooldownDuration);
         this.attackEffect = ClosestEnemyAttackEffectInstanceCreate.Create(statusType);
+        this.targetSelector = new ClosestEnemyAttackTargetSelector();
     }
 
-    public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)
+    public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex)
     {
         if (targetPlates == null)
         {
@@ -28,40 +28,16 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
             return;
         }
 
-        Summon closestEnemySummon = GetClosestEnemySummon(targetPlates);
+        List<Summon> targets = targetSelector.SelectTargets(attacker, targetPlates, selectedPlateIndex);
 
-        if (closestEnemySummon != null)
+        if (targets.Count > 0)
         {
-            attackEffect.AttackEffectApply(attacker, closestEnemySummon, SpecialAttackarrayIndex);
+            attackEffect.AttackEffectApply(attacker, targets[0], specialAttackArrayIndex);
         }
         else
         {
             Debug.Log("공격할 적이 없습니다.");
         }
-    }
-
-    private Summon GetClosestEnemySummon(List<Plate> targetPlates)
-    {
-        if (targetPlates == null)
-        {
-            return null;
-        }
-
-        for (int i = 0; i < targetPlates.Count; i++)
-        {
-            if (targetPlates[i] == null)
-            {
-                continue;
-            }
-
-            Summon enemySummon = targetPlates[i].GetCurrentSummon();
-            if (enemySummon != null)
-            {
-                return enemySummon; // 첫 번째로 존재하는 소환수를 바로 반환
-            }
-        }
-
-        return null; // 적 소환수가 없으면 null 반환
     }
 
     public double GetSpecialDamage()
@@ -72,21 +48,14 @@ public class ClosestEnemyAttackStrategy : IAttackStrategy
     public bool BenefitEffectCheck() => attackEffect.BenefitEffectCheck();
 
     public StatusType GetStatusType() { return statusType; }
-    public void SetStatusType(StatusType type) { statusType = type; }
     
-    public int GetCooltime() { return cooltime; }
+    public int GetCooltime() { return cooldownState.GetCooltime(); }
 
-    public int GetCurrentCooldown() => currentCooldown;
+    public int GetCurrentCooldown() => cooldownState.GetCurrentCooldown();
 
     // 쿨타임을 초기화 (스킬 사용 후 적용)
-    public void ApplyCooldown() => currentCooldown = cooltime;
+    public void ApplyCooldown() => cooldownState.ApplyCooldown();
 
     // 턴 종료 시 쿨타임 감소
-    public void ReduceCooldown()
-    {
-        if (currentCooldown > 0)
-        {
-            currentCooldown--;
-        }
-    }
+    public void ReduceCooldown() => cooldownState.ReduceCooldown();
 }

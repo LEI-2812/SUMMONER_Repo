@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IAttackStrategy
 {
-   void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackarrayIndex);
+   void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex);
 
     StatusType GetStatusType(); // 상태 타입 반환 메서드 추가
     bool BenefitEffectCheck(); // 이로운 효과 여부 반환

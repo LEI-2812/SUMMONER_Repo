@@ -96,7 +96,6 @@ public static class TargetedAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            target = attacker;
             StatusEffect shieldEffect = StatusEffectInstanceCreate.Create(StatusType.Shield, statusTime, damage);
             target.ApplyStatusEffect(shieldEffect);
             Debug.Log($"{attacker.GetSummonName()}이(가) {target.GetSummonName()}에게 {damage} 만큼 보호막을 부여합니다.");
@@ -129,7 +128,6 @@ public static class TargetedAttackEffectInstanceCreate
 
         public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)
         {
-            target = attacker;
             StatusEffect onceInvincibilityEffect = StatusEffectInstanceCreate.Create(StatusType.OnceInvincibility, 0, 0);
             target.ApplyStatusEffect(onceInvincibilityEffect);
         }

@@ -96,11 +96,11 @@ public class BattleController : MonoBehaviour
     //타겟지정 로직
     private void HandleTargetedAttack(Summon attackSummon, TargetedAttackStrategy targetedAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
-        List<Plate> targetPlates = SpecialAttackTargetPlatesGet(targetedAttack, isPlayer);
+        List<Plate> targetPlates = GetSpecialAttackTargetPlates(targetedAttack, isPlayer);
 
         if (!targetedAttack.BenefitEffectCheck() && !IsValidPlateIndex(selectedPlateIndex, targetPlates.Count))
         {
-            Debug.Log(TargetedAttackInvalidLogGet(isPlayer));
+            Debug.Log(GetTargetedAttackInvalidLog(isPlayer));
             return;
         }
 
@@ -109,14 +109,14 @@ public class BattleController : MonoBehaviour
             targetPlates,
             selectedPlateIndex,
             selectSpecialAttackIndex,
-            TargetedAttackSuccessLogGet(targetedAttack, selectedPlateIndex, isPlayer));
+            GetTargetedAttackSuccessLog(targetedAttack, selectedPlateIndex, isPlayer));
     }
 
 
     //전체공격 로직
     private void HandleAttackAll(Summon attackSummon, AttackAllEnemiesStrategy allAttackstrategy, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
-        List<Plate> targetPlates = SpecialAttackTargetPlatesGet(allAttackstrategy, isPlayer);
+        List<Plate> targetPlates = GetSpecialAttackTargetPlates(allAttackstrategy, isPlayer);
 
         if (isPlayer)
         {
@@ -140,7 +140,7 @@ public class BattleController : MonoBehaviour
     //근접공격 로직
     private void HandleClosestEnemyAttack(Summon attackSummon, ClosestEnemyAttackStrategy closestAttack, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer)
     {
-        List<Plate> targetPlates = SpecialAttackTargetPlatesGet(closestAttack, isPlayer);
+        List<Plate> targetPlates = GetSpecialAttackTargetPlates(closestAttack, isPlayer);
 
         if (isPlayer)
         {
@@ -168,7 +168,7 @@ public class BattleController : MonoBehaviour
         return selectedPlateIndex >= 0 && selectedPlateIndex < plateCount;
     }
 
-    private List<Plate> SpecialAttackTargetPlatesGet(IAttackStrategy attackStrategy, bool isPlayer)
+    private List<Plate> GetSpecialAttackTargetPlates(IAttackStrategy attackStrategy, bool isPlayer)
     {
         bool targetsOwnPlates = attackStrategy.BenefitEffectCheck();
 
@@ -180,7 +180,7 @@ public class BattleController : MonoBehaviour
         return plateController.GetEnermyPlates();
     }
 
-    private string TargetedAttackSuccessLogGet(TargetedAttackStrategy targetedAttack, int selectedPlateIndex, bool isPlayer)
+    private string GetTargetedAttackSuccessLog(TargetedAttackStrategy targetedAttack, int selectedPlateIndex, bool isPlayer)
     {
         if (isPlayer)
         {
@@ -194,7 +194,7 @@ public class BattleController : MonoBehaviour
             : $"적이 선택한 플레이어의 플레이트 {selectedPlateIndex}가 공격 대상입니다.";
     }
 
-    private string TargetedAttackInvalidLogGet(bool isPlayer)
+    private string GetTargetedAttackInvalidLog(bool isPlayer)
     {
         return isPlayer
             ? "유효한 적의 플레이트 인덱스가 선택되지 않았습니다."
@@ -257,10 +257,7 @@ public class BattleController : MonoBehaviour
 
     private bool DoesAttackStrategyTargetPlayerPlate(IAttackStrategy attackStrategy)
     {
-        StatusType attackStatusType = attackStrategy.GetStatusType();
-        return attackStatusType == StatusType.Heal
-            || attackStatusType == StatusType.Upgrade
-            || attackStatusType == StatusType.Shield;
+        return attackStrategy != null && attackStrategy.BenefitEffectCheck();
     }
 
     public bool GetIsAttacking()

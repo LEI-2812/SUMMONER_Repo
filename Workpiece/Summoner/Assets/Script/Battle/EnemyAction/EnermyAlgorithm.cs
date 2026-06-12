@@ -145,7 +145,7 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.IsSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                if (!CanUseSpecialAttack(attacker, attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
                 {
                     continue;
                 }
@@ -180,7 +180,7 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.IsSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                if (!CanUseSpecialAttack(attacker, attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
                 {
                     continue;
                 }
@@ -219,7 +219,7 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.IsSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                if (!CanUseSpecialAttack(attacker, attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
                 {
                     continue;
                 }
@@ -257,7 +257,7 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.IsSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                if (!CanUseSpecialAttack(attacker, attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
                 {
                     continue;
                 }
@@ -290,7 +290,7 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.IsSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                if (!CanUseSpecialAttack(attacker, attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
                 {
                     continue;
                 }
@@ -329,7 +329,7 @@ public class EnermyAlgorithm : MonoBehaviour
                 Debug.Log("소환수2마리 이상중 30%이상인 인덱스: " + index);
                 for (int i = 0; i < attackStrategy.Length; i++)
                 {
-                    if (attacker.IsSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                    if (!CanUseSpecialAttack(attacker, attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
                     {
                         continue;
                     }
@@ -344,7 +344,7 @@ public class EnermyAlgorithm : MonoBehaviour
             {
                 for (int i = 0; i < attackStrategy.Length; i++)
                 {
-                    if (attacker.IsSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                    if (!CanUseSpecialAttack(attacker, attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
                     {
                         continue;
                     }
@@ -370,7 +370,7 @@ public class EnermyAlgorithm : MonoBehaviour
         {
             for (int i = 0; i < attackStrategy.Length; i++)
             {
-                if (attacker.IsSpecialAttackCool(attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
+                if (!CanUseSpecialAttack(attacker, attackStrategy[i])) //쿨타임이면 다음 특수스킬 검사
                 {
                     continue;
                 }
@@ -424,6 +424,11 @@ public class EnermyAlgorithm : MonoBehaviour
     {
         battleController.SpecialAttackExecute(attacker, targetPlateIndex, specialAttackIndex);
         Debug.Log(logMessage);
+    }
+
+    private bool CanUseSpecialAttack(Summon attacker, IAttackStrategy attackStrategy)
+    {
+        return attackStrategy != null && !attacker.IsSpecialAttackCool(attackStrategy);
     }
 
     private bool HasPlayerSummonOverMediumRank(List<Plate> plates)
@@ -481,18 +486,6 @@ public class EnermyAlgorithm : MonoBehaviour
         return -1; // 조건을 만족하는 소환수가 없으면 -1 반환
     }
 
-    private int GetLowestMonsterIndex(List<Plate> enermyPlates)
-    {
-        int lowestIndex=-1;
-
-        for(int i = 0; i<enermyPlates.Count; i++)
-        {
-
-        }
-
-        return lowestIndex;
-    }
-
     //private int Get30PercentDifferentHP(Summon attacker, List<Plate> targetPlates)
     //{
     //    double attackerHealthRatio = (double)attacker.GetNowHP() / attacker.GetMaxHP();
@@ -538,10 +531,18 @@ public class EnermyAlgorithm : MonoBehaviour
         List<Plate> playerPlates = CheckPlayerPlateState(); // 현재 playerPlates들
 
         // 2. 몬스터의 상태 체크 (새 리스트에 상태 조정된 enermyPlates 추가)
-        List<Plate> applyEnermyPlates = GetApplyStatusEnermyPlates();
+        List<Summon> originEnermySummons = new List<Summon>();
+        List<Plate> applyEnermyPlates = GetApplyStatusEnermyPlates(originEnermySummons);
 
         //3. 소환수의 예측공격 리스트를 받아온다.
-        playerAttackPredictionsList = playerAttackPrediction.GetPlayerAttackPredictionList(playerPlates, applyEnermyPlates);
+        try
+        {
+            playerAttackPredictionsList = playerAttackPrediction.GetPlayerAttackPredictionList(playerPlates, applyEnermyPlates);
+        }
+        finally
+        {
+            RestoreEnermyPlates(applyEnermyPlates, originEnermySummons);
+        }
 
         return playerAttackPredictionsList;
     }
@@ -569,13 +570,15 @@ public class EnermyAlgorithm : MonoBehaviour
         return playerPlateStates;
     }
     // 2. 적 몬스터의 상태를 조정하여 새로운 플레이트 리스트 반환
-    private List<Plate> GetApplyStatusEnermyPlates()
+    private List<Plate> GetApplyStatusEnermyPlates(List<Summon> originEnermySummons)
     {
         List<Plate> applyEnermyPlates = new List<Plate>();
 
         foreach (Plate plate in plateController.GetEnermyPlates())
         {
             Summon originSummon = plate.GetCurrentSummon();
+            originEnermySummons.Add(originSummon);
+
             if (originSummon != null)
             {
                 // Summon 객체만 복제하고 상태 효과를 적용
@@ -586,8 +589,6 @@ public class EnermyAlgorithm : MonoBehaviour
                 plate.SetCurrentSummon(adjustedSummon);
                 applyEnermyPlates.Add(plate);
 
-                // 원본 Summon으로 복원
-                plate.SetCurrentSummon(originSummon);
             }
             else
             {
@@ -598,80 +599,45 @@ public class EnermyAlgorithm : MonoBehaviour
         return applyEnermyPlates;
     }
 
-    // 복제된 Summon에 상태 효과 적용
+    private void RestoreEnermyPlates(List<Plate> enermyPlates, List<Summon> originSummons)
+    {
+        for (int i = 0; i < enermyPlates.Count; i++)
+        {
+            enermyPlates[i].SetCurrentSummon(originSummons[i]);
+        }
+    }
+
     private Summon ApplyEnermyStatus(Summon clonedSummon)
     {
-        if (clonedSummon.GetAllStatusTypes().Contains(StatusType.Poison))
+        foreach (StatusEffect statusEffect in clonedSummon.GetActiveStatusEffects())
         {
-            clonedSummon.SetNowHP(clonedSummon.GetNowHP() - clonedSummon.GetMaxHP() * 0.1);
-            if (clonedSummon.GetNowHP() <= 0) return null;
-        }
+            if (!IsDamagePredictionStatus(statusEffect))
+            {
+                continue;
+            }
 
-        if (clonedSummon.GetAllStatusTypes().Contains(StatusType.Burn))
-        {
-            clonedSummon.SetNowHP(clonedSummon.GetNowHP() - clonedSummon.GetMaxHP() * 0.2);
-            if (clonedSummon.GetNowHP() <= 0) return null;
-        }
-
-        if (clonedSummon.GetAllStatusTypes().Contains(StatusType.LifeDrain))
-        {
-            clonedSummon.SetNowHP(clonedSummon.GetNowHP() - clonedSummon.GetMaxHP() * 0.2);
-            if (clonedSummon.GetNowHP() <= 0) return null;
+            clonedSummon.SetNowHP(clonedSummon.GetNowHP() - statusEffect.damagePerTurn);
+            if (clonedSummon.GetNowHP() <= 0)
+            {
+                return null;
+            }
         }
 
         return clonedSummon; // 상태가 적용된 복제본 Summon 반환
     }
 
 
-    //// 2. 적 몬스터의 상태를 조정하여 새로운 플레이트 리스트 반환
-    //private List<Plate> GetApplyStatusEnermyPlates()
-    //{
-    //    List<Plate> applyEnermyPlates = new List<Plate>(); // 새 리스트
+    private bool IsDamagePredictionStatus(StatusEffect statusEffect)
+    {
+        if (statusEffect == null)
+        {
+            return false;
+        }
 
-    //    foreach (Plate plate in plateController.GetEnermyPlates()) // enermyPlates를 하나씩 가져온다
-    //    {
-    //        Summon originSummon = plate.GetCurrentSummon(); // 해당 플레이트의 소환수를 가져와서
-    //        if (originSummon != null)
-    //        {
-    //            Summon copySummon = originSummon;
-    //            // 기존 몬스터를 가져와 상태를 조정 후 새 플레이트 리스트에 추가
-    //            Summon applySummon = ApplyEnermyStatus(copySummon);
-    //            plate.setCurrentSummon(applySummon); //null이여도 넣어줌. 죽었을땐 null이므로 공격대상이 되지 않게
-    //            applyEnermyPlates.Add(plate);
-    //        }
-    //    }
-
-    //    return applyEnermyPlates;
-    //}
-
-    //// 2.(1) 몬스터 상태에 따라 수치 조정
-    //private Summon ApplyEnermyStatus(Summon enermySummon)
-    //{
-    //    // 독성: 최대 체력의 10% 데미지 적용
-    //    if (enermySummon.GetAllStatusTypes().Contains(StatusType.Poison))
-    //    {
-    //        enermySummon.SetNowHP(enermySummon.GetNowHP() - enermySummon.GetMaxHP() * 0.1); // 10% 체력 감소
-    //        if (enermySummon.GetNowHP() <= 0) return null; // 체력이 0 이하라면 제외
-    //    }
-
-    //    // 화상: 최대 체력의 20% 데미지 적용
-    //    if (enermySummon.GetAllStatusTypes().Contains(StatusType.Burn))
-    //    {
-    //        enermySummon.SetNowHP(enermySummon.GetNowHP() - enermySummon.GetMaxHP() * 0.2); // 20% 체력 감소
-    //        if (enermySummon.GetNowHP() <= 0) return null; // 체력이 0 이하라면 제외
-    //    }
-
-    //    // 흡혈: 최대 체력의 20% 데미지 적용
-    //    if (enermySummon.GetAllStatusTypes().Contains(StatusType.LifeDrain))
-    //    {
-    //        enermySummon.SetNowHP(enermySummon.GetNowHP() - enermySummon.GetMaxHP() * 0.2); // 20% 체력 감소
-    //        if (enermySummon.GetNowHP() <= 0) return null; // 체력이 0 이하라면 제외
-    //    }
-
-    //    return enermySummon; // 상태 적용된 몬스터 반환
-    //}
-
-
+        return statusEffect.statusType == StatusType.Poison
+            || statusEffect.statusType == StatusType.Burn
+            || statusEffect.statusType == StatusType.LifeDrain;
+    }
 
     public PlateController GetPlateController()
     {

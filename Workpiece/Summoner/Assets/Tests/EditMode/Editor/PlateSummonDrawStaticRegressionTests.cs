@@ -210,22 +210,25 @@ namespace Summoner.EditModeTests
         [Test]
         public void TargetedAttackStrategy_GuardsInvalidTargetIndex()
         {
-            string text = File.ReadAllText("Assets/Script/Battle/Attack/TargetedAttackStrategy.cs");
-            int methodIndex = text.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int Arrayindex)");
-            int nullGuardIndex = text.IndexOf("targetPlates == null", methodIndex);
-            int negativeGuardIndex = text.IndexOf("selectedPlateIndex < 0", methodIndex);
-            int upperGuardIndex = text.IndexOf("selectedPlateIndex >= targetPlates.Count", methodIndex);
-            int accessIndex = text.IndexOf("targetPlates[selectedPlateIndex]", methodIndex);
-            int targetPlateNullGuardIndex = text.IndexOf("targetPlate == null", methodIndex);
-            int summonAccessIndex = text.IndexOf("targetPlate.GetCurrentSummon()", methodIndex);
+            string strategyText = File.ReadAllText("Assets/Script/Battle/Attack/TargetedAttackStrategy.cs");
+            string selectorText = File.ReadAllText("Assets/Script/Battle/Attack/IAttackTargetSelector.cs");
+            int strategyMethodIndex = strategyText.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex)");
+            int selectorIndex = selectorText.IndexOf("class SelectedPlateAttackTargetSelector");
+            int nullGuardIndex = selectorText.IndexOf("targetPlates == null", selectorIndex);
+            int negativeGuardIndex = selectorText.IndexOf("selectedPlateIndex < 0", selectorIndex);
+            int upperGuardIndex = selectorText.IndexOf("selectedPlateIndex >= targetPlates.Count", selectorIndex);
+            int accessIndex = selectorText.IndexOf("targetPlates[selectedPlateIndex]", selectorIndex);
+            int targetPlateNullGuardIndex = selectorText.IndexOf("targetPlate == null", selectorIndex);
+            int summonAccessIndex = selectorText.IndexOf("targetPlate.GetCurrentSummon()", selectorIndex);
 
-            Assert.GreaterOrEqual(methodIndex, 0, "TargetedAttackStrategy.Attack method should exist.");
-            Assert.Greater(nullGuardIndex, methodIndex, "TargetedAttackStrategy should guard null target plate lists.");
-            Assert.Greater(negativeGuardIndex, methodIndex, "TargetedAttackStrategy should guard negative target indexes.");
-            Assert.Greater(upperGuardIndex, methodIndex, "TargetedAttackStrategy should guard out-of-range target indexes.");
-            Assert.Greater(accessIndex, methodIndex, "TargetedAttackStrategy should access target plates after validation.");
-            Assert.Greater(targetPlateNullGuardIndex, accessIndex, "TargetedAttackStrategy should guard null target plates.");
-            Assert.Greater(summonAccessIndex, targetPlateNullGuardIndex, "TargetedAttackStrategy should access summons after target plate validation.");
+            Assert.GreaterOrEqual(strategyMethodIndex, 0, "TargetedAttackStrategy.Attack method should exist.");
+            Assert.GreaterOrEqual(selectorIndex, 0, "SelectedPlateAttackTargetSelector should own selected target lookup.");
+            Assert.Greater(nullGuardIndex, selectorIndex, "Selected target lookup should guard null target plate lists.");
+            Assert.Greater(negativeGuardIndex, selectorIndex, "Selected target lookup should guard negative target indexes.");
+            Assert.Greater(upperGuardIndex, selectorIndex, "Selected target lookup should guard out-of-range target indexes.");
+            Assert.Greater(accessIndex, selectorIndex, "Selected target lookup should access target plates after validation.");
+            Assert.Greater(targetPlateNullGuardIndex, accessIndex, "Selected target lookup should guard null target plates.");
+            Assert.Greater(summonAccessIndex, targetPlateNullGuardIndex, "Selected target lookup should access summons after target plate validation.");
             Assert.Less(nullGuardIndex, accessIndex, "Null guard should run before target plate access.");
             Assert.Less(negativeGuardIndex, accessIndex, "Negative index guard should run before target plate access.");
             Assert.Less(upperGuardIndex, accessIndex, "Upper bound guard should run before target plate access.");
@@ -235,33 +238,72 @@ namespace Summoner.EditModeTests
         public void AreaAndClosestAttackStrategies_GuardNullTargetPlates()
         {
             string areaText = File.ReadAllText("Assets/Script/Battle/Attack/AttackAllEnemiesStrategy.cs");
-            int areaMethodIndex = areaText.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates,int selectedPlateIndex, int SpecialAttackArrayIndex)");
-            int areaNullGuardIndex = areaText.IndexOf("targetPlates == null", areaMethodIndex);
-            int areaLoopIndex = areaText.IndexOf("foreach (var plate in targetPlates)", areaMethodIndex);
-            int areaPlateGuardIndex = areaText.IndexOf("plate == null", areaMethodIndex);
-            int areaSummonAccessIndex = areaText.IndexOf("plate.GetCurrentSummon()", areaMethodIndex);
+            string selectorText = File.ReadAllText("Assets/Script/Battle/Attack/IAttackTargetSelector.cs");
+            int areaMethodIndex = areaText.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex)");
+            int areaSelectorIndex = selectorText.IndexOf("class AllEnemiesAttackTargetSelector");
+            int areaNullGuardIndex = selectorText.IndexOf("targetPlates == null", areaSelectorIndex);
+            int areaLoopIndex = selectorText.IndexOf("foreach (Plate plate in targetPlates)", areaSelectorIndex);
+            int areaPlateGuardIndex = selectorText.IndexOf("plate == null", areaSelectorIndex);
+            int areaSummonAccessIndex = selectorText.IndexOf("plate.GetCurrentSummon()", areaSelectorIndex);
 
             Assert.GreaterOrEqual(areaMethodIndex, 0, "AttackAllEnemiesStrategy.Attack method should exist.");
-            Assert.Greater(areaNullGuardIndex, areaMethodIndex, "AttackAllEnemiesStrategy should guard null target plate lists.");
-            Assert.Less(areaNullGuardIndex, areaLoopIndex, "AttackAllEnemiesStrategy should guard before iterating target plates.");
-            Assert.Greater(areaPlateGuardIndex, areaLoopIndex, "AttackAllEnemiesStrategy should skip null plates.");
-            Assert.Less(areaPlateGuardIndex, areaSummonAccessIndex, "AttackAllEnemiesStrategy should guard null plates before summon access.");
+            Assert.GreaterOrEqual(areaSelectorIndex, 0, "AllEnemiesAttackTargetSelector should own area target lookup.");
+            Assert.Greater(areaNullGuardIndex, areaSelectorIndex, "Area target lookup should guard null target plate lists.");
+            Assert.Less(areaNullGuardIndex, areaLoopIndex, "Area target lookup should guard before iterating target plates.");
+            Assert.Greater(areaPlateGuardIndex, areaLoopIndex, "Area target lookup should skip null plates.");
+            Assert.Less(areaPlateGuardIndex, areaSummonAccessIndex, "Area target lookup should guard null plates before summon access.");
 
             string closestText = File.ReadAllText("Assets/Script/Battle/Attack/ClosestEnemyAttackStrategy.cs");
-            int closestMethodIndex = closestText.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackarrayIndex)");
+            int closestMethodIndex = closestText.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex)");
             int closestNullGuardIndex = closestText.IndexOf("targetPlates == null", closestMethodIndex);
-            int closestCallIndex = closestText.IndexOf("GetClosestEnemySummon(targetPlates)", closestMethodIndex);
-            int closestHelperIndex = closestText.IndexOf("private Summon GetClosestEnemySummon(List<Plate> targetPlates)");
-            int helperNullGuardIndex = closestText.IndexOf("targetPlates == null", closestHelperIndex);
-            int helperPlateGuardIndex = closestText.IndexOf("targetPlates[i] == null", closestHelperIndex);
-            int helperSummonAccessIndex = closestText.IndexOf("targetPlates[i].GetCurrentSummon()", closestHelperIndex);
+            int closestSelectorCallIndex = closestText.IndexOf("targetSelector.SelectTargets(attacker, targetPlates, selectedPlateIndex)", closestMethodIndex);
+            int closestSelectorIndex = selectorText.IndexOf("class ClosestEnemyAttackTargetSelector");
+            int helperNullGuardIndex = selectorText.IndexOf("targetPlates == null", closestSelectorIndex);
+            int helperPlateGuardIndex = selectorText.IndexOf("targetPlates[i] == null", closestSelectorIndex);
+            int helperSummonAccessIndex = selectorText.IndexOf("targetPlates[i].GetCurrentSummon()", closestSelectorIndex);
 
             Assert.GreaterOrEqual(closestMethodIndex, 0, "ClosestEnemyAttackStrategy.Attack method should exist.");
             Assert.Greater(closestNullGuardIndex, closestMethodIndex, "ClosestEnemyAttackStrategy should guard null target plate lists.");
-            Assert.Less(closestNullGuardIndex, closestCallIndex, "ClosestEnemyAttackStrategy should guard before resolving closest target.");
-            Assert.Greater(helperNullGuardIndex, closestHelperIndex, "ClosestEnemyAttackStrategy helper should also guard null lists.");
+            Assert.Less(closestNullGuardIndex, closestSelectorCallIndex, "ClosestEnemyAttackStrategy should guard before resolving closest target.");
+            Assert.GreaterOrEqual(closestSelectorIndex, 0, "ClosestEnemyAttackTargetSelector should own closest target lookup.");
+            Assert.Greater(helperNullGuardIndex, closestSelectorIndex, "Closest target lookup should also guard null lists.");
             Assert.Greater(helperPlateGuardIndex, helperNullGuardIndex, "ClosestEnemyAttackStrategy should skip null plates.");
             Assert.Less(helperPlateGuardIndex, helperSummonAccessIndex, "ClosestEnemyAttackStrategy should guard null plates before summon access.");
+        }
+
+        [Test]
+        public void AttackStrategies_DelegateCooldownState()
+        {
+            string cooldownText = File.ReadAllText("Assets/Script/Battle/Attack/AttackCooldownState.cs");
+            string targetedText = File.ReadAllText("Assets/Script/Battle/Attack/TargetedAttackStrategy.cs");
+            string closestText = File.ReadAllText("Assets/Script/Battle/Attack/ClosestEnemyAttackStrategy.cs");
+            string areaText = File.ReadAllText("Assets/Script/Battle/Attack/AttackAllEnemiesStrategy.cs");
+
+            StringAssert.Contains("public class AttackCooldownState", cooldownText);
+            StringAssert.Contains("private readonly int cooldownDuration;", cooldownText);
+            StringAssert.Contains("private int currentCooldown;", cooldownText);
+            StringAssert.Contains("public void ApplyCooldown()", cooldownText);
+            StringAssert.Contains("public void ReduceCooldown()", cooldownText);
+
+            AssertAttackStrategyDelegatesCooldown(targetedText, "TargetedAttackStrategy");
+            AssertAttackStrategyDelegatesCooldown(closestText, "ClosestEnemyAttackStrategy");
+            AssertAttackStrategyDelegatesCooldown(areaText, "AttackAllEnemiesStrategy");
+        }
+
+        [Test]
+        public void AttackStrategies_DoNotStoreEffectStatusTime()
+        {
+            string targetedText = File.ReadAllText("Assets/Script/Battle/Attack/TargetedAttackStrategy.cs");
+            string areaText = File.ReadAllText("Assets/Script/Battle/Attack/AttackAllEnemiesStrategy.cs");
+            string targetedEffectText = File.ReadAllText("Assets/Script/Battle/Attack/TargetedAttackEffectInstanceCreate.cs");
+            string areaEffectText = File.ReadAllText("Assets/Script/Battle/Attack/AllEnemiesAttackEffectInstanceCreate.cs");
+
+            Assert.IsFalse(targetedText.Contains("private int statusTime;"), "TargetedAttackStrategy should not store status duration after effect creation.");
+            Assert.IsFalse(areaText.Contains("private int statusTime;"), "AttackAllEnemiesStrategy should not store status duration after effect creation.");
+            StringAssert.Contains("TargetedAttackEffectInstanceCreate.Create(statusType, statusTime, damage)", targetedText);
+            StringAssert.Contains("AllEnemiesAttackEffectInstanceCreate.Create(statusType, statusTime)", areaText);
+            StringAssert.Contains("private int statusTime;", targetedEffectText);
+            StringAssert.Contains("private int statusTime;", areaEffectText);
         }
 
         [Test]
@@ -399,9 +441,10 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("public bool DoesCurrentSpecialAttackTargetPlayerPlate()", battleText);
             StringAssert.Contains("public SpecialAttackInfo GetCurrentSpecialAttackInfo()", battleText);
             StringAssert.Contains("private bool DoesAttackStrategyTargetPlayerPlate(IAttackStrategy attackStrategy)", battleText);
-            StringAssert.Contains("StatusType.Heal", battleText);
-            StringAssert.Contains("StatusType.Upgrade", battleText);
-            StringAssert.Contains("StatusType.Shield", battleText);
+            StringAssert.Contains("attackStrategy.BenefitEffectCheck()", battleText);
+            Assert.IsFalse(battleText.Contains("StatusType.Heal"), "BattleController should not decide benefit target status types directly.");
+            Assert.IsFalse(battleText.Contains("StatusType.Upgrade"), "BattleController should not decide benefit target status types directly.");
+            Assert.IsFalse(battleText.Contains("StatusType.Shield"), "BattleController should not decide benefit target status types directly.");
         }
 
         [Test]
@@ -409,10 +452,10 @@ namespace Summoner.EditModeTests
         {
             string battleText = File.ReadAllText("Assets/Script/Battle/Flow/BattleController.cs");
 
-            StringAssert.Contains("private List<Plate> SpecialAttackTargetPlatesGet(IAttackStrategy attackStrategy, bool isPlayer)", battleText);
-            StringAssert.Contains("SpecialAttackTargetPlatesGet(targetedAttack, isPlayer)", battleText);
-            StringAssert.Contains("SpecialAttackTargetPlatesGet(allAttackstrategy, isPlayer)", battleText);
-            StringAssert.Contains("SpecialAttackTargetPlatesGet(closestAttack, isPlayer)", battleText);
+            StringAssert.Contains("private List<Plate> GetSpecialAttackTargetPlates(IAttackStrategy attackStrategy, bool isPlayer)", battleText);
+            StringAssert.Contains("GetSpecialAttackTargetPlates(targetedAttack, isPlayer)", battleText);
+            StringAssert.Contains("GetSpecialAttackTargetPlates(allAttackstrategy, isPlayer)", battleText);
+            StringAssert.Contains("GetSpecialAttackTargetPlates(closestAttack, isPlayer)", battleText);
             StringAssert.Contains("bool targetsOwnPlates = attackStrategy.BenefitEffectCheck();", battleText);
         }
 
@@ -441,6 +484,66 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("EnemySpecialAttackExecute(attacker, targetPlateIndex, i,", algorithmText);
             StringAssert.Contains("EnemySpecialAttackExecute(attacker, attackingEnermyPlateIndex, i,", algorithmText);
             StringAssert.Contains("EnemySpecialAttackExecute(attacker, playerPrediction.GetAttackSummonPlateIndex(), i,", algorithmText);
+            StringAssert.Contains("private bool CanUseSpecialAttack(Summon attacker, IAttackStrategy attackStrategy)", algorithmText);
+            StringAssert.Contains("!attacker.IsSpecialAttackCool(attackStrategy)", algorithmText);
+            Assert.LessOrEqual(CountOccurrences(algorithmText, "attacker.IsSpecialAttackCool("), 1);
+        }
+
+        [Test]
+        public void EnermyAlgorithm_UsesStoredStatusDamageForPrediction()
+        {
+            string algorithmText = File.ReadAllText("Assets/Script/Battle/EnemyAction/EnermyAlgorithm.cs");
+            string summonText = File.ReadAllText("Assets/Script/Summons/Summon.cs");
+            int methodStart = algorithmText.IndexOf("private Summon ApplyEnermyStatus(Summon clonedSummon)");
+            int methodEnd = algorithmText.IndexOf("public PlateController GetPlateController()", methodStart);
+
+            Assert.GreaterOrEqual(methodStart, 0, "Enemy prediction should keep a status apply method.");
+            Assert.Greater(methodEnd, methodStart, "Enemy prediction status method boundary should be visible before public accessors.");
+
+            string activeStatusPredictionText = algorithmText.Substring(methodStart, methodEnd - methodStart);
+
+            StringAssert.Contains("public IReadOnlyList<StatusEffect> GetActiveStatusEffects()", summonText);
+            StringAssert.Contains("foreach (StatusEffect statusEffect in clonedSummon.GetActiveStatusEffects())", activeStatusPredictionText);
+            StringAssert.Contains("IsDamagePredictionStatus(statusEffect)", activeStatusPredictionText);
+            StringAssert.Contains("statusEffect.damagePerTurn", activeStatusPredictionText);
+            StringAssert.Contains("statusEffect.statusType == StatusType.Poison", activeStatusPredictionText);
+            StringAssert.Contains("statusEffect.statusType == StatusType.Burn", activeStatusPredictionText);
+            StringAssert.Contains("statusEffect.statusType == StatusType.LifeDrain", activeStatusPredictionText);
+            Assert.IsFalse(activeStatusPredictionText.Contains("GetMaxHP() * 0.1"), "Enemy prediction should use stored poison damage, not recompute a fixed max HP ratio.");
+            Assert.IsFalse(activeStatusPredictionText.Contains("GetMaxHP() * 0.2"), "Enemy prediction should use stored burn/life drain damage, not recompute a fixed max HP ratio.");
+            Assert.IsFalse(algorithmText.Contains("private int GetLowestMonsterIndex("), "Enemy prediction should not keep empty unused helper methods.");
+            Assert.IsFalse(algorithmText.Contains("//private List<Plate> GetApplyStatusEnermyPlates()"), "Enemy prediction should not keep outdated commented implementations.");
+            Assert.IsFalse(algorithmText.Contains("//private Summon ApplyEnermyStatus(Summon enermySummon)"), "Enemy prediction should not keep outdated commented status damage implementations.");
+        }
+
+        [Test]
+        public void EnermyAlgorithm_RestoresAdjustedEnemyPlatesAfterPrediction()
+        {
+            string algorithmText = File.ReadAllText("Assets/Script/Battle/EnemyAction/EnermyAlgorithm.cs");
+            int predictionMethodStart = algorithmText.IndexOf("public List<AttackPrediction> GetPlayerAttackPredictionsList()");
+            int predictionMethodEnd = algorithmText.IndexOf("public List<Plate> CheckPlayerPlateState()", predictionMethodStart);
+            int applyMethodStart = algorithmText.IndexOf("private List<Plate> GetApplyStatusEnermyPlates(List<Summon> originEnermySummons)");
+            int applyMethodEnd = algorithmText.IndexOf("private void RestoreEnermyPlates", applyMethodStart);
+
+            Assert.GreaterOrEqual(predictionMethodStart, 0, "Enemy prediction entry method should exist.");
+            Assert.Greater(predictionMethodEnd, predictionMethodStart, "Enemy prediction entry method boundary should be visible.");
+            Assert.GreaterOrEqual(applyMethodStart, 0, "Enemy status apply method should accept an origin summon list.");
+            Assert.Greater(applyMethodEnd, applyMethodStart, "Enemy status apply method boundary should be visible.");
+
+            string predictionMethodText = algorithmText.Substring(predictionMethodStart, predictionMethodEnd - predictionMethodStart);
+            string applyMethodText = algorithmText.Substring(applyMethodStart, applyMethodEnd - applyMethodStart);
+
+            StringAssert.Contains("List<Summon> originEnermySummons = new List<Summon>();", predictionMethodText);
+            StringAssert.Contains("GetApplyStatusEnermyPlates(originEnermySummons)", predictionMethodText);
+            StringAssert.Contains("try", predictionMethodText);
+            StringAssert.Contains("playerAttackPrediction.GetPlayerAttackPredictionList(playerPlates, applyEnermyPlates)", predictionMethodText);
+            StringAssert.Contains("finally", predictionMethodText);
+            StringAssert.Contains("RestoreEnermyPlates(applyEnermyPlates, originEnermySummons);", predictionMethodText);
+            StringAssert.Contains("originEnermySummons.Add(originSummon);", applyMethodText);
+            StringAssert.Contains("plate.SetCurrentSummon(adjustedSummon);", applyMethodText);
+            Assert.IsFalse(applyMethodText.Contains("plate.SetCurrentSummon(originSummon);"), "Adjusted enemy plates should stay adjusted until prediction finishes.");
+            StringAssert.Contains("private void RestoreEnermyPlates(List<Plate> enermyPlates, List<Summon> originSummons)", algorithmText);
+            StringAssert.Contains("enermyPlates[i].SetCurrentSummon(originSummons[i]);", algorithmText);
         }
 
         [Test]
@@ -487,6 +590,17 @@ namespace Summoner.EditModeTests
             }
 
             return count;
+        }
+
+        private static void AssertAttackStrategyDelegatesCooldown(string text, string strategyName)
+        {
+            StringAssert.Contains("private AttackCooldownState cooldownState;", text, strategyName + " should own a cooldown state field.");
+            StringAssert.Contains("this.cooldownState = new AttackCooldownState(cooldownDuration);", text, strategyName + " should create cooldown state from constructor data.");
+            StringAssert.Contains("return cooldownState.GetCooltime();", text, strategyName + " should delegate cooldown value.");
+            StringAssert.Contains("cooldownState.GetCurrentCooldown()", text, strategyName + " should delegate current cooldown.");
+            StringAssert.Contains("cooldownState.ApplyCooldown()", text, strategyName + " should delegate cooldown apply.");
+            StringAssert.Contains("cooldownState.ReduceCooldown()", text, strategyName + " should delegate cooldown reduction.");
+            Assert.IsFalse(text.Contains("private int currentCooldown;"), strategyName + " should not store current cooldown directly.");
         }
     }
 }

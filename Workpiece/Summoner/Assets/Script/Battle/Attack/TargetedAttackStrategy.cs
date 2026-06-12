@@ -5,41 +5,26 @@ public class TargetedAttackStrategy : IAttackStrategy
 {
     private StatusType statusType; // 상태 타입
     private double damage; // 데미지
-    private int cooltime; // 쿨타임
-    private int currentCooldown; // 현재 쿨타임 진행시간
-    private int statusTime; // 지속시간
+    private AttackCooldownState cooldownState;
     private IAttackEffect attackEffect;
+    private IAttackTargetSelector targetSelector;
 
-    public TargetedAttackStrategy(StatusType statusType, double damage, int cooltime, int statusTime=0)
+    public TargetedAttackStrategy(StatusType statusType, double damage, int cooldownDuration, int statusTime=0)
     {
         this.statusType = statusType;
         this.damage = damage;
-        this.cooltime = cooltime;
-        this.currentCooldown = 0;
-        this.statusTime = statusTime;
+        this.cooldownState = new AttackCooldownState(cooldownDuration);
         this.attackEffect = TargetedAttackEffectInstanceCreate.Create(statusType, statusTime, damage);
+        this.targetSelector = CreateTargetSelector(statusType);
     }
 
-    public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int Arrayindex)
+    public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex)
     {
-        if (targetPlates == null || selectedPlateIndex < 0 || selectedPlateIndex >= targetPlates.Count)
-        {
-            Debug.LogWarning("Invalid target plate index.");
-            return;
-        }
+        List<Summon> targets = targetSelector.SelectTargets(attacker, targetPlates, selectedPlateIndex);
 
-        Plate targetPlate = targetPlates[selectedPlateIndex];
-        if (targetPlate == null)
+        if (targets.Count > 0)
         {
-            Debug.LogWarning("Target plate is missing.");
-            return;
-        }
-
-        Summon target = targetPlate.GetCurrentSummon();
-
-        if (target != null)
-        {
-            attackEffect.AttackEffectApply(attacker, target, Arrayindex);
+            attackEffect.AttackEffectApply(attacker, targets[0], specialAttackArrayIndex);
         }
         else
         {
@@ -47,9 +32,14 @@ public class TargetedAttackStrategy : IAttackStrategy
         }
     }
 
-    public bool IsBenefitEffect(TargetedAttackStrategy strategy)
+    private IAttackTargetSelector CreateTargetSelector(StatusType statusType)
     {
-        return BenefitEffectCheck();
+        if (statusType == StatusType.Shield || statusType == StatusType.OnceInvincibility)
+        {
+            return new SelfAttackTargetSelector();
+        }
+
+        return new SelectedPlateAttackTargetSelector();
     }
 
     public bool BenefitEffectCheck() => attackEffect.BenefitEffectCheck();
@@ -64,19 +54,13 @@ public class TargetedAttackStrategy : IAttackStrategy
         return statusType;
     }
 
-    public int GetCooltime() { return cooltime; }
+    public int GetCooltime() { return cooldownState.GetCooltime(); }
 
-    public int GetCurrentCooldown() => currentCooldown;
+    public int GetCurrentCooldown() => cooldownState.GetCurrentCooldown();
 
     // 쿨타임을 초기화한다. (스킬 사용 후 적용)
-    public void ApplyCooldown() => currentCooldown = cooltime;
+    public void ApplyCooldown() => cooldownState.ApplyCooldown();
 
     // 턴 종료 후 쿨타임 감소
-    public void ReduceCooldown()
-    {
-        if (currentCooldown > 0)
-        {
-            currentCooldown--;
-        }
-    }
+    public void ReduceCooldown() => cooldownState.ReduceCooldown();
 }
