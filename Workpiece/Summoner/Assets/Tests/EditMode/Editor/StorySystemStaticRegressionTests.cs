@@ -9,22 +9,22 @@ namespace Summoner.EditModeTests
     {
         private const string ScriptRoot = "Assets/Script";
         private const string ScreenRoot = "Assets/Screen";
-        private const string FadePanelViewPath = "Assets/Script/Story/View/FadePanelView.cs";
-        private const string FadePanelViewMetaPath = "Assets/Script/Story/View/FadePanelView.cs.meta";
-        private const string MainSceneButtonViewPath = "Assets/Script/Story/View/MainSceneButtonView.cs";
-        private const string MainSceneButtonViewMetaPath = "Assets/Script/Story/View/MainSceneButtonView.cs.meta";
-        private const string StorySkipViewPath = "Assets/Script/Story/View/StorySkipView.cs";
-        private const string StorySkipViewMetaPath = "Assets/Script/Story/View/StorySkipView.cs.meta";
-        private const string InteractionControllerPath = "Assets/Script/Story/Dialogue/InteractionController.cs";
-        private const string DialogueParserPath = "Assets/Script/Story/Dialogue/DialogueParser.cs";
-        private const string DialogueCsvParsePath = "Assets/Script/Story/Dialogue/DialogueCsvParse.cs";
-        private const string DialogueDatabaseLoadPath = "Assets/Script/Story/Dialogue/DialogueDatabaseLoad.cs";
-        private const string StoryScenarioControllerBasePath = "Assets/Script/Story/Scenario/StoryScenarioControllerBase.cs";
-        private const string Stage1ControllerPath = "Assets/Script/Story/Scenario/Stage1_Controller.cs";
-        private const string Stage2ControllerPath = "Assets/Script/Story/Scenario/Stage2_Controller.cs";
-        private const string Stage3ControllerPath = "Assets/Script/Story/Scenario/Stage3_Controller.cs";
-        private const string Stage5ControllerPath = "Assets/Script/Story/Scenario/Stage5_Controller.cs";
-        private const string Stage7ControllerPath = "Assets/Script/Story/Scenario/Stage7_Controller.cs";
+        private const string FadePanelViewPath = "Assets/Script/4_Story/View/FadePanelView.cs";
+        private const string FadePanelViewMetaPath = "Assets/Script/4_Story/View/FadePanelView.cs.meta";
+        private const string MainSceneButtonViewPath = "Assets/Script/4_Story/View/MainSceneButtonView.cs";
+        private const string MainSceneButtonViewMetaPath = "Assets/Script/4_Story/View/MainSceneButtonView.cs.meta";
+        private const string StorySkipViewPath = "Assets/Script/4_Story/View/StorySkipView.cs";
+        private const string StorySkipViewMetaPath = "Assets/Script/4_Story/View/StorySkipView.cs.meta";
+        private const string InteractionControllerPath = "Assets/Script/4_Story/Dialogue/InteractionController.cs";
+        private const string DialogueParserPath = "Assets/Script/4_Story/Dialogue/DialogueParser.cs";
+        private const string DialogueCsvParsePath = "Assets/Script/4_Story/Dialogue/DialogueCsvParse.cs";
+        private const string DialogueDatabaseLoadPath = "Assets/Script/4_Story/Dialogue/DialogueDatabaseLoad.cs";
+        private const string StoryScenarioControllerBasePath = "Assets/Script/4_Story/Scenario/StoryScenarioControllerBase.cs";
+        private const string Stage1ControllerPath = "Assets/Script/4_Story/Scenario/Stage1_Controller.cs";
+        private const string Stage2ControllerPath = "Assets/Script/4_Story/Scenario/Stage2_Controller.cs";
+        private const string Stage3ControllerPath = "Assets/Script/4_Story/Scenario/Stage3_Controller.cs";
+        private const string Stage5ControllerPath = "Assets/Script/4_Story/Scenario/Stage5_Controller.cs";
+        private const string Stage7ControllerPath = "Assets/Script/4_Story/Scenario/Stage7_Controller.cs";
         private const string FadePanelViewGuid = "d1c8ed078a786a44298790ea5ccdf7b0";
         private const string MainSceneButtonViewGuid = "69dbc41dfe9e18347834b153125c4571";
         private const string StorySkipViewGuid = "fce73e9dab229134d95d4cd0cddb67ab";
@@ -169,9 +169,9 @@ namespace Summoner.EditModeTests
         }
 
         [Test]
-        public void StorySceneMove_ReturnsExistingSceneNames()
+        public void StorySceneFlow_ReturnsExistingSceneNames()
         {
-            string text = File.ReadAllText("Assets/Script/Story/Progress/StorySceneMove.cs");
+            string text = File.ReadAllText("Assets/Script/4_Story/0_Flow/StorySceneFlow.cs");
 
             StringAssert.Contains("case 0:", text);
             StringAssert.Contains("return \"Stage Select Screen\";", text);
@@ -185,16 +185,16 @@ namespace Summoner.EditModeTests
         {
             string text = File.ReadAllText(InteractionControllerPath);
 
-            StringAssert.Contains("StorySceneMove.LoadNextScene(storyStage.GetStoryNum())", text);
+            StringAssert.Contains("StorySceneFlow.LoadNextScene(storyStage.GetStoryNum())", text);
             Assert.IsFalse(
                 text.Contains("Fight Screen_\"+storyStage.GetStoryNum()+\"Stage"),
-                "InteractionController should delegate next scene name decisions to StorySceneMove.");
+                "InteractionController should delegate next scene name decisions to StorySceneFlow.");
         }
 
         [Test]
         public void DialogueLineShow_BuildsExistingCombinedLineFormat()
         {
-            string text = File.ReadAllText("Assets/Script/Story/View/DialogueLineShow.cs");
+            string text = File.ReadAllText("Assets/Script/4_Story/View/DialogueLineShow.cs");
 
             StringAssert.Contains("if (i % 2 == 0)", text);
             StringAssert.Contains("combinedDialogue = \"\";", text);
@@ -213,7 +213,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void StoryProgressAdvance_ReturnsDialogueLinesInExistingOrder()
         {
-            string text = File.ReadAllText("Assets/Script/Story/Progress/StoryProgressAdvance.cs");
+            string text = File.ReadAllText("Assets/Script/4_Story/Progress/StoryProgressAdvance.cs");
 
             StringAssert.Contains("public bool TryGetNextLine(out Dialogue dialogue, out int dialogueLineIndex)", text);
             StringAssert.Contains("CurrentDialogueLineIndex >= dialogues[CurrentDialogueIndex].context.Length", text);
@@ -351,3 +351,4 @@ namespace Summoner.EditModeTests
         }
     }
 }
+

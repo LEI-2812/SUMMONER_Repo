@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using NUnit.Framework;
 
 namespace Summoner.EditModeTests
@@ -8,7 +8,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void ShieldStatusEffect_DoesNotSpendTurnTime()
         {
-            string text = File.ReadAllText("Assets/Script/Battle/Status/ShieldStatusEffect.cs");
+            string text = File.ReadAllText("Assets/Script/5_Battle/8_Status/ShieldStatusEffect.cs");
             int canUpdateIndex = text.IndexOf("public bool StatusTurnCanUpdate(StatusUpdateTiming updateTiming)");
             int turnUpdateIndex = text.IndexOf("public void StatusTurnUpdate(IStatusEffectTarget target)");
             int expireIndex = text.IndexOf("public void StatusExpire(IStatusEffectTarget target)");
@@ -22,8 +22,8 @@ namespace Summoner.EditModeTests
         [Test]
         public void AttackTargetSelection_IsSeparatedFromStatusEffect()
         {
-            string targetedStrategyText = File.ReadAllText("Assets/Script/Battle/Attack/TargetedAttackStrategy.cs");
-            string targetedEffectText = File.ReadAllText("Assets/Script/Battle/Attack/TargetedAttackEffectInstanceCreate.cs");
+            string targetedStrategyText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/TargetedAttackStrategy.cs");
+            string targetedEffectText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/TargetedAttackEffectInstanceCreate.cs");
 
             StringAssert.Contains("SelfAttackTargetSelector", targetedStrategyText);
             StringAssert.Contains("SelectedPlateAttackTargetSelector", targetedStrategyText);
@@ -33,7 +33,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void Summon_DoesNotPlayAudioSourcesDirectly()
         {
-            string text = File.ReadAllText("Assets/Script/Summons/Summon.cs");
+            string text = File.ReadAllText("Assets/Script/6_Summons/Summon.cs");
 
             Assert.IsFalse(text.Contains(".Play()"), "Summon should delegate sound playback to SummonSoundView.");
             StringAssert.Contains("SummonSoundView", text);
@@ -42,7 +42,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void SummonSoundView_OwnsSoundPlayback()
         {
-            string text = File.ReadAllText("Assets/Script/Battle/View/SummonSoundView.cs");
+            string text = File.ReadAllText("Assets/Script/5_Battle/9_View/SummonSoundView.cs");
 
             StringAssert.Contains("public void AttackSoundPlay()", text);
             StringAssert.Contains("public void DebuffSoundPlay()", text);
@@ -53,7 +53,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void Summon_DoesNotDeclareFeedbackBridgeFields()
         {
-            string text = File.ReadAllText("Assets/Script/Summons/Summon.cs");
+            string text = File.ReadAllText("Assets/Script/6_Summons/Summon.cs");
 
             Assert.IsFalse(text.Contains("protected Image image"), "Summon image bridge field should be removed.");
             Assert.IsFalse(text.Contains("protected Sprite[] sprites"), "Summon sprite bridge field should be removed.");
@@ -67,7 +67,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void Summon_DoesNotOwnActiveStatusEffectList()
         {
-            string text = File.ReadAllText("Assets/Script/Summons/Summon.cs");
+            string text = File.ReadAllText("Assets/Script/6_Summons/Summon.cs");
 
             Assert.IsFalse(text.Contains("activeStatusEffects"), "Summon should delegate active status storage to StatusEffectController.");
             StringAssert.Contains("statusEffectController.GetActiveStatusEffects()", text);
@@ -76,7 +76,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void StatusEffectController_OwnsActiveStatusQueries()
         {
-            string text = File.ReadAllText("Assets/Script/Battle/Status/StatusEffectController.cs");
+            string text = File.ReadAllText("Assets/Script/5_Battle/8_Status/StatusEffectController.cs");
 
             StringAssert.Contains("GetActiveStatusEffects()", text);
             StringAssert.Contains("GetStatusTypes()", text);
@@ -86,7 +86,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void Summon_DelegatesImageOperationsToSummonImageView()
         {
-            string text = File.ReadAllText("Assets/Script/Summons/Summon.cs");
+            string text = File.ReadAllText("Assets/Script/6_Summons/Summon.cs");
 
             StringAssert.Contains("SummonImageView", text);
             StringAssert.Contains("imageView.SpriteSet(index)", text);
@@ -98,7 +98,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void SummonImageView_OwnsSpriteAndImageAccess()
         {
-            string text = File.ReadAllText("Assets/Script/Battle/View/SummonImageView.cs");
+            string text = File.ReadAllText("Assets/Script/5_Battle/9_View/SummonImageView.cs");
 
             StringAssert.Contains("public void SpriteSet(int index)", text);
             StringAssert.Contains("public void ImageSet(Image image)", text);
@@ -107,3 +107,4 @@ namespace Summoner.EditModeTests
         }
     }
 }
+

@@ -120,10 +120,10 @@ namespace Summoner.EditModeTests
             AssertGameObjectPathExists("__Audio/AlterClickAudio");
             AssertGameObjectPathExists("__Handlers");
             AssertGameObjectPathExists("__Handlers/MenuHandler");
-            AssertGameObjectPathExists("__Handlers/ToMainAlterHandler");
+            AssertGameObjectPathExists("__Handlers/ToMainAlertHandler");
             AssertGameObjectPathExists("__Handlers/SettingHandler");
-            AssertGameObjectPathExists("__Handlers/ToQuitAlterHandler");
-            AssertGameObjectPathExists("__Handlers/SkipAlterHandler");
+            AssertGameObjectPathExists("__Handlers/ToQuitAlertHandler");
+            AssertGameObjectPathExists("__Handlers/SkipAlertHandler");
         }
 
         [Test]
@@ -132,26 +132,29 @@ namespace Summoner.EditModeTests
             OpenScene(FightSceneOnePath);
 
             AssertNoMissingScriptsInOpenScene();
-            AssertGameObjectPathExists("__Systems/EventSystem");
-            AssertGameObjectPathExists("__Systems/GameSaveController");
-            AssertGameObjectPathExists("__Systems/BattleRuntime");
+            AssertGameObjectPathExists("0_Runtime/EventSystem");
+            AssertGameObjectPathExists("0_Runtime/GameSaveController");
+            AssertGameObjectPathExists("0_Runtime/0_BattleFlow_Runtime");
+            AssertGameObjectPathExists("0_Runtime/0_BattleFlow_Runtime/0_Board_Runtime");
+            AssertGameObjectPathExists("0_Runtime/0_BattleFlow_Runtime/1_Turn_Runtime");
+            AssertGameObjectPathExists("0_Runtime/0_BattleFlow_Runtime/2_Stage_Runtime");
             AssertHasComponent("BattleStartController");
-            AssertGameObjectPathExists("__Camera/Main Camera");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_00_Background");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_10_BattleField/Player");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_10_BattleField/Enermy");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_20_TurnStatus/TurnTextUI");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_20_TurnStatus/CurrentTurnText");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_20_TurnStatus/ClearTurnText");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_30_PlayerCommands/SummonBtn");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_30_PlayerCommands/RedoBtn");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_30_PlayerCommands/TurnEndBtn");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_40_Mana");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_50_SelectedUnitState");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_60_SummonPicker/SummonPanel");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_60_SummonPicker/ReSummonPanel");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_90_ResultAlerts/Alert_clear");
-            AssertGameObjectPathExists("__UI/BattleCanvas/UI_90_ResultAlerts/Alert_fail");
+            AssertGameObjectPathExists("1_Camera/Main Camera");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_00_BackgroundLayer");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_10_BattleBoard/PlayerSide");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_10_BattleBoard/EnemySide");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_20_TurnStatus");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/CurrentTurnText");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/ClearTurnText");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_30_PlayerCommands/DrawButton");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_30_PlayerCommands/RedrawButton");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_30_PlayerCommands/EndTurnButton");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_40_PlayerMana");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_50_SelectedUnitState");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_60_SummonPicker/DrawPanel");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_60_SummonPicker/RedrawPanel");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_90_ResultAlerts/Alert_clear");
+            AssertGameObjectPathExists("2_UI/BattleCanvas/UI_90_ResultAlerts/Alert_fail");
         }
 
         private static void OpenScene(string scenePath)

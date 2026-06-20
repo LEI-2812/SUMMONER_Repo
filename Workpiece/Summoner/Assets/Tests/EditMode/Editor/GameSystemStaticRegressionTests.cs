@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,18 +13,23 @@ namespace Summoner.EditModeTests
     {
         private const string ScriptRoot = "Assets/Script";
         private const string ScreenRoot = "Assets/Screen";
-        private const string PlayerPrefsSaveStorePath = "Assets/Script/Save/PlayerPrefsSaveStore.cs";
-        private const string GameSaveControllerPath = "Assets/Script/Save/GameSaveController.cs";
-        private const string AudioSettingViewPath = "Assets/Script/Option/AudioSettingView.cs";
-        private const string VideoSettingViewPath = "Assets/Script/Option/VideoSettingView.cs";
-        private const string StartScreenViewPath = "Assets/Script/Start Screen/StartScreenView.cs";
+        private const string PlayerPrefsSaveStorePath = "Assets/Script/7_Save/PlayerPrefsSaveStore.cs";
+        private const string GameSaveControllerPath = "Assets/Script/7_Save/GameSaveController.cs";
+        private const string GameSaveDataPath = "Assets/Script/7_Save/GameSaveData.cs";
+        private const string AudioSettingViewPath = "Assets/Script/8_Option/Audio/AudioSettingView.cs";
+        private const string AudioSettingStorePath = "Assets/Script/8_Option/Audio/AudioSettingStore.cs";
+        private const string GameplaySettingViewPath = "Assets/Script/8_Option/Gameplay/GameplaySettingView.cs";
+        private const string GameplaySettingStorePath = "Assets/Script/8_Option/Gameplay/GameplaySettingStore.cs";
+        private const string VideoSettingViewPath = "Assets/Script/8_Option/Video/VideoSettingView.cs";
+        private const string VideoSettingStorePath = "Assets/Script/8_Option/Video/VideoSettingStore.cs";
+        private const string StartScreenViewPath = "Assets/Script/1_StartScreen/StartScreenView.cs";
 
         private static readonly string[] KnownPlayerPrefsAccessFiles =
         {
-            "Assets/Script/Save/PlayerPrefsSaveStore.cs",
-            "Assets/Script/Option/AudioSettingView.cs",
-            "Assets/Script/Option/GameplaySettingStore.cs",
-            "Assets/Script/Option/VideoSettingView.cs"
+            "Assets/Script/7_Save/PlayerPrefsSaveStore.cs",
+            "Assets/Script/8_Option/Audio/AudioSettingStore.cs",
+            "Assets/Script/8_Option/Gameplay/GameplaySettingStore.cs",
+            "Assets/Script/8_Option/Video/VideoSettingStore.cs"
         };
 
         private static readonly string[] ProgressKeys =
@@ -114,6 +119,20 @@ namespace Summoner.EditModeTests
         }
 
         [Test]
+        public void GameSaveController_UsesGameSaveDataFactoryForNewProgress()
+        {
+            string controllerText = File.ReadAllText(GameSaveControllerPath);
+            string dataText = File.ReadAllText(GameSaveDataPath);
+
+            StringAssert.Contains("public static GameSaveData CreateNewGameProgress()", dataText);
+            StringAssert.Contains("currentSaveData = GameSaveData.CreateNewGameProgress();", controllerText);
+            Assert.AreEqual(
+                0,
+                Regex.Matches(controllerText, @"new\s+GameSaveData\s*\{").Count,
+                "GameSaveController should not duplicate new-game default progress values.");
+        }
+
+        [Test]
         public void AudioSettingView_GuardsZeroVolumeBeforeLog10()
         {
             string text = File.ReadAllText(AudioSettingViewPath);
@@ -127,14 +146,42 @@ namespace Summoner.EditModeTests
         }
 
         [Test]
+        public void AudioSettingView_DelegatesPlayerPrefsToStore()
+        {
+            string viewText = File.ReadAllText(AudioSettingViewPath);
+            string storeText = File.ReadAllText(AudioSettingStorePath);
+
+            StringAssert.Contains("private readonly AudioSettingStore audioSettingStore", viewText);
+            StringAssert.Contains("audioSettingStore.LoadMasterVolume()", viewText);
+            StringAssert.Contains("audioSettingStore.LoadBgmVolume()", viewText);
+            StringAssert.Contains("audioSettingStore.LoadSfxVolume()", viewText);
+            StringAssert.Contains("audioSettingStore.SaveMasterVolume(volume)", viewText);
+            StringAssert.Contains("audioSettingStore.SaveBgmVolume(volume)", viewText);
+            StringAssert.Contains("audioSettingStore.SaveSfxVolume(volume)", viewText);
+            Assert.IsFalse(viewText.Contains("PlayerPrefs."), "AudioSettingView should not access PlayerPrefs directly.");
+
+            StringAssert.Contains("private const string MasterVolumeKey = \"MasterVolume\"", storeText);
+            StringAssert.Contains("private const string BgmVolumeKey = \"BGMVolume\"", storeText);
+            StringAssert.Contains("private const string SfxVolumeKey = \"SFXVolume\"", storeText);
+            StringAssert.Contains("LoadMasterVolume()", storeText);
+            StringAssert.Contains("SaveMasterVolume(float volume)", storeText);
+            StringAssert.Contains("LoadBgmVolume()", storeText);
+            StringAssert.Contains("SaveBgmVolume(float volume)", storeText);
+            StringAssert.Contains("LoadSfxVolume()", storeText);
+            StringAssert.Contains("SaveSfxVolume(float volume)", storeText);
+        }
+
+        [Test]
         public void VideoSettingView_RepairsInvalidSavedIndexesBeforeToggleSetup()
         {
-            string text = File.ReadAllText(VideoSettingViewPath);
+            string viewText = File.ReadAllText(VideoSettingViewPath);
+            string storeText = File.ReadAllText(VideoSettingStorePath);
 
-            StringAssert.Contains("GetValidSavedIndex(\"resolutionIndex\", resolutionToggles.Count)", text);
-            StringAssert.Contains("GetValidSavedIndex(\"screenModeIndex\", screenModeToggles.Count)", text);
-            StringAssert.Contains("savedIndex >= 0 && savedIndex < itemCount", text);
-            StringAssert.Contains("PlayerPrefs.SetInt(prefsKey, 0)", text);
+            StringAssert.Contains("videoSettingStore.LoadValidResolutionIndex(resolutionToggles.Count)", viewText);
+            StringAssert.Contains("videoSettingStore.LoadValidScreenModeIndex(screenModeToggles.Count)", viewText);
+            StringAssert.Contains("savedIndex >= 0 && savedIndex < itemCount", storeText);
+            StringAssert.Contains("PlayerPrefs.SetInt(prefsKey, 0)", storeText);
+            Assert.IsFalse(viewText.Contains("PlayerPrefs."), "VideoSettingView should not access PlayerPrefs directly.");
         }
 
         [TestCase("resolutionIndex", -1, 3)]
@@ -166,7 +213,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void GameplaySettingStore_OwnsGameplayPlayerPrefsKeys()
         {
-            string text = File.ReadAllText("Assets/Script/Option/GameplaySettingStore.cs");
+            string text = File.ReadAllText(GameplaySettingStorePath);
 
             StringAssert.Contains("private const string StorySkipKey = \"IsStorySkip\"", text);
             StringAssert.Contains("private const string OnlyMouseKey = \"IsOnlyMouse\"", text);
@@ -174,6 +221,40 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("SaveStorySkipEnabled(bool isEnabled)", text);
             StringAssert.Contains("LoadOnlyMouseEnabled()", text);
             StringAssert.Contains("SaveOnlyMouseEnabled(bool isEnabled)", text);
+        }
+
+        [Test]
+        public void GameplaySettingFiles_StayInGameplayFolder()
+        {
+            string viewText = File.ReadAllText(GameplaySettingViewPath);
+            string storeText = File.ReadAllText(GameplaySettingStorePath);
+
+            StringAssert.Contains("public class GameplaySettingView : MonoBehaviour", viewText);
+            StringAssert.Contains("private readonly GameplaySettingStore gameplaySettingStore", viewText);
+            StringAssert.Contains("public class GameplaySettingStore", storeText);
+            Assert.IsFalse(File.Exists("Assets/Script/8_Option/GameplaySettingView.cs"));
+            Assert.IsFalse(File.Exists("Assets/Script/8_Option/GameplaySettingStore.cs"));
+        }
+
+        [Test]
+        public void VideoSettingView_DelegatesPlayerPrefsToStore()
+        {
+            string viewText = File.ReadAllText(VideoSettingViewPath);
+            string storeText = File.ReadAllText(VideoSettingStorePath);
+
+            StringAssert.Contains("private readonly VideoSettingStore videoSettingStore", viewText);
+            StringAssert.Contains("videoSettingStore.LoadValidResolutionIndex(resolutionToggles.Count)", viewText);
+            StringAssert.Contains("videoSettingStore.LoadValidScreenModeIndex(screenModeToggles.Count)", viewText);
+            StringAssert.Contains("videoSettingStore.SaveResolutionIndex(index)", viewText);
+            StringAssert.Contains("videoSettingStore.SaveScreenModeIndex(index)", viewText);
+            Assert.IsFalse(viewText.Contains("PlayerPrefs."), "VideoSettingView should not access PlayerPrefs directly.");
+
+            StringAssert.Contains("private const string ResolutionIndexKey = \"resolutionIndex\"", storeText);
+            StringAssert.Contains("private const string ScreenModeIndexKey = \"screenModeIndex\"", storeText);
+            StringAssert.Contains("LoadValidResolutionIndex(int itemCount)", storeText);
+            StringAssert.Contains("SaveResolutionIndex(int index)", storeText);
+            StringAssert.Contains("LoadValidScreenModeIndex(int itemCount)", storeText);
+            StringAssert.Contains("SaveScreenModeIndex(int index)", storeText);
         }
 
         private static bool ContainsPlayerPrefsAccessToKey(string text, string key)
@@ -203,19 +284,20 @@ namespace Summoner.EditModeTests
 
         private static int InvokeGetValidSavedIndex(string prefsKey, int itemCount)
         {
-            Type videoSettingViewType = AppDomain.CurrentDomain
+            Type videoSettingStoreType = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Select(assembly => assembly.GetType("VideoSettingView"))
+                .Select(assembly => assembly.GetType("VideoSettingStore"))
                 .FirstOrDefault(type => type != null);
 
-            Assert.IsNotNull(videoSettingViewType, "VideoSettingView type was not found.");
+            Assert.IsNotNull(videoSettingStoreType, "VideoSettingStore type was not found.");
 
-            MethodInfo methodInfo = videoSettingViewType.GetMethod(
+            MethodInfo methodInfo = videoSettingStoreType.GetMethod(
                 "GetValidSavedIndex",
                 BindingFlags.Static | BindingFlags.NonPublic);
 
-            Assert.IsNotNull(methodInfo, "VideoSettingView.GetValidSavedIndex was not found.");
+            Assert.IsNotNull(methodInfo, "VideoSettingStore.GetValidSavedIndex was not found.");
             return (int)methodInfo.Invoke(null, new object[] { prefsKey, itemCount });
         }
     }
 }
+

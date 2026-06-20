@@ -239,7 +239,7 @@ namespace Summoner.EditModeTests
 
             foreach (string summonName in summonNames)
             {
-                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+                string text = File.ReadAllText($"Assets/Script/6_Summons/{summonName}.cs");
 
                 Assert.IsFalse(text.Contains("public override void Die()"), $"{summonName} should inherit Die without a pass-through override.");
                 Assert.IsFalse(text.Contains("public override void TakeDamage(double damage)"), $"{summonName} should inherit TakeDamage without a pass-through override.");
@@ -257,7 +257,7 @@ namespace Summoner.EditModeTests
 
             foreach (string summonName in summonNames)
             {
-                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+                string text = File.ReadAllText($"Assets/Script/6_Summons/{summonName}.cs");
 
                 Assert.IsFalse(text.Contains("public override void Die()"), $"{summonName} should inherit Die without a pass-through override.");
                 Assert.IsFalse(text.Contains("public override void TakeDamage(double damage)"), $"{summonName} should inherit TakeDamage without a pass-through override.");
@@ -267,7 +267,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void PlayerDrawSummons_DoNotInitializeThroughSummonController()
         {
-            string controllerText = File.ReadAllText("Assets/Script/Battle/SummonPick/SummonController.cs");
+            string controllerText = File.ReadAllText("Assets/Script/5_Battle/5_SummonPick/SummonController.cs");
 
             Assert.IsFalse(controllerText.Contains("DrawSummonsInitialize();"));
             Assert.IsFalse(controllerText.Contains("private void DrawSummonsInitialize()"));
@@ -277,13 +277,13 @@ namespace Summoner.EditModeTests
         [Test]
         public void PlayerDrawSummons_SelectRankFromSummonData()
         {
-            string summonText = File.ReadAllText("Assets/Script/Summons/Summon.cs");
-            string controllerText = File.ReadAllText("Assets/Script/Battle/SummonPick/SummonController.cs");
+            string summonText = File.ReadAllText("Assets/Script/6_Summons/Summon.cs");
+            string drawServiceText = File.ReadAllText("Assets/Script/5_Battle/5_SummonPick/0_Draw/SummonDrawService.cs");
 
             Assert.IsTrue(summonText.Contains("public SummonRank GetDrawRank()"));
             Assert.IsTrue(summonText.Contains("return summonData == null ? summonRank : summonData.GetSummonRank();"));
-            Assert.IsTrue(controllerText.Contains("summon.GetDrawRank() == rank"));
-            Assert.IsFalse(controllerText.Contains("summon.GetSummonRank() == rank"));
+            Assert.IsTrue(drawServiceText.Contains("summon.GetDrawRank() == rank"));
+            Assert.IsFalse(drawServiceText.Contains("summon.GetSummonRank() == rank"));
         }
 
         [Test]
@@ -334,7 +334,7 @@ namespace Summoner.EditModeTests
 
             foreach (string summonName in summonNames)
             {
-                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+                string text = File.ReadAllText($"Assets/Script/6_Summons/{summonName}.cs");
 
                 Assert.IsFalse(text.Contains("void Start()"), $"{summonName} should not own draw-list initialization through Start.");
                 Assert.IsFalse(text.Contains("SummonInitialize();\r\n    }"), $"{summonName} should leave draw-list initialization to SummonController.");
@@ -348,7 +348,7 @@ namespace Summoner.EditModeTests
 
             foreach (string summonName in summonNames)
             {
-                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+                string text = File.ReadAllText($"Assets/Script/6_Summons/{summonName}.cs");
 
                 Assert.IsFalse(text.Contains("private void Start()"), $"{summonName} should not keep a Start method only for health logging.");
                 Assert.IsFalse(text.Contains("Debug.Log(\"남은 체력: \" + nowHP);"), $"{summonName} should not log health from Start.");
@@ -357,7 +357,7 @@ namespace Summoner.EditModeTests
         [Test]
         public void SummonFallbackHelpers_UseSetPrefixNames()
         {
-            string summonText = File.ReadAllText("Assets/Script/Summons/Summon.cs");
+            string summonText = File.ReadAllText("Assets/Script/6_Summons/Summon.cs");
             string[] summonNames =
             {
                 "Cat", "Rabbit", "Snake", "Wolf", "Eagle", "Fox",
@@ -375,7 +375,7 @@ namespace Summoner.EditModeTests
 
             foreach (string summonName in summonNames)
             {
-                string text = File.ReadAllText($"Assets/Script/Summons/{summonName}.cs");
+                string text = File.ReadAllText($"Assets/Script/6_Summons/{summonName}.cs");
 
                 StringAssert.Contains("SetFallbackStatus(", text);
                 StringAssert.Contains("SetAttackStrategies(", text);
@@ -1244,7 +1244,7 @@ namespace Summoner.EditModeTests
             int expectedSpecialAttackCooltime)
         {
             UnityEngine.Object data = AssetDatabase.LoadAssetAtPath(
-                $"Assets/Script/Summons/Data/{summonName}SummonData.asset",
+                $"Assets/Script/6_Summons/Data/{summonName}SummonData.asset",
                 GetTypeByName("SummonData"));
 
             Assert.NotNull(data);
@@ -1295,7 +1295,7 @@ namespace Summoner.EditModeTests
             int expectedSecondSpecialAttackCooltime)
         {
             UnityEngine.Object data = AssetDatabase.LoadAssetAtPath(
-                $"Assets/Script/Summons/Data/{summonName}SummonData.asset",
+                $"Assets/Script/6_Summons/Data/{summonName}SummonData.asset",
                 GetTypeByName("SummonData"));
 
             Assert.NotNull(data);
@@ -1377,7 +1377,7 @@ namespace Summoner.EditModeTests
         private void AssertSummonDataAssetWithExpectedAttacks(ExpectedSummon expected)
         {
             UnityEngine.Object data = AssetDatabase.LoadAssetAtPath(
-                $"Assets/Script/Summons/Data/{expected.TypeName}SummonData.asset",
+                $"Assets/Script/6_Summons/Data/{expected.TypeName}SummonData.asset",
                 GetTypeByName("SummonData"));
 
             Assert.NotNull(data);
@@ -1747,8 +1747,8 @@ namespace Summoner.EditModeTests
 
         private void AssertSummonDataReference(string summonName, string prefabName, string guid)
         {
-            string assetText = File.ReadAllText($"Assets/Script/Summons/Data/{summonName}SummonData.asset");
-            string metaText = File.ReadAllText($"Assets/Script/Summons/Data/{summonName}SummonData.asset.meta");
+            string assetText = File.ReadAllText($"Assets/Script/6_Summons/Data/{summonName}SummonData.asset");
+            string metaText = File.ReadAllText($"Assets/Script/6_Summons/Data/{summonName}SummonData.asset.meta");
             string prefabText = File.ReadAllText($"Assets/Prefabs/SummonPrefab/{prefabName}.prefab");
 
             StringAssert.Contains($"m_Name: {summonName}SummonData", assetText);
@@ -1834,3 +1834,4 @@ namespace Summoner.EditModeTests
         }
     }
 }
+
