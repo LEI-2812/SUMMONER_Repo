@@ -6143,7 +6143,7 @@ GameObject:
   - component: {fileID: 721865599}
   - component: {fileID: 721865600}
   m_Layer: 0
-  m_Name: ToMainAlterHandler
+  m_Name: ToMainAlertHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15468,7 +15468,7 @@ GameObject:
   - component: {fileID: 2079414804}
   - component: {fileID: 2079414806}
   m_Layer: 0
-  m_Name: SkipAlterHandler
+  m_Name: SkipAlertHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15515,7 +15515,7 @@ GameObject:
   - component: {fileID: 2085839030}
   - component: {fileID: 2085839032}
   m_Layer: 0
-  m_Name: ToQuitAlterHandler
+  m_Name: ToQuitAlertHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

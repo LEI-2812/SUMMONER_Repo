@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
 OcclusionCullingSettings:
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 21840651}
   - component: {fileID: 21840650}
   m_Layer: 5
-  m_Name: Panel (3)
+  m_Name: RedrawOption_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -601,7 +601,7 @@ GameObject:
   - component: {fileID: 271314469}
   - component: {fileID: 271314468}
   m_Layer: 5
-  m_Name: Backgroud Color
+  m_Name: BackgroundColor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -980,9 +980,8 @@ GameObject:
   - component: {fileID: 313031150}
   - component: {fileID: 313031151}
   - component: {fileID: 313031152}
-  - component: {fileID: 313031153}
   m_Layer: 5
-  m_Name: Enermy
+  m_Name: EnemySide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1032,18 +1031,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf862d93ab88f8f4cb20c74da9f460f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &313031153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 313031149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd2e37e0a8a3a604a802e36f2693bc28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   plateController: {fileID: 893681172}
@@ -1831,7 +1818,7 @@ GameObject:
   - component: {fileID: 521371647}
   - component: {fileID: 521371649}
   m_Layer: 5
-  m_Name: ReSummonPanel
+  m_Name: RedrawPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2722,7 +2709,7 @@ GameObject:
   m_Component:
   - component: {fileID: 744963238}
   m_Layer: 0
-  m_Name: __Camera
+  m_Name: 1_Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3073,7 +3060,7 @@ GameObject:
   - component: {fileID: 839549381}
   - component: {fileID: 839549384}
   m_Layer: 5
-  m_Name: SummonBtn
+  m_Name: DrawButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3258,7 +3245,7 @@ GameObject:
   - component: {fileID: 893681169}
   - component: {fileID: 893681168}
   m_Layer: 5
-  m_Name: UI_10_BattleField
+  m_Name: UI_10_BattleBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4053,7 +4040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1052698416}
   m_Layer: 0
-  m_Name: __Systems
+  m_Name: 0_Runtime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4166,7 +4153,7 @@ GameObject:
   - component: {fileID: 1152497999}
   - component: {fileID: 1152497998}
   m_Layer: 5
-  m_Name: Panel (2)
+  m_Name: RedrawOption_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4478,7 +4465,7 @@ GameObject:
   - component: {fileID: 1178627254}
   - component: {fileID: 1178627252}
   m_Layer: 5
-  m_Name: Panel (1)
+  m_Name: DrawOption_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4568,7 +4555,7 @@ GameObject:
   - component: {fileID: 1196271520}
   - component: {fileID: 1196271519}
   m_Layer: 5
-  m_Name: SummonPanel
+  m_Name: DrawPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4935,7 +4922,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1284664187}
   m_Layer: 5
-  m_Name: UI_40_Mana
+  m_Name: UI_40_PlayerMana
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5372,7 +5359,7 @@ GameObject:
   - component: {fileID: 1434509436}
   - component: {fileID: 1434509435}
   m_Layer: 5
-  m_Name: Panel (1)
+  m_Name: RedrawOption_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5551,7 +5538,7 @@ GameObject:
   - component: {fileID: 1469478340}
   - component: {fileID: 1469478341}
   m_Layer: 5
-  m_Name: Player
+  m_Name: PlayerSide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6115,7 +6102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1496251709}
   m_Layer: 5
-  m_Name: __UI
+  m_Name: 2_UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6184,7 +6171,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1533807416}
   m_Layer: 5
-  m_Name: UI_00_Background
+  m_Name: UI_00_BackgroundLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6429,7 +6416,7 @@ GameObject:
   - component: {fileID: 1545899000}
   - component: {fileID: 1545899001}
   m_Layer: 5
-  m_Name: EnermyPlates
+  m_Name: EnemyPlates
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6722,7 +6709,7 @@ GameObject:
   - component: {fileID: 1609441965}
   - component: {fileID: 1609441964}
   m_Layer: 5
-  m_Name: PlatePanel
+  m_Name: PlayerPlateActions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6799,7 +6786,7 @@ GameObject:
   - component: {fileID: 1625915091}
   - component: {fileID: 1625915094}
   m_Layer: 5
-  m_Name: RedoBtn
+  m_Name: RedrawButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8109,7 +8096,7 @@ GameObject:
   - component: {fileID: 2056378205}
   - component: {fileID: 2056378208}
   m_Layer: 5
-  m_Name: TurnEndBtn
+  m_Name: EndTurnButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8432,7 +8419,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2140000002}
   m_Layer: 0
-  m_Name: BattleRuntime
+  m_Name: 0_BattleFlow_Runtime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8476,7 +8463,7 @@ GameObject:
   - component: {fileID: 893681180}
   - component: {fileID: 893681186}
   m_Layer: 0
-  m_Name: BattleBoardRuntime
+  m_Name: 0_Board_Runtime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8508,7 +8495,7 @@ GameObject:
   - component: {fileID: 2140000010}
   - component: {fileID: 893681170}
   m_Layer: 0
-  m_Name: BattleTurnRuntime
+  m_Name: 1_Turn_Runtime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8547,7 +8534,7 @@ GameObject:
   - component: {fileID: 2140000003}
   - component: {fileID: 2140000004}
   m_Layer: 0
-  m_Name: BattleStageRuntime
+  m_Name: 2_Stage_Runtime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

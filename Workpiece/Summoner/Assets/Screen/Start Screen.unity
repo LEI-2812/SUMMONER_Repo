@@ -3070,7 +3070,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 214920138}
-        m_TargetAssemblyTypeName: StartSreenEvent, Assembly-CSharp
+        m_TargetAssemblyTypeName: StartScreenView, Assembly-CSharp
         m_MethodName: StartSavedStage
         m_Mode: 1
         m_Arguments:
@@ -3458,7 +3458,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 214920138}
-        m_TargetAssemblyTypeName: StartSreenEvent, Assembly-CSharp
+        m_TargetAssemblyTypeName: StartScreenView, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
@@ -4430,8 +4430,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 214920138}
-        m_TargetAssemblyTypeName: StartSreenEvent, Assembly-CSharp
-        m_MethodName: SelectStage
+        m_TargetAssemblyTypeName: StartScreenView, Assembly-CSharp
+        m_MethodName: OpenOption
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5076,7 +5076,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 214920138}
-        m_TargetAssemblyTypeName: StartSreenEvent, Assembly-CSharp
+        m_TargetAssemblyTypeName: StartScreenView, Assembly-CSharp
         m_MethodName: NewStart
         m_Mode: 1
         m_Arguments:

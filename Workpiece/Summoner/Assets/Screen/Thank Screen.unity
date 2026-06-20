@@ -3268,7 +3268,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1948006729}
         m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: openSettingCanvas
+        m_MethodName: OpenSettingCanvas
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4404,7 +4404,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1948006729}
         m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: toMainAlert
+        m_MethodName: ToMainAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8846,7 +8846,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1948006729}
         m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: toQuitAlert
+        m_MethodName: ToQuitAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
