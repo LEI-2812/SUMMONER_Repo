@@ -1,0 +1,2294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="139" result="Failed(Child)" total="139" passed="120" failed="19" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:13Z" duration="10.5533781">
+  <test-suite type="TestSuite" id="1000" name="Summoner" fullname="Summoner" runstate="Runnable" testcasecount="139" result="Failed" site="Child" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:13Z" duration="10.553378" total="139" passed="120" failed="19" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1154" name="Summoner.EditModeTests.dll" fullname="D:/GitRepo/SUMMONER_Refactor/Workpiece/Summoner/Library/ScriptAssemblies/Summoner.EditModeTests.dll" runstate="Runnable" testcasecount="139" result="Failed" site="Child" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:13Z" duration="10.543721" total="139" passed="120" failed="19" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="82212" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1155" name="Summoner" fullname="Summoner" runstate="Runnable" testcasecount="139" result="Failed" site="Child" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:13Z" duration="10.541639" total="139" passed="120" failed="19" inconclusive="0" skipped="0" asserts="0">
+        <properties>
+          <property name="platform" value="EditMode" />
+        </properties>
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1156" name="EditModeTests" fullname="Summoner.EditModeTests" runstate="Runnable" testcasecount="139" result="Failed" site="Child" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:13Z" duration="10.537766" total="139" passed="120" failed="19" inconclusive="0" skipped="0" asserts="0">
+          <properties>
+            <property name="platform" value="EditMode" />
+          </properties>
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1003" name="BattleResultFlowStaticRegressionTests" fullname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests" classname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.053957" total="5" passed="3" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1007" name="BattleProgressController_OwnsSaveAndStageFlow" fullname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests.BattleProgressController_OwnsSaveAndStageFlow" methodname="BattleProgressController_OwnsSaveAndStageFlow" classname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests" runstate="Runnable" seed="974915582" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.016515" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="BattleResultAlertView_DoesNotSaveOrMoveScenes" fullname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests.BattleResultAlertView_DoesNotSaveOrMoveScenes" methodname="BattleResultAlertView_DoesNotSaveOrMoveScenes" classname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests" runstate="Runnable" seed="1512686132" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.003371" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="BattleResultController_DelegatesAlertResultToProgress" fullname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests.BattleResultController_DelegatesAlertResultToProgress" methodname="BattleResultController_DelegatesAlertResultToProgress" classname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests" runstate="Runnable" seed="760271888" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.002249" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1008" name="Player_UsesBattleResultControllerForResults" fullname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests.Player_UsesBattleResultControllerForResults" methodname="Player_UsesBattleResultControllerForResults" classname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests" runstate="Runnable" seed="2086871627" result="Failed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.008891" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "BattleResultController"
+  But was:  "// 역할: 플레이어의 소환, 리롤, 공격, 턴 종료 흐름을 조율한다.
+public class PlayerActionFlow
+{
+    private readonly PlayerController player;
+    private readonly SummonController summonController;
+    private readonly BattleController battleController;
+    private readonly PlayerTurnActions turnActions;
+    private readonly PlayerSummonActions summonActions;
+    private readonly PlayerAttackActions attackActions;
+    private readonly PlayerView playerView;
+    private readonly PlayerFeedbackView feedbackView;
+    private readonly PlayerTurnResourceState resourceState;
+    private readonly PlayerTurnProgressState turnProgressState;
+
+    public PlayerActionFlow(
+        PlayerController player,
+        SummonController summonController,
+        BattleController battleController,
+        PlayerTurnResourceState resourceState,
+        PlayerTurnProgressState turnProgressState,
+        PlayerTurnActions turnActions,
+        PlayerSummonActions summonActions,
+        PlayerAttackActions attackActions,
+        PlayerView playerView,
+        PlayerFeedbackView feedbackView)
+    {
+        this.player = player;
+        this.summonController = summonController;
+        this.battleController = battleController;
+        this.resourceState = resourceState;
+        this.turnProgressState = turnProgressState;
+        this.turnActions = turnActions;
+        this.summonActions = summonActions;
+        this.attackActions = attackActions;
+        this.playerView = playerView;
+        this.feedbackView = feedbackView;
+    }
+
+    public int GetClearTurn()
+    {
+        int clearTurn = turnActions.GetPlayerClearTurn();
+        turnProgressState.SetTurnProgress(clearTurn, player.currentTurn);
+        return clearTurn;
+    }
+
+    public void ResetPlayerSetting()
+    {
+        resourceState.Reset();
+        UpdateManaUI();
+    }
+
+    public void UpdateRedrawButtonState()
+    {
+        if (!resourceState.CanRedraw())
+        {
+            playerView.ShowRedrawButtonDisabled();
+            return;
+        }
+
+        playerView.ShowRedrawButtonEnabled();
+    }
+
+    public void StartPlayerTurn()
+    {
+        feedbackView.Log("플레이어 턴 시작");
+        feedbackView.Log($"{player.gameObject.name} 의 마나: {resourceState.Mana}");
+        turnActions.StartPlayerTurn(turnProgressState);
+        player.clearTurn = turnProgressState.ClearTurn;
+        player.currentTurn = turnProgressState.CurrentTurn;
+        resourceState.StartTurn();
+        UpdateManaUI();
+        BattleFailResultTry();
+    }
+
+    public void TryStartSummon()
+    {
+        if (PlayerActionBlockedCheck()) return;
+
+        summonActions.TryStartSummon();
+    }
+
+    public void TryEndPlayerTurn()
+    {
+        if (PlayerActionBlockedCheck()) return;
+
+        if (!turnActions.TryEndPlayerTurn())
+        {
+            feedbackView.PlayFail();
+            feedbackView.Log("플레이어 턴이 아닙니다.");
+            return;
+        }
+
+        feedbackView.Log("플레이어 턴 종료");
+        feedbackView.PlayClick();
+    }
+
+    public void TryStartRedraw()
+    {
+        if (PlayerActionBlockedCheck()) return;
+
+        summonActions.TryStartRedraw();
+    }
+
+    public void TryExecuteNormalAttack()
+    {
+        if (PlayerActionBlockedCheck()) return;
+
+        attackActions.TryExecuteNormalAttack();
+    }
+
+    public void TryExecuteSpecialAttack()
+    {
+        if (PlayerActionBlockedCheck()) return;
+
+        attackActions.TryExecuteSpecialAttack();
+    }
+
+    public void SetHasSummonedThisTurn(bool value)
+    {
+        resourceState.SetHasSummonedThisTurn(value);
+    }
+
+    public bool HasSummonedThisTurn()
+    {
+        return resourceState.HasSummonedThisTurn;
+    }
+
+    public void UpdateManaUI()
+    {
+        playerView.UpdateMana(resourceState.Mana, resourceState.CanShowSummonAvailable());
+    }
+
+    public void AddMana()
+    {
+        resourceState.AddMana(10);
+        UpdateManaUI();
+    }
+
+    public void SetSelectedPlateIndex(int selectedPlateIndex)
+    {
+        attackActions.SetSelectedPlateIndex(selectedPlateIndex);
+    }
+
+    public void BattleFailResultTry()
+    {
+        turnActions.CheckPlayerFailResult(turnProgressState);
+    }
+
+    private bool PlayerActionBlockedCheck()
+    {
+        return summonController.IsSummoning() || battleController.GetIsAttacking();
+    }
+}
+"
+]]></message>
+                <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00007] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00000] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at Summoner.EditModeTests.BattleResultFlowStaticRegressionTests.Player_UsesBattleResultControllerForResults () [0x00023] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\BattleResultFlowStaticRegressionTests.cs:62
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1004" name="TurnController_DoesNotReferenceStageController" fullname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests.TurnController_DoesNotReferenceStageController" methodname="TurnController_DoesNotReferenceStageController" classname="Summoner.EditModeTests.BattleResultFlowStaticRegressionTests" runstate="Runnable" seed="283649335" result="Failed" label="Error" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.005041" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\Flow\TurnController.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.BattleResultFlowStaticRegressionTests.TurnController_DoesNotReferenceStageController () [0x00001] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\BattleResultFlowStaticRegressionTests.cs:11 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1009" name="GameSystemStaticRegressionTests" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:04Z" duration="1.600471" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <test-case id="1017" name="AudioSettingView_DelegatesPlayerPrefsToStore" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.AudioSettingView_DelegatesPlayerPrefsToStore" methodname="AudioSettingView_DelegatesPlayerPrefsToStore" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="1405189000" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.006754" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="AudioSettingView_GuardsZeroVolumeBeforeLog10" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.AudioSettingView_GuardsZeroVolumeBeforeLog10" methodname="AudioSettingView_GuardsZeroVolumeBeforeLog10" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="1294863243" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.004358" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="GameplaySettingFiles_StayInGameplayFolder" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.GameplaySettingFiles_StayInGameplayFolder" methodname="GameplaySettingFiles_StayInGameplayFolder" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="1893049236" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.004370" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="GameplaySettingStore_OwnsGameplayPlayerPrefsKeys" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.GameplaySettingStore_OwnsGameplayPlayerPrefsKeys" methodname="GameplaySettingStore_OwnsGameplayPlayerPrefsKeys" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="1093825968" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.003889" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="GameSaveController_MovesToRootBeforeDontDestroyOnLoad" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.GameSaveController_MovesToRootBeforeDontDestroyOnLoad" methodname="GameSaveController_MovesToRootBeforeDontDestroyOnLoad" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="1769101172" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.005456" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1015" name="GameSaveController_UsesGameSaveDataFactoryForNewProgress" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.GameSaveController_UsesGameSaveDataFactoryForNewProgress" methodname="GameSaveController_UsesGameSaveDataFactoryForNewProgress" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="97400735" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.009468" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1010" name="PlayerPrefsDirectAccess_StaysInsideKnownStorageFiles" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.PlayerPrefsDirectAccess_StaysInsideKnownStorageFiles" methodname="PlayerPrefsDirectAccess_StaysInsideKnownStorageFiles" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="451396469" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.342609" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="ProgressPlayerPrefsKeys_AreOnlyUsedByPlayerPrefsSaveStore" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.ProgressPlayerPrefsKeys_AreOnlyUsedByPlayerPrefsSaveStore" methodname="ProgressPlayerPrefsKeys_AreOnlyUsedByPlayerPrefsSaveStore" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="1214120924" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:03Z" duration="0.370040" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="RemovedLoadStageMethod_DoesNotReturnToScriptsOrScenes" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.RemovedLoadStageMethod_DoesNotReturnToScriptsOrScenes" methodname="RemovedLoadStageMethod_DoesNotReturnToScriptsOrScenes" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="198488684" result="Passed" start-time="2026-06-20 05:12:03Z" end-time="2026-06-20 05:12:04Z" duration="0.821157" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="StartScreenView_ReadsSavedStageOnlyOnceForContinue" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.StartScreenView_ReadsSavedStageOnlyOnceForContinue" methodname="StartScreenView_ReadsSavedStageOnlyOnceForContinue" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="562344909" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002652" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="VideoSettingView_DelegatesPlayerPrefsToStore" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_DelegatesPlayerPrefsToStore" methodname="VideoSettingView_DelegatesPlayerPrefsToStore" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="795401402" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.004602" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1026" name="VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.009646" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <test-case id="1024" name="VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs(&quot;resolutionIndex&quot;,1,3)" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs(&quot;resolutionIndex&quot;,1,3)" methodname="VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="1306138447" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.004247" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs(&quot;screenModeIndex&quot;,2,3)" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs(&quot;screenModeIndex&quot;,2,3)" methodname="VideoSettingView_KeepsValidSavedIndexesInPlayerPrefs" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="1711438448" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.000750" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1018" name="VideoSettingView_RepairsInvalidSavedIndexesBeforeToggleSetup" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_RepairsInvalidSavedIndexesBeforeToggleSetup" methodname="VideoSettingView_RepairsInvalidSavedIndexesBeforeToggleSetup" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="138727251" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003585" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1023" name="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.005310" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <test-case id="1019" name="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(&quot;resolutionIndex&quot;,-1,3)" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(&quot;resolutionIndex&quot;,-1,3)" methodname="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="684311177" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001786" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(&quot;resolutionIndex&quot;,3,3)" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(&quot;resolutionIndex&quot;,3,3)" methodname="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="928291932" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.000746" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1021" name="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(&quot;screenModeIndex&quot;,-1,3)" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(&quot;screenModeIndex&quot;,-1,3)" methodname="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="95922692" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.000554" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(&quot;screenModeIndex&quot;,3,3)" fullname="Summoner.EditModeTests.GameSystemStaticRegressionTests.VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs(&quot;screenModeIndex&quot;,3,3)" methodname="VideoSettingView_RepairsInvalidSavedIndexesInPlayerPrefs" classname="Summoner.EditModeTests.GameSystemStaticRegressionTests" runstate="Runnable" seed="93822526" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.000498" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1030" name="PlateSummonDrawStaticRegressionTests" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" testcasecount="34" result="Failed" site="Child" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.175907" total="34" passed="19" failed="15" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1044" name="AreaAndClosestAttackStrategies_GuardNullTargetPlates" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.AreaAndClosestAttackStrategies_GuardNullTargetPlates" methodname="AreaAndClosestAttackStrategies_GuardNullTargetPlates" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="925229281" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.007562" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1045" name="AttackStrategies_DelegateCooldownState" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.AttackStrategies_DelegateCooldownState" methodname="AttackStrategies_DelegateCooldownState" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="145101465" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.009546" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1046" name="AttackStrategies_DoNotStoreEffectStatusTime" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.AttackStrategies_DoNotStoreEffectStatusTime" methodname="AttackStrategies_DoNotStoreEffectStatusTime" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="723545422" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.006636" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1056" name="BattleController_UsesSharedSpecialAttackTargetPlateResolution" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.BattleController_UsesSharedSpecialAttackTargetPlateResolution" methodname="BattleController_UsesSharedSpecialAttackTargetPlateResolution" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="144501558" result="Failed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003313" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "private List<Plate> GetSpecialAttackTargetPlates(IAttackStrategy attackStrategy, bool isPlayer)"
+  But was:  "using UnityEngine;
+
+// 역할: 선택된 소환수의 공격 시작 상태를 관리하고 특수 공격을 실제 공격 전략으로 실행한다.
+public class BattleController : MonoBehaviour
+{
+
+    [SerializeField] private SummonStatePanelView statePanel;
+
+    public bool isAttacking = false; //공격중인이 판별
+
+    private PlateController plateController;
+    private BattleSpecialAttackExecutor specialAttackExecutor;
+    private readonly BattleAttackState attackState = new BattleAttackState();
+
+    public Summon GetAttackingSummon()
+    {
+        return attackState.AttackingSummon;
+    }
+
+    void Awake()
+    {
+        plateController = GetComponent<PlateController>();
+        specialAttackExecutor = new BattleSpecialAttackExecutor(plateController);
+    }
+
+    public Summon AttackStart(int buttonIndex)
+    {
+        attackState.StartAttack(statePanel.GetStatePanelSummon());
+
+        if (attackState.AttackingSummon == null)
+        {
+            Debug.Log("선택된 plate에 소환수가 없습니다.");
+            return null;
+        }
+
+        if (IsValidSpecialAttackIndex(attackState.AttackingSummon, buttonIndex))
+        {
+            attackState.SetCurrentSpecialAttackInfo(
+                new SpecialAttackInfo(
+                    attackState.AttackingSummon.GetSpecialAttackStrategy()[buttonIndex],
+                    buttonIndex));
+        }
+        return attackState.AttackingSummon;
+    }
+
+    public void SpecialAttackExecute(Summon attackSummon, int selectedPlateIndex, int selectSpecialAttackIndex, bool isPlayer = false)
+    {
+        if (!specialAttackExecutor.Execute(
+            attackSummon,
+            selectedPlateIndex,
+            selectSpecialAttackIndex,
+            isPlayer))
+        {
+            return;
+        }
+
+        BattleAttackStateReset();
+    }
+
+    private bool IsValidSpecialAttackIndex(Summon attackSummon, int selectSpecialAttackIndex)
+    {
+        if (attackSummon == null || attackSummon.GetSpecialAttackStrategy() == null)
+        {
+            return false;
+        }
+
+        return selectSpecialAttackIndex >= 0 && selectSpecialAttackIndex < attackSummon.GetSpecialAttackStrategy().Length;
+    }
+
+    public void BattleAttackStateReset()
+    {
+        attackState.Reset();
+        isAttacking = attackState.IsAttacking;
+        plateController.ResetAllPlateHighlight();
+    }
+
+
+    public PlateController GetPlateController()
+    {
+        return plateController;
+    }
+
+    public SpecialAttackInfo GetCurrentSpecialAttackInfo()
+    {
+        return attackState.CurrentSpecialAttackInfo;
+    }
+
+    public bool HasCurrentSpecialAttackInfo()
+    {
+        return attackState.HasCurrentSpecialAttackInfo();
+    }
+
+    public int GetCurrentSpecialAttackInfoIndex()
+    {
+        return attackState.GetCurrentSpecialAttackInfoIndex();
+    }
+
+    public bool DoesCurrentSpecialAttackTargetPlayerPlate()
+    {
+        return attackState.DoesCurrentSpecialAttackTargetPlayerPlate();
+    }
+
+    public bool GetIsAttacking()
+    {
+        return attackState.IsAttacking;
+    }
+    public void SetIsAttacking(bool isAttacking)
+    {
+        attackState.SetIsAttacking(isAttacking);
+        this.isAttacking = attackState.IsAttacking;
+    }
+}
+"
+]]></message>
+                <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00007] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00000] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.BattleController_UsesSharedSpecialAttackTargetPlateResolution () [0x0000c] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:465
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1064" name="CatSpecialAttack_KeepsHeavyAttackOnCurrentAttackPowerPath" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.CatSpecialAttack_KeepsHeavyAttackOnCurrentAttackPowerPath" methodname="CatSpecialAttack_KeepsHeavyAttackOnCurrentAttackPowerPath" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1372160038" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002569" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1063" name="ClosestEnemyAttack_UsesCurrentAttackPowerForBuffedDamage" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.ClosestEnemyAttack_UsesCurrentAttackPowerForBuffedDamage" methodname="ClosestEnemyAttack_UsesCurrentAttackPowerForBuffedDamage" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1096473510" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001631" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1034" name="DrawOptionPanelView_ClassNameMatchesFileNameAndKeepsGuid" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.DrawOptionPanelView_ClassNameMatchesFileNameAndKeepsGuid" methodname="DrawOptionPanelView_ClassNameMatchesFileNameAndKeepsGuid" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1402685582" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003074" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="DrawOptionPanelView_ReportsSelectionWithoutSummonControllerSingleton" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.DrawOptionPanelView_ReportsSelectionWithoutSummonControllerSingleton" methodname="DrawOptionPanelView_ReportsSelectionWithoutSummonControllerSingleton" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1581015425" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003377" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1059" name="EnemyReaction_DelegatesReactionSpecialAttackPicking" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.EnemyReaction_DelegatesReactionSpecialAttackPicking" methodname="EnemyReaction_DelegatesReactionSpecialAttackPicking" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="116938997" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.008568" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1057" name="EnemyReaction_UsesSharedNormalAttackExecution" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.EnemyReaction_UsesSharedNormalAttackExecution" methodname="EnemyReaction_UsesSharedNormalAttackExecution" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="91711515" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.005254" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1058" name="EnemyReaction_UsesSharedSpecialAttackExecutionLog" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.EnemyReaction_UsesSharedSpecialAttackExecutionLog" methodname="EnemyReaction_UsesSharedSpecialAttackExecutionLog" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1568753404" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.005466" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1060" name="EnermyAttackController_DelegatesActionPicking" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.EnermyAttackController_DelegatesActionPicking" methodname="EnermyAttackController_DelegatesActionPicking" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="512279731" result="Failed" label="Error" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.005535" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\Flow\TurnController.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.EnermyAttackController_DelegatesActionPicking () [0x00022] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:543 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1040" name="FightScenes_UseRedrawButtonHandlerInUnityEvents" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.FightScenes_UseRedrawButtonHandlerInUnityEvents" methodname="FightScenes_UseRedrawButtonHandlerInUnityEvents" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="10038361" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.043144" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1054" name="Plate_DelegatesAttackTargetDecisionToPlateController" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Plate_DelegatesAttackTargetDecisionToPlateController" methodname="Plate_DelegatesAttackTargetDecisionToPlateController" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1834659212" result="Failed" label="Error" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001731" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\Unit\Plate.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Plate_DelegatesAttackTargetDecisionToPlateController () [0x00001] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:420 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1055" name="Plate_DelegatesCurrentSpecialAttackTargetTypeToBattleController" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Plate_DelegatesCurrentSpecialAttackTargetTypeToBattleController" methodname="Plate_DelegatesCurrentSpecialAttackTargetTypeToBattleController" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1252888199" result="Failed" label="Error" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001473" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\Unit\Plate.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Plate_DelegatesCurrentSpecialAttackTargetTypeToBattleController () [0x00001] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:443 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1042" name="Plate_RemoveSummonAlwaysClearsSlotState" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Plate_RemoveSummonAlwaysClearsSlotState" methodname="Plate_RemoveSummonAlwaysClearsSlotState" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1857157244" result="Failed" label="Error" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002696" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\Unit\Plate.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Plate_RemoveSummonAlwaysClearsSlotState () [0x00001] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:209 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1041" name="Plate_SetCurrentSummonSynchronizesOccupancy" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Plate_SetCurrentSummonSynchronizesOccupancy" methodname="Plate_SetCurrentSummonSynchronizesOccupancy" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1670168657" result="Failed" label="Error" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001702" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\Unit\Plate.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Plate_SetCurrentSummonSynchronizesOccupancy () [0x00001] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:196 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1052" name="PlateController_ClosestEnemyPlateQueryUsesEnemyPlates" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlateController_ClosestEnemyPlateQueryUsesEnemyPlates" methodname="PlateController_ClosestEnemyPlateQueryUsesEnemyPlates" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="951460603" result="Failed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001798" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "return FindClosestOccupiedPlateIndex(enermyPlates, attackingSummon);"
+  But was:  "public int GetClosestEnermyPlateIndexExcept(Summon attackingSummon) //적 플레이트중 가장 가까이 있는 소환수의 인덱스를 반환
+    {
+        return queryService.FindClosestOccupiedPlateIndex(enermyPlates, attackingSummon);
+    }
+
+    "
+]]></message>
+                <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00007] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00000] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlateController_ClosestEnemyPlateQueryUsesEnemyPlates () [0x00054] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:402
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1049" name="PlateController_DelegatesBasicShowHideToPlateView" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlateController_DelegatesBasicShowHideToPlateView" methodname="PlateController_DelegatesBasicShowHideToPlateView" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1822076337" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002865" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1051" name="PlateController_DelegatesHighlightAndTransparencyToPlateView" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlateController_DelegatesHighlightAndTransparencyToPlateView" methodname="PlateController_DelegatesHighlightAndTransparencyToPlateView" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="314604709" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003457" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1048" name="PlateView_OwnsBasicShowHideOperations" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlateView_OwnsBasicShowHideOperations" methodname="PlateView_OwnsBasicShowHideOperations" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="316651330" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001603" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="PlateView_OwnsHighlightAndTransparencyOperations" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlateView_OwnsHighlightAndTransparencyOperations" methodname="PlateView_OwnsHighlightAndTransparencyOperations" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="766705569" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002161" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="Player_DelegatesSpecialAttackTargetTypeToBattleController" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Player_DelegatesSpecialAttackTargetTypeToBattleController" methodname="Player_DelegatesSpecialAttackTargetTypeToBattleController" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="755468897" result="Failed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.004156" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "actionController.TryExecuteSpecialAttack();"
+  But was:  "using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+// 역할: Unity 이벤트와 씬 연결을 유지하고 플레이어 행동, UI, 피드백 책임을 연결한다.
+public class PlayerController : MonoBehaviour
+{
+    [Header("마나UI")]
+    [SerializeField] private List<RawImage> manaList;
+
+    [Header("마나텍스쳐")]
+    [SerializeField] private Texture notHaveTexture;
+    [SerializeField] private Texture haveTexture;
+
+    [Header("버튼 UI")]
+    [SerializeField] private Button summonButton;
+    [SerializeField] private Button reSummonButton;
+
+    [Header("상태창 패널")]
+    [SerializeField] private Image statePanel;
+
+    [Header("효과음")]
+    [SerializeField] private AudioSource clickSound;
+    [SerializeField] private AudioSource failSound;
+
+    [Header("컨트롤러")]
+    [SerializeField] private SummonController summonController;
+    [SerializeField] private TurnController turnController;
+    [SerializeField] private BattleController battleController;
+    [SerializeField] private PlateController plateController;
+    [SerializeField] private BattleResultController battleResultController;
+
+    private PlayerActionFlow actionFlow;
+    private PlayerView playerView;
+    private PlayerFeedbackView feedbackView;
+
+    public int currentTurn;
+    public int clearTurn;
+
+    private void Awake()
+    {
+        EnsureBattleResultController();
+
+        playerView = new PlayerView(
+            manaList,
+            notHaveTexture,
+            haveTexture,
+            summonButton,
+            reSummonButton,
+            statePanel);
+
+        feedbackView = new PlayerFeedbackView(clickSound, failSound);
+        var resourceState = new PlayerTurnResourceState();
+        var turnProgressState = new PlayerTurnProgressState();
+        var turnActions = new PlayerTurnActions(
+            turnController,
+            battleResultController);
+        var actionExecutor = new PlayerActionExecutor();
+        var summonActions = new PlayerSummonActions(
+            summonController,
+            plateController,
+            resourceState,
+            actionExecutor,
+            playerView,
+            feedbackView);
+        var attackActions = new PlayerAttackActions(
+            this,
+            summonController,
+            battleController,
+            plateController,
+            turnProgressState,
+            turnActions,
+            playerView,
+            feedbackView,
+            actionExecutor);
+
+        actionFlow = new PlayerActionFlow(
+            this,
+            summonController,
+            battleController,
+            resourceState,
+            turnProgressState,
+            turnActions,
+            summonActions,
+            attackActions,
+            playerView,
+            feedbackView);
+
+        clearTurn = actionFlow.GetClearTurn();
+        actionFlow.ResetPlayerSetting();
+    }
+
+    private void Update()
+    {
+        actionFlow.UpdateRedrawButtonState();
+    }
+
+    public void PlayerTurnStart()
+    {
+        actionFlow.StartPlayerTurn();
+    }
+
+    public void OnSummonBtnClick()
+    {
+        actionFlow.TryStartSummon();
+    }
+
+    public void PlayerTurnOverBtn()
+    {
+        actionFlow.TryEndPlayerTurn();
+    }
+
+    public void OnRedrawButtonClick()
+    {
+        actionFlow.TryStartRedraw();
+    }
+
+    public void OnAttackBtnClick()
+    {
+        actionFlow.TryExecuteNormalAttack();
+    }
+
+    public void OnSpecialAttackBtnClick()
+    {
+        actionFlow.TryExecuteSpecialAttack();
+    }
+
+    public void SetHasSummonedThisTurn(bool value)
+    {
+        actionFlow.SetHasSummonedThisTurn(value);
+    }
+
+    public bool HasSummonedThisTurn()
+    {
+        return actionFlow.HasSummonedThisTurn();
+    }
+
+    public void UpdateManaUI()
+    {
+        actionFlow.UpdateManaUI();
+    }
+
+    public void AddMana()
+    {
+        actionFlow.AddMana();
+    }
+
+    public void SetSelectedPlateIndex(int selectedPlateIndex)
+    {
+        actionFlow.SetSelectedPlateIndex(selectedPlateIndex);
+    }
+
+    public void TurnOver()
+    {
+        actionFlow.BattleFailResultTry();
+    }
+
+    private void EnsureBattleResultController()
+    {
+        if (battleResultController != null)
+        {
+            return;
+        }
+
+        battleResultController = GetComponent<BattleResultController>();
+        if (battleResultController == null)
+        {
+            battleResultController = gameObject.AddComponent<BattleResultController>();
+        }
+    }
+}
+"
+]]></message>
+                <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00007] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00000] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Player_DelegatesSpecialAttackTargetTypeToBattleController () [0x00022] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:138
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1037" name="Player_UsesRedrawButtonHandlerName" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Player_UsesRedrawButtonHandlerName" methodname="Player_UsesRedrawButtonHandlerName" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="91986942" result="Failed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003350" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "actionController.TryStartRedraw();"
+  But was:  "using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+// 역할: Unity 이벤트와 씬 연결을 유지하고 플레이어 행동, UI, 피드백 책임을 연결한다.
+public class PlayerController : MonoBehaviour
+{
+    [Header("마나UI")]
+    [SerializeField] private List<RawImage> manaList;
+
+    [Header("마나텍스쳐")]
+    [SerializeField] private Texture notHaveTexture;
+    [SerializeField] private Texture haveTexture;
+
+    [Header("버튼 UI")]
+    [SerializeField] private Button summonButton;
+    [SerializeField] private Button reSummonButton;
+
+    [Header("상태창 패널")]
+    [SerializeField] private Image statePanel;
+
+    [Header("효과음")]
+    [SerializeField] private AudioSource clickSound;
+    [SerializeField] private AudioSource failSound;
+
+    [Header("컨트롤러")]
+    [SerializeField] private SummonController summonController;
+    [SerializeField] private TurnController turnController;
+    [SerializeField] private BattleController battleController;
+    [SerializeField] private PlateController plateController;
+    [SerializeField] private BattleResultController battleResultController;
+
+    private PlayerActionFlow actionFlow;
+    private PlayerView playerView;
+    private PlayerFeedbackView feedbackView;
+
+    public int currentTurn;
+    public int clearTurn;
+
+    private void Awake()
+    {
+        EnsureBattleResultController();
+
+        playerView = new PlayerView(
+            manaList,
+            notHaveTexture,
+            haveTexture,
+            summonButton,
+            reSummonButton,
+            statePanel);
+
+        feedbackView = new PlayerFeedbackView(clickSound, failSound);
+        var resourceState = new PlayerTurnResourceState();
+        var turnProgressState = new PlayerTurnProgressState();
+        var turnActions = new PlayerTurnActions(
+            turnController,
+            battleResultController);
+        var actionExecutor = new PlayerActionExecutor();
+        var summonActions = new PlayerSummonActions(
+            summonController,
+            plateController,
+            resourceState,
+            actionExecutor,
+            playerView,
+            feedbackView);
+        var attackActions = new PlayerAttackActions(
+            this,
+            summonController,
+            battleController,
+            plateController,
+            turnProgressState,
+            turnActions,
+            playerView,
+            feedbackView,
+            actionExecutor);
+
+        actionFlow = new PlayerActionFlow(
+            this,
+            summonController,
+            battleController,
+            resourceState,
+            turnProgressState,
+            turnActions,
+            summonActions,
+            attackActions,
+            playerView,
+            feedbackView);
+
+        clearTurn = actionFlow.GetClearTurn();
+        actionFlow.ResetPlayerSetting();
+    }
+
+    private void Update()
+    {
+        actionFlow.UpdateRedrawButtonState();
+    }
+
+    public void PlayerTurnStart()
+    {
+        actionFlow.StartPlayerTurn();
+    }
+
+    public void OnSummonBtnClick()
+    {
+        actionFlow.TryStartSummon();
+    }
+
+    public void PlayerTurnOverBtn()
+    {
+        actionFlow.TryEndPlayerTurn();
+    }
+
+    public void OnRedrawButtonClick()
+    {
+        actionFlow.TryStartRedraw();
+    }
+
+    public void OnAttackBtnClick()
+    {
+        actionFlow.TryExecuteNormalAttack();
+    }
+
+    public void OnSpecialAttackBtnClick()
+    {
+        actionFlow.TryExecuteSpecialAttack();
+    }
+
+    public void SetHasSummonedThisTurn(bool value)
+    {
+        actionFlow.SetHasSummonedThisTurn(value);
+    }
+
+    public bool HasSummonedThisTurn()
+    {
+        return actionFlow.HasSummonedThisTurn();
+    }
+
+    public void UpdateManaUI()
+    {
+        actionFlow.UpdateManaUI();
+    }
+
+    public void AddMana()
+    {
+        actionFlow.AddMana();
+    }
+
+    public void SetSelectedPlateIndex(int selectedPlateIndex)
+    {
+        actionFlow.SetSelectedPlateIndex(selectedPlateIndex);
+    }
+
+    public void TurnOver()
+    {
+        actionFlow.BattleFailResultTry();
+    }
+
+    private void EnsureBattleResultController()
+    {
+        if (battleResultController != null)
+        {
+            return;
+        }
+
+        battleResultController = GetComponent<BattleResultController>();
+        if (battleResultController == null)
+        {
+            battleResultController = gameObject.AddComponent<BattleResultController>();
+        }
+    }
+}
+"
+]]></message>
+                <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00007] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00000] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Player_UsesRedrawButtonHandlerName () [0x00023] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:125
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1039" name="Player_UsesSingleTargetPlateSelectionWaitFlow" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Player_UsesSingleTargetPlateSelectionWaitFlow" methodname="Player_UsesSingleTargetPlateSelectionWaitFlow" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1909716611" result="Failed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003807" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "actionController.TryExecuteSpecialAttack();"
+  But was:  "using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+// 역할: Unity 이벤트와 씬 연결을 유지하고 플레이어 행동, UI, 피드백 책임을 연결한다.
+public class PlayerController : MonoBehaviour
+{
+    [Header("마나UI")]
+    [SerializeField] private List<RawImage> manaList;
+
+    [Header("마나텍스쳐")]
+    [SerializeField] private Texture notHaveTexture;
+    [SerializeField] private Texture haveTexture;
+
+    [Header("버튼 UI")]
+    [SerializeField] private Button summonButton;
+    [SerializeField] private Button reSummonButton;
+
+    [Header("상태창 패널")]
+    [SerializeField] private Image statePanel;
+
+    [Header("효과음")]
+    [SerializeField] private AudioSource clickSound;
+    [SerializeField] private AudioSource failSound;
+
+    [Header("컨트롤러")]
+    [SerializeField] private SummonController summonController;
+    [SerializeField] private TurnController turnController;
+    [SerializeField] private BattleController battleController;
+    [SerializeField] private PlateController plateController;
+    [SerializeField] private BattleResultController battleResultController;
+
+    private PlayerActionFlow actionFlow;
+    private PlayerView playerView;
+    private PlayerFeedbackView feedbackView;
+
+    public int currentTurn;
+    public int clearTurn;
+
+    private void Awake()
+    {
+        EnsureBattleResultController();
+
+        playerView = new PlayerView(
+            manaList,
+            notHaveTexture,
+            haveTexture,
+            summonButton,
+            reSummonButton,
+            statePanel);
+
+        feedbackView = new PlayerFeedbackView(clickSound, failSound);
+        var resourceState = new PlayerTurnResourceState();
+        var turnProgressState = new PlayerTurnProgressState();
+        var turnActions = new PlayerTurnActions(
+            turnController,
+            battleResultController);
+        var actionExecutor = new PlayerActionExecutor();
+        var summonActions = new PlayerSummonActions(
+            summonController,
+            plateController,
+            resourceState,
+            actionExecutor,
+            playerView,
+            feedbackView);
+        var attackActions = new PlayerAttackActions(
+            this,
+            summonController,
+            battleController,
+            plateController,
+            turnProgressState,
+            turnActions,
+            playerView,
+            feedbackView,
+            actionExecutor);
+
+        actionFlow = new PlayerActionFlow(
+            this,
+            summonController,
+            battleController,
+            resourceState,
+            turnProgressState,
+            turnActions,
+            summonActions,
+            attackActions,
+            playerView,
+            feedbackView);
+
+        clearTurn = actionFlow.GetClearTurn();
+        actionFlow.ResetPlayerSetting();
+    }
+
+    private void Update()
+    {
+        actionFlow.UpdateRedrawButtonState();
+    }
+
+    public void PlayerTurnStart()
+    {
+        actionFlow.StartPlayerTurn();
+    }
+
+    public void OnSummonBtnClick()
+    {
+        actionFlow.TryStartSummon();
+    }
+
+    public void PlayerTurnOverBtn()
+    {
+        actionFlow.TryEndPlayerTurn();
+    }
+
+    public void OnRedrawButtonClick()
+    {
+        actionFlow.TryStartRedraw();
+    }
+
+    public void OnAttackBtnClick()
+    {
+        actionFlow.TryExecuteNormalAttack();
+    }
+
+    public void OnSpecialAttackBtnClick()
+    {
+        actionFlow.TryExecuteSpecialAttack();
+    }
+
+    public void SetHasSummonedThisTurn(bool value)
+    {
+        actionFlow.SetHasSummonedThisTurn(value);
+    }
+
+    public bool HasSummonedThisTurn()
+    {
+        return actionFlow.HasSummonedThisTurn();
+    }
+
+    public void UpdateManaUI()
+    {
+        actionFlow.UpdateManaUI();
+    }
+
+    public void AddMana()
+    {
+        actionFlow.AddMana();
+    }
+
+    public void SetSelectedPlateIndex(int selectedPlateIndex)
+    {
+        actionFlow.SetSelectedPlateIndex(selectedPlateIndex);
+    }
+
+    public void TurnOver()
+    {
+        actionFlow.BattleFailResultTry();
+    }
+
+    private void EnsureBattleResultController()
+    {
+        if (battleResultController != null)
+        {
+            return;
+        }
+
+        battleResultController = GetComponent<BattleResultController>();
+        if (battleResultController == null)
+        {
+            battleResultController = gameObject.AddComponent<BattleResultController>();
+        }
+    }
+}
+"
+]]></message>
+                <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00007] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00000] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Player_UsesSingleTargetPlateSelectionWaitFlow () [0x00017] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:160
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1053" name="PlayerAttackPrediction_DefaultNormalAttackTargetsEnemyPlateIndex" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlayerAttackPrediction_DefaultNormalAttackTargetsEnemyPlateIndex" methodname="PlayerAttackPrediction_DefaultNormalAttackTargetsEnemyPlateIndex" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1339487460" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001877" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1062" name="PlayerAttackPredictionListBuilder_RestoresAdjustedEnemyPlatesAfterPrediction" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlayerAttackPredictionListBuilder_RestoresAdjustedEnemyPlatesAfterPrediction" methodname="PlayerAttackPredictionListBuilder_RestoresAdjustedEnemyPlatesAfterPrediction" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1209990265" result="Failed" label="Error" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002461" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\EnemyAction\Prediction\EnemyPredictionPlates.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlayerAttackPredictionListBuilder_RestoresAdjustedEnemyPlatesAfterPrediction () [0x0000c] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:655 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1061" name="PlayerAttackPredictionListBuilder_UsesStoredStatusDamageForPrediction" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlayerAttackPredictionListBuilder_UsesStoredStatusDamageForPrediction" methodname="PlayerAttackPredictionListBuilder_UsesStoredStatusDamageForPrediction" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="205218457" result="Failed" label="Error" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001356" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\EnemyAction\Prediction\EnemyPredictionPlates.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.PlayerAttackPredictionListBuilder_UsesStoredStatusDamageForPrediction () [0x00001] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:627 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1031" name="StartSummon_SetsDrawStateBeforeBranching" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.StartSummon_SetsDrawStateBeforeBranching" methodname="StartSummon_SetsDrawStateBeforeBranching" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1763247465" result="Failed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002357" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  StartSummon should enter draw state.
+  Expected: greater than 2403
+  But was:  -1
+]]></message>
+                <stack-trace><![CDATA[at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.StartSummon_SetsDrawStateBeforeBranching () [0x00044] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:17
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1047" name="Summon_GuardsNullSpecialAttackArrays" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.Summon_GuardsNullSpecialAttackArrays" methodname="Summon_GuardsNullSpecialAttackArrays" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="501787345" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003349" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="SummonController_DelegatesRedrawPlateSelection" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.SummonController_DelegatesRedrawPlateSelection" methodname="SummonController_DelegatesRedrawPlateSelection" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="1414955264" result="Failed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.003719" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "plateSelectionController.ShowRedrawSelectablePlates(darkBackground)"
+  But was:  "using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+// 역할: 플레이어의 일반 소환과 재소환 선택 흐름을 관리한다.
+public class SummonController : MonoBehaviour
+{
+    private readonly SummonDrawService drawService = new SummonDrawService();
+    private readonly SummonPickState pickState = new SummonPickState();
+    private readonly SummonPlaceExecutor placeExecutor = new SummonPlaceExecutor();
+    private SummonPickView pickView;
+
+    [SerializeField] private GameObject darkBackground; // 재소환 배경 처리할 판넬 (반투명)
+
+    public bool isSummoning = false; // 재소환 중인지 확인하는 변수
+
+    [Header("플레이어")]
+    [SerializeField] private PlayerController player;
+   //[SerializeField] private List<Plate> playerPlates; // 플레이어가 사용할 플레이트 목록
+
+    [Header("일반 소환 관련 오브젝트")]
+    public List<Summon> summons; // 인스펙터에 넣을 소환수 오브젝트들
+    [FormerlySerializedAs("takeSummonPanel")]
+    [SerializeField] private GameObject drawPanel;
+    [FormerlySerializedAs("selectSummonPanels")]
+    [SerializeField] private List<DrawOptionPanelView> drawOptionPanels; // 패널에 띄울 소환수
+
+    [Header("재소환 관련 오브젝트")]
+    [FormerlySerializedAs("reTakeSummonPanel")]
+    [SerializeField] private GameObject redrawPanel;
+    [FormerlySerializedAs("ReselectSummonPanels")]
+    [SerializeField] private List<DrawOptionPanelView> redrawOptionPanels; // 패널에 띄울 소환수
+
+    [Header("(외부 오브젝트)컨트롤러")]
+    [SerializeField] private PlateController plateController;
+
+    [Header("효과음")]
+    [SerializeField] private AudioSource clickSound;
+
+    [Header("소환수 프리팹 목록")]
+    private PlateSelectionController plateSelectionController;
+
+
+    private void Awake()
+    {
+        pickView = new SummonPickView(
+            darkBackground,
+            drawPanel,
+            drawOptionPanels,
+            redrawPanel,
+            redrawOptionPanels);
+        plateSelectionController = new PlateSelectionController(plateController);
+        ConnectOptionPanels(drawOptionPanels);
+        ConnectOptionPanels(redrawOptionPanels);
+    }
+
+    private void ConnectOptionPanels(List<DrawOptionPanelView> optionPanels)
+    {
+        if (optionPanels == null) return;
+
+        foreach (DrawOptionPanelView optionPanel in optionPanels)
+        {
+            if (optionPanel == null) continue;
+
+            optionPanel.SetSelectionHandler(OnSelectSummon);
+        }
+    }
+
+    // 일반 및 재소환을 처리하는 메서드
+    public void StartSummon(int plateIndex, bool isRedraw)
+    {
+        StartSummoning();
+
+        if (isRedraw)
+        {
+            OpenRedrawOptions();
+            StartCoroutine(RedrawSelection(plateIndex));
+        }
+        else
+        {
+            pickView.SetDarkBackground(true);
+            OpenDrawOptions();
+            StartCoroutine(DrawSelection(plateIndex));
+        }
+    }
+
+    // 소환 코루틴 (일반 소환 로직)
+    private IEnumerator DrawSelection(int plateIndex)
+    {
+        while (pickState.SelectedSummon == null)
+        {
+            yield return null;
+        }
+
+        if (pickState.SelectedSummon != null) //3개중에 고른것
+        {
+            placeExecutor.PlaceSummon(
+                plateController,
+                player,
+                plateIndex,
+                pickState.SelectedSummon);
+            Debug.Log($"플레이트 {plateIndex}에 소환 완료.");
+        }
+
+        FinishPickFlow(shouldShowAllPlates: false);
+       
+    }
+
+    // 재소환 코루틴 (재소환 로직)
+    private IEnumerator RedrawSelection(int plateIndex)
+    {
+        while (pickState.SelectedSummon == null)
+        {
+            yield return null;
+        }
+
+        if (pickState.SelectedSummon != null)
+        {
+            placeExecutor.PlaceRedrawSummon(
+                plateController,
+                player,
+                plateIndex,
+                pickState.SelectedSummon);
+            Debug.Log($"플레이트 {plateIndex}에 재소환 완료.");
+        }
+
+        FinishPickFlow(shouldShowAllPlates: true);
+
+    }
+
+    //차례로 재소환 로직
+    public bool StartRedraw()
+    {
+        if (!plateSelectionController.CanStartRedrawSelection())
+        {
+            return false;
+        }
+
+        StartSummoning();
+        pickView.SetDarkBackground(true);
+        plateSelectionController.ShowRedrawSelectablePlates();
+        return true;
+    }
+
+    //재소환 중일때 플레이트 클릭시 이 메소드가 호출됨. 선택한 플레이트의 번호를 가져옴
+    public void SelectPlate(Plate plate)
+    {
+        if (!plateSelectionController.TryGetPlayerPlateIndex(plate, out int selectedPlateIndex))
+        {
+            return;
+        }
+
+        pickState.SetSelectedPlateIndex(selectedPlateIndex);
+        StartRedrawOptionSelection();
+        clickSound.Play();
+        Debug.Log($"플레이트 {selectedPlateIndex}가 선택되었습니다.");
+    }
+
+    //재소환 시킬 플레이트에 넣을 소환수를 선택하는 오브젝트 활성화
+    private void StartRedrawOptionSelection()
+    {
+        StartSummon(pickState.SelectedPlateIndex, true); //소환을 시작(선택한 인덱스와 재소환여부를 true하여 호출)
+    }
+
+    private void OpenDrawOptions()
+    {
+        pickView.ShowDrawOptions(drawService.CreateDrawOptions(summons));
+        pickState.ClearSelectedSummon();
+    }
+
+    //재소환시 소환시킬 소환수 선택
+    private void OpenRedrawOptions()
+    {
+        plateController.HideAllPlates();
+        pickView.ShowRedrawOptions(drawService.CreateDrawOptions(summons));
+        pickState.ClearSelectedSummon();
+    }
+
+    // 소환 중인지 확인
+    public bool IsSummoning()
+    {
+        return pickState.IsSummoning;
+    }
+
+    // 소환수 선택
+    public void OnSelectSummon(Summon summon)
+    {
+        pickState.SetSelectedSummon(summon);
+        Debug.Log($"{pickState.SelectedSummon.GetSummonName()} 소환수를 선택했습니다.");
+        plateSelectionController.RestorePlayerPlateSelectionView();
+        pickView.HideOptionPanels();
+        clickSound.Play();
+    }
+
+    private void StartSummoning()
+    {
+        pickState.StartSummoning();
+        isSummoning = pickState.IsSummoning;
+    }
+
+    private void FinishSummoning()
+    {
+        pickState.FinishSummoning();
+        isSummoning = pickState.IsSummoning;
+    }
+
+    private void FinishPickFlow(bool shouldShowAllPlates)
+    {
+        if (shouldShowAllPlates)
+        {
+            plateController.ShowAllPlates();
+        }
+
+        FinishSummoning();
+        pickView.SetDarkBackground(false);
+        plateController.ResetPlayerPlateHighlight();
+    }
+
+    // 어둡게 배경 활성화
+    public void OnDarkBackground(bool onOff)
+    {
+        pickView.SetDarkBackground(onOff);
+    }
+
+    public bool GetIsSummoningBackGroundActive()
+    {
+        return pickView.IsDarkBackgroundActive();
+    }
+
+    public int GetPlayerPlateIndex(Plate selectedPlate)
+    {
+        return plateController.GetPlayerPlateIndex(selectedPlate);
+    }
+
+    public int GetEnermyPlateIndex(Plate selectedPlate)
+    {
+        return plateController.GetEnermyPlateIndex(selectedPlate);
+    }
+
+    public void SetPlayerSelectedIndex(int index)
+    {
+        player.SetSelectedPlateIndex(index);
+    }
+
+}
+"
+]]></message>
+                <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00007] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00000] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.SummonController_DelegatesRedrawPlateSelection () [0x0002f] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:113
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1032" name="SummonController_UsesDrawNamesForInternalSelectionFlow" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.SummonController_UsesDrawNamesForInternalSelectionFlow" methodname="SummonController_UsesDrawNamesForInternalSelectionFlow" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="309537629" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.005478" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="SummonController_UsesDrawNamesForSerializedFieldsSafely" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.SummonController_UsesDrawNamesForSerializedFieldsSafely" methodname="SummonController_UsesDrawNamesForSerializedFieldsSafely" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="2123048846" result="Failed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002803" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: String containing "drawPanel.SetActive(true)"
+  But was:  "using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+// 역할: 플레이어의 일반 소환과 재소환 선택 흐름을 관리한다.
+public class SummonController : MonoBehaviour
+{
+    private readonly SummonDrawService drawService = new SummonDrawService();
+    private readonly SummonPickState pickState = new SummonPickState();
+    private readonly SummonPlaceExecutor placeExecutor = new SummonPlaceExecutor();
+    private SummonPickView pickView;
+
+    [SerializeField] private GameObject darkBackground; // 재소환 배경 처리할 판넬 (반투명)
+
+    public bool isSummoning = false; // 재소환 중인지 확인하는 변수
+
+    [Header("플레이어")]
+    [SerializeField] private PlayerController player;
+   //[SerializeField] private List<Plate> playerPlates; // 플레이어가 사용할 플레이트 목록
+
+    [Header("일반 소환 관련 오브젝트")]
+    public List<Summon> summons; // 인스펙터에 넣을 소환수 오브젝트들
+    [FormerlySerializedAs("takeSummonPanel")]
+    [SerializeField] private GameObject drawPanel;
+    [FormerlySerializedAs("selectSummonPanels")]
+    [SerializeField] private List<DrawOptionPanelView> drawOptionPanels; // 패널에 띄울 소환수
+
+    [Header("재소환 관련 오브젝트")]
+    [FormerlySerializedAs("reTakeSummonPanel")]
+    [SerializeField] private GameObject redrawPanel;
+    [FormerlySerializedAs("ReselectSummonPanels")]
+    [SerializeField] private List<DrawOptionPanelView> redrawOptionPanels; // 패널에 띄울 소환수
+
+    [Header("(외부 오브젝트)컨트롤러")]
+    [SerializeField] private PlateController plateController;
+
+    [Header("효과음")]
+    [SerializeField] private AudioSource clickSound;
+
+    [Header("소환수 프리팹 목록")]
+    private PlateSelectionController plateSelectionController;
+
+
+    private void Awake()
+    {
+        pickView = new SummonPickView(
+            darkBackground,
+            drawPanel,
+            drawOptionPanels,
+            redrawPanel,
+            redrawOptionPanels);
+        plateSelectionController = new PlateSelectionController(plateController);
+        ConnectOptionPanels(drawOptionPanels);
+        ConnectOptionPanels(redrawOptionPanels);
+    }
+
+    private void ConnectOptionPanels(List<DrawOptionPanelView> optionPanels)
+    {
+        if (optionPanels == null) return;
+
+        foreach (DrawOptionPanelView optionPanel in optionPanels)
+        {
+            if (optionPanel == null) continue;
+
+            optionPanel.SetSelectionHandler(OnSelectSummon);
+        }
+    }
+
+    // 일반 및 재소환을 처리하는 메서드
+    public void StartSummon(int plateIndex, bool isRedraw)
+    {
+        StartSummoning();
+
+        if (isRedraw)
+        {
+            OpenRedrawOptions();
+            StartCoroutine(RedrawSelection(plateIndex));
+        }
+        else
+        {
+            pickView.SetDarkBackground(true);
+            OpenDrawOptions();
+            StartCoroutine(DrawSelection(plateIndex));
+        }
+    }
+
+    // 소환 코루틴 (일반 소환 로직)
+    private IEnumerator DrawSelection(int plateIndex)
+    {
+        while (pickState.SelectedSummon == null)
+        {
+            yield return null;
+        }
+
+        if (pickState.SelectedSummon != null) //3개중에 고른것
+        {
+            placeExecutor.PlaceSummon(
+                plateController,
+                player,
+                plateIndex,
+                pickState.SelectedSummon);
+            Debug.Log($"플레이트 {plateIndex}에 소환 완료.");
+        }
+
+        FinishPickFlow(shouldShowAllPlates: false);
+       
+    }
+
+    // 재소환 코루틴 (재소환 로직)
+    private IEnumerator RedrawSelection(int plateIndex)
+    {
+        while (pickState.SelectedSummon == null)
+        {
+            yield return null;
+        }
+
+        if (pickState.SelectedSummon != null)
+        {
+            placeExecutor.PlaceRedrawSummon(
+                plateController,
+                player,
+                plateIndex,
+                pickState.SelectedSummon);
+            Debug.Log($"플레이트 {plateIndex}에 재소환 완료.");
+        }
+
+        FinishPickFlow(shouldShowAllPlates: true);
+
+    }
+
+    //차례로 재소환 로직
+    public bool StartRedraw()
+    {
+        if (!plateSelectionController.CanStartRedrawSelection())
+        {
+            return false;
+        }
+
+        StartSummoning();
+        pickView.SetDarkBackground(true);
+        plateSelectionController.ShowRedrawSelectablePlates();
+        return true;
+    }
+
+    //재소환 중일때 플레이트 클릭시 이 메소드가 호출됨. 선택한 플레이트의 번호를 가져옴
+    public void SelectPlate(Plate plate)
+    {
+        if (!plateSelectionController.TryGetPlayerPlateIndex(plate, out int selectedPlateIndex))
+        {
+            return;
+        }
+
+        pickState.SetSelectedPlateIndex(selectedPlateIndex);
+        StartRedrawOptionSelection();
+        clickSound.Play();
+        Debug.Log($"플레이트 {selectedPlateIndex}가 선택되었습니다.");
+    }
+
+    //재소환 시킬 플레이트에 넣을 소환수를 선택하는 오브젝트 활성화
+    private void StartRedrawOptionSelection()
+    {
+        StartSummon(pickState.SelectedPlateIndex, true); //소환을 시작(선택한 인덱스와 재소환여부를 true하여 호출)
+    }
+
+    private void OpenDrawOptions()
+    {
+        pickView.ShowDrawOptions(drawService.CreateDrawOptions(summons));
+        pickState.ClearSelectedSummon();
+    }
+
+    //재소환시 소환시킬 소환수 선택
+    private void OpenRedrawOptions()
+    {
+        plateController.HideAllPlates();
+        pickView.ShowRedrawOptions(drawService.CreateDrawOptions(summons));
+        pickState.ClearSelectedSummon();
+    }
+
+    // 소환 중인지 확인
+    public bool IsSummoning()
+    {
+        return pickState.IsSummoning;
+    }
+
+    // 소환수 선택
+    public void OnSelectSummon(Summon summon)
+    {
+        pickState.SetSelectedSummon(summon);
+        Debug.Log($"{pickState.SelectedSummon.GetSummonName()} 소환수를 선택했습니다.");
+        plateSelectionController.RestorePlayerPlateSelectionView();
+        pickView.HideOptionPanels();
+        clickSound.Play();
+    }
+
+    private void StartSummoning()
+    {
+        pickState.StartSummoning();
+        isSummoning = pickState.IsSummoning;
+    }
+
+    private void FinishSummoning()
+    {
+        pickState.FinishSummoning();
+        isSummoning = pickState.IsSummoning;
+    }
+
+    private void FinishPickFlow(bool shouldShowAllPlates)
+    {
+        if (shouldShowAllPlates)
+        {
+            plateController.ShowAllPlates();
+        }
+
+        FinishSummoning();
+        pickView.SetDarkBackground(false);
+        plateController.ResetPlayerPlateHighlight();
+    }
+
+    // 어둡게 배경 활성화
+    public void OnDarkBackground(bool onOff)
+    {
+        pickView.SetDarkBackground(onOff);
+    }
+
+    public bool GetIsSummoningBackGroundActive()
+    {
+        return pickView.IsDarkBackgroundActive();
+    }
+
+    public int GetPlayerPlateIndex(Plate selectedPlate)
+    {
+        return plateController.GetPlayerPlateIndex(selectedPlate);
+    }
+
+    public int GetEnermyPlateIndex(Plate selectedPlate)
+    {
+        return plateController.GetEnermyPlateIndex(selectedPlate);
+    }
+
+    public void SetPlayerSelectedIndex(int index)
+    {
+        player.SetSelectedPlateIndex(index);
+    }
+
+}
+"
+]]></message>
+                <stack-trace><![CDATA[at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual, System.String message, System.Object[] args) [0x00007] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at NUnit.Framework.StringAssert.Contains (System.String expected, System.String actual) [0x00000] in <956b82cfdef641c6bc6a0e5b19798f05>:0
+at Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.SummonController_UsesDrawNamesForSerializedFieldsSafely () [0x00078] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\PlateSummonDrawStaticRegressionTests.cs:69
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1043" name="TargetedAttackStrategy_GuardsInvalidTargetIndex" fullname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests.TargetedAttackStrategy_GuardsInvalidTargetIndex" methodname="TargetedAttackStrategy_GuardsInvalidTargetIndex" classname="Summoner.EditModeTests.PlateSummonDrawStaticRegressionTests" runstate="Runnable" seed="963549294" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002843" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1065" name="StageEnemyPlacementStaticRegressionTests" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" testcasecount="9" result="Failed" site="Child" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.055160" total="9" passed="8" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1067" name="BattleEnemyPlacementController_AppliesDataThroughEnemyPlates" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.BattleEnemyPlacementController_AppliesDataThroughEnemyPlates" methodname="BattleEnemyPlacementController_AppliesDataThroughEnemyPlates" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="1618979819" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002083" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1071" name="BattleEnemyPlacementController_GuardsMissingReferencesAndInvalidSlots" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.BattleEnemyPlacementController_GuardsMissingReferencesAndInvalidSlots" methodname="BattleEnemyPlacementController_GuardsMissingReferencesAndInvalidSlots" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="1306979548" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.004608" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="BattleStageContext_UsesSceneDefaultStageBeforeSaveFallback" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.BattleStageContext_UsesSceneDefaultStageBeforeSaveFallback" methodname="BattleStageContext_UsesSceneDefaultStageBeforeSaveFallback" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="1563736217" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001405" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1068" name="BattleStartController_ControlsEnemyPlacementBeforeTurnStart" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.BattleStartController_ControlsEnemyPlacementBeforeTurnStart" methodname="BattleStartController_ControlsEnemyPlacementBeforeTurnStart" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="1614775699" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001893" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1074" name="FightSceneOne_DoesNotKeepDirectEnemySummonOverride" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.FightSceneOne_DoesNotKeepDirectEnemySummonOverride" methodname="FightSceneOne_DoesNotKeepDirectEnemySummonOverride" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="1756762652" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.007662" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1073" name="FightSceneOne_ReferencesStageEnemyPlacementControllerAndData" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.FightSceneOne_ReferencesStageEnemyPlacementControllerAndData" methodname="FightSceneOne_ReferencesStageEnemyPlacementControllerAndData" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="1220669552" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.027647" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1066" name="StageEnemyPlacementData_UsesExplicitStageAndEnemySlots" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.StageEnemyPlacementData_UsesExplicitStageAndEnemySlots" methodname="StageEnemyPlacementData_UsesExplicitStageAndEnemySlots" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="1812076256" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002065" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1072" name="StageEnemyPlacementDataAsset_ContainsStageOneSlimePlacement" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.StageEnemyPlacementDataAsset_ContainsStageOneSlimePlacement" methodname="StageEnemyPlacementDataAsset_ContainsStageOneSlimePlacement" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="1871444400" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.002293" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="TurnController_ExposesTurnStartInitializeForBattleStartFlow" fullname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.TurnController_ExposesTurnStartInitializeForBattleStartFlow" methodname="TurnController_ExposesTurnStartInitializeForBattleStartFlow" classname="Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests" runstate="Runnable" seed="2032362443" result="Failed" label="Error" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:04Z" duration="0.001449" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[System.IO.FileNotFoundException : Could not find file "D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Script\Battle\Flow\TurnController.cs"]]></message>
+                <stack-trace><![CDATA[  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.IO.FileOptions options) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare,int,System.IO.FileOptions)
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks, System.Int32 bufferSize) [0x00055] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, System.Boolean detectEncodingFromByteOrderMarks) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.StreamReader..ctor(string,System.Text.Encoding,bool)
+  at System.IO.File.InternalReadAllText (System.String path, System.Text.Encoding encoding) [0x00000] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at System.IO.File.ReadAllText (System.String path) [0x0002c] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 
+  at Summoner.EditModeTests.StageEnemyPlacementStaticRegressionTests.TurnController_ExposesTurnStartInitializeForBattleStartFlow () [0x00001] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\StageEnemyPlacementStaticRegressionTests.cs:63 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <8ce0bd04a7a04b4b9395538239d3fdd8>:0 ]]></stack-trace>
+              </failure>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1075" name="StageSceneConnectionEditModeTests" fullname="Summoner.EditModeTests.StageSceneConnectionEditModeTests" classname="Summoner.EditModeTests.StageSceneConnectionEditModeTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:11Z" duration="6.553923" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <test-case id="1080" name="FightSceneOne_HasOrganizedUiGroups" fullname="Summoner.EditModeTests.StageSceneConnectionEditModeTests.FightSceneOne_HasOrganizedUiGroups" methodname="FightSceneOne_HasOrganizedUiGroups" classname="Summoner.EditModeTests.StageSceneConnectionEditModeTests" runstate="Runnable" seed="177712185" result="Passed" start-time="2026-06-20 05:12:04Z" end-time="2026-06-20 05:12:06Z" duration="1.507094" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1078" name="FightScreens_HaveRequiredResultAlertConnections" fullname="Summoner.EditModeTests.StageSceneConnectionEditModeTests.FightScreens_HaveRequiredResultAlertConnections" methodname="FightScreens_HaveRequiredResultAlertConnections" classname="Summoner.EditModeTests.StageSceneConnectionEditModeTests" runstate="Runnable" seed="489487822" result="Passed" start-time="2026-06-20 05:12:06Z" end-time="2026-06-20 05:12:09Z" duration="2.797396" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1079" name="HudScene_HasOrganizedRootGroups" fullname="Summoner.EditModeTests.StageSceneConnectionEditModeTests.HudScene_HasOrganizedRootGroups" methodname="HudScene_HasOrganizedRootGroups" classname="Summoner.EditModeTests.StageSceneConnectionEditModeTests" runstate="Runnable" seed="304006560" result="Passed" start-time="2026-06-20 05:12:09Z" end-time="2026-06-20 05:12:09Z" duration="0.638635" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1077" name="StageSelectScreen_HasRequiredUiConnections" fullname="Summoner.EditModeTests.StageSceneConnectionEditModeTests.StageSelectScreen_HasRequiredUiConnections" methodname="StageSelectScreen_HasRequiredUiConnections" classname="Summoner.EditModeTests.StageSceneConnectionEditModeTests" runstate="Runnable" seed="1217086901" result="Passed" start-time="2026-06-20 05:12:09Z" end-time="2026-06-20 05:12:10Z" duration="1.033563" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1076" name="StartScreen_HasRequiredUiConnections" fullname="Summoner.EditModeTests.StageSceneConnectionEditModeTests.StartScreen_HasRequiredUiConnections" methodname="StartScreen_HasRequiredUiConnections" classname="Summoner.EditModeTests.StageSceneConnectionEditModeTests" runstate="Runnable" seed="2028784403" result="Passed" start-time="2026-06-20 05:12:10Z" end-time="2026-06-20 05:12:11Z" duration="0.572873" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1081" name="StorySystemStaticRegressionTests" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:13Z" duration="1.706461" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <test-case id="1099" name="DialogueCsvParse_KeepsExistingRowParsingRules" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.DialogueCsvParse_KeepsExistingRowParsingRules" methodname="DialogueCsvParse_KeepsExistingRowParsingRules" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1361742925" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003406" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1100" name="DialogueDatabaseLoad_UsesResourcesTextAsset" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.DialogueDatabaseLoad_UsesResourcesTextAsset" methodname="DialogueDatabaseLoad_UsesResourcesTextAsset" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1200658682" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.004238" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1094" name="DialogueLineShow_BuildsExistingCombinedLineFormat" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.DialogueLineShow_BuildsExistingCombinedLineFormat" methodname="DialogueLineShow_BuildsExistingCombinedLineFormat" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="753079103" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003538" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1098" name="DialogueParser_DelegatesLoadAndCsvParse" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.DialogueParser_DelegatesLoadAndCsvParse" methodname="DialogueParser_DelegatesLoadAndCsvParse" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="76307630" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003337" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1089" name="FadePanelView_ClassNameMatchesFileName" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.FadePanelView_ClassNameMatchesFileName" methodname="FadePanelView_ClassNameMatchesFileName" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1256256364" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003806" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1084" name="FadePanelView_GuidIsStillUsedByStoryScenes" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.FadePanelView_GuidIsStillUsedByStoryScenes" methodname="FadePanelView_GuidIsStillUsedByStoryScenes" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="582773745" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.098136" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1083" name="FadePanelView_KeepsOriginalSceneGuid" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.FadePanelView_KeepsOriginalSceneGuid" methodname="FadePanelView_KeepsOriginalSceneGuid" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="438514716" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003841" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1097" name="InteractionController_DelegatesDialogueProgress" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.InteractionController_DelegatesDialogueProgress" methodname="InteractionController_DelegatesDialogueProgress" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="409223022" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003436" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1095" name="InteractionController_DelegatesDialogueTextOutput" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.InteractionController_DelegatesDialogueTextOutput" methodname="InteractionController_DelegatesDialogueTextOutput" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="763220452" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003633" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1093" name="InteractionController_DelegatesStoryEndSceneMove" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.InteractionController_DelegatesStoryEndSceneMove" methodname="InteractionController_DelegatesStoryEndSceneMove" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="142705314" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.004469" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1088" name="InteractionController_PreservesFadeControllerSerializedField" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.InteractionController_PreservesFadeControllerSerializedField" methodname="InteractionController_PreservesFadeControllerSerializedField" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1936002869" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.005006" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1090" name="MainSceneButtonView_ClassNameMatchesFileName" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.MainSceneButtonView_ClassNameMatchesFileName" methodname="MainSceneButtonView_ClassNameMatchesFileName" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="709409773" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.005989" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1085" name="MainSceneButtonView_KeepsOriginalThankSceneGuid" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.MainSceneButtonView_KeepsOriginalThankSceneGuid" methodname="MainSceneButtonView_KeepsOriginalThankSceneGuid" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1805405968" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.117178" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1102" name="Stage1Controller_DelegatesCommonInputFlowToBase" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.Stage1Controller_DelegatesCommonInputFlowToBase" methodname="Stage1Controller_DelegatesCommonInputFlowToBase" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="869373912" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003357" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1103" name="Stage2Controller_DelegatesCommonInputFlowToBase" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.Stage2Controller_DelegatesCommonInputFlowToBase" methodname="Stage2Controller_DelegatesCommonInputFlowToBase" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1636510245" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003190" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1104" name="Stage3Controller_DelegatesCommonInputFlowToBase" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.Stage3Controller_DelegatesCommonInputFlowToBase" methodname="Stage3Controller_DelegatesCommonInputFlowToBase" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1337985868" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003946" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1105" name="Stage5Controller_DelegatesCommonInputFlowToBase" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.Stage5Controller_DelegatesCommonInputFlowToBase" methodname="Stage5Controller_DelegatesCommonInputFlowToBase" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="544298002" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.004019" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1106" name="Stage7Controller_DelegatesCommonInputFlowToBase" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.Stage7Controller_DelegatesCommonInputFlowToBase" methodname="Stage7Controller_DelegatesCommonInputFlowToBase" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1632595330" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003383" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1096" name="StoryProgressAdvance_ReturnsDialogueLinesInExistingOrder" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.StoryProgressAdvance_ReturnsDialogueLinesInExistingOrder" methodname="StoryProgressAdvance_ReturnsDialogueLinesInExistingOrder" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1634478828" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003193" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1101" name="StoryScenarioControllerBase_OwnsCommonInputFlow" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.StoryScenarioControllerBase_OwnsCommonInputFlow" methodname="StoryScenarioControllerBase_OwnsCommonInputFlow" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="595762324" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.004018" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1092" name="StorySceneMove_ReturnsExistingSceneNames" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.StorySceneMove_ReturnsExistingSceneNames" methodname="StorySceneMove_ReturnsExistingSceneNames" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1911973285" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.003444" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1091" name="StorySkipView_ClassNameMatchesFileName" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.StorySkipView_ClassNameMatchesFileName" methodname="StorySkipView_ClassNameMatchesFileName" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="609255366" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.005628" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1086" name="StorySkipView_KeepsOriginalStorySceneGuid" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.StorySkipView_KeepsOriginalStorySceneGuid" methodname="StorySkipView_KeepsOriginalStorySceneGuid" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="886379233" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:11Z" duration="0.101759" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1087" name="StorySkipView_UnityEventsUseCurrentTypeName" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.StorySkipView_UnityEventsUseCurrentTypeName" methodname="StorySkipView_UnityEventsUseCurrentTypeName" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="1325625442" result="Passed" start-time="2026-06-20 05:12:11Z" end-time="2026-06-20 05:12:12Z" duration="0.088999" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1082" name="StoryViewOldTypeNames_DoNotReturnToScripts" fullname="Summoner.EditModeTests.StorySystemStaticRegressionTests.StoryViewOldTypeNames_DoNotReturnToScripts" methodname="StoryViewOldTypeNames_DoNotReturnToScripts" classname="Summoner.EditModeTests.StorySystemStaticRegressionTests" runstate="Runnable" seed="209690233" result="Passed" start-time="2026-06-20 05:12:12Z" end-time="2026-06-20 05:12:13Z" duration="1.203755" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1107" name="SummonDataRegressionTests" fullname="Summoner.EditModeTests.SummonDataRegressionTests" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" testcasecount="23" result="Failed" site="Child" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.335345" total="23" passed="22" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1125" name="Cat_UsesAssignedSummonData" fullname="Summoner.EditModeTests.SummonDataRegressionTests.Cat_UsesAssignedSummonData" methodname="Cat_UsesAssignedSummonData" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="1253302551" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.008782" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1115" name="EnemyAndSpiritSummons_RemoveRedundantDamageAndDeathOverrides" fullname="Summoner.EditModeTests.SummonDataRegressionTests.EnemyAndSpiritSummons_RemoveRedundantDamageAndDeathOverrides" methodname="EnemyAndSpiritSummons_RemoveRedundantDamageAndDeathOverrides" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="469380076" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.008967" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1130" name="EnemySummonDataAssets_KeepCurrentValues" fullname="Summoner.EditModeTests.SummonDataRegressionTests.EnemySummonDataAssets_KeepCurrentValues" methodname="EnemySummonDataAssets_KeepCurrentValues" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="512720526" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.021859" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1129" name="EnemySummonPrefabs_ReferenceAssignedSummonDataAssets" fullname="Summoner.EditModeTests.SummonDataRegressionTests.EnemySummonPrefabs_ReferenceAssignedSummonDataAssets" methodname="EnemySummonPrefabs_ReferenceAssignedSummonDataAssets" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="958216976" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.099879" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1122" name="EnemySummons_DoNotKeepHealthLogOnlyStart" fullname="Summoner.EditModeTests.SummonDataRegressionTests.EnemySummons_DoNotKeepHealthLogOnlyStart" methodname="EnemySummons_DoNotKeepHealthLogOnlyStart" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="2051466217" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002461" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1109" name="EnemySummons_KeepCurrentValuesBeforeDataMigration" fullname="Summoner.EditModeTests.SummonDataRegressionTests.EnemySummons_KeepCurrentValuesBeforeDataMigration" methodname="EnemySummons_KeepCurrentValuesBeforeDataMigration" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="685097318" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.011739" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1127" name="EnemySummons_UseAssignedSummonData" fullname="Summoner.EditModeTests.SummonDataRegressionTests.EnemySummons_UseAssignedSummonData" methodname="EnemySummons_UseAssignedSummonData" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="256586109" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.022025" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1116" name="PlayerDrawSummons_DoNotInitializeThroughSummonController" fullname="Summoner.EditModeTests.SummonDataRegressionTests.PlayerDrawSummons_DoNotInitializeThroughSummonController" methodname="PlayerDrawSummons_DoNotInitializeThroughSummonController" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="639966293" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001688" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1117" name="PlayerDrawSummons_SelectRankFromSummonData" fullname="Summoner.EditModeTests.SummonDataRegressionTests.PlayerDrawSummons_SelectRankFromSummonData" methodname="PlayerDrawSummons_SelectRankFromSummonData" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="1102858478" result="Failed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.003579" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at Summoner.EditModeTests.SummonDataRegressionTests.PlayerDrawSummons_SelectRankFromSummonData () [0x00039] in D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\Assets\Tests\EditMode\Editor\SummonDataRegressionTests.cs:285
+]]></stack-trace>
+              </failure>
+            </test-case>
+            <test-case id="1128" name="PlayerSummonPrefabs_ReferenceAssignedSummonDataAssets" fullname="Summoner.EditModeTests.SummonDataRegressionTests.PlayerSummonPrefabs_ReferenceAssignedSummonDataAssets" methodname="PlayerSummonPrefabs_ReferenceAssignedSummonDataAssets" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="1303998605" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.076559" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1121" name="PlayerSummons_DoNotInitializeFromStart" fullname="Summoner.EditModeTests.SummonDataRegressionTests.PlayerSummons_DoNotInitializeFromStart" methodname="PlayerSummons_DoNotInitializeFromStart" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="1649355886" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.006831" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1108" name="PlayerSummons_KeepCurrentValuesBeforeDataMigration" fullname="Summoner.EditModeTests.SummonDataRegressionTests.PlayerSummons_KeepCurrentValuesBeforeDataMigration" methodname="PlayerSummons_KeepCurrentValuesBeforeDataMigration" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="630736848" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.005972" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1114" name="PlayerSummons_RemoveRedundantDamageAndDeathOverrides" fullname="Summoner.EditModeTests.SummonDataRegressionTests.PlayerSummons_RemoveRedundantDamageAndDeathOverrides" methodname="PlayerSummons_RemoveRedundantDamageAndDeathOverrides" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="596007059" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.006380" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1126" name="PlayerSummons_UseAssignedSummonData" fullname="Summoner.EditModeTests.SummonDataRegressionTests.PlayerSummons_UseAssignedSummonData" methodname="PlayerSummons_UseAssignedSummonData" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="2029476151" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.012210" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1124" name="PlayerSummons_UseAssignedSummonData_CoversAllPlayerTypes" fullname="Summoner.EditModeTests.SummonDataRegressionTests.PlayerSummons_UseAssignedSummonData_CoversAllPlayerTypes" methodname="PlayerSummons_UseAssignedSummonData_CoversAllPlayerTypes" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="1049811775" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002927" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1110" name="SummonAttackData_CreatesCurrentAttackStrategies" fullname="Summoner.EditModeTests.SummonDataRegressionTests.SummonAttackData_CreatesCurrentAttackStrategies" methodname="SummonAttackData_CreatesCurrentAttackStrategies" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="221266526" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001894" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1112" name="SummonAttackData_DoesNotKeepDuplicateGetterNames" fullname="Summoner.EditModeTests.SummonDataRegressionTests.SummonAttackData_DoesNotKeepDuplicateGetterNames" methodname="SummonAttackData_DoesNotKeepDuplicateGetterNames" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="612969693" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000783" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1113" name="SummonAttackData_ProvidesCreatePrefixStrategyFactoryName" fullname="Summoner.EditModeTests.SummonDataRegressionTests.SummonAttackData_ProvidesCreatePrefixStrategyFactoryName" methodname="SummonAttackData_ProvidesCreatePrefixStrategyFactoryName" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="1943232892" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000523" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1111" name="SummonAttackData_ProvidesGetPrefixGetterNames" fullname="Summoner.EditModeTests.SummonDataRegressionTests.SummonAttackData_ProvidesGetPrefixGetterNames" methodname="SummonAttackData_ProvidesGetPrefixGetterNames" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="968084911" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002063" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1119" name="SummonData_DoesNotKeepDuplicateGetterNames" fullname="Summoner.EditModeTests.SummonDataRegressionTests.SummonData_DoesNotKeepDuplicateGetterNames" methodname="SummonData_DoesNotKeepDuplicateGetterNames" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="666089046" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001160" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1120" name="SummonData_ProvidesCreatePrefixStrategyFactoryNames" fullname="Summoner.EditModeTests.SummonDataRegressionTests.SummonData_ProvidesCreatePrefixStrategyFactoryNames" methodname="SummonData_ProvidesCreatePrefixStrategyFactoryNames" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="915804440" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001192" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1118" name="SummonData_ProvidesGetPrefixGetterNames" fullname="Summoner.EditModeTests.SummonDataRegressionTests.SummonData_ProvidesGetPrefixGetterNames" methodname="SummonData_ProvidesGetPrefixGetterNames" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="1752712249" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001406" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1123" name="SummonFallbackHelpers_UseSetPrefixNames" fullname="Summoner.EditModeTests.SummonDataRegressionTests.SummonFallbackHelpers_UseSetPrefixNames" methodname="SummonFallbackHelpers_UseSetPrefixNames" classname="Summoner.EditModeTests.SummonDataRegressionTests" runstate="Runnable" seed="1658022879" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.025611" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1131" name="SummonFeedbackSeparationTests" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.028839" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <test-case id="1133" name="AttackTargetSelection_IsSeparatedFromStatusEffect" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.AttackTargetSelection_IsSeparatedFromStatusEffect" methodname="AttackTargetSelection_IsSeparatedFromStatusEffect" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="1764720965" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002690" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1132" name="ShieldStatusEffect_DoesNotSpendTurnTime" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.ShieldStatusEffect_DoesNotSpendTurnTime" methodname="ShieldStatusEffect_DoesNotSpendTurnTime" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="297191421" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002329" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1138" name="StatusEffectController_OwnsActiveStatusQueries" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.StatusEffectController_OwnsActiveStatusQueries" methodname="StatusEffectController_OwnsActiveStatusQueries" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="1016099063" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002532" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1139" name="Summon_DelegatesImageOperationsToSummonImageView" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.Summon_DelegatesImageOperationsToSummonImageView" methodname="Summon_DelegatesImageOperationsToSummonImageView" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="2020145455" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.005517" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1136" name="Summon_DoesNotDeclareFeedbackBridgeFields" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.Summon_DoesNotDeclareFeedbackBridgeFields" methodname="Summon_DoesNotDeclareFeedbackBridgeFields" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="725358815" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002933" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1137" name="Summon_DoesNotOwnActiveStatusEffectList" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.Summon_DoesNotOwnActiveStatusEffectList" methodname="Summon_DoesNotOwnActiveStatusEffectList" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="272237266" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002330" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1134" name="Summon_DoesNotPlayAudioSourcesDirectly" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.Summon_DoesNotPlayAudioSourcesDirectly" methodname="Summon_DoesNotPlayAudioSourcesDirectly" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="1373280685" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.002966" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1140" name="SummonImageView_OwnsSpriteAndImageAccess" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.SummonImageView_OwnsSpriteAndImageAccess" methodname="SummonImageView_OwnsSpriteAndImageAccess" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="109784978" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001731" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1135" name="SummonSoundView_OwnsSoundPlayback" fullname="Summoner.EditModeTests.SummonFeedbackSeparationTests.SummonSoundView_OwnsSoundPlayback" methodname="SummonSoundView_OwnsSoundPlayback" classname="Summoner.EditModeTests.SummonFeedbackSeparationTests" runstate="Runnable" seed="807988188" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001222" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1141" name="SummonStatusViewTests" fullname="Summoner.EditModeTests.SummonStatusViewTests" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.018276" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties>
+              <property name="platform" value="EditMode" />
+            </properties>
+            <test-case id="1153" name="StatusEffectsShow_MultipleStatuses_ShowsFirstStatusImmediately" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_MultipleStatuses_ShowsFirstStatusImmediately" methodname="StatusEffectsShow_MultipleStatuses_ShowsFirstStatusImmediately" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="1295088020" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.004383" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-case id="1152" name="StatusEffectsShow_ResetsColor_WhenNoStatusExists" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_ResetsColor_WhenNoStatusExists" methodname="StatusEffectsShow_ResetsColor_WhenNoStatusExists" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="1403573798" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001983" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1151" name="StatusEffectsShow_SetsColorByStatus" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.009939" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties>
+                <property name="platform" value="EditMode" />
+              </properties>
+              <test-case id="1142" name="StatusEffectsShow_SetsColorByStatus(&quot;Burn&quot;,1.0f,0.35f,0.15f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;Burn&quot;,1.0f,0.35f,0.15f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="1487267159" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.001267" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1143" name="StatusEffectsShow_SetsColorByStatus(&quot;Poison&quot;,0.3f,1.0f,0.3f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;Poison&quot;,0.3f,1.0f,0.3f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="988541361" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000707" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1144" name="StatusEffectsShow_SetsColorByStatus(&quot;Stun&quot;,0.2f,0.2f,0.2f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;Stun&quot;,0.2f,0.2f,0.2f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="78623770" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000664" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1145" name="StatusEffectsShow_SetsColorByStatus(&quot;Curse&quot;,0.64f,0.19f,0.84f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;Curse&quot;,0.64f,0.19f,0.84f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="425288767" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000776" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1146" name="StatusEffectsShow_SetsColorByStatus(&quot;LifeDrain&quot;,1.0f,1.0f,0.5f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;LifeDrain&quot;,1.0f,1.0f,0.5f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="1599277354" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000843" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1147" name="StatusEffectsShow_SetsColorByStatus(&quot;Shield&quot;,0.35f,0.75f,1.0f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;Shield&quot;,0.35f,0.75f,1.0f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="555587899" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000781" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1148" name="StatusEffectsShow_SetsColorByStatus(&quot;Upgrade&quot;,0.35f,0.55f,1.0f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;Upgrade&quot;,0.35f,0.55f,1.0f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="440078435" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000699" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1149" name="StatusEffectsShow_SetsColorByStatus(&quot;OnceInvincibility&quot;,1.0f,0.85f,0.25f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;OnceInvincibility&quot;,1.0f,0.85f,0.25f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="950620079" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000726" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+              </test-case>
+              <test-case id="1150" name="StatusEffectsShow_SetsColorByStatus(&quot;Heal&quot;,0.2f,0.85f,0.35f)" fullname="Summoner.EditModeTests.SummonStatusViewTests.StatusEffectsShow_SetsColorByStatus(&quot;Heal&quot;,0.2f,0.85f,0.35f)" methodname="StatusEffectsShow_SetsColorByStatus" classname="Summoner.EditModeTests.SummonStatusViewTests" runstate="Runnable" seed="968874823" result="Passed" start-time="2026-06-20 05:12:13Z" end-time="2026-06-20 05:12:13Z" duration="0.000696" asserts="0">
+                <properties>
+                  <property name="platform" value="EditMode" />
+                </properties>
+                <output><![CDATA[Saving results to: D:\GitRepo\SUMMONER_Refactor\Workpiece\Summoner\UnityTestResults_EditMode.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
