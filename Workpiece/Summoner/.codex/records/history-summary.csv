@@ -1,5 +1,4 @@
 date,kind,id_range,domain,title,summary,verification,source
-2026-05-30,Policy,WORKFLOW,Docs,로드맵과 작업 로그 역할 분리,현재 작업판과 과거 작업 로그의 역할을 분리하고 과거 완료 요약을 WorkLogs로 이관했다.,문서 구조와 작업 로그 확인,.codex/dev-log/2026-05-30.md
 2026-05-31,Refactor,WORKLOG,Battle,전투 상태이상과 공격 처리 책임 분리,전투 상태이상 처리와 공격 처리 흐름을 더 작은 책임 단위로 나눴다.,정적 검토와 관련 기록 확인,.codex/dev-log/2026-05-31.md
 2026-05-31,Refactor,WORKLOG,Battle,승리/패배 처리 흐름 분리,Battle 결과 처리와 Alert/진행 저장 흐름의 책임 경계를 정리했다.,관련 작업 기록과 QA 기록 확인,.codex/dev-log/2026-05-31.md
 2026-05-31,Refactor,WORKLOG,UI,소환수 표시와 Draw 흐름 정리,소환수 표시 책임과 Draw 진행 상태/이름/옵션 패널 흐름을 정리했다.,관련 작업 기록 확인,.codex/dev-log/2026-05-31.md

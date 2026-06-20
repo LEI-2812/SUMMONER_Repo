@@ -2,6 +2,12 @@
 
 자동 루프를 명시적으로 요청했을 때만 읽는다.
 
+## 현재 사용자 지시
+
+- 반복되는 유지보수 리팩토링은 중단 없이 계속 진행한다.
+- DevAgent는 Change Proposal과 적용 예정 diff를 보여준 뒤, 같은 기능 슬라이스 안의 저위험 반복 작업은 별도 승인 대기 없이 적용한다.
+- 아래 중단 조건에 해당하는 위험 작업은 자동 진행하지 않는다.
+
 ## 흐름
 
 ```text
@@ -9,8 +15,9 @@ Ready 확인
 -> 현재 Ready 역할 문서 하나만 읽기
 -> CoordinatorAgent가 기능 슬라이스와 호출 대상 확정
 -> CoordinatorAgent가 사용자에게 보여줄 일과 바로 넘길 일을 구분
--> DevAgent가 적용 예정 diff를 제시하고 진행 승인 확인
--> 승인 후 DevAgent가 기능 슬라이스 안에서 구현
+-> DevAgent가 적용 예정 diff를 제시
+-> 저위험 반복 작업이면 별도 승인 대기 없이 기능 슬라이스 안에서 구현
+-> 위험 작업이면 진행 승인 확인 후 구현
 -> 필요한 경우 CoordinatorAgent가 VerificationAgent 호출
 -> 필요한 경우 CoordinatorAgent가 DocumentationAgent 호출
 -> 필요한 경우 CoordinatorAgent가 ReleaseAgent 호출
@@ -21,7 +28,9 @@ Ready 확인
 ## 호출 기준
 
 - DevAgent는 기본 개발 흐름이다.
-- DevAgent는 코드 변경 전 적용 예정 diff와 진행 승인을 필요로 한다.
+- DevAgent는 코드 변경 전 적용 예정 diff를 보여준다.
+- 반복되는 저위험 리팩토링은 사용자의 현재 자동 진행 지시를 승인으로 보고 이어서 적용한다.
+- 위험 작업은 적용 예정 diff와 별도 진행 승인을 필요로 한다.
 - CoordinatorAgent는 문서 갱신과 다음 에이전트 인계를 사용자 승인 없이 처리한다.
 - CoordinatorAgent는 코드 diff 승인, 위험 작업, 제품 판단이 필요한 결정만 사용자에게 보여준다.
 - 문서 상태 기록은 사용자 진행 승인 없이 바로 수행한다.
@@ -41,7 +50,7 @@ Ready 확인
 
 - Ready 에이전트가 없거나 둘 이상
 - DevAgent가 적용 예정 diff 없이 코드 변경하려는 경우
-- 사용자가 제시된 diff 진행을 승인하지 않은 경우
+- 위험 작업인데 사용자가 제시된 diff 진행을 승인하지 않은 경우
 - 도메인 변경
 - 사용자 승인 필요한 위험 작업
 - 테스트/도구 오류가 반복되어 코드 문제와 구분이 필요한 경우
