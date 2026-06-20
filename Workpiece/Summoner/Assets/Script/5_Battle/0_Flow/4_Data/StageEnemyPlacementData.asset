@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec3e46d9a728984bb7cc551d6a8253b, type: 3}
+  m_Name: StageEnemyPlacementData
+  m_EditorClassIdentifier: 
+  stageEnemyPlacements:
+  - stage: 1
+    enemyPlacementSlots:
+    - plateIndex: 0
+      enemySummonPrefab: {fileID: 1760420319589789094, guid: 8fd706c78e2922046af9ec2e55c582ca, type: 3}
+    - plateIndex: 1
+      enemySummonPrefab: {fileID: 1760420319589789094, guid: 8fd706c78e2922046af9ec2e55c582ca, type: 3}
+  - stage: 2
+    enemyPlacementSlots:
+    - plateIndex: 0
+      enemySummonPrefab: {fileID: 1760420319589789094, guid: 8fd706c78e2922046af9ec2e55c582ca, type: 3}
+    - plateIndex: 1
+      enemySummonPrefab: {fileID: 1750558109740812656, guid: bf542230506a74c42b2451b8d3bc631f, type: 3}
+  - stage: 3
+    enemyPlacementSlots:
+    - plateIndex: 0
+      enemySummonPrefab: {fileID: 6006135561973635161, guid: 8fd297f85265bc04894ce80f6e81ac6c, type: 3}
+    - plateIndex: 1
+      enemySummonPrefab: {fileID: 6070155094882544941, guid: 5dd30040c5ae722429071dc4dc0dbca2, type: 3}
+  - stage: 4
+    enemyPlacementSlots:
+    - plateIndex: 0
+      enemySummonPrefab: {fileID: 1712392830363715930, guid: 90097dbc557a1854191dac4f46b78a46, type: 3}
+    - plateIndex: 1
+      enemySummonPrefab: {fileID: 6006135561973635161, guid: 8fd297f85265bc04894ce80f6e81ac6c, type: 3}
+    - plateIndex: 2
+      enemySummonPrefab: {fileID: 5960568070116890051, guid: daceb49291e617948a072a85699e6272, type: 3}
+  - stage: 5
+    enemyPlacementSlots:
+    - plateIndex: 0
+      enemySummonPrefab: {fileID: 4539207676563251665, guid: 0742304be4be2ec42acdc85ae66b8eea, type: 3}
+    - plateIndex: 1
+      enemySummonPrefab: {fileID: 4539207676563251665, guid: 0742304be4be2ec42acdc85ae66b8eea, type: 3}
+    - plateIndex: 2
+      enemySummonPrefab: {fileID: 8549275133440041068, guid: e40edda8095726c4085f00ac81879052, type: 3}
+  - stage: 6
+    enemyPlacementSlots:
+    - plateIndex: 0
+      enemySummonPrefab: {fileID: 4539207676563251665, guid: 0742304be4be2ec42acdc85ae66b8eea, type: 3}
+    - plateIndex: 1
+      enemySummonPrefab: {fileID: 8549275133440041068, guid: e40edda8095726c4085f00ac81879052, type: 3}
+    - plateIndex: 2
+      enemySummonPrefab: {fileID: 5091724618932704684, guid: d3bcd2f130775e243a6678d60797559b, type: 3}
+  - stage: 7
+    enemyPlacementSlots:
+    - plateIndex: 0
+      enemySummonPrefab: {fileID: 6386049030523729004, guid: 46576d69373393243a279ff2ab892158, type: 3}
