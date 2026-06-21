@@ -1,12 +1,10 @@
 using UnityEngine;
 
-// 역할: 시작 화면에서 메뉴 씬으로 이동하는 흐름을 담당한다.
+// Loads the shared HUD menu for scenes that need menu and option UI.
 public class MenuLoader : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
         StartGameFlow.LoadStartScreenHud();
     }
-
 }

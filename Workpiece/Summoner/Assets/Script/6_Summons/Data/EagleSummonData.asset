@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: Eagle
   summonRank: 2
-  summonType: 3
   maxHp: 1750
   attackPower: 225
   heavyAttackPower: 150

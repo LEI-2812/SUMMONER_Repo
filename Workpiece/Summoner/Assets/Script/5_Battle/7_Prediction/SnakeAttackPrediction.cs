@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,13 +6,13 @@ using UnityEngine;
 public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 {
 
-    public SummonType GetPreSummonType()
+    public bool CanPredict(Summon summon)
     {
-        return SummonType.Snake;
+        return summon is Snake;
     }
 
     // 역할: 뱀이 독 공격을 쓸 상황인지, 일반 공격이 더 나은 상황인지 예측한다.
-    public AttackPrediction GetAttackPrediction(Summon snake, int snakePlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon snake, int snakePlateIndex, IReadOnlyList<Plate> playerPlates, IReadOnlyList<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
@@ -59,7 +59,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 적 중 이미 독 상태인 소환수가 있는지 확인한다.
-    public bool IsEnermyAlreadyPoisoned(List<Plate> enermyPlates)
+    public bool IsEnermyAlreadyPoisoned(IReadOnlyList<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
@@ -83,7 +83,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 살아있는 적들의 체력이 모두 절반 이상인지 확인한다.
-    public bool AllEnermyHealthOver50(List<Plate> enermyPlates)
+    public bool AllEnermyHealthOver50(IReadOnlyList<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
@@ -103,7 +103,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 적 중 특수 공격을 여러 개 가진 소환수가 있는지 확인한다.
-    public bool HasMonsterWithMoreThan3Attacks(List<Plate> enermyPlates)
+    public bool HasMonsterWithMoreThan3Attacks(IReadOnlyList<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
@@ -118,7 +118,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 살아있는 적이 2마리 이상인지 확인한다.
-    public bool IsEnermyCountOverTwo(List<Plate> enermyPlates)
+    public bool IsEnermyCountOverTwo(IReadOnlyList<Plate> enermyPlates)
     {
         int count = 0;
         foreach (Plate plate in enermyPlates)
@@ -133,7 +133,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 살아있는 적이 하나라도 있는지 확인한다.
-    public bool IsEnermyCountOnlyOne(List<Plate> enermyPlates)
+    public bool IsEnermyCountOnlyOne(IReadOnlyList<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
@@ -147,7 +147,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 가장 가까운 적을 일반 공격 한 번으로 처치할 수 있으면 그 적 위치를 돌려준다.
-    public int GetIndexOfNormalAttackCanKill(Summon snake, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon snake, IReadOnlyList<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
         int closestIndex = GetClosestEnermyIndex(enermyPlates);
@@ -167,7 +167,7 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 적 플레이트를 앞에서부터 확인해 가장 먼저 만나는 적 위치를 찾는다.
-    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(IReadOnlyList<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {

@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: KingSlime
   summonRank: 4
-  summonType: 10
   maxHp: 250
   attackPower: 50
   heavyAttackPower: 65

@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 역할: 소환수에게 걸린 상태 효과 목록을 관리하고 턴 갱신과 만료를 처리한다.
-public class StatusEffectController
+// 역할: 소환수에게 걸린 상태 효과 목록을 보관하고 턴 갱신과 만료를 처리한다.
+public class StatusEffectState
 {
     private List<StatusEffect> activeStatusEffects;
 
-    public StatusEffectController()
+    public StatusEffectState()
         : this(new List<StatusEffect>())
     {
     }
 
-    public StatusEffectController(List<StatusEffect> activeStatusEffects)
+    public StatusEffectState(List<StatusEffect> activeStatusEffects)
     {
         this.activeStatusEffects = activeStatusEffects;
     }
@@ -62,25 +62,7 @@ public class StatusEffectController
         StatusEffectObjectApply(statusEffect, statusEffectObject, existingEffect, target);
     }
 
-    // 피해를 주는 상태이상을 업데이트한다. 예: Poison, Burn, LifeDrain
-    public void DamageStatusEffectsUpdate(IStatusEffectTarget target)
-    {
-        StatusEffectsUpdate(StatusUpdateTiming.Damage, target);
-    }
-
-    // 스턴과 저주 상태를 업데이트한다.
-    public void StunAndCurseStatusUpdate(IStatusEffectTarget target)
-    {
-        StatusEffectsUpdate(StatusUpdateTiming.StunAndCurse, target);
-    }
-
-    // 강화 상태를 업데이트한다.
-    public void UpgradeStatusUpdate(IStatusEffectTarget target)
-    {
-        StatusEffectsUpdate(StatusUpdateTiming.Upgrade, target);
-    }
-
-    public void StatusEffectsUpdate(StatusUpdateTiming updateTiming, IStatusEffectTarget target)
+    public void UpdateStatusEffects(StatusUpdateTiming updateTiming, IStatusEffectTarget target)
     {
         List<StatusEffect> expiredEffects = new List<StatusEffect>();
 

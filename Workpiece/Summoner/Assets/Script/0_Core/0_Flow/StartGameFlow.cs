@@ -28,21 +28,14 @@ public static class StartGameFlow
         return true;
     }
 
-    public static bool TryStartNewGame(StageController stageController)
+    public static bool TryStartNewGame()
     {
-        if (stageController == null)
-        {
-            Debug.LogError("checkStage가 null입니다. 올바르게 설정되었는지 확인하세요.");
-            return false;
-        }
-
         if (GameSaveController.instance == null)
         {
             Debug.LogError("GameSaveController가 Start Screen 씬에 없습니다.");
             return false;
         }
 
-        stageController.SetStageNum(NewGameStartStage);
         GameSaveController.instance.StartNewGame();
         Debug.Log($"저장된 스테이지 번호: {NewGameStartStage}");
         Debug.Log("저장되어있던 데이터를 모두 삭제후 새게임 시작");
@@ -50,21 +43,14 @@ public static class StartGameFlow
         return true;
     }
 
-    public static bool TryContinueSavedGame(StageController stageController)
+    public static bool TryContinueSavedGame()
     {
-        if (stageController == null)
-        {
-            Debug.LogError("checkStage가 null입니다. 올바르게 설정되었는지 확인하세요.");
-            return false;
-        }
-
         if (!TryGetSavedStage(out int savedStage))
         {
             return false;
         }
 
         Debug.Log($"저장된 스테이지 번호: {savedStage}");
-        stageController.SetStageNum(savedStage);
         GameSceneFlow.LoadStageSelect();
         return true;
     }

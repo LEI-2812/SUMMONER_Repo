@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: Fox
   summonRank: 0
-  summonType: 5
   maxHp: 1250
   attackPower: 175
   heavyAttackPower: 0

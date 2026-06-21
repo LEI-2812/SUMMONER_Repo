@@ -71,7 +71,7 @@ public class BattleAttackState
             return false;
         }
 
-        return CurrentSpecialAttackInfo.GetAttackInfoStrategy().BenefitEffectCheck();
+        return CurrentSpecialAttackInfo.GetAttackInfoStrategy().TargetsOwnPlates();
     }
 
     public void Reset()

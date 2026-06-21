@@ -5,16 +5,9 @@ using UnityEngine;
 // 역할: 하급 악마 적 소환수의 기본 데이터와 공격 동작을 초기화한다.
 public class LowDevil : Summon
 {
-    protected override void Awake()
+    protected override void ApplyFallbackData()
     {
-        base.Awake();
-
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("LowDevil", SummonRank.Normal, SummonType.LowDevil, 700, 180, 220);
+        SetFallbackStatus("LowDevil", SummonRank.Normal, 700, 180, 220);
 
         // 일반 공격: 가장 가까운 적 공격
         SetAttackStrategies(

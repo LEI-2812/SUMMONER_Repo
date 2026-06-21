@@ -1,4 +1,4 @@
-// 역할: 플레이어 턴의 일반 소환과 재소환 시작 조건을 확인하고 실행 흐름에 넘긴다.
+﻿// 역할: 플레이어 턴의 일반 소환과 재소환 시작 조건을 확인하고 실행 흐름에 넘긴다.
 public class PlayerSummonActions
 {
     private readonly SummonController summonController;
@@ -83,21 +83,19 @@ public class PlayerSummonActions
 
     private bool TryStartSummonOnEmptyPlate()
     {
-        for (int i = 0; i < plateController.GetPlayerPlates().Count; i++)
+        int emptyPlateIndex = plateController.GetFirstEmptyPlayerPlateIndex();
+        if (emptyPlateIndex < 0)
         {
-            if (!plateController.GetPlayerPlates()[i].GetIsInSummon())
-            {
-                actionExecutor.StartSummon(
-                    summonController,
-                    resourceState,
-                    playerView,
-                    feedbackView,
-                    i);
-                return true;
-            }
+            return false;
         }
 
-        return false;
+        actionExecutor.StartSummon(
+            summonController,
+            resourceState,
+            playerView,
+            feedbackView,
+            emptyPlateIndex);
+        return true;
     }
 
     private bool CanUseRedrawMana()

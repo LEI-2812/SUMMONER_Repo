@@ -26,7 +26,7 @@ internal class EnemyPredictionPlateState
         }
     }
 
-    private List<Plate> CollectPlayerPlates(List<Plate> playerPlates)
+    private List<Plate> CollectPlayerPlates(IReadOnlyList<Plate> playerPlates)
     {
         List<Plate> playerPlateStates = new List<Plate>();
 
@@ -45,7 +45,7 @@ internal class EnemyPredictionPlateState
         return playerPlateStates;
     }
 
-    private List<Plate> ApplyEnemyStatusToPlates(List<Plate> sourceEnemyPlates, List<Summon> originSummons)
+    private List<Plate> ApplyEnemyStatusToPlates(IReadOnlyList<Plate> sourceEnemyPlates, List<Summon> originSummons)
     {
         List<Plate> adjustedEnemyPlates = new List<Plate>();
 

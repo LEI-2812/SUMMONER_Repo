@@ -3,13 +3,13 @@ using System.Collections.Generic;
 // 역할: 공격 전략이 대상 소환수를 고르기 위해 지켜야 하는 계약을 정의한다.
 interface IAttackTargetSelector
 {
-    List<Summon> SelectTargets(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex);
+    List<Summon> SelectTargets(Summon attacker, IReadOnlyList<Plate> targetPlates, int selectedPlateIndex);
 }
 
-// 역할: 가장 가까운 점유 플레이트의 소환수를 공격 대상으로 선택한다.
+// 역할: 가까운 순서로 전달된 플레이트 목록에서 첫 점유 소환수를 공격 대상으로 선택한다.
 class ClosestEnemyAttackTargetSelector : IAttackTargetSelector
 {
-    public List<Summon> SelectTargets(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex)
+    public List<Summon> SelectTargets(Summon attacker, IReadOnlyList<Plate> targetPlates, int selectedPlateIndex)
     {
         List<Summon> targets = new List<Summon>();
 
@@ -40,7 +40,7 @@ class ClosestEnemyAttackTargetSelector : IAttackTargetSelector
 // 역할: 사용자가 선택한 플레이트의 소환수를 공격 대상으로 선택한다.
 class SelectedPlateAttackTargetSelector : IAttackTargetSelector
 {
-    public List<Summon> SelectTargets(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex)
+    public List<Summon> SelectTargets(Summon attacker, IReadOnlyList<Plate> targetPlates, int selectedPlateIndex)
     {
         List<Summon> targets = new List<Summon>();
 
@@ -68,7 +68,7 @@ class SelectedPlateAttackTargetSelector : IAttackTargetSelector
 // 역할: 대상 플레이트 목록에 있는 모든 소환수를 공격 대상으로 선택한다.
 class AllEnemiesAttackTargetSelector : IAttackTargetSelector
 {
-    public List<Summon> SelectTargets(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex)
+    public List<Summon> SelectTargets(Summon attacker, IReadOnlyList<Plate> targetPlates, int selectedPlateIndex)
     {
         List<Summon> targets = new List<Summon>();
 
@@ -98,7 +98,7 @@ class AllEnemiesAttackTargetSelector : IAttackTargetSelector
 // 역할: 공격자 자신을 이로운 효과의 대상으로 선택한다.
 class SelfAttackTargetSelector : IAttackTargetSelector
 {
-    public List<Summon> SelectTargets(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex)
+    public List<Summon> SelectTargets(Summon attacker, IReadOnlyList<Plate> targetPlates, int selectedPlateIndex)
     {
         List<Summon> targets = new List<Summon>();
 

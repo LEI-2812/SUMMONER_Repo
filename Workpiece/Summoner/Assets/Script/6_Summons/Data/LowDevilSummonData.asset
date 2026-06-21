@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: LowDevil
   summonRank: 3
-  summonType: 8
   maxHp: 700
   attackPower: 180
   heavyAttackPower: 220

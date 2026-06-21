@@ -5,9 +5,6 @@ using UnityEngine.UI;
 // 역할: 시작 화면 UI 표시와 시작 버튼 입력을 담당한다.
 public class StartScreenView : MonoBehaviour
 {
-    private GameObject menuCanvas; //비파괴로 해놔서 public으로 할시 다른씬 다녀오면 missing나기때문에 직접 참조
-    private StageController stageController;
-
     [Header("메인씬 처음부터 버튼")]
     public GameObject newAlert;
     public ConfirmAlertView newAlertResult;
@@ -25,20 +22,19 @@ public class StartScreenView : MonoBehaviour
 
     void Start()
     {
-        stageController = FindObjectOfType<StageController>();
-        // OptionCanvas_Audio 오브젝트를 씬에서 찾아서 참조
-        menuCanvas = GameObject.Find("MenuCanvas");
+        StartGameFlow.LoadStartScreenHud();
 
         // 만약 씬에 오브젝트가 없을 경우 오류 방지
-        if (menuCanvas == null)
-        {
-            Debug.LogError("MenuCanvas 오브젝트가 없음.");
-        }
-
         if (settingBtn == null)
         {
             Debug.LogError("SettingPanelView 버튼이 연결되지 않았습니다.");
         }
+        else
+        {
+            settingBtn.onClick.RemoveListener(OpenOption);
+            settingBtn.onClick.AddListener(OpenOption);
+        }
+
         newAlert.SetActive(false);
         loadAlert.SetActive(false);
 
@@ -58,7 +54,7 @@ public class StartScreenView : MonoBehaviour
         StartCoroutine(WaitForAlertResult(newAlert, newAlertResult, (result) => {
             if (result)
             {
-                StartGameFlow.TryStartNewGame(stageController);
+                StartGameFlow.TryStartNewGame();
             }
             else
             {
@@ -85,7 +81,7 @@ public class StartScreenView : MonoBehaviour
         StartCoroutine(WaitForAlertResult(loadAlert, loadAlertResult, (result) => {
             if (result)
             {
-                StartGameFlow.TryContinueSavedGame(stageController);
+                StartGameFlow.TryContinueSavedGame();
             }
             else
             {
@@ -107,36 +103,40 @@ public class StartScreenView : MonoBehaviour
     //설정창 끄기 키기
     public void OpenOption()
     {
-        // OptionCanvas_Audio가 존재할 경우에만 로직 실행
-        if (menuCanvas != null)
+        audioSource?.Play();
+
+        SettingPanelView settingPanelView = FindObjectOfType<SettingPanelView>();
+        if (settingPanelView != null)
         {
-            audioSource.Play();
+            settingPanelView.OpenOption();
+            return;
+        }
 
-            Transform optionTransform = menuCanvas.transform.Find("UI_20_Settings/Setting/SettingPanel")
-                ?? menuCanvas.transform.Find("Setting/SettingPanel");
-            GameObject option = optionTransform != null ? optionTransform.gameObject : null;
+        if (!GameSceneFlow.IsHudLoaded())
+        {
+            StartGameFlow.LoadStartScreenHud();
+            StartCoroutine(OpenOptionAfterHudLoaded());
+            return;
+        }
 
-            if (option != null)
+        Debug.LogError("SettingPanelView를 찾을 수 없습니다.");
+    }
+
+    private IEnumerator OpenOptionAfterHudLoaded()
+    {
+        for (int frame = 0; frame < 60; frame++)
+        {
+            yield return null;
+
+            SettingPanelView settingPanelView = FindObjectOfType<SettingPanelView>();
+            if (settingPanelView != null)
             {
-                // 패널이 활성화되어 있으면 비활성화, 비활성화되어 있으면 활성화
-                if (option.activeSelf)
-                {
-                    option.SetActive(false);
-                }
-                else
-                {
-                    option.SetActive(true);
-                }
-            }
-            else
-            {
-                Debug.LogError("SettingPanel 오브젝트를 찾을 수 없습니다.");
+                settingPanelView.OpenOption();
+                yield break;
             }
         }
-        else
-        {
-            Debug.LogError("MenuCanvas 오브젝트가 존재하지 않습니다.");
-        }
+
+        Debug.LogError("HUD 로드 후에도 SettingPanelView를 찾을 수 없습니다.");
     }
 
     //게임 종료

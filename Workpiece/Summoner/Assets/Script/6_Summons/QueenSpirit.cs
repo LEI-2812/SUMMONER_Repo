@@ -6,16 +6,9 @@ using UnityEngine;
 public class QueenSpirit : Summon
 {
 
-    protected override void Awake()
+    protected override void ApplyFallbackData()
     {
-        base.Awake();
-
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("QueenSpirit", SummonRank.Special, SummonType.QueenSpirit, 400, 100, 140);
+        SetFallbackStatus("QueenSpirit", SummonRank.Special, 400, 100, 140);
 
         // 일반 공격: 가장 가까운 적 공격
         SetAttackStrategies(

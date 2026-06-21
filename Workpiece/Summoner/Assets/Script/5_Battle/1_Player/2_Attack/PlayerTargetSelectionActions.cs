@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 
-// 역할: 플레이어 타겟형 특수공격의 타겟 선택 대기, 취소, 완료 흐름을 처리한다.
+// 역할: 타겟형 특수공격의 대상 선택 대기, 취소, 선택 완료 흐름을 처리한다.
 public class PlayerTargetSelectionActions
 {
     private readonly PlayerController player;
@@ -11,82 +11,76 @@ public class PlayerTargetSelectionActions
     private readonly BattleController battleController;
     private readonly PlateController plateController;
     private readonly PlayerFeedbackView feedbackView;
-    private readonly Action onAttackCompleted;
 
     public PlayerTargetSelectionActions(
         PlayerController player,
         SummonController summonController,
         BattleController battleController,
         PlateController plateController,
-        PlayerFeedbackView feedbackView,
-        Action onAttackCompleted)
+        PlayerFeedbackView feedbackView)
     {
         this.player = player;
         this.summonController = summonController;
         this.battleController = battleController;
         this.plateController = plateController;
         this.feedbackView = feedbackView;
-        this.onAttackCompleted = onAttackCompleted;
     }
 
-    public void StartTargetSelection(Summon attackSummon, int specialAttackIndex)
+    public void StartTargetSelection(Action<int> onTargetSelected)
     {
         if (battleController.DoesCurrentSpecialAttackTargetPlayerPlate())
         {
-            StartPlayerPlateSelection(attackSummon, specialAttackIndex);
+            StartPlayerPlateSelection(onTargetSelected);
             return;
         }
 
-        StartEnermyPlateSelection(attackSummon, specialAttackIndex);
+        StartEnermyPlateSelection(onTargetSelected);
     }
 
-    private void StartPlayerPlateSelection(Summon attackSummon, int specialAttackIndex)
+    private void StartPlayerPlateSelection(Action<int> onTargetSelected)
     {
         feedbackView.Log("아군의 플레이트를 선택하세요.");
-        player.StartCoroutine(WaitForPlayerPlateSelection(attackSummon, specialAttackIndex));
+        player.StartCoroutine(WaitForPlayerPlateSelection(onTargetSelected));
     }
 
-    private void StartEnermyPlateSelection(Summon attackSummon, int specialAttackIndex)
+    private void StartEnermyPlateSelection(Action<int> onTargetSelected)
     {
         feedbackView.Log("적의 플레이트를 선택하세요.");
-        player.StartCoroutine(WaitForEnermyPlateSelection(attackSummon, specialAttackIndex));
+        player.StartCoroutine(WaitForEnermyPlateSelection(onTargetSelected));
     }
 
-    private IEnumerator WaitForEnermyPlateSelection(Summon attackSummon, int specialAttackArrayIndex)
+    private IEnumerator WaitForEnermyPlateSelection(Action<int> onTargetSelected)
     {
         return WaitForTargetPlateSelection(
-            attackSummon,
-            specialAttackArrayIndex,
             plateController.GetEnermyPlates(),
             true,
             "적의 플레이트를 선택하는 중입니다...",
-            "적 플레이트 외부 클릭으로 선택 취소",
-            "공격을 준비 중입니다. 선택된 플레이트 인덱스: {0}",
-            "공격할 적의 플레이트 인덱스가 유효하지 않습니다.");
+            "적 플레이트 밖 클릭으로 선택 취소",
+            "공격을 준비 중입니다. 선택한 플레이트 인덱스: {0}",
+            "공격할 적의 플레이트 인덱스가 유효하지 않습니다.",
+            onTargetSelected);
     }
 
-    private IEnumerator WaitForPlayerPlateSelection(Summon attackSummon, int specialAttackArrayIndex)
+    private IEnumerator WaitForPlayerPlateSelection(Action<int> onTargetSelected)
     {
         return WaitForTargetPlateSelection(
-            attackSummon,
-            specialAttackArrayIndex,
             plateController.GetPlayerPlates(),
             false,
             "아군의 플레이트를 선택하는 중입니다...",
-            "플레이트 외부 클릭으로 선택 취소",
-            "아군에게 버프를 준비중입니다. 선택된 플레이트 인덱스: {0}",
-            "아군의 플레이트 인덱스가 유효하지 않습니다.");
+            "플레이트 밖 클릭으로 선택 취소",
+            "아군에게 버프를 준비 중입니다. 선택한 플레이트 인덱스: {0}",
+            "아군의 플레이트 인덱스가 유효하지 않습니다.",
+            onTargetSelected);
     }
 
     private IEnumerator WaitForTargetPlateSelection(
-        Summon attackSummon,
-        int specialAttackArrayIndex,
-        List<Plate> targetPlates,
+        IReadOnlyList<Plate> targetPlates,
         bool downTransparencyForPlayerPlate,
         string waitLog,
         string outsideClickLog,
         string executeLogFormat,
-        string invalidLog)
+        string invalidLog,
+        Action<int> onTargetSelected)
     {
         battleController.StartSpecialAttackTargetSelection();
         summonController.OnDarkBackground(true);
@@ -113,27 +107,16 @@ public class PlayerTargetSelectionActions
         if (selectedTargetPlateIndex >= 0)
         {
             feedbackView.Log(string.Format(executeLogFormat, selectedTargetPlateIndex));
-            bool attackExecuted = battleController.SpecialAttackExecute(
-                attackSummon,
-                selectedTargetPlateIndex,
-                specialAttackArrayIndex,
-                true);
-
             summonController.OnDarkBackground(false);
             battleController.ClearSpecialAttackTargetSelection();
+            onTargetSelected?.Invoke(selectedTargetPlateIndex);
+            yield break;
+        }
 
-            if (attackExecuted)
-            {
-                onAttackCompleted?.Invoke();
-            }
-        }
-        else
-        {
-            feedbackView.LogError(invalidLog);
-        }
+        feedbackView.LogError(invalidLog);
     }
 
-    private bool MousePositionInsidePlates(List<Plate> targetPlates)
+    private bool MousePositionInsidePlates(IReadOnlyList<Plate> targetPlates)
     {
         Vector2 mousePosition = Input.mousePosition;
 

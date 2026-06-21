@@ -8,7 +8,6 @@ public class SummonController : MonoBehaviour
 {
     private readonly SummonDrawService drawService = new SummonDrawService();
     private readonly SummonPickState pickState = new SummonPickState();
-    private readonly SummonPlaceExecutor placeExecutor = new SummonPlaceExecutor();
     private SummonPickView pickView;
 
     [SerializeField] private GameObject darkBackground; // 재소환 배경 처리할 판넬 (반투명)
@@ -17,15 +16,10 @@ public class SummonController : MonoBehaviour
 
     [Header("플레이어")]
     [SerializeField] private PlayerController player;
-   //[SerializeField] private List<Plate> playerPlates; // 플레이어가 사용할 플레이트 목록
+   //[SerializeField] private IReadOnlyList<Plate> playerPlates; // 플레이어가 사용할 플레이트 목록
 
     [Header("일반 소환 관련 오브젝트")]
     public List<Summon> summons; // 인스펙터에 넣을 소환수 오브젝트들
-    [FormerlySerializedAs("takeSummonPanel")]
-    [SerializeField] private GameObject drawPanel;
-    [FormerlySerializedAs("selectSummonPanels")]
-    [SerializeField] private List<DrawOptionPanelView> drawOptionPanels; // 패널에 띄울 소환수
-
     [Header("재소환 관련 오브젝트")]
     [FormerlySerializedAs("reTakeSummonPanel")]
     [SerializeField] private GameObject redrawPanel;
@@ -46,12 +40,9 @@ public class SummonController : MonoBehaviour
     {
         pickView = new SummonPickView(
             darkBackground,
-            drawPanel,
-            drawOptionPanels,
             redrawPanel,
             redrawOptionPanels);
         plateSelectionController = new PlateSelectionController(plateController);
-        ConnectOptionPanels(drawOptionPanels);
         ConnectOptionPanels(redrawOptionPanels);
     }
 
@@ -105,11 +96,7 @@ public class SummonController : MonoBehaviour
 
         if (pickState.SelectedSummon != null) //3개중에 고른것
         {
-            placeExecutor.PlaceSummon(
-                plateController,
-                player,
-                plateIndex,
-                pickState.SelectedSummon);
+            PlaceSelectedSummon(plateIndex, pickState.SelectedSummon, isResummon: false);
             Debug.Log($"플레이트 {plateIndex}에 소환 완료.");
         }
 
@@ -127,11 +114,7 @@ public class SummonController : MonoBehaviour
 
         if (pickState.SelectedSummon != null)
         {
-            placeExecutor.PlaceRedrawSummon(
-                plateController,
-                player,
-                plateIndex,
-                pickState.SelectedSummon);
+            PlaceSelectedSummon(plateIndex, pickState.SelectedSummon, isResummon: true);
             Debug.Log($"플레이트 {plateIndex}에 재소환 완료.");
         }
 
@@ -218,6 +201,13 @@ public class SummonController : MonoBehaviour
     {
         pickState.FinishSummoning();
         isSummoning = pickState.IsSummoning;
+    }
+
+    private void PlaceSelectedSummon(int plateIndex, Summon summon, bool isResummon)
+    {
+        plateController.GetPlayerPlates()[plateIndex]
+            .SummonPlaceOnPlate(summon, isResummon);
+        player.SetHasSummonedThisTurn(true);
     }
 
     private void FinishPickFlow(bool shouldShowAllPlates)

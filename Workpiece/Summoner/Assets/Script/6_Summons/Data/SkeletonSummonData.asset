@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: Skeleton
   summonRank: 3
-  summonType: 7
   maxHp: 650
   attackPower: 150
   heavyAttackPower: 170

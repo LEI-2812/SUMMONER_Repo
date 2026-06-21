@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: DarkDragon
   summonRank: 5
-  summonType: 15
   maxHp: 3000
   attackPower: 400
   heavyAttackPower: 500

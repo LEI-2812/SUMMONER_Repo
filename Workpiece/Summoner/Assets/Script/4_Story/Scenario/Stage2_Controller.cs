@@ -71,8 +71,8 @@ public class Stage2_Controller : StoryScenarioControllerBase
         confusebubbleImage.SetActive(true);
         interactionController.StopNextDialogue(); //여기서 알아서 대사를 멈추게함
 
-        // 2초 후에 `endConfuseEffect` 메서드 호출
-        Invoke("endConfuseEffect", 1.5f);
+        // 1.5초 후에 EndConfuseEffect 메서드 호출
+        Invoke(nameof(EndConfuseEffect), 1.5f);
     }
     private void EndConfuseEffect()
     {
@@ -87,7 +87,7 @@ public class Stage2_Controller : StoryScenarioControllerBase
         bangImage.SetActive(true);
         interactionController.StopNextDialogue(); //여기서 알아서 대사를 멈추게함
 
-        Invoke("endBangEffect", 1f);
+        Invoke(nameof(EndBangEffect), 1f);
     }
     private void EndBangEffect()
     {

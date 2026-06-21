@@ -6,7 +6,6 @@ public class SummonData : ScriptableObject
 {
     [SerializeField] private string summonName;
     [SerializeField] private SummonRank summonRank;
-    [SerializeField] private SummonType summonType;
     [SerializeField] private double maxHp;
     [SerializeField] private double attackPower;
     [SerializeField] private double heavyAttackPower;
@@ -15,7 +14,6 @@ public class SummonData : ScriptableObject
 
     public string GetSummonName() => summonName;
     public SummonRank GetSummonRank() => summonRank;
-    public SummonType GetSummonType() => summonType;
     public double GetMaxHp() => maxHp;
     public double GetAttackPower() => attackPower;
     public double GetHeavyAttackPower() => heavyAttackPower;

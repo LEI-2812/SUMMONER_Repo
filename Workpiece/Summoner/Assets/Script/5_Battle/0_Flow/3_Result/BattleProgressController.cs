@@ -73,7 +73,7 @@ public class BattleProgressController : MonoBehaviour
 
         if (stageContext == null)
         {
-            stageContext = gameObject.AddComponent<BattleStageContext>();
+            Debug.LogError("BattleProgressController needs BattleStageContext.");
         }
 
         if (stageFlowController == null)

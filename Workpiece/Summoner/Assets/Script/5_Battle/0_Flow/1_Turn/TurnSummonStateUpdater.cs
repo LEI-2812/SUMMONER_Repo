@@ -44,7 +44,7 @@ internal sealed class TurnSummonStateUpdater
     {
         foreach (var summon in plateController.GetPlayerSummons())
         {
-            summon.UpdateUpgradeStatus();
+            summon.UpdateStatusEffects(StatusUpdateTiming.Upgrade);
         }
     }
 
@@ -52,7 +52,7 @@ internal sealed class TurnSummonStateUpdater
     {
         foreach (var summon in plateController.GetEnermySummons())
         {
-            summon.UpdateUpgradeStatus();
+            summon.UpdateStatusEffects(StatusUpdateTiming.Upgrade);
         }
     }
 
@@ -69,8 +69,30 @@ internal sealed class TurnSummonStateUpdater
 
     private void ApplyTurnStartEffects(Summon summon)
     {
-        summon.UpdateDamageStatusEffects();
-        summon.UpdateStunAndCurseStatus();
-        summon.GetAttackStrategy().ReduceCooldown();
+        ApplyTurnStartDamageEffects(summon);
+        ApplyTurnStartControlEffects(summon);
+        UpdateNormalAttackCooldown(summon);
+    }
+
+    private void ApplyTurnStartDamageEffects(Summon summon)
+    {
+        summon.UpdateStatusEffects(StatusUpdateTiming.Damage);
+    }
+
+    private void ApplyTurnStartControlEffects(Summon summon)
+    {
+        summon.UpdateStatusEffects(StatusUpdateTiming.StunAndCurse);
+    }
+
+    private void UpdateNormalAttackCooldown(Summon summon)
+    {
+        IAttackStrategy normalAttack = summon.GetAttackStrategy();
+
+        if (normalAttack == null)
+        {
+            return;
+        }
+
+        normalAttack.ReduceCooldown();
     }
 }

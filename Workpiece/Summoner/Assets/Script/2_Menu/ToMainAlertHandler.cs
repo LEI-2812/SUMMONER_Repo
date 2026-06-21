@@ -1,11 +1,5 @@
-
-
-// ¸ŞÀÎ È­¸é ¾Ë¸² ÇÚµé·¯
-// ¿ªÇÒ: ¸ŞÀÎ È­¸é ÀÌµ¿ È®ÀÎ ¾Ë¸²¿¡¼­ È­¸é ÀÌµ¿ µ¿ÀÛÀ» Ã³¸®ÇÑ´Ù.
+ï»¿// ë©”ì¸ í™”ë©´ ì•Œë¦¼ í•¸ë“¤ëŸ¬
+// ì—­í• : ë©”ì¸ í™”ë©´ ì´ë™ í™•ì¸ ì•Œë¦¼ íƒ€ì…ì„ êµ¬ë¶„í•œë‹¤.
 public class ToMainAlertHandler : BaseAlertHandler
 {
-    public override void ShowAlert(System.Action<bool> callback)
-    {
-        base.ShowAlert(callback);
-    }
 }

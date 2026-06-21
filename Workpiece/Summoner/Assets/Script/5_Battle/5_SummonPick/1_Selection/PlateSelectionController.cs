@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 // 역할: 재소환할 플레이어 플레이트 선택 가능 여부와 선택 표시를 관리한다.
 public class PlateSelectionController

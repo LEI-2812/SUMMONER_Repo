@@ -39,13 +39,20 @@ public class SettingPanelView : MonoBehaviour
     // 싱글톤 인스턴스 초기화
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
+        if (instance != null && instance != this)
         {
             Destroy(gameObject); // 이미 인스턴스가 존재한다면 새로운 인스턴스를 파괴
+            return;
+        }
+
+        instance = this;
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
         }
     }
 
@@ -109,13 +116,21 @@ public class SettingPanelView : MonoBehaviour
     // 설정창 열기/닫기
     public void OpenOption()
     {
+        if (settingPanel == null)
+        {
+            Debug.LogError("SettingPanel이 할당되지 않았습니다.");
+            return;
+        }
+
         if (settingPanel.activeSelf)
         {
-            audioSource.Play();
+            audioSource?.Play();
             settingPanel.SetActive(false);
         }
         else
+        {
             settingPanel.SetActive(true);
+        }
     }
 
 

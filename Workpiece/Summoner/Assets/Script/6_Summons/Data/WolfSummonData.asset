@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: Wolf
   summonRank: 2
-  summonType: 2
   maxHp: 1750
   attackPower: 250
   heavyAttackPower: 150

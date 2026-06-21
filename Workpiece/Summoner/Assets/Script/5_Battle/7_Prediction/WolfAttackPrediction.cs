@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +8,13 @@ using UnityEngine;
 public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 {
 
-    public SummonType GetPreSummonType()
+    public bool CanPredict(Summon summon)
     {
-        return SummonType.Wolf;
+        return summon is Wolf;
     }
 
     // 역할: 늑대가 적 수, 체력 차이, 피해량을 보고 다음 공격 선택을 예측한다.
-    public AttackPrediction GetAttackPrediction(Summon wolf, int wolfPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon wolf, int wolfPlateIndex, IReadOnlyList<Plate> playerPlates, IReadOnlyList<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
@@ -78,7 +78,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 살아있는 적들의 체력이 모두 절반 이상인지 확인한다.
-    public bool AllEnermyHealthOver50(List<Plate> enermyPlates)
+    public bool AllEnermyHealthOver50(IReadOnlyList<Plate> enermyPlates)
     {
         bool hasAliveEnermy = false;
 
@@ -102,7 +102,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 살아있는 적들의 체력이 모두 절반 이하인지 확인한다.
-    public bool AllEnermyHealthDown50(List<Plate> enermyPlates)
+    public bool AllEnermyHealthDown50(IReadOnlyList<Plate> enermyPlates)
     {
         bool hasAliveEnermy = false;
 
@@ -124,7 +124,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 다른 적보다 체력이 30% 이상 낮은 적이 있으면 그중 가장 약한 적 위치를 돌려준다.
-    public int IsEnermyHealthDifferenceOver30(List<Plate> enermyPlates)
+    public int IsEnermyHealthDifferenceOver30(IReadOnlyList<Plate> enermyPlates)
     {
         if (enermyPlates.Count < 2) return -1;
 
@@ -160,7 +160,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 체력이 가장 낮은 적이 일반 공격으로 바로 닿는 가장 가까운 적인지 확인한다.
-    public bool IsLowestHealthEnermyClosest(Summon attackingSummon, List<Plate> enermyPlates, int lowestIndex)
+    public bool IsLowestHealthEnermyClosest(Summon attackingSummon, IReadOnlyList<Plate> enermyPlates, int lowestIndex)
     {
         // 적 소환수가 2개 미만인 경우 비교할 수 없으므로 false 반환
         if (enermyPlates.Count < 2) return false;
@@ -175,7 +175,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 공격자 자신을 제외하고 가장 앞쪽에 있는 적 위치를 찾는다.
-    public int GetClosestEnermyIndex(Summon attackingSummon, List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(Summon attackingSummon, IReadOnlyList<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
@@ -192,7 +192,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 살아있는 적이 2마리 이상인지 확인한다.
-    public bool IsEnermyCountTwoOrMore(List<Plate> enermyPlates)
+    public bool IsEnermyCountTwoOrMore(IReadOnlyList<Plate> enermyPlates)
     {
         int enermyCount = 0;
 
@@ -209,7 +209,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 살아있는 적이 정확히 1마리인지 확인한다.
-    public bool IsEnermyCountOne(List<Plate> enermyPlates)
+    public bool IsEnermyCountOne(IReadOnlyList<Plate> enermyPlates)
     {
         int enermyCount = 0;
 
@@ -227,7 +227,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 늑대 뒤쪽 아군 중 지금 쓸 수 있는 공격형 특수 공격이 있는지 확인한다.
-    public bool HasSpecificAvailableSpecialAttack(Summon self, int wolfPlateIndex, List<Plate> playerPlates)
+    public bool HasSpecificAvailableSpecialAttack(Summon self, int wolfPlateIndex, IReadOnlyList<Plate> playerPlates)
     {
         // 검사할 특수 공격 상태 타입들 (None, Burn, Poison, LifeDrain)
         StatusType[] specificStatuses = new StatusType[] { StatusType.None, StatusType.Burn, StatusType.Poison, StatusType.LifeDrain };
@@ -260,7 +260,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 일반 공격과 사용 가능한 특수 공격 중 전체 피해가 더 큰 공격 종류를 고른다.
-    public AttackType GetMostDamageAttack(Summon attackingSummon, List<Plate> enermyPlates)
+    public AttackType GetMostDamageAttack(Summon attackingSummon, IReadOnlyList<Plate> enermyPlates)
     {
         double normalAttackDamage = attackingSummon.GetAttackPower(); // 기본값: 일반 공격의 데미지
 
@@ -294,7 +294,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 가장 가까운 적을 일반 공격 한 번으로 처치할 수 있으면 그 적 위치를 돌려준다.
-    public int GetIndexOfNormalAttackCanKill(Summon wolf, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon wolf, IReadOnlyList<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
         int closestIndex = GetClosestEnermyIndex(enermyPlates);
@@ -314,7 +314,7 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 적 플레이트를 앞에서부터 확인해 가장 먼저 만나는 적 위치를 찾는다.
-    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(IReadOnlyList<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {

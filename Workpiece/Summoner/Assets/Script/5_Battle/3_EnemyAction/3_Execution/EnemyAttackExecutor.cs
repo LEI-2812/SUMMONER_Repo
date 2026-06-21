@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: 적이 선택한 일반 공격과 특수 공격을 실제로 실행한다.
@@ -35,7 +35,7 @@ public class EnemyAttackExecutor
         Debug.Log(logMessage);
     }
 
-    public void ExecuteDirectSpecialAttack(Summon attacker, List<Plate> targetPlates, int targetPlateIndex, int specialAttackIndex)
+    public void ExecuteDirectSpecialAttack(Summon attacker, IReadOnlyList<Plate> targetPlates, int targetPlateIndex, int specialAttackIndex)
     {
         attacker.SpecialAttack(targetPlates, targetPlateIndex, specialAttackIndex);
     }

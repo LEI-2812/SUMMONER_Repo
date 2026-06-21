@@ -5,21 +5,15 @@ using UnityEngine;
 public class SummonPickView
 {
     private readonly GameObject darkBackground;
-    private readonly GameObject drawPanel;
-    private readonly List<DrawOptionPanelView> drawOptionPanels;
     private readonly GameObject redrawPanel;
     private readonly List<DrawOptionPanelView> redrawOptionPanels;
 
     public SummonPickView(
         GameObject darkBackground,
-        GameObject drawPanel,
-        List<DrawOptionPanelView> drawOptionPanels,
         GameObject redrawPanel,
         List<DrawOptionPanelView> redrawOptionPanels)
     {
         this.darkBackground = darkBackground;
-        this.drawPanel = drawPanel;
-        this.drawOptionPanels = drawOptionPanels;
         this.redrawPanel = redrawPanel;
         this.redrawOptionPanels = redrawOptionPanels;
     }
@@ -39,8 +33,8 @@ public class SummonPickView
 
     public void ShowDrawOptions(List<Summon> drawOptions)
     {
-        ShowPanel(drawPanel);
-        SetOptionPanels(drawOptionPanels, drawOptions);
+        ShowPanel(redrawPanel);
+        SetOptionPanels(redrawOptionPanels, drawOptions);
     }
 
     public void ShowRedrawOptions(List<Summon> drawOptions)
@@ -51,7 +45,6 @@ public class SummonPickView
 
     public void HideOptionPanels()
     {
-        HidePanel(drawPanel);
         HidePanel(redrawPanel);
     }
 

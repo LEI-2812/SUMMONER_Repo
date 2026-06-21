@@ -82,7 +82,7 @@ public class Stage5_Controller : StoryScenarioControllerBase
         bangImage.SetActive(true);
         interactionController.StopNextDialogue(); //여기서 알아서 대사를 멈추게함
 
-        Invoke("endBangEffect", 1f);
+        Invoke(nameof(EndBangEffect), 1f);
     }
     private void EndBangEffect()
     {

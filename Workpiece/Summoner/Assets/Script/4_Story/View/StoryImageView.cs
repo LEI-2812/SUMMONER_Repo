@@ -10,16 +10,8 @@ public class StoryImageView : MonoBehaviour
     [Header("받은 Sprite를 넣을 Image오브젝트")]
     [SerializeField] private Image targetImage;
 
-    private InteractionController interactionController;
-
-    private void Awake()
+    public void ShowImage(int currentDialogueIndex)
     {
-        interactionController = GetComponent<InteractionController>();
-    }
-
-    public void ShowImage()
-    {
-        int currentDialogueIndex = interactionController.GetCurrentDialogueIndex(); // currentDialogueIndex 가져오기
         Debug.Log(currentDialogueIndex);
         
         if (currentDialogueIndex >= 0 && currentDialogueIndex < spriteArray.Length)

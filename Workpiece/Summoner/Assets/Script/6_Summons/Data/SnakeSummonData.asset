@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: Snake
   summonRank: 1
-  summonType: 4
   maxHp: 1500
   attackPower: 200
   heavyAttackPower: 0

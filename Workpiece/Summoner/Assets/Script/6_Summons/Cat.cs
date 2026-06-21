@@ -1,18 +1,13 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: 고양이 소환수의 기본 데이터와 특수 공격 동작을 초기화한다.
 public class Cat : Summon
 {
 
-    public override void SummonInitialize()
+    protected override void ApplyFallbackData()
     {
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("Cat", SummonRank.Low, SummonType.Cat, 250, 30, 40);
+        SetFallbackStatus("Cat", SummonRank.Low, 250, 30, 40);
         ApplayMultiple(GetStatMultiplier());
 
         // 일반 공격: 가장 가까운 적 공격
@@ -22,7 +17,7 @@ public class Cat : Summon
 
     }
 
-    public override void SpecialAttack(List<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
+    public override void SpecialAttack(IReadOnlyList<Plate> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
         if (!SpecialAttackIndexCheck(SpecialAttackArrayIndex))
         {
@@ -41,26 +36,21 @@ public class Cat : Summon
         CatSpecialAttackWithHeavyAttackPowerExecute(
             specialAttack,
             enemyPlates,
-            selectedPlateIndex,
-            SpecialAttackArrayIndex);
+            selectedPlateIndex);
     }
 
     private void CatSpecialAttackWithHeavyAttackPowerExecute(
         IAttackStrategy specialAttack,
-        List<Plate> enemyPlates,
-        int selectedPlateIndex,
-        int specialAttackArrayIndex)
+        IReadOnlyList<Plate> enemyPlates,
+        int selectedPlateIndex)
     {
         // 근접공격 effect가 attacker.GetAttackPower()를 사용하므로
         // 강공격도 버프/저주가 반영되는 현재 공격력 경로로 실행한다.
         double originAttackPower = GetAttackPower();
         SetAttackPower(GetHeavyAttackPower());
 
-        specialAttack.Attack(this, enemyPlates, selectedPlateIndex, specialAttackArrayIndex);
-        AttackMotionPlay(false);
-        AttackCooldownApply(specialAttack);
+        SpecialAttackExecute(specialAttack, enemyPlates, selectedPlateIndex);
         SetAttackPower(originAttackPower);
-        SetIsAttack(false);
     }
 
 }

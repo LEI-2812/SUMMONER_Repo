@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: 적 행동 흐름에서 사용할 확률 판정과 조건 기반 선택을 담당한다.
@@ -72,7 +72,7 @@ internal class EnemyActionPicker
         return Random.Range(0f, 100f) < 30f;
     }
 
-    public int PickHighHealthPlayerPlateIndexWithLowAlly(List<Plate> playerPlates)
+    public int PickHighHealthPlayerPlateIndexWithLowAlly(IReadOnlyList<Plate> playerPlates)
     {
         // 흡혈 대응용으로 체력이 가장 높은 플레이어 소환수 위치를 고른다.
         if (playerPlates.Count < 2)
@@ -125,7 +125,7 @@ internal class EnemyActionPicker
         return -1;
     }
 
-    public bool HasPlayerSummonOverMediumRank(List<Plate> plates)
+    public bool HasPlayerSummonOverMediumRank(IReadOnlyList<Plate> plates)
     {
         // 중급 이상 소환수가 있으면 저주/스턴/쉴드 대응 후보가 생긴다.
         foreach (Plate plate in plates)

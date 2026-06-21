@@ -92,7 +92,7 @@ public class Stage3_Controller : StoryScenarioControllerBase
     public void ShowBlueEffect()
     {
         playerMove.PlayBlueAni();
-        Invoke("showFox", 1.5f);
+        Invoke(nameof(ShowFox), 1.5f);
     }
 
     private void ShowFox()

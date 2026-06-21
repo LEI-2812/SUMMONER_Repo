@@ -1,11 +1,5 @@
-
-
-// °ÔÀÓ Á¾·á ¾Ë¸² ÇÚµé·¯
-// ¿ªÇÒ: °ÔÀÓ Á¾·á È®ÀÎ ¾Ë¸²¿¡¼­ Á¾·á µ¿ÀÛÀ» Ã³¸®ÇÑ´Ù.
+ï»¿// ê²Œì„ ì¢…ë£Œ ì•Œë¦¼ í•¸ë“¤ëŸ¬
+// ì—­í• : ê²Œì„ ì¢…ë£Œ í™•ì¸ ì•Œë¦¼ íƒ€ì…ì„ êµ¬ë¶„í•œë‹¤.
 public class ToQuitAlertHandler : BaseAlertHandler
 {
-    public override void ShowAlert(System.Action<bool> callback)
-    {
-        base.ShowAlert(callback);
-    }
 }

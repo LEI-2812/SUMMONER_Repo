@@ -5,16 +5,9 @@ using UnityEngine;
 // 역할: 상급 악마 적 소환수의 기본 데이터와 공격 동작을 초기화한다.
 public class HighDevil : Summon
 {
-    protected override void Awake()
+    protected override void ApplyFallbackData()
     {
-        base.Awake();
-
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("HighDevil", SummonRank.Special, SummonType.HighDevil, 1000, 200, 250);
+        SetFallbackStatus("HighDevil", SummonRank.Special, 1000, 200, 250);
 
         // 일반 공격: 가장 가까운 적 공격
         SetAttackStrategies(

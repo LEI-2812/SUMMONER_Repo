@@ -14,6 +14,11 @@ public class BattleResultAlertView : MonoBehaviour
     [SerializeField] private AudioSource clearSound;
     [SerializeField] private AudioSource failSound;
 
+    private void Awake()
+    {
+        HideAlerts();
+    }
+
     public void ShowClearResultAlert(System.Action<bool> callback)
     {
         if (clearSound != null)
@@ -65,6 +70,19 @@ public class BattleResultAlertView : MonoBehaviour
 
         Debug.LogWarning("Battle result " + alertName + " alert is not assigned. Default battle flow will continue.");
         return false;
+    }
+
+    private void HideAlerts()
+    {
+        if (alertClear != null)
+        {
+            alertClear.SetActive(false);
+        }
+
+        if (alertFail != null)
+        {
+            alertFail.SetActive(false);
+        }
     }
 
     private IEnumerator WaitForAlertResult(GameObject alertObject, ConfirmAlertView alertScript, System.Action<bool> callback)

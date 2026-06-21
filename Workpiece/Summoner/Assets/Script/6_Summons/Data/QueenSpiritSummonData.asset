@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: QueenSpirit
   summonRank: 4
-  summonType: 14
   maxHp: 400
   attackPower: 100
   heavyAttackPower: 140

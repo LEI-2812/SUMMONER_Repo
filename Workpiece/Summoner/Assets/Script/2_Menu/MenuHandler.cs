@@ -3,47 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// ¿ªÇÒ: ¸Ş´º È­¸é¿¡¼­ ¹öÆ° ÀÔ·ÂÀ» ¹Ş¾Æ È­¸é ÀÌµ¿ÀÌ³ª ¸Ş´º µ¿ÀÛÀ» ½ÇÇàÇÑ´Ù.
+// ì—­í• : ë©”ë‰´ í™”ë©´ì—ì„œ ë²„íŠ¼ ì…ë ¥ì„ ë°›ì•„ í™”ë©´ ì´ë™ì´ë‚˜ ë©”ë‰´ ë™ì‘ì„ ì‹¤í–‰í•œë‹¤.
 public class MenuHandler : MonoBehaviour
 {
     public static MenuHandler instance;
 
-    [Header("¸Ş´º ÆĞ³Î ¹× ¹è°æ")]
+    [Header("ë©”ë‰´ íŒ¨ë„ ë° ë°°ê²½")]
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject backGroundPanel;
 
-    [Header("»ç¿îµå")]
+    [Header("ì‚¬ìš´ë“œ")]
     [SerializeField] private AudioSource menuClick;
     [SerializeField] private AudioSource alertClick;
 
-    [Header("¾Ë¸² ÇÚµé·¯µé")]
+    [Header("ì•Œë¦¼ í•¸ë“¤ëŸ¬ë“¤")]
     [SerializeField] private ToMainAlertHandler toMainAlertHandler;
     [SerializeField] private ToQuitAlertHandler toQuitAlertHandler;
     [SerializeField] private SkipAlertHandler skipAlertHandler;
 
-    [Header("¼³Á¤ ÇÚµé·¯")]
+    [Header("ì„¤ì • í•¸ë“¤ëŸ¬")]
     [SerializeField] private SettingHandler settingHandler;
 
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
         }
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && settingHandler.settingPanel.activeSelf)
+        if (!Input.GetKeyDown(KeyCode.Escape))
         {
-            settingHandler.settingPanel.SetActive(false);
+            return;
         }
-        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name != "Start Screen" && !settingHandler.settingPanel.activeSelf)
+
+        if (settingHandler != null && settingHandler.IsSettingsOpen())
+        {
+            settingHandler.CloseSettings();
+            return;
+        }
+
+        if (SceneManager.GetActiveScene().name != "Start Screen")
         {
             ToggleMenu();
         }
@@ -53,7 +67,7 @@ public class MenuHandler : MonoBehaviour
     {
         if (menuPanel == null || backGroundPanel == null)
         {
-            Debug.LogError("¸Ş´º ÆĞ³Î ¶Ç´Â ¹è°æ ÆĞ³ÎÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("ë©”ë‰´ íŒ¨ë„ ë˜ëŠ” ë°°ê²½ íŒ¨ë„ì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 
@@ -71,7 +85,7 @@ public class MenuHandler : MonoBehaviour
 
         if (toMainAlertHandler == null)
         {
-            Debug.LogError("toMainAlertHandler°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("toMainAlertHandlerê°€ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 
@@ -94,7 +108,7 @@ public class MenuHandler : MonoBehaviour
 
         if (toQuitAlertHandler == null)
         {
-            Debug.LogError("toQuitAlertHandler°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("toQuitAlertHandlerê°€ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 
@@ -116,7 +130,7 @@ public class MenuHandler : MonoBehaviour
 
         if (skipAlertHandler == null)
         {
-            Debug.LogError("skipAlertHandler°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("skipAlertHandlerê°€ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 
@@ -124,7 +138,7 @@ public class MenuHandler : MonoBehaviour
         {
             if (result)
             {
-                Debug.Log("½ºÅµµÇ¾ú½À´Ï´Ù.");
+                Debug.Log("ìŠ¤í‚µë˜ì—ˆìŠµë‹ˆë‹¤.");
             }
         });
     }
@@ -133,7 +147,7 @@ public class MenuHandler : MonoBehaviour
     {
         if (settingHandler == null)
         {
-            Debug.LogError("settingHandler°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("settingHandlerê°€ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
             return;
         }
 

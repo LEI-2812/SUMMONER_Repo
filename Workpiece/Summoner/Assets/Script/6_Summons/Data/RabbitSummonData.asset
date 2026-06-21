@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: Rabbit
   summonRank: 1
-  summonType: 1
   maxHp: 1500
   attackPower: 185
   heavyAttackPower: 0

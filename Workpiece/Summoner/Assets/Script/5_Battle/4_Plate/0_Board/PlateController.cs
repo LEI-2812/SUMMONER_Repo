@@ -95,6 +95,11 @@ public class PlateController : MonoBehaviour
         return queryService.FindLowestHealthPlateIndex(enermyPlates);
     }
 
+    public int GetFirstEmptyPlayerPlateIndex()
+    {
+        return queryService.FindFirstEmptyPlateIndex(playerPlates);
+    }
+
     // 판 표시 제어
     public void CompactEnermyPlates()
     {
@@ -236,23 +241,13 @@ public class PlateController : MonoBehaviour
     }
 
     // 리스트 접근
-    public List<Plate> GetPlayerPlates()
+    public IReadOnlyList<Plate> GetPlayerPlates()
     {
         return playerPlates;
     }
 
-    public List<Plate> GetEnermyPlates()
+    public IReadOnlyList<Plate> GetEnermyPlates()
     {
         return enermyPlates;
-    }
-
-    public void SetPlayerPlates(List<Plate> plates)
-    {
-        playerPlates = plates;
-    }
-
-    public void SetEnermyPlates(List<Plate> plates)
-    {
-        enermyPlates = plates;
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: 플레이어 공격 예측 목록을 순회하고 대응한 예측을 제거한다.

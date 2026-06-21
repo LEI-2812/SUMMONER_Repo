@@ -11,7 +11,7 @@ public class SettingHandler : MonoBehaviour
 
     public void OpenSettings()
     {
-        if (setting == null || settingPanel == null)
+        if (!ResolveSettingReferences())
         {
             Debug.LogError("Setting 또는 Setting Panel이 할당되지 않았습니다.");
             return;
@@ -24,6 +24,29 @@ public class SettingHandler : MonoBehaviour
 
     public void CloseSettings()
     {
-        settingPanel?.SetActive(false);
+        if (ResolveSettingReferences())
+        {
+            settingPanel.SetActive(false);
+        }
+    }
+
+    public bool IsSettingsOpen()
+    {
+        return ResolveSettingReferences() && settingPanel.activeSelf;
+    }
+
+    private bool ResolveSettingReferences()
+    {
+        if (setting == null)
+        {
+            setting = FindObjectOfType<SettingPanelView>();
+        }
+
+        if (settingPanel == null && setting != null)
+        {
+            settingPanel = setting.settingPanel;
+        }
+
+        return setting != null && settingPanel != null;
     }
 }

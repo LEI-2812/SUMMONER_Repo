@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: 적 소환수 1명의 상태 회복 선사용, 대응 공격, 연속 공격을 실행한다.
@@ -24,7 +24,7 @@ internal class EnemyTurnActionRunner
 
     public List<AttackPrediction> RunEnemyAction(
         Summon attackingSummon,
-        List<Plate> enemyPlates,
+        IReadOnlyList<Plate> enemyPlates,
         int enemyPlateIndex,
         List<AttackPrediction> playerAttackPredictions)
     {
@@ -90,7 +90,7 @@ internal class EnemyTurnActionRunner
     // 화상, 흡혈, 독성에 대해서는 힐스킬이 있을 경우 힐을 먼저 사용한다.
     private bool TryUseHealBeforeReaction(
         Summon attackingSummon,
-        List<Plate> enemyPlates,
+        IReadOnlyList<Plate> enemyPlates,
         int enemyPlateIndex)
     {
         int healSpecialAttackIndex = actionPicker.PickHealSpecialAttackIndexForDamageStatus(attackingSummon);

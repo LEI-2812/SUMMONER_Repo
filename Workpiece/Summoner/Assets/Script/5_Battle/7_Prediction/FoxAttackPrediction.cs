@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,18 +6,18 @@ using UnityEngine;
 public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
 {
 
-    public SummonType GetPreSummonType()
+    public bool CanPredict(Summon summon)
     {
-        return SummonType.Fox;
+        return summon is Fox;
     }
 
     // 역할: 여우가 적을 공격할지 아군 저주 해제를 노릴지 판단해 다음 행동을 예측한다.
-    public AttackPrediction GetAttackPrediction(Summon fox, int foxPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon fox, int foxPlateIndex, IReadOnlyList<Plate> playerPlates, IReadOnlyList<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
         int attackIndex = GetClosestEnermyIndex(enermyPlates);
-        List<Plate> targetPlate = enermyPlates;
+        IReadOnlyList<Plate> targetPlate = enermyPlates;
 
         int cursedSummonIndex = GetIndexOfSummonWithCurseStatus(playerPlates);
 
@@ -77,6 +77,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
         }
         else
         {
+            targetPlate = playerPlates;
             attackIndex = GetIndexOfHighestAttackPower(playerPlates);
         }
 
@@ -84,7 +85,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 아군 중 저주 상태인 소환수가 있으면 그 위치를 찾는다.
-    public int GetIndexOfSummonWithCurseStatus(List<Plate> playerPlates)
+    public int GetIndexOfSummonWithCurseStatus(IReadOnlyList<Plate> playerPlates)
     {
         for (int i = 0; i < playerPlates.Count; i++)
         {
@@ -98,7 +99,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 살아있는 적이 2마리 이상인지 확인한다.
-    public bool IsTwoOrMoreEnemies(List<Plate> enermyPlates)
+    public bool IsTwoOrMoreEnemies(IReadOnlyList<Plate> enermyPlates)
     {
         int count = 0;
         foreach (Plate plate in enermyPlates)
@@ -110,7 +111,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 살아있는 적이 정확히 1마리인지 확인한다.
-    public bool IsOnlyOneEnemy(List<Plate> enermyPlates)
+    public bool IsOnlyOneEnemy(IReadOnlyList<Plate> enermyPlates)
     {
         int count = 0;
         foreach (Plate plate in enermyPlates)
@@ -121,7 +122,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 살아있는 적들의 체력이 모두 절반 이상인지 확인한다.
-    public bool AllEnemiesHealthOver50(List<Plate> enermyPlates)
+    public bool AllEnemiesHealthOver50(IReadOnlyList<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
@@ -135,7 +136,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 아군에 상급 소환수가 없는지 확인한다.
-    public bool AllSummonsLowOrMediumRank(List<Plate> playerPlates)
+    public bool AllSummonsLowOrMediumRank(IReadOnlyList<Plate> playerPlates)
     {
         foreach (Plate plate in playerPlates)
         {
@@ -149,7 +150,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 체력이 30% 아래인 적이 딱 한 명이면 그 위치를 돌려준다.
-    public int IsAnyEnemyHealthDown30Percent(List<Plate> enermyPlates)
+    public int IsAnyEnemyHealthDown30Percent(IReadOnlyList<Plate> enermyPlates)
     {
         int index = -1;
         int count = 0;
@@ -170,7 +171,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 체력이 70%를 넘는 적이 하나라도 있는지 확인한다.
-    public bool IsAnyEnemyHealthOver70Percent(List<Plate> enermyPlates)
+    public bool IsAnyEnemyHealthOver70Percent(IReadOnlyList<Plate> enermyPlates)
     {
         foreach (Plate plate in enermyPlates)
         {
@@ -184,7 +185,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 아군 중 공격력이 가장 높은 소환수의 위치를 찾는다.
-    public int GetIndexOfHighestAttackPower(List<Plate> playerPlates)
+    public int GetIndexOfHighestAttackPower(IReadOnlyList<Plate> playerPlates)
     {
         int highestAttackIndex = -1;
         double highestAttackPower = double.MinValue;
@@ -209,7 +210,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 체력이 30% 아래인 적이 가장 가까운 적이고 일반 공격으로 처치 가능한지 확인한다.
-    public int GetIndexOfNormalAttack30PerCanKill(Summon fox, List<Plate> enermyPlates, int under30Index)
+    public int GetIndexOfNormalAttack30PerCanKill(Summon fox, IReadOnlyList<Plate> enermyPlates, int under30Index)
     {
         // 가장 가까운 적의 인덱스를 가져옴
         int closestIndex = GetClosestEnermyIndex(enermyPlates);
@@ -229,7 +230,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 적 플레이트를 앞에서부터 확인해 가장 먼저 만나는 적 위치를 찾는다.
-    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(IReadOnlyList<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
@@ -242,7 +243,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
         return -1; // 적 소환수가 없으면 -1 반환
     }
     // 역할: 가장 가까운 적을 일반 공격 한 번으로 처치할 수 있으면 그 적 위치를 돌려준다.
-    public int GetIndexOfNormalAttackCanKill(Summon fox, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon fox, IReadOnlyList<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
         int closestIndex = GetClosestEnermyIndex(enermyPlates);

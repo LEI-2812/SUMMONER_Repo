@@ -6,14 +6,9 @@ using UnityEngine.UI;
 // 역할: 토끼 소환수의 기본 데이터와 특수 공격 동작을 초기화한다.
 public class Rabbit : Summon
 {
-    public override void SummonInitialize()
+    protected override void ApplyFallbackData()
     {
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("Rabbit", SummonRank.Medium, SummonType.Rabbit, 300, 37, 0);
+        SetFallbackStatus("Rabbit", SummonRank.Medium, 300, 37, 0);
         ApplayMultiple(GetStatMultiplier());
 
         SetAttackStrategies(

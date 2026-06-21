@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: 적 소환수들을 순서대로 찾아 한 적의 행동 실행 흐름에 넘긴다.
@@ -59,7 +59,7 @@ public class EnermyAttackController : MonoBehaviour
 
     private void RunEnemyActions(List<AttackPrediction> playerAttackPredictionsList)
     {
-        List<Plate> enermyPlates = plateController.GetEnermyPlates();
+        IReadOnlyList<Plate> enermyPlates = plateController.GetEnermyPlates();
         for (int index = 0; index < plateController.GetEnermySummonCount(); index++) //적이 순차적으로 공격준비
         {
             playerAttackPredictionsList = GetEnemyTurnActionRunner().RunEnemyAction(

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,7 +19,7 @@ public class PlayerAttackPrediction : MonoBehaviour
     }
 
     // 역할: 현재 아군 소환수들을 하나씩 확인해 각 소환수의 다음 공격 예측 목록을 만든다.
-    public List<AttackPrediction> GetPlayerAttackPredictionList(List<Plate> playerPlates, List<Plate> enermyPlates)
+    public List<AttackPrediction> GetPlayerAttackPredictionList(IReadOnlyList<Plate> playerPlates, IReadOnlyList<Plate> enermyPlates)
     {
         List<AttackPrediction> playerPrediction = new List<AttackPrediction>();
 
@@ -62,7 +62,7 @@ public class PlayerAttackPrediction : MonoBehaviour
                     // 적절한 예측 클래스를 찾아서 공격 예측 수행
                     foreach (IAttackPrediction prediction in attackPredictions)
                     {
-                        if (prediction.GetPreSummonType() == summon.GetSummonType())
+                        if (prediction.CanPredict(summon))
                         {
                             AttackPrediction result = prediction.GetAttackPrediction(summon, attackSummonPlateIndex, playerPlates, enermyPlates);
                             if (result != null)

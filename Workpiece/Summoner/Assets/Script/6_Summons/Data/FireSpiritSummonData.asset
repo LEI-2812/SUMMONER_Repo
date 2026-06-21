@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: FireSpirit
   summonRank: 3
-  summonType: 13
   maxHp: 350
   attackPower: 60
   heavyAttackPower: 130

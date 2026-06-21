@@ -16,10 +16,13 @@ public class SummonStatusView : MonoBehaviour
     private float blinkTimer;
     private bool colorFeedbackPlaying;
     private Coroutine colorFeedbackCoroutine;
+    private Color baseColor = Color.white;
+    private bool baseColorCaptured;
 
     private void Awake()
     {
         ImageEnsure();
+        BaseColorCapture();
     }
 
     public void StatusEffectsShow(IReadOnlyList<StatusEffect> activeStatusEffects)
@@ -35,6 +38,7 @@ public class SummonStatusView : MonoBehaviour
         }
 
         ImageEnsure();
+        BaseColorCapture();
 
         if (activeStatusEffects == null || activeStatusEffects.Count == 0)
         {
@@ -64,10 +68,22 @@ public class SummonStatusView : MonoBehaviour
 
     private void StatusColorReset()
     {
-        image.color = Color.white;
+        BaseColorCapture();
+        image.color = baseColor;
         blinkTimer = 0f;
         currentEffectIndex = 0;
         activeEffectCount = 0;
+    }
+
+    private void BaseColorCapture()
+    {
+        if (baseColorCaptured || image == null)
+        {
+            return;
+        }
+
+        baseColor = image.color;
+        baseColorCaptured = true;
     }
 
     private void MultipleStatusColorBlink(IReadOnlyList<StatusEffect> activeStatusEffects)
@@ -153,6 +169,7 @@ public class SummonStatusView : MonoBehaviour
     private void ColorFeedbackShow(Color color)
     {
         ImageEnsure();
+        BaseColorCapture();
 
         if (colorFeedbackCoroutine != null)
         {

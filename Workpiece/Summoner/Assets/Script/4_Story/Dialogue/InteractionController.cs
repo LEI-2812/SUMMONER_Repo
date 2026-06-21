@@ -97,7 +97,7 @@ public class InteractionController : MonoBehaviour, IPointerClickHandler
             if (isDialogueActive && !isStory)
             {
                 ShowNextLine();
-                storyImageView.ShowImage();
+                storyImageView.ShowImage(GetCurrentDialogueIndex());
             }
         }
     }

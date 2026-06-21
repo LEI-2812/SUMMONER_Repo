@@ -31,14 +31,20 @@ public class MenuView : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
         }
     }
 
@@ -55,6 +61,12 @@ public class MenuView : MonoBehaviour
 
     public void OpenCloseMenu()
     {
+        if (menuPanel == null || backGroundPanel == null)
+        {
+            Debug.LogError("메뉴 패널 또는 배경 패널이 할당되지 않았습니다.");
+            return;
+        }
+
         if (menuPanel.activeSelf)
         {
             backGroundPanel.SetActive(false);

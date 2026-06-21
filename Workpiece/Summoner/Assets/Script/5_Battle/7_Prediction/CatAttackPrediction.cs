@@ -1,16 +1,16 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: 고양이 소환수의 공격 선택 가능성을 예측한다.
 public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
 {
-    public SummonType GetPreSummonType()
+    public bool CanPredict(Summon summon)
     {
-        return SummonType.Cat;
+        return summon is Cat;
     }
 
     // 역할: 고양이가 이번 턴에 일반 공격과 특수 공격 중 무엇을 더 쓸 것 같은지 예측한다.
-    public AttackPrediction GetAttackPrediction(Summon cat, int catPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon cat, int catPlateIndex, IReadOnlyList<Plate> playerPlates, IReadOnlyList<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
@@ -71,7 +71,7 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 가장 가까운 적을 일반 공격 한 번으로 처치할 수 있으면 그 적의 위치를 돌려준다.
-    public int GetIndexOfNormalAttackCanKill(Summon cat, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon cat, IReadOnlyList<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
         int closestIndex = GetClosestEnermyIndex(enermyPlates);
@@ -90,7 +90,7 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 특수 공격 한 번으로 처치할 수 있는 첫 번째 적 위치를 찾는다.
-    public int GetIndexOfSpecialCanKill(Summon cat, List<Plate> enermyPlates)
+    public int GetIndexOfSpecialCanKill(Summon cat, IReadOnlyList<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {
@@ -105,7 +105,7 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 적 플레이트를 앞에서부터 확인해 가장 먼저 만나는 적 위치를 찾는다.
-    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(IReadOnlyList<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {

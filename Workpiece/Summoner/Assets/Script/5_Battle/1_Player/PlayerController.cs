@@ -78,8 +78,7 @@ public class PlayerController : MonoBehaviour
             turnProgressState,
             turnActions,
             playerView,
-            feedbackView,
-            actionExecutor);
+            feedbackView);
 
         return new PlayerTurnFlow(
             this,

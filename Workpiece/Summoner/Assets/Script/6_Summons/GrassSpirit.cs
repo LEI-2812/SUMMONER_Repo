@@ -5,16 +5,9 @@ using UnityEngine;
 // 역할: 풀 정령 소환수의 기본 데이터와 공격 동작을 초기화한다.
 public class GrassSpirit : Summon
 {
-    protected override void Awake()
+    protected override void ApplyFallbackData()
     {
-        base.Awake();
-
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("GrassSpirit", SummonRank.Normal, SummonType.GrassSpirit, 350, 80, 110);
+        SetFallbackStatus("GrassSpirit", SummonRank.Normal, 350, 80, 110);
 
         // 일반 공격: 가장 가까운 적 공격
         SetAttackStrategies(

@@ -107,4 +107,23 @@ public class PlateQueryService
 
         return lowestHealthIndex;
     }
+
+    public int FindFirstEmptyPlateIndex(List<Plate> targetPlates)
+    {
+        if (targetPlates == null)
+        {
+            return -1;
+        }
+
+        for (int i = 0; i < targetPlates.Count; i++)
+        {
+            Plate plate = targetPlates[i];
+            if (plate != null && !plate.GetIsInSummon())
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
 }

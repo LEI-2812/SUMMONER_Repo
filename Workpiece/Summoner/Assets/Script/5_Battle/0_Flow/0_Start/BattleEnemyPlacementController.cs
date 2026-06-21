@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BattleStageContext))]
@@ -24,7 +24,7 @@ public class BattleEnemyPlacementController : MonoBehaviour
             return;
         }
 
-        List<Plate> enemyPlates = plateController.GetEnermyPlates();
+        IReadOnlyList<Plate> enemyPlates = plateController.GetEnermyPlates();
         if (enemyPlates == null || enemyPlates.Count == 0)
         {
             Debug.LogWarning("적 플레이트가 없어 스테이지 적 배치를 건너뜁니다.");
@@ -37,7 +37,7 @@ public class BattleEnemyPlacementController : MonoBehaviour
         }
     }
 
-    private void EnemyPlacementSlotApply(EnemyPlacementSlot enemyPlacementSlot, List<Plate> enemyPlates)
+    private void EnemyPlacementSlotApply(EnemyPlacementSlot enemyPlacementSlot, IReadOnlyList<Plate> enemyPlates)
     {
         if (enemyPlacementSlot == null)
         {
@@ -65,6 +65,18 @@ public class BattleEnemyPlacementController : MonoBehaviour
         }
 
         targetPlate.SummonPlaceOnPlate(enemySummonPrefab);
+        EnemyStageMultiplierApply(targetPlate);
+    }
+
+    private void EnemyStageMultiplierApply(Plate targetPlate)
+    {
+        Summon placedEnemySummon = targetPlate.GetCurrentSummon();
+        if (placedEnemySummon == null)
+        {
+            return;
+        }
+
+        placedEnemySummon.ApplayMultiple(Summon.GetStatMultiplier());
     }
 
     private bool EnemyPlateHasSummon(Plate targetPlate)

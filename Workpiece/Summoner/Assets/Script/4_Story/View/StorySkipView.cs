@@ -10,23 +10,11 @@ public class StorySkipView : MonoBehaviour
 
     [SerializeField] private AudioSource skipSound;
 
-    private SettingPanelView setting;
+    private readonly GameplaySettingStore gameplaySettingStore = new GameplaySettingStore();
 
     private void Start()
     {
         skipAlertHandler = FindObjectOfType<SkipAlertHandler>();
-        if (skipAlertHandler == null)
-        {
-            Debug.LogWarning("스킵 알림 핸들러가 할당되지 않았습니다.");
-        }
-
-        setting = SettingPanelView.instance;
-
-        if (setting == null)
-        {
-            Debug.LogWarning("SettingPanelView 인스턴스가 존재하지 않습니다.");
-        }
-
         IsSkipActive();
     }
 
@@ -42,32 +30,23 @@ public class StorySkipView : MonoBehaviour
 
     public void IsSkipActive()
     {
-        if (setting != null)
-        {
-            if (setting.GetGamePlayController().GetIsStorySkip())
-            {
-                SkipBtn.SetActive(true);
-            }
-            else
-            {
-                SkipBtn.SetActive(false);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("설정이 할당되지 않았습니다.");
-        }
+        SkipBtn.SetActive(gameplaySettingStore.LoadStorySkipEnabled());
     }
 
     public void SkipAlert()
     {
+        ResolveSkipAlertHandler();
         if (skipAlertHandler == null)
         {
             Debug.LogError("SkipAlertHandler가 할당되지 않았습니다.");
             return;
         }
 
-        skipSound.Play();
+        if (skipSound != null)
+        {
+            skipSound.Play();
+        }
+
         skipAlertHandler.ShowAlert(result =>
         {
             if (result)
@@ -80,5 +59,15 @@ public class StorySkipView : MonoBehaviour
                 skipAlertHandler.HideAlert();
             }
         });
+    }
+
+    private void ResolveSkipAlertHandler()
+    {
+        if (skipAlertHandler != null)
+        {
+            return;
+        }
+
+        skipAlertHandler = FindObjectOfType<SkipAlertHandler>();
     }
 }

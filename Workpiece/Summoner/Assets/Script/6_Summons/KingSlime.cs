@@ -5,16 +5,9 @@ using UnityEngine;
 // 역할: 킹슬라임 적 소환수의 기본 데이터와 공격 동작을 초기화한다.
 public class KingSlime : Summon
 {
-    protected override void Awake()
+    protected override void ApplyFallbackData()
     {
-        base.Awake();
-
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("KingSlime", SummonRank.Special, SummonType.KingSlime, 250, 50, 65);
+        SetFallbackStatus("KingSlime", SummonRank.Special, 250, 50, 65);
 
         // 일반 공격: 가장 가까운 적 공격
         SetAttackStrategies(

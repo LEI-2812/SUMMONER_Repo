@@ -6,14 +6,9 @@ using UnityEngine;
 public class Eagle : Summon
 {
 
-    public override void SummonInitialize()
+    protected override void ApplyFallbackData()
     {
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("Eagle", SummonRank.High, SummonType.Eagle, 350, 45, 30);
+        SetFallbackStatus("Eagle", SummonRank.High, 350, 45, 30);
 
         ApplayMultiple(GetStatMultiplier());
 

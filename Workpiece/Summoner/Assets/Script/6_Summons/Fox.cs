@@ -6,14 +6,9 @@ using UnityEngine;
 public class Fox : Summon
 {
 
-    public override void SummonInitialize()
+    protected override void ApplyFallbackData()
     {
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("Fox", SummonRank.Low, SummonType.Fox, 250, 35, 0);
+        SetFallbackStatus("Fox", SummonRank.Low, 250, 35, 0);
         ApplayMultiple(GetStatMultiplier());
 
         // 일반 공격: 가장 가까운 적 공격

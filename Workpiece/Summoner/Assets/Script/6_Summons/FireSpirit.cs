@@ -6,16 +6,9 @@ using UnityEngine;
 public class FireSpirit : Summon
 {
 
-    protected override void Awake()
+    protected override void ApplyFallbackData()
     {
-        base.Awake();
-
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("FireSpirit", SummonRank.Normal, SummonType.FireSpirit, 350, 60, 130);
+        SetFallbackStatus("FireSpirit", SummonRank.Normal, 350, 60, 130);
 
         // 일반 공격: 가장 가까운 적 공격
         SetAttackStrategies(

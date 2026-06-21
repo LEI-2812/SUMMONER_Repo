@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: HighDevil
   summonRank: 4
-  summonType: 9
   maxHp: 1000
   attackPower: 200
   heavyAttackPower: 250

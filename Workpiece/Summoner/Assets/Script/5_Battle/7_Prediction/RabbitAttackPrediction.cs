@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,13 +7,13 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 {
  
 
-    public SummonType GetPreSummonType()
+    public bool CanPredict(Summon summon)
     {
-        return SummonType.Rabbit;
+        return summon is Rabbit;
     }
 
     // 역할: 토끼가 아군을 회복할지 적을 일반 공격할지 현재 체력 상태로 예측한다.
-    public AttackPrediction GetAttackPrediction(Summon rabbit, int rabbitPlateIndex, List<Plate> playerPlates, List<Plate> enermyPlates)
+    public AttackPrediction GetAttackPrediction(Summon rabbit, int rabbitPlateIndex, IReadOnlyList<Plate> playerPlates, IReadOnlyList<Plate> enermyPlates)
     {
         // 기본값 설정: 일반 공격 50%, 특수 공격 50%
         AttackProbability attackProbability = new AttackProbability(50f, 50f);
@@ -40,6 +40,7 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
         if (AllPlayerSummonOver70Percent(playerPlates))
         {
             attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "토끼 모든 플레이어 소환수 체력이 70% 이상");
+            return new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability);
         }
         else
         {
@@ -47,7 +48,9 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
             if (normalAttackKillIndex != -1)
             {
+                attackIndex = normalAttackKillIndex;
                 attackProbability = AdjustAttackProbabilities(attackProbability, 10f, true, "토끼 일반공격으로 처치가능");
+                return new AttackPrediction(rabbit, rabbitPlateIndex, rabbit.GetAttackStrategy(), 0, enermyPlates, attackIndex, attackProbability);
             }
         }
 
@@ -59,7 +62,7 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 토끼 자신을 빼고 비교했을 때, 다른 아군보다 체력이 30% 이상 낮은 아군 위치를 찾는다.
-    public int GetIndexOfLowerHealthIfDifferenceOver30(List<Plate> playerPlates,int rabbitIndex)
+    public int GetIndexOfLowerHealthIfDifferenceOver30(IReadOnlyList<Plate> playerPlates,int rabbitIndex)
     {
         if (playerPlates.Count < 2) return -1;
 
@@ -97,7 +100,7 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 모든 아군 체력이 30% 이하일 때 가장 체력이 낮은 아군 위치를 찾는다.
-    public int GetIndexOfLowerHealthIfAllDown30(List<Plate> playerPlates)
+    public int GetIndexOfLowerHealthIfAllDown30(IReadOnlyList<Plate> playerPlates)
     {
         double minHealthRatio = double.MaxValue;
         int indexOfMinHealth = -1;
@@ -128,7 +131,7 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 아군 소환수들의 체력이 모두 70% 이상인지 확인한다.
-    public bool AllPlayerSummonOver70Percent(List<Plate> playerPlates)
+    public bool AllPlayerSummonOver70Percent(IReadOnlyList<Plate> playerPlates)
     {
         foreach (Plate plate in playerPlates)
         {
@@ -146,7 +149,7 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 아군 중 현재 체력 비율이 가장 낮은 소환수 위치를 찾는다.
-    public int GetIndexOfLowestHealthSummon(List<Plate> playerPlates)
+    public int GetIndexOfLowestHealthSummon(IReadOnlyList<Plate> playerPlates)
     {
         double minHealthRatio = double.MaxValue;
         int indexOfMinHealth = -1;
@@ -171,7 +174,7 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
     // 역할: 가장 가까운 적을 일반 공격 한 번으로 처치할 수 있으면 그 적 위치를 돌려준다.
-    public int GetIndexOfNormalAttackCanKill(Summon rabbit, List<Plate> enermyPlates)
+    public int GetIndexOfNormalAttackCanKill(Summon rabbit, IReadOnlyList<Plate> enermyPlates)
     {
         // 가장 가까운 적의 인덱스를 가져옴
         int closestIndex = GetClosestEnermyIndex(enermyPlates);
@@ -191,7 +194,7 @@ public class RabbitAttackPrediction : MonoBehaviour, IAttackPrediction
 
 
     // 역할: 적 플레이트를 앞에서부터 확인해 가장 먼저 만나는 적 위치를 찾는다.
-    public int GetClosestEnermyIndex(List<Plate> enermyPlates)
+    public int GetClosestEnermyIndex(IReadOnlyList<Plate> enermyPlates)
     {
         for (int i = 0; i < enermyPlates.Count; i++)
         {

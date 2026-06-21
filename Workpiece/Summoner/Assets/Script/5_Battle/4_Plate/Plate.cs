@@ -210,8 +210,28 @@ public class Plate : MonoBehaviour,
 
     public void SetCurrentSummon(Summon currentSummon)
     {
+        if (this.currentSummon != null && this.currentSummon != currentSummon)
+        {
+            this.currentSummon.ClearDeathHandler();
+        }
+
         this.currentSummon = currentSummon;
         isInSummon = currentSummon != null;
+
+        if (this.currentSummon != null)
+        {
+            this.currentSummon.SetDeathHandler(RemoveDefeatedSummon);
+        }
+    }
+
+    private void RemoveDefeatedSummon(Summon defeatedSummon)
+    {
+        if (currentSummon != defeatedSummon)
+        {
+            return;
+        }
+
+        RemoveSummon();
     }
 
     public bool GetIsInSummon()

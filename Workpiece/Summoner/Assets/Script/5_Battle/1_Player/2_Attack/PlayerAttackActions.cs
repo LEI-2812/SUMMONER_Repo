@@ -1,4 +1,4 @@
-// 역할: 플레이어 턴의 일반 공격과 특수 공격 시작 조건을 확인하고 실행 흐름을 조율한다.
+﻿// 역할: 플레이어 턴의 일반 공격과 특수 공격 시작 조건을 확인하고 실행 흐름을 조율한다.
 public class PlayerAttackActions
 {
     private readonly BattleController battleController;
@@ -7,7 +7,6 @@ public class PlayerAttackActions
     private readonly PlayerTurnActions turnActions;
     private readonly PlayerView playerView;
     private readonly PlayerFeedbackView feedbackView;
-    private readonly PlayerActionExecutor actionExecutor;
     private readonly PlayerTargetSelectionActions targetSelectionActions;
 
     public PlayerAttackActions(
@@ -18,8 +17,7 @@ public class PlayerAttackActions
         PlayerTurnProgressState turnProgressState,
         PlayerTurnActions turnActions,
         PlayerView playerView,
-        PlayerFeedbackView feedbackView,
-        PlayerActionExecutor actionExecutor)
+        PlayerFeedbackView feedbackView)
     {
         this.battleController = battleController;
         this.plateController = plateController;
@@ -27,14 +25,12 @@ public class PlayerAttackActions
         this.turnActions = turnActions;
         this.playerView = playerView;
         this.feedbackView = feedbackView;
-        this.actionExecutor = actionExecutor;
         targetSelectionActions = new PlayerTargetSelectionActions(
             player,
             summonController,
             battleController,
             plateController,
-            feedbackView,
-            ProcessAfterPlayerAttack);
+            feedbackView);
     }
 
     public void TryExecuteNormalAttack()
@@ -45,11 +41,10 @@ public class PlayerAttackActions
             return;
         }
 
-        actionExecutor.ExecuteNormalAttack(
-            attackSummon,
+        attackSummon.NormalAttack(
             plateController.GetEnermyPlates(),
-            battleController.GetAttackingPlateIndex(),
-            feedbackView);
+            battleController.GetAttackingPlateIndex());
+        feedbackView.PlayClick();
         ProcessAfterPlayerAttack();
     }
 
@@ -78,7 +73,7 @@ public class PlayerAttackActions
             return null;
         }
 
-        if (!CanUseNormalAttack(attackSummon))
+        if (!CanUseAttack(attackSummon))
         {
             feedbackView.Log("공격할 수 없습니다. ");
             feedbackView.PlayFail();
@@ -86,11 +81,6 @@ public class PlayerAttackActions
         }
 
         return attackSummon;
-    }
-
-    private bool CanUseNormalAttack(Summon attackSummon)
-    {
-        return attackSummon.GetIsAttack() && !attackSummon.IsStun();
     }
 
     private Summon GetSpecialAttackSummon()
@@ -109,7 +99,7 @@ public class PlayerAttackActions
             return null;
         }
 
-        if (!CanUseSpecialAttack(attackSummon))
+        if (!CanUseAttack(attackSummon))
         {
             feedbackView.Log("공격할 수 없습니다. ");
             feedbackView.PlayFail();
@@ -117,11 +107,6 @@ public class PlayerAttackActions
         }
 
         return attackSummon;
-    }
-
-    private bool CanUseSpecialAttack(Summon attackSummon)
-    {
-        return attackSummon.GetIsAttack() && !attackSummon.IsStun();
     }
 
     private bool SpecialAttackExecuteOrTargetSelect(Summon attackSummon)
@@ -144,33 +129,62 @@ public class PlayerAttackActions
         return ImmediateSpecialAttackExecute(attackSummon);
     }
 
-    private bool IsSpecialAttackCooldown(IAttackStrategy attackStrategy)
-    {
-        return attackStrategy.GetCurrentCooldown() > 0;
-    }
-
     private void TargetedSpecialAttackStart(Summon attackSummon)
     {
         int specialAttackIndex = battleController.GetCurrentSpecialAttackInfoIndex();
         feedbackView.PlayClick();
-        targetSelectionActions.StartTargetSelection(attackSummon, specialAttackIndex);
+        targetSelectionActions.StartTargetSelection(
+            selectedTargetPlateIndex => ExecuteSelectedSpecialAttack(
+                attackSummon,
+                specialAttackIndex,
+                selectedTargetPlateIndex));
+    }
+
+    private void ExecuteSelectedSpecialAttack(Summon attackSummon, int specialAttackIndex, int selectedTargetPlateIndex)
+    {
+        bool attackExecuted = battleController.SpecialAttackExecute(
+            attackSummon,
+            selectedTargetPlateIndex,
+            specialAttackIndex,
+            true);
+
+        if (attackExecuted)
+        {
+            ProcessAfterPlayerAttack();
+        }
     }
 
     private bool ImmediateSpecialAttackExecute(Summon attackSummon)
     {
-        return actionExecutor.ExecuteImmediateSpecialAttack(
-            battleController,
-            attackSummon,
-            battleController.GetAttackingPlateIndex(),
-            feedbackView);
+        if (!battleController.SpecialAttackExecute(
+                attackSummon,
+                battleController.GetAttackingPlateIndex(),
+                0,
+                true))
+        {
+            return false;
+        }
+
+        feedbackView.PlayClick();
+        return true;
     }
 
     private void ProcessAfterPlayerAttack()
     {
         turnProgressState.SetEnemyPlateClear(plateController.IsEnermyPlateClear());
         turnActions.CheckPlayerClearResult(turnProgressState);
-        actionExecutor.ProcessAfterPlayerAttack(
-            plateController,
-            playerView);
+        plateController.CompactEnermyPlates();
+        playerView.HideStatePanel();
+    }
+
+    private bool CanUseAttack(Summon attackSummon)
+    {
+        return attackSummon.GetIsAttack() &&
+               !attackSummon.IsStun();
+    }
+
+    private bool IsSpecialAttackCooldown(IAttackStrategy attackStrategy)
+    {
+        return attackStrategy.GetCurrentCooldown() > 0;
     }
 }

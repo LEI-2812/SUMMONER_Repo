@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   summonName: Slime
   summonRank: 3
-  summonType: 6
   maxHp: 200
   attackPower: 25
   heavyAttackPower: 40

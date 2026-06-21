@@ -21,7 +21,7 @@ public class AttackPrediction
     private int specialAttackArrayIndex;
 
     // 역할: 공격 대상이 들어 있는 플레이트 목록을 저장한다.
-    private List<Plate> targetPlate;
+    private IReadOnlyList<Plate> targetPlate;
 
     // 역할: 대상 플레이트 목록 안에서 실제로 공격받을 위치를 저장한다.
     private int targetPlateIndex;
@@ -32,7 +32,7 @@ public class AttackPrediction
         int attackSummonPlateIndex, //공격자 자신의 플레이트 번호
         IAttackStrategy attackStrategy, //공격 유형
         int specialAttackArrayIndex, //특수공격 인덱스
-        List<Plate> targetPlate, //타겟의 플레이트
+        IReadOnlyList<Plate> targetPlate, //타겟의 플레이트
         int targetPlateIndex, //타겟의 플레이트 번호
         AttackProbability attackProbability) //확률
     {
@@ -87,12 +87,12 @@ public class AttackPrediction
     }
 
 
-    public List<Plate> GetTargetPlate()
+    public IReadOnlyList<Plate> GetTargetPlate()
     {
         return targetPlate;
     }
 
-    public void SetTargetPlate(List<Plate> targetPlate)
+    public void SetTargetPlate(IReadOnlyList<Plate> targetPlate)
     {
         this.targetPlate = targetPlate;
     }

@@ -10,19 +10,6 @@ public enum SummonRank
     Normal, Special, Boss // 적 소환수 등급
 }
 
-// 역할: 소환수 종류를 구분하는 값이다.
-public enum SummonType
-{
-    Cat, Rabbit, Wolf, Eagle, Snake, Fox,
-    Slime, Skeleton,
-    LowDevil, HighDevil,
-    KingSlime,
-    WaterSpirit, GrassSpirit,
-    FireSpirit,
-    QueenSpirit,
-    DarkDragon
-}
-
 [RequireComponent(typeof(SummonStatusView))]
 [RequireComponent(typeof(SummonSoundView))]
 [RequireComponent(typeof(SummonImageView))]
@@ -39,7 +26,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     [SerializeField] private double attackPower; // 일반 공격력
     [SerializeField] private double heavyAttakPower; // 강공격력
     private SummonRank summonRank; // 등급
-    private SummonType summonType;
     private double maxHP; // 최대 체력
     [SerializeField] protected double nowHP; // 현재 체력
     private double shield = 0; // 보호막
@@ -49,10 +35,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     private IAttackStrategy attackStrategy;
     private IAttackStrategy[] specialAttackStrategies;
-    private StatusEffectController statusEffectController;
+    private StatusEffectState statusEffectState;
     private SummonImageView imageView;
     private SummonStatusView statusView;
     private SummonSoundView soundView;
+    private Action<Summon> deathHandler;
 
     private List<stateObserver> observers = new List<stateObserver>();
 
@@ -78,14 +65,14 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         }
 
         nowHP = maxHP;
-        statusEffectController = new StatusEffectController();
+        statusEffectState = new StatusEffectState();
     }
 
     void Update()
     {
-        StatusEffectControllerEnsure();
+        StatusEffectStateEnsure();
 
-        statusView.StatusEffectsShow(statusEffectController.GetActiveStatusEffects());
+        statusView.StatusEffectsShow(statusEffectState.GetActiveStatusEffects());
     }
 
     public void SetSprite(int index) => imageView.SpriteSet(index);
@@ -93,20 +80,20 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public Sprite GetSpecialAttackSprite() => specialAttackSprite;
 
 
-    public void NormalAttack(List<Plate> targetPlates, int selectedPlateIndex)
+    public void NormalAttack(IReadOnlyList<Plate> targetPlates, int selectedPlateIndex)
     {
         if (!AttackCanUse(attackStrategy))
         {
             Debug.Log("일반 공격은 쿨타임 중이라 사용할 수 없습니다.");
             return;
         }
-        attackStrategy.Attack(this, targetPlates, selectedPlateIndex, 0); // 일반 공격 실행
+        attackStrategy.Attack(this, targetPlates, selectedPlateIndex); // 일반 공격 실행
         AttackMotionPlay(true);
         AttackCooldownApply(attackStrategy);
         isAttack = false;
     }
 
-    public virtual void SpecialAttack(List<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
+    public virtual void SpecialAttack(IReadOnlyList<Plate> targetPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
     {
         if (!SpecialAttackIndexCheck(SpecialAttackArrayIndex))
         {
@@ -122,8 +109,15 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
             return;
         }
 
-        // 공격 실행
-        specialAttack.Attack(this, targetPlates, selectedPlateIndex, SpecialAttackArrayIndex);
+        SpecialAttackExecute(specialAttack, targetPlates, selectedPlateIndex);
+    }
+
+    protected void SpecialAttackExecute(
+        IAttackStrategy specialAttack,
+        IReadOnlyList<Plate> targetPlates,
+        int selectedPlateIndex)
+    {
+        specialAttack.Attack(this, targetPlates, selectedPlateIndex);
         AttackMotionPlay(false);
         AttackCooldownApply(specialAttack);
         isAttack = false;
@@ -159,41 +153,24 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     // 상태이상을 적용한다. 같은 상태이상은 중복 적용하지 않는다.
     public void ApplyStatusEffect(StatusEffect statusEffect)
     {
-        StatusEffectControllerEnsure();
+        StatusEffectStateEnsure();
 
-        statusEffectController.StatusEffectApply(statusEffect, this);
+        statusEffectState.StatusEffectApply(statusEffect, this);
     }
 
-    private void StatusEffectControllerEnsure()
+    private void StatusEffectStateEnsure()
     {
-        if (statusEffectController == null)
+        if (statusEffectState == null)
         {
-            statusEffectController = new StatusEffectController();
+            statusEffectState = new StatusEffectState();
         }
     }
 
-    // 피해를 주는 상태이상을 업데이트한다. 예: Poison, Burn
-    public void UpdateDamageStatusEffects()
+    public void UpdateStatusEffects(StatusUpdateTiming updateTiming)
     {
-        StatusEffectControllerEnsure();
+        StatusEffectStateEnsure();
 
-        statusEffectController.DamageStatusEffectsUpdate(this);
-    }
-
-    // 스턴과 저주 상태를 업데이트한다.
-    public void UpdateStunAndCurseStatus()
-    {
-        StatusEffectControllerEnsure();
-
-        statusEffectController.StunAndCurseStatusUpdate(this);
-    }
-
-    // 강화 상태를 업데이트한다.
-    public void UpdateUpgradeStatus()
-    {
-        StatusEffectControllerEnsure();
-
-        statusEffectController.UpgradeStatusUpdate(this);
+        statusEffectState.UpdateStatusEffects(updateTiming, this);
     }
 
 
@@ -249,9 +226,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     public void StatusChangedNotify() => NotifyObservers();
 
-    public SummonType GetSummonType() => summonType;
-    
-
     public void UpgradeAttackPower(double multiplier)
     {
         attackPower *= (1 + multiplier);
@@ -294,18 +268,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
             return;
         }
 
-        if (shield > 0) // 보호막이 있으면 피해를 먼저 막음
-        {
-            ShieldDamageApply(damage);
-        }
-        else // 보호막이 없는 경우
-        {
-            HealthDamageApply(damage);
-        }
-
-        DeathCheck(damage);
-
-        // 체력 변경을 옵저버에게 알림
+        DamageApply(damage);
+        DeathHandle(damage);
         NotifyObservers();
     }
 
@@ -327,6 +291,17 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         return true;
     }
 
+    private void DamageApply(double damage)
+    {
+        if (shield > 0)
+        {
+            ShieldDamageApply(damage);
+            return;
+        }
+
+        HealthDamageApply(damage);
+    }
+
     private void ShieldDamageApply(double damage)
     {
         if (shield >= damage)
@@ -343,8 +318,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         animator.SetTrigger("hitted");
         shieldImage.SetActive(false);
 
-        StatusEffectControllerEnsure();
-        statusEffectController.StatusEffectRemove(StatusType.Shield, this);
+        StatusEffectStateEnsure();
+        statusEffectState.StatusEffectRemove(StatusType.Shield, this);
         Debug.Log("보호막이 깨졌습니다. 남은 체력: " + nowHP);
     }
 
@@ -355,23 +330,32 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         statusView.DamageColorShow();
     }
 
-    private void DeathCheck(double damage)
+    private void DeathHandle(double damage)
     {
-        if (nowHP <= 0)
+        if (nowHP > 0)
         {
-            nowHP = 0;
             Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
-            Die();
             return;
         }
 
+        nowHP = 0;
         Debug.Log($"{summonName} takes {damage} damage. Remaining health: {nowHP}");
+        Die();
     }
 
     // 소환수 초기화 메서드
     public virtual void SummonInitialize()
     {
+        if (!TryApplyAssignedSummonData())
+        {
+            ApplyFallbackData();
+        }
+
         NotifyObservers();
+    }
+
+    protected virtual void ApplyFallbackData()
+    {
     }
 
     protected bool TryApplyAssignedSummonData()
@@ -383,28 +367,24 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
         summonName = summonData.GetSummonName();
         summonRank = summonData.GetSummonRank();
-        summonType = summonData.GetSummonType();
         maxHP = summonData.GetMaxHp();
         nowHP = maxHP;
         attackPower = summonData.GetAttackPower();
         heavyAttakPower = summonData.GetHeavyAttackPower();
         attackStrategy = summonData.CreateNormalAttackStrategy();
         specialAttackStrategies = summonData.CreateSpecialAttackStrategies();
-        NotifyObservers();
         return true;
     }
 
     protected void SetFallbackStatus(
         string name,
         SummonRank rank,
-        SummonType type,
         double maxHp,
         double normalAttackPower,
         double heavyAttackPower)
     {
         summonName = name;
         summonRank = rank;
-        summonType = type;
         maxHP = maxHp;
         nowHP = maxHP;
         attackPower = normalAttackPower;
@@ -417,7 +397,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         specialAttackStrategies = specialAttacks;
     }
 
-    private static double multiple=5; // 배수 설정
+    private static double multiple = 1; // 배수 설정
     public static double GetStatMultiplier() => multiple;
     public static void StatMultiplierSet(double value) => multiple = value;
 
@@ -433,12 +413,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public virtual void Die()
     {
         Debug.Log($"{summonName}의 체력이 모두 소진되어 사라집니다.");
-        // Plate에서 소환수를 제거하기 위해 부모 Plate를 가져옴
-        Plate plate = GetComponentInParent<Plate>(); // 소환수가 배치된 부모 Plate 가져오기
-        if (plate != null)
-        {
-            plate.RemoveSummon(); // 소환수 제거
-        }
+        deathHandler?.Invoke(this);
 
         // 소환수 오브젝트 제거
         Destroy(gameObject); // 씬에서 소환수 오브젝트 제거
@@ -461,10 +436,8 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public double GetInitialShield() => initialShield; // 초기 보호막 값을 반환
 
     public string GetSummonName() => summonName;
-    public void SetSummonName(string name) => this.summonName = name;
 
     public double GetHeavyAttackPower() => heavyAttakPower;
-    public void SetHeavyAttackPower(double value) => this.heavyAttakPower = value;
 
     public IAttackStrategy[] GetSpecialAttackStrategy() => specialAttackStrategies;
     public IAttackStrategy GetAttackStrategy() => attackStrategy;
@@ -472,7 +445,6 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
     public bool GetInvincibilityOnce() => onceInvincibility;
     public void SetOnceInvincibility(bool isinvincibility) => this.onceInvincibility = isinvincibility;
 
-    public void SetMaxHP(double hp) => this.maxHP = hp;
     public double GetMaxHP() => maxHP;
 
     // nowHP 관련 메서드
@@ -489,14 +461,25 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         return summonData == null ? summonRank : summonData.GetSummonRank();
     }
 
-    public void SetSummonRank(SummonRank rank) => this.summonRank = rank;
-
-    public void SetImage(Image image)
+    public Image GetImage()
     {
-        imageView.ImageSet(image);
+        ImageViewEnsure();
+        return imageView.GetImage();
     }
 
-    public Image GetImage() => imageView.GetImage();
+    private void ImageViewEnsure()
+    {
+        if (imageView != null)
+        {
+            return;
+        }
+
+        imageView = GetComponent<SummonImageView>();
+        if (imageView == null)
+        {
+            imageView = gameObject.AddComponent<SummonImageView>();
+        }
+    }
 
 
     // 특수 공격 쿨타임 확인
@@ -517,16 +500,16 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     public List<StatusType> GetAllStatusTypes()
     {
-        StatusEffectControllerEnsure();
+        StatusEffectStateEnsure();
 
-        return statusEffectController.GetStatusTypes();
+        return statusEffectState.GetStatusTypes();
     }
 
     public IReadOnlyList<StatusEffect> GetActiveStatusEffects()
     {
-        StatusEffectControllerEnsure();
+        StatusEffectStateEnsure();
 
-        return statusEffectController.GetActiveStatusEffects();
+        return statusEffectState.GetActiveStatusEffects();
     }
 
     public bool IsCursed()
@@ -541,9 +524,9 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     private bool StatusTypeContains(StatusType statusType)
     {
-        StatusEffectControllerEnsure();
+        StatusEffectStateEnsure();
 
-        return statusEffectController.StatusTypeContains(statusType);
+        return statusEffectState.StatusTypeContains(statusType);
     }
 
     public bool IsCooltime() // 쿨타임인지 확인
@@ -592,6 +575,10 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
 
     public int GetSpecialAttackCount() => specialAttackStrategies == null ? 0 : specialAttackStrategies.Length;
 
+    public void SetDeathHandler(Action<Summon> deathHandler) => this.deathHandler = deathHandler;
+
+    public void ClearDeathHandler() => deathHandler = null;
+
     public void AddObserver(stateObserver observer) => observers.Add(observer);
 
     public void RemoveObserver(stateObserver observer) => observers.Remove(observer);
@@ -604,5 +591,10 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusEffectTarget
         }
     }
 
-    public Summon Clone() => (Summon)this.MemberwiseClone(); // 얕은 복사
+    public Summon Clone()
+    {
+        Summon clone = (Summon)this.MemberwiseClone(); // 얕은 복사
+        clone.deathHandler = null;
+        return clone;
+    }
 }

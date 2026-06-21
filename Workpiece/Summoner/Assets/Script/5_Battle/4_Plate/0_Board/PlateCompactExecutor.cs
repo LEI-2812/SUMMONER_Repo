@@ -22,8 +22,8 @@ public class PlateCompactExecutor
 
             if (i != nextAvailableIndex)
             {
-                plates[nextAvailableIndex].DirectMoveSummon(summon);
                 plates[i].RemoveSummon();
+                plates[nextAvailableIndex].DirectMoveSummon(summon);
             }
 
             nextAvailableIndex++;

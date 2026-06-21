@@ -6,7 +6,7 @@ public class BattleController : MonoBehaviour
     public bool isAttacking = false; //공격중인이 판별
 
     private PlateController plateController;
-    private BattleSpecialAttackExecutor specialAttackExecutor;
+    private SpecialAttackExecutor specialAttackExecutor;
     private readonly BattleAttackState attackState = new BattleAttackState();
 
     public Summon GetAttackingSummon()
@@ -17,7 +17,7 @@ public class BattleController : MonoBehaviour
     void Awake()
     {
         plateController = GetComponent<PlateController>();
-        specialAttackExecutor = new BattleSpecialAttackExecutor(plateController);
+        specialAttackExecutor = new SpecialAttackExecutor(plateController);
     }
 
     public Summon AttackStart(int buttonIndex)

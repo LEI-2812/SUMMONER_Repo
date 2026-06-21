@@ -6,16 +6,9 @@ using UnityEngine;
 public class WaterSpirit : Summon
 {
 
-    protected override void Awake()
+    protected override void ApplyFallbackData()
     {
-        base.Awake();
-
-        if (TryApplyAssignedSummonData())
-        {
-            return;
-        }
-
-        SetFallbackStatus("WaterSpirit", SummonRank.Normal, SummonType.WaterSpirit, 350, 70, 120);
+        SetFallbackStatus("WaterSpirit", SummonRank.Normal, 350, 70, 120);
 
         // 일반 공격: 가장 가까운 적 공격
         SetAttackStrategies(
