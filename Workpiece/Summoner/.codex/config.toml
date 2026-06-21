@@ -47,3 +47,18 @@ approval_mode = "approve"
 
 [mcp_servers.mcp-unity.tools.send_console_log]
 approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.select_gameobject]
+approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.unload_scene]
+approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.execute_menu_item]
+approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.load_scene]
+approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.get_gameobject]
+approval_mode = "approve"
