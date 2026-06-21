@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using NUnit.Framework;
 
 namespace Summoner.EditModeTests
@@ -23,11 +23,9 @@ namespace Summoner.EditModeTests
         public void AttackTargetSelection_IsSeparatedFromStatusEffect()
         {
             string targetedStrategyText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/TargetedAttackStrategy.cs");
-            string targetedEffectText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/TargetedAttackEffectInstanceCreate.cs");
-
             StringAssert.Contains("SelfAttackTargetSelector", targetedStrategyText);
             StringAssert.Contains("SelectedPlateAttackTargetSelector", targetedStrategyText);
-            Assert.IsFalse(targetedEffectText.Contains("target = attacker"), "Attack effects should apply to the target selected by the strategy.");
+            Assert.IsFalse(targetedStrategyText.Contains("target = attacker"), "Attack effects should apply to the target selected by the strategy.");
         }
 
         [Test]
@@ -69,14 +67,14 @@ namespace Summoner.EditModeTests
         {
             string text = File.ReadAllText("Assets/Script/6_Summons/Summon.cs");
 
-            Assert.IsFalse(text.Contains("activeStatusEffects"), "Summon should delegate active status storage to StatusEffectController.");
-            StringAssert.Contains("statusEffectController.GetActiveStatusEffects()", text);
+            Assert.IsFalse(text.Contains("activeStatusEffects"), "Summon should delegate active status storage to StatusEffectState.");
+            StringAssert.Contains("statusEffectState.GetActiveStatusEffects()", text);
         }
 
         [Test]
-        public void StatusEffectController_OwnsActiveStatusQueries()
+        public void StatusEffectState_OwnsActiveStatusQueries()
         {
-            string text = File.ReadAllText("Assets/Script/5_Battle/8_Status/StatusEffectController.cs");
+            string text = File.ReadAllText("Assets/Script/5_Battle/8_Status/StatusEffectState.cs");
 
             StringAssert.Contains("GetActiveStatusEffects()", text);
             StringAssert.Contains("GetStatusTypes()", text);
@@ -90,7 +88,6 @@ namespace Summoner.EditModeTests
 
             StringAssert.Contains("SummonImageView", text);
             StringAssert.Contains("imageView.SpriteSet(index)", text);
-            StringAssert.Contains("imageView.ImageSet(image)", text);
             StringAssert.Contains("imageView.GetImage()", text);
             Assert.IsFalse(text.Contains("image.sprite = sprites[index]"), "Summon should delegate sprite changes to SummonImageView.");
         }

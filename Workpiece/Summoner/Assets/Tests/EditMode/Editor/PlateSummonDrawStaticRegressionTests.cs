@@ -56,20 +56,23 @@ namespace Summoner.EditModeTests
         public void SummonController_UsesDrawNamesForSerializedFieldsSafely()
         {
             string text = File.ReadAllText("Assets/Script/5_Battle/5_SummonPick/SummonController.cs");
+            string viewText = File.ReadAllText("Assets/Script/5_Battle/5_SummonPick/3_View/SummonPickView.cs");
 
             StringAssert.Contains("using UnityEngine.Serialization;", text);
-            StringAssert.Contains("[FormerlySerializedAs(\"takeSummonPanel\")]", text);
-            StringAssert.Contains("[FormerlySerializedAs(\"selectSummonPanels\")]", text);
             StringAssert.Contains("[FormerlySerializedAs(\"reTakeSummonPanel\")]", text);
             StringAssert.Contains("[FormerlySerializedAs(\"ReselectSummonPanels\")]", text);
-            StringAssert.Contains("[SerializeField] private GameObject drawPanel;", text);
-            StringAssert.Contains("[SerializeField] private List<DrawOptionPanelView> drawOptionPanels;", text);
             StringAssert.Contains("[SerializeField] private GameObject redrawPanel;", text);
             StringAssert.Contains("[SerializeField] private List<DrawOptionPanelView> redrawOptionPanels;", text);
-            StringAssert.Contains("drawPanel.SetActive(true)", text);
-            StringAssert.Contains("redrawPanel.SetActive(true)", text);
-            StringAssert.Contains("drawPanel.SetActive(false)", text);
-            StringAssert.Contains("redrawPanel.SetActive(false)", text);
+            StringAssert.Contains("ShowDrawOptions", viewText);
+            StringAssert.Contains("ShowRedrawOptions", viewText);
+            StringAssert.Contains("SetOptionPanels(redrawOptionPanels, drawOptions)", viewText);
+            StringAssert.Contains("ShowPanel(redrawPanel)", viewText);
+            StringAssert.Contains("HidePanel(redrawPanel)", viewText);
+            Assert.IsFalse(text.Contains("[SerializeField] private GameObject drawPanel;"), "SummonController must not keep the removed one-option draw panel field.");
+            Assert.IsFalse(text.Contains("[SerializeField] private List<DrawOptionPanelView> drawOptionPanels;"), "SummonController must not keep the removed one-option draw panel list.");
+            Assert.IsFalse(viewText.Contains("GetDrawDisplayPanel"), "SummonPickView must not fallback through the removed one-option draw panel.");
+            Assert.IsFalse(viewText.Contains("GetDrawOptionPanels"), "SummonPickView must not fallback through the removed one-option draw panel.");
+            Assert.IsFalse(viewText.Contains("HasEnoughOptionPanels"), "SummonPickView must not decide between one-option and three-option panels.");
         }
 
         [Test]
@@ -95,8 +98,8 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("public void SetSelectionHandler(Action<Summon> selectSummon)", viewText);
             StringAssert.Contains("selectSummon?.Invoke(assignedSummon);", viewText);
             Assert.IsFalse(viewText.Contains("SummonController.Instance"), "DrawOptionPanelView should report selection through an injected handler.");
-            StringAssert.Contains("ConnectOptionPanels(drawOptionPanels)", controllerText);
             StringAssert.Contains("ConnectOptionPanels(redrawOptionPanels)", controllerText);
+            Assert.IsFalse(controllerText.Contains("ConnectOptionPanels(drawOptionPanels)"), "SummonController must not connect the removed one-option draw panels.");
             StringAssert.Contains("optionPanel.SetSelectionHandler(OnSelectSummon)", controllerText);
             Assert.IsFalse(controllerText.Contains("public static SummonController Instance"), "SummonController should not keep an unused global Instance.");
             Assert.IsFalse(controllerText.Contains("Instance = this"), "SummonController should not keep singleton assignment after panel selection uses handlers.");
@@ -111,7 +114,7 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("private PlateSelectionController plateSelectionController;", controllerText);
             StringAssert.Contains("plateSelectionController.CanStartRedrawSelection()", controllerText);
             StringAssert.Contains("plateSelectionController.ShowRedrawSelectablePlates()", controllerText);
-            StringAssert.Contains("plateSelectionController.TryGetPlayerPlateIndex(plate, out selectedPlateIndex)", controllerText);
+            StringAssert.Contains("plateSelectionController.TryGetPlayerPlateIndex(plate, out int selectedPlateIndex)", controllerText);
             StringAssert.Contains("public class PlateSelectionController", selectionText);
         }
 
@@ -168,7 +171,7 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("playerTurnFlow.TryExecuteSpecialAttack();", playerText);
             StringAssert.Contains("return WaitForTargetPlateSelection(", actionText);
             StringAssert.Contains("private IEnumerator WaitForTargetPlateSelection(", actionText);
-            StringAssert.Contains("private bool MousePositionInsidePlates(List<Plate> targetPlates)", actionText);
+            StringAssert.Contains("private bool MousePositionInsidePlates(IReadOnlyList<Plate> targetPlates)", actionText);
             StringAssert.Contains("plateController.GetEnermyPlates(),", actionText);
             StringAssert.Contains("plateController.GetPlayerPlates(),", actionText);
             StringAssert.Contains("plateController.DownTransparencyForWhoPlate(downTransparencyForPlayerPlate);", actionText);
@@ -226,11 +229,40 @@ namespace Summoner.EditModeTests
         }
 
         [Test]
+        public void PlateController_ExposesReadOnlyPlateLists()
+        {
+            string text = File.ReadAllText("Assets/Script/5_Battle/4_Plate/0_Board/PlateController.cs");
+
+            StringAssert.Contains("public IReadOnlyList<Plate> GetPlayerPlates()", text);
+            StringAssert.Contains("public IReadOnlyList<Plate> GetEnermyPlates()", text);
+            Assert.IsFalse(text.Contains("public void SetPlayerPlates("), "PlateController should not let external code replace player plates.");
+            Assert.IsFalse(text.Contains("public void SetEnermyPlates("), "PlateController should not let external code replace enemy plates.");
+        }
+
+        [Test]
+        public void Summon_ReportsDeathWithoutFindingPlate()
+        {
+            string summonText = File.ReadAllText("Assets/Script/6_Summons/Summon.cs");
+            string plateText = File.ReadAllText("Assets/Script/5_Battle/4_Plate/Plate.cs");
+
+            StringAssert.Contains("private Action<Summon> deathHandler;", summonText);
+            StringAssert.Contains("deathHandler?.Invoke(this);", summonText);
+            StringAssert.Contains("public void SetDeathHandler(Action<Summon> deathHandler)", summonText);
+            StringAssert.Contains("public void ClearDeathHandler()", summonText);
+            Assert.IsFalse(summonText.Contains("GetComponentInParent<Plate>()"), "Summon should not find Plate directly when it dies.");
+            Assert.IsFalse(summonText.Contains("plate.RemoveSummon()"), "Summon should report death and let Plate clear its own slot.");
+
+            StringAssert.Contains("this.currentSummon.SetDeathHandler(RemoveDefeatedSummon);", plateText);
+            StringAssert.Contains("private void RemoveDefeatedSummon(Summon defeatedSummon)", plateText);
+            StringAssert.Contains("RemoveSummon();", plateText);
+        }
+
+        [Test]
         public void TargetedAttackStrategy_GuardsInvalidTargetIndex()
         {
             string strategyText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/TargetedAttackStrategy.cs");
             string selectorText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/IAttackTargetSelector.cs");
-            int strategyMethodIndex = strategyText.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex)");
+            int strategyMethodIndex = strategyText.IndexOf("public void Attack(Summon attacker, IReadOnlyList<Plate> targetPlates, int selectedPlateIndex)");
             int selectorIndex = selectorText.IndexOf("class SelectedPlateAttackTargetSelector");
             int nullGuardIndex = selectorText.IndexOf("targetPlates == null", selectorIndex);
             int negativeGuardIndex = selectorText.IndexOf("selectedPlateIndex < 0", selectorIndex);
@@ -257,7 +289,7 @@ namespace Summoner.EditModeTests
         {
             string areaText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/AttackAllEnemiesStrategy.cs");
             string selectorText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/IAttackTargetSelector.cs");
-            int areaMethodIndex = areaText.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex)");
+            int areaMethodIndex = areaText.IndexOf("public void Attack(Summon attacker, IReadOnlyList<Plate> targetPlates, int selectedPlateIndex)");
             int areaSelectorIndex = selectorText.IndexOf("class AllEnemiesAttackTargetSelector");
             int areaNullGuardIndex = selectorText.IndexOf("targetPlates == null", areaSelectorIndex);
             int areaLoopIndex = selectorText.IndexOf("foreach (Plate plate in targetPlates)", areaSelectorIndex);
@@ -272,7 +304,7 @@ namespace Summoner.EditModeTests
             Assert.Less(areaPlateGuardIndex, areaSummonAccessIndex, "Area target lookup should guard null plates before summon access.");
 
             string closestText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/ClosestEnemyAttackStrategy.cs");
-            int closestMethodIndex = closestText.IndexOf("public void Attack(Summon attacker, List<Plate> targetPlates, int selectedPlateIndex, int specialAttackArrayIndex)");
+            int closestMethodIndex = closestText.IndexOf("public void Attack(Summon attacker, IReadOnlyList<Plate> targetPlates, int selectedPlateIndex)");
             int closestNullGuardIndex = closestText.IndexOf("targetPlates == null", closestMethodIndex);
             int closestSelectorCallIndex = closestText.IndexOf("targetSelector.SelectTargets(attacker, targetPlates, selectedPlateIndex)", closestMethodIndex);
             int closestSelectorIndex = selectorText.IndexOf("class ClosestEnemyAttackTargetSelector");
@@ -309,21 +341,20 @@ namespace Summoner.EditModeTests
         }
 
         [Test]
-        public void AttackStrategies_DoNotStoreEffectStatusTime()
+        public void AttackStrategies_ApplyEffectsWithoutFactoryFiles()
         {
             string targetedText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/TargetedAttackStrategy.cs");
             string areaText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/AttackAllEnemiesStrategy.cs");
-            string targetedEffectText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/TargetedAttackEffectInstanceCreate.cs");
-            string areaEffectText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/AllEnemiesAttackEffectInstanceCreate.cs");
 
-            Assert.IsFalse(targetedText.Contains("private int statusTime;"), "TargetedAttackStrategy should not store status duration after effect creation.");
-            Assert.IsFalse(areaText.Contains("private int statusTime;"), "AttackAllEnemiesStrategy should not store status duration after effect creation.");
-            StringAssert.Contains("TargetedAttackEffectInstanceCreate.Create(statusType, statusTime, damage)", targetedText);
-            StringAssert.Contains("AllEnemiesAttackEffectInstanceCreate.Create(statusType, statusTime)", areaText);
-            StringAssert.Contains("private int statusTime;", targetedEffectText);
-            StringAssert.Contains("private int statusTime;", areaEffectText);
+            Assert.IsFalse(File.Exists("Assets/Script/5_Battle/6_AttackRule/TargetedAttackEffectInstanceCreate.cs"), "Targeted attacks should not route through an effect factory file.");
+            Assert.IsFalse(File.Exists("Assets/Script/5_Battle/6_AttackRule/AllEnemiesAttackEffectInstanceCreate.cs"), "Area attacks should not route through an effect factory file.");
+            Assert.IsFalse(targetedText.Contains("TargetedAttackEffectInstanceCreate"), "TargetedAttackStrategy should apply its own effects directly.");
+            Assert.IsFalse(areaText.Contains("AllEnemiesAttackEffectInstanceCreate"), "AttackAllEnemiesStrategy should apply its own effects directly.");
+            StringAssert.Contains("private void ApplyEffectToTarget(Summon attacker, Summon target)", targetedText);
+            StringAssert.Contains("private void ApplyEffectToTarget(Summon attacker, Summon target)", areaText);
+            StringAssert.Contains("StatusEffectInstanceCreate.Create(StatusType.Shield, statusTime, effectValue)", targetedText);
+            StringAssert.Contains("StatusEffectInstanceCreate.Create(damageStatusType, statusTime, statusDamage)", areaText);
         }
-
         [Test]
         public void Summon_GuardsNullSpecialAttackArrays()
         {
@@ -400,6 +431,7 @@ namespace Summoner.EditModeTests
         public void PlateController_ClosestEnemyPlateQueryUsesEnemyPlates()
         {
             string text = File.ReadAllText("Assets/Script/5_Battle/4_Plate/0_Board/PlateController.cs");
+            string queryText = File.ReadAllText("Assets/Script/5_Battle/4_Plate/0_Board/PlateQueryService.cs");
             int methodIndex = text.IndexOf("public int GetClosestEnermyPlateIndexExcept(Summon attackingSummon)");
             int nextMethodIndex = text.IndexOf("public int GetPlayerSummonCount()", methodIndex);
 
@@ -408,7 +440,7 @@ namespace Summoner.EditModeTests
 
             string methodBody = text.Substring(methodIndex, nextMethodIndex - methodIndex);
             StringAssert.Contains("return queryService.FindClosestOccupiedPlateIndex(enermyPlates, attackingSummon);", methodBody);
-            StringAssert.Contains("targetPlates[i].GetCurrentSummon()", text);
+            StringAssert.Contains("targetPlates[i].GetCurrentSummon()", queryText);
             Assert.IsFalse(methodBody.Contains("playerPlates[i].GetCurrentSummon()"), "Enemy plate query should not read player plates.");
         }
 
@@ -418,7 +450,7 @@ namespace Summoner.EditModeTests
             string text = File.ReadAllText("Assets/Script/5_Battle/7_Prediction/PlayerAttackPrediction.cs");
 
             StringAssert.Contains("int attackIndex = plateController.GetClosestEnermyPlateIndexExcept(summon);", text);
-            StringAssert.Contains("enermyPlates, //?寃??뚮젅?댄듃", text);
+            StringAssert.Contains("enermyPlates, //타겟 플레이트", text);
             Assert.IsFalse(text.Contains("int attackIndex = plateController.GetClosestPlayerPlateIndex();"), "Player attack prediction should not target a player plate index.");
         }
 
@@ -426,13 +458,18 @@ namespace Summoner.EditModeTests
         public void Plate_DelegatesAttackTargetDecisionToPlateController()
         {
             string plateText = File.ReadAllText("Assets/Script/5_Battle/4_Plate/Plate.cs");
+            string inputText = File.ReadAllText("Assets/Script/5_Battle/4_Plate/PlateInputActions.cs");
+            string targetSelectionText = File.ReadAllText("Assets/Script/5_Battle/4_Plate/PlateTargetSelectionActions.cs");
             string controllerText = File.ReadAllText("Assets/Script/5_Battle/4_Plate/0_Board/PlateController.cs");
 
-            StringAssert.Contains("private bool TrySelectAttackTargetPlate()", plateText);
-            StringAssert.Contains("private bool TryGetAttackTargetPlate(out int plateIndex, out string plateName)", plateText);
-            StringAssert.Contains("TryGetAttackTargetPlate(out _, out _)", plateText);
-            StringAssert.Contains("plateController.TryGetAttackTargetPlate(this, targetsPlayerPlate, out plateIndex, out plateName)", plateText);
-            StringAssert.Contains("Debug.Log($\"{plateName}???뚮젅?댄듃 {plateIndex}媛 ?좏깮?섏뿀?듬땲??\");", plateText);
+            StringAssert.Contains("private PlateInputActions inputActions;", plateText);
+            StringAssert.Contains("private bool TrySelectAttackTargetPlate()", inputText);
+            StringAssert.Contains("targetSelectionActions.TrySelectAttackTargetPlate()", inputText);
+            StringAssert.Contains("public bool TrySelectAttackTargetPlate()", targetSelectionText);
+            StringAssert.Contains("private bool TryGetAttackTargetPlate(out int plateIndex, out string plateName)", targetSelectionText);
+            StringAssert.Contains("TryGetAttackTargetPlate(out _, out _)", targetSelectionText);
+            StringAssert.Contains("plateController.TryGetAttackTargetPlate(plate, targetsPlayerPlate, out plateIndex, out plateName)", targetSelectionText);
+            StringAssert.Contains("Debug.Log($\"{plateName}의 플레이트 {plateIndex}가 선택되었습니다.\");", targetSelectionText);
             Assert.IsFalse(plateText.Contains("plateController.CanSelectAttackTargetPlate(this, AttackingSummonTargetsPlayerPlate())"), "Plate should use one attack target lookup path for hover and click.");
 
             StringAssert.Contains("public bool CanSelectAttackTargetPlate(Plate plate, bool targetsPlayerPlate)", controllerText);
@@ -449,17 +486,19 @@ namespace Summoner.EditModeTests
         public void Plate_DelegatesCurrentSpecialAttackTargetTypeToBattleController()
         {
             string plateText = File.ReadAllText("Assets/Script/5_Battle/4_Plate/Plate.cs");
+            string targetSelectionText = File.ReadAllText("Assets/Script/5_Battle/4_Plate/PlateTargetSelectionActions.cs");
             string battleText = File.ReadAllText("Assets/Script/5_Battle/0_Flow/2_AttackFlow/BattleController.cs");
+            string attackStateText = File.ReadAllText("Assets/Script/5_Battle/0_Flow/2_AttackFlow/BattleAttackState.cs");
 
-            StringAssert.Contains("battleController.DoesCurrentSpecialAttackTargetPlayerPlate()", plateText);
+            StringAssert.Contains("battleController.DoesCurrentSpecialAttackTargetPlayerPlate()", targetSelectionText);
             Assert.IsFalse(plateText.Contains("StatusType.Heal"), "Plate should not decide benefit target status types directly.");
             Assert.IsFalse(plateText.Contains("StatusType.Upgrade"), "Plate should not decide benefit target status types directly.");
             Assert.IsFalse(plateText.Contains("StatusType.Shield"), "Plate should not decide benefit target status types directly.");
 
             StringAssert.Contains("public bool DoesCurrentSpecialAttackTargetPlayerPlate()", battleText);
             StringAssert.Contains("public SpecialAttackInfo GetCurrentSpecialAttackInfo()", battleText);
-            StringAssert.Contains("private bool DoesAttackStrategyTargetPlayerPlate(IAttackStrategy attackStrategy)", battleText);
-            StringAssert.Contains("attackStrategy.BenefitEffectCheck()", battleText);
+            StringAssert.Contains("public bool DoesCurrentSpecialAttackTargetPlayerPlate()", attackStateText);
+            StringAssert.Contains("CurrentSpecialAttackInfo.GetAttackInfoStrategy().TargetsOwnPlates()", attackStateText);
             Assert.IsFalse(battleText.Contains("StatusType.Heal"), "BattleController should not decide benefit target status types directly.");
             Assert.IsFalse(battleText.Contains("StatusType.Upgrade"), "BattleController should not decide benefit target status types directly.");
             Assert.IsFalse(battleText.Contains("StatusType.Shield"), "BattleController should not decide benefit target status types directly.");
@@ -470,7 +509,7 @@ namespace Summoner.EditModeTests
         {
             string battleText = File.ReadAllText("Assets/Script/5_Battle/0_Flow/2_AttackFlow/BattleController.cs");
 
-            StringAssert.Contains("private BattleSpecialAttackExecutor specialAttackExecutor;", battleText);
+            StringAssert.Contains("private SpecialAttackExecutor specialAttackExecutor;", battleText);
             StringAssert.Contains("specialAttackExecutor.Execute(", battleText);
             StringAssert.Contains("public bool SpecialAttackExecute(", battleText);
             StringAssert.Contains("return false;", battleText);
@@ -575,7 +614,7 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("public List<AttackPrediction> Build()", predictionBuilderText);
             StringAssert.Contains("internal class EnemyTurnActionRunner", turnActionRunnerText);
             StringAssert.Contains("public List<AttackPrediction> RunEnemyAction(", turnActionRunnerText);
-            StringAssert.Contains("private bool TryExecuteHealForDamageStatus(", turnActionRunnerText);
+            StringAssert.Contains("private bool TryUseHealBeforeReaction(", turnActionRunnerText);
             StringAssert.Contains("actionPicker.PickHealSpecialAttackIndexForDamageStatus(attackingSummon)", turnActionRunnerText);
             StringAssert.Contains("actionPicker.CanContinueAttack(attackingSummon)", turnActionRunnerText);
             StringAssert.Contains("attackExecutor.ExecuteDirectSpecialAttack(", turnActionRunnerText);
@@ -611,10 +650,10 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("internal class EnemyActionPicker", pickerText);
             StringAssert.Contains("public int PickHealSpecialAttackIndexForDamageStatus(Summon summon)", pickerText);
             StringAssert.Contains("public bool CanContinueAttack(Summon summon)", pickerText);
-            StringAssert.Contains("public int PickHighHealthPlayerPlateIndexWithLowAlly(List<Plate> playerPlates)", pickerText);
-            StringAssert.Contains("public bool HasPlayerSummonOverMediumRank(List<Plate> plates)", pickerText);
+            StringAssert.Contains("public int PickHighHealthPlayerPlateIndexWithLowAlly(IReadOnlyList<Plate> playerPlates)", pickerText);
+            StringAssert.Contains("public bool HasPlayerSummonOverMediumRank(IReadOnlyList<Plate> plates)", pickerText);
             StringAssert.Contains("private bool HasDamageStatus(Summon summon)", pickerText);
-            StringAssert.Contains("public void ExecuteDirectSpecialAttack(Summon attacker, List<Plate> targetPlates, int targetPlateIndex, int specialAttackIndex)", executorText);
+            StringAssert.Contains("public void ExecuteDirectSpecialAttack(Summon attacker, IReadOnlyList<Plate> targetPlates, int targetPlateIndex, int specialAttackIndex)", executorText);
             StringAssert.Contains("attacker.SpecialAttack(targetPlates, targetPlateIndex, specialAttackIndex);", executorText);
             StringAssert.Contains("predictionReactionService.ReactToPredictions(", turnActionRunnerText);
             StringAssert.Contains("private readonly EnemyActionPicker actionPicker = new EnemyActionPicker();", predictionReactionText);
@@ -696,17 +735,19 @@ namespace Summoner.EditModeTests
         [Test]
         public void ClosestEnemyAttack_UsesCurrentAttackPowerForBuffedDamage()
         {
-            string effectText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/ClosestEnemyAttackEffectInstanceCreate.cs");
-            int effectMethodIndex = effectText.IndexOf("public void AttackEffectApply(Summon attacker, Summon target, int specialAttackArrayIndex)");
-            int takeDamageIndex = effectText.IndexOf("target.TakeDamage(attacker.GetAttackPower());", effectMethodIndex);
-            int specialDamageIndex = effectText.IndexOf("GetSpecialDamage()", effectMethodIndex);
+            string strategyText = File.ReadAllText("Assets/Script/5_Battle/6_AttackRule/ClosestEnemyAttackStrategy.cs");
+            int effectMethodIndex = strategyText.IndexOf("private void ApplyEffectToTarget(Summon attacker, Summon target)");
+            int nextMethodIndex = strategyText.IndexOf("public double GetSpecialDamage()", effectMethodIndex);
+            string effectMethodText = strategyText.Substring(effectMethodIndex, nextMethodIndex - effectMethodIndex);
+            int takeDamageIndex = effectMethodText.IndexOf("target.TakeDamage(attacker.GetAttackPower());");
+            int specialDamageIndex = effectMethodText.IndexOf("GetSpecialDamage()");
 
-            Assert.GreaterOrEqual(effectMethodIndex, 0, "Closest enemy attack effect should have an apply method.");
-            Assert.Greater(takeDamageIndex, effectMethodIndex, "Closest enemy attack should use current attack power so buffs and curses affect damage.");
+            Assert.IsFalse(File.Exists("Assets/Script/5_Battle/6_AttackRule/ClosestEnemyAttackEffectInstanceCreate.cs"), "Closest attack should not route through an effect factory file.");
+            Assert.GreaterOrEqual(effectMethodIndex, 0, "Closest enemy attack strategy should own its apply method.");
+            Assert.GreaterOrEqual(takeDamageIndex, 0, "Closest enemy attack should use current attack power so buffs and curses affect damage.");
             Assert.AreEqual(-1, specialDamageIndex, "Closest enemy attack should not use fixed strategy damage for runtime damage.");
-            StringAssert.Contains("踰꾪봽/?二?媛뺢났寃??꾪솚??諛섏쁺???꾩옱 怨듦꺽?μ쓣 ?ъ슜?쒕떎.", effectText);
+            StringAssert.Contains("target.TakeDamage(attacker.GetAttackPower());", effectMethodText);
         }
-
         [Test]
         public void CatSpecialAttack_KeepsHeavyAttackOnCurrentAttackPowerPath()
         {
@@ -714,7 +755,7 @@ namespace Summoner.EditModeTests
             int methodIndex = catText.IndexOf("private void CatSpecialAttackWithHeavyAttackPowerExecute");
             int originIndex = catText.IndexOf("double originAttackPower = GetAttackPower();", methodIndex);
             int heavyPowerIndex = catText.IndexOf("SetAttackPower(GetHeavyAttackPower());", methodIndex);
-            int attackIndex = catText.IndexOf("specialAttack.Attack(this, enemyPlates, selectedPlateIndex, specialAttackArrayIndex);", methodIndex);
+            int attackIndex = catText.IndexOf("SpecialAttackExecute(specialAttack, enemyPlates, selectedPlateIndex);", methodIndex);
             int restoreIndex = catText.IndexOf("SetAttackPower(originAttackPower);", methodIndex);
 
             Assert.GreaterOrEqual(methodIndex, 0, "Cat should keep a dedicated heavy attack execution path.");
@@ -722,7 +763,7 @@ namespace Summoner.EditModeTests
             Assert.Greater(heavyPowerIndex, originIndex, "Cat should place heavy attack power on the current attack power path.");
             Assert.Greater(attackIndex, heavyPowerIndex, "Cat should attack after heavy attack conversion.");
             Assert.Greater(restoreIndex, attackIndex, "Cat should restore current attack power after the attack.");
-            StringAssert.Contains("媛뺢났寃⑸룄 踰꾪봽/?二쇨? 諛섏쁺?섎뒗 ?꾩옱 怨듦꺽??寃쎈줈濡??ㅽ뻾?쒕떎.", catText);
+            StringAssert.Contains("강공격도 버프/저주가 반영되는 현재 공격력 경로로 실행한다.", catText);
         }
 
         private static int CountOccurrences(string text, string value)

@@ -58,6 +58,20 @@ namespace Summoner.EditModeTests
         }
 
         [Test]
+        public void StatusEffectsShow_RestoresOriginalImageColor_WhenNoStatusExists()
+        {
+            Color originalColor = new Color(0.8f, 0.7f, 0.6f, 1f);
+            using (SummonStatusViewFixture fixture = new SummonStatusViewFixture(originalColor))
+            {
+                fixture.StatusEffectsShow(StatusEffectList("Upgrade"), false);
+
+                fixture.StatusEffectsShow(StatusEffectList(), false);
+
+                Assert.AreEqual(originalColor, fixture.Image.color);
+            }
+        }
+
+        [Test]
         public void StatusEffectsShow_MultipleStatuses_ShowsFirstStatusImmediately()
         {
             StatusEffectsShow(StatusEffectList("Poison", "Stun"), false);
@@ -111,6 +125,39 @@ namespace Summoner.EditModeTests
             Assert.AreEqual(expectedG, image.color.g, 0.001f);
             Assert.AreEqual(expectedB, image.color.b, 0.001f);
             Assert.AreEqual(1f, image.color.a, 0.001f);
+        }
+
+        private sealed class SummonStatusViewFixture : IDisposable
+        {
+            private readonly GameObject gameObject;
+            private readonly Component view;
+
+            public SummonStatusViewFixture(Color originalColor)
+            {
+                gameObject = new GameObject("SummonStatusView Original Color Test");
+                Image = gameObject.AddComponent<Image>();
+                Image.color = originalColor;
+                view = gameObject.AddComponent(GetTypeByName("SummonStatusView"));
+            }
+
+            public Image Image { get; }
+
+            public void StatusEffectsShow(object effects, bool isPaused)
+            {
+                Type statusEffectType = GetTypeByName("StatusEffect");
+                Type effectsParameterType = typeof(IReadOnlyList<>).MakeGenericType(statusEffectType);
+                MethodInfo method = view.GetType().GetMethod(
+                    "StatusEffectsShow",
+                    new[] { effectsParameterType, typeof(bool) });
+
+                Assert.IsNotNull(method, "SummonStatusView.StatusEffectsShow(IReadOnlyList<StatusEffect>, bool) was not found.");
+                method.Invoke(view, new[] { effects, isPaused });
+            }
+
+            public void Dispose()
+            {
+                UnityEngine.Object.DestroyImmediate(gameObject);
+            }
         }
     }
 }

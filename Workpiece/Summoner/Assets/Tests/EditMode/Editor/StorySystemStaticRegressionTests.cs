@@ -25,6 +25,7 @@ namespace Summoner.EditModeTests
         private const string Stage3ControllerPath = "Assets/Script/4_Story/Scenario/Stage3_Controller.cs";
         private const string Stage5ControllerPath = "Assets/Script/4_Story/Scenario/Stage5_Controller.cs";
         private const string Stage7ControllerPath = "Assets/Script/4_Story/Scenario/Stage7_Controller.cs";
+        private const string FoxIdleAnimationPath = "Assets/Animation/Fox_Idle.anim";
         private const string FadePanelViewGuid = "d1c8ed078a786a44298790ea5ccdf7b0";
         private const string MainSceneButtonViewGuid = "69dbc41dfe9e18347834b153125c4571";
         private const string StorySkipViewGuid = "fce73e9dab229134d95d4cd0cddb67ab";
@@ -122,6 +123,47 @@ namespace Summoner.EditModeTests
             Assert.IsEmpty(
                 oldTypeNameMatches,
                 "StorySkipView UnityEvent type names must use the current class name:\n" + string.Join("\n", oldTypeNameMatches));
+        }
+
+        [Test]
+        public void StorySkipView_UnityEventsUseCurrentSkipAlertMethod()
+        {
+            string[] oldMethodNameMatches = Directory.GetFiles(ScreenRoot, "*.unity", SearchOption.AllDirectories)
+                .Where(path => File.ReadAllText(path).Contains("m_MethodName: skipAlert"))
+                .Select(NormalizePath)
+                .OrderBy(path => path)
+                .ToArray();
+
+            Assert.IsEmpty(
+                oldMethodNameMatches,
+                "StorySkipView UnityEvents must use current SkipAlert method name:\n" + string.Join("\n", oldMethodNameMatches));
+        }
+
+        [Test]
+        public void StorySkipView_DoesNotWarnBeforeSkipInput()
+        {
+            string text = File.ReadAllText(StorySkipViewPath);
+
+            Assert.IsFalse(
+                text.Contains("Debug.LogWarning(\"스킵 알림 핸들러가 할당되지 않았습니다.\")"),
+                "StorySkipView should not warn during scene start when the optional HUD skip alert is not loaded yet.");
+            StringAssert.Contains("ResolveSkipAlertHandler()", text);
+            StringAssert.Contains("if (skipSound != null)", text);
+        }
+
+        [Test]
+        public void StoryThreeFoxUsesAnimatorWithoutLegacyAnimationComponent()
+        {
+            string sceneText = File.ReadAllText("Assets/Screen/StoryScene/Story Screen_3Stage.unity");
+            string clipText = File.ReadAllText(FoxIdleAnimationPath);
+
+            StringAssert.Contains(
+                "m_Legacy: 0",
+                clipText,
+                "Fox_Idle is played through Character_Fox Animator Controller and must not be marked as Legacy.");
+            Assert.IsFalse(
+                sceneText.Contains("m_Animation: {fileID: 7400000, guid: 5208acd7cc87d83449ec03943498df4f, type: 2}"),
+                "Story Screen_3Stage must not keep a legacy Animation component for Fox_Idle while Animator also uses that clip.");
         }
 
         [Test]

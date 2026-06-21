@@ -57,6 +57,8 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("stageFlowController.SendNextStageAfterBattle(stageNum)", text);
             StringAssert.Contains("stageFlowController.SendFight(stageNum)", text);
             StringAssert.Contains("stageFlowController.SendStageSelect()", text);
+            Assert.IsFalse(text.Contains("AddComponent<BattleStageContext>()"), "BattleProgressController should not create stage context at runtime.");
+            StringAssert.Contains("BattleProgressController needs BattleStageContext.", text);
         }
 
         [Test]

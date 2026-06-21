@@ -97,13 +97,32 @@ namespace Summoner.EditModeTests
         [Test]
         public void StartScreenView_ReadsSavedStageOnlyOnceForContinue()
         {
-            string text = File.ReadAllText(StartScreenViewPath);
-            int getGameSaveCallCount = Regex.Matches(text, @"\.GetGameSave\s*\(").Count;
+            string startScreenViewText = File.ReadAllText(StartScreenViewPath);
+            string startGameFlowText = File.ReadAllText("Assets/Script/0_Core/0_Flow/StartGameFlow.cs");
+            int startScreenViewGetGameSaveCallCount = Regex.Matches(startScreenViewText, @"\.GetGameSave\s*\(").Count;
+            int startGameFlowGetGameSaveCallCount = Regex.Matches(startGameFlowText, @"\.GetGameSave\s*\(").Count;
 
             Assert.AreEqual(
+                0,
+                startScreenViewGetGameSaveCallCount,
+                "StartScreenView should delegate saved stage reads to StartGameFlow.");
+            Assert.AreEqual(
                 1,
-                getGameSaveCallCount,
-                "StartScreenView should read GetGameSave only for StartSavedStage continue flow. Reuse local values instead of re-reading after StartNewGame.");
+                startGameFlowGetGameSaveCallCount,
+                "StartGameFlow should read GetGameSave only once for the continue flow.");
+        }
+
+        [Test]
+        public void StartScreenFlow_DoesNotDependOnStageController()
+        {
+            string startScreenViewText = File.ReadAllText(StartScreenViewPath);
+            string startGameFlowText = File.ReadAllText("Assets/Script/0_Core/0_Flow/StartGameFlow.cs");
+
+            Assert.IsFalse(startScreenViewText.Contains("FindObjectOfType<StageController>()"), "Start Screen must not search for StageController.");
+            Assert.IsFalse(startScreenViewText.Contains("private StageController"), "StartScreenView should not keep a StageController reference.");
+            Assert.IsFalse(startGameFlowText.Contains("TryStartNewGame(StageController"), "StartGameFlow should not require StageController for new game.");
+            Assert.IsFalse(startGameFlowText.Contains("TryContinueSavedGame(StageController"), "StartGameFlow should not require StageController for continue.");
+            Assert.IsFalse(startGameFlowText.Contains("checkStage"), "Start flow should not log the old checkStage error.");
         }
 
         [Test]

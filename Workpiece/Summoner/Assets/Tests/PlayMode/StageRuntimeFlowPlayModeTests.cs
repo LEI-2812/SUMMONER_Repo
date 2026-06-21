@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
@@ -42,20 +43,93 @@ namespace Summoner.PlayModeTests
         }
 
         [UnityTest]
+        public IEnumerator StartScreen_SettingButton_OpensHudSettingPanel()
+        {
+            ResetSaveData();
+
+            yield return LoadScene(StartSceneName);
+            yield return WaitUntilSceneLoadedAdditive("HUD");
+
+            MonoBehaviour startScreenView = FindMonoBehaviour("StartScreenView");
+            Button settingButton = GetField<Button>(startScreenView, "settingBtn");
+            Assert.IsNotNull(settingButton, "StartScreenView.settingBtn must be assigned.");
+
+            settingButton.onClick.Invoke();
+            yield return null;
+
+            MonoBehaviour settingPanelView = FindMonoBehaviour("SettingPanelView");
+            GameObject settingPanel = GetField<GameObject>(settingPanelView, "settingPanel");
+            Assert.IsTrue(settingPanel.activeSelf, "Start screen setting button must open the HUD setting panel.");
+        }
+
+        [UnityTest]
+        public IEnumerator PrologueMenuView_DoesNotPersistIntoStoryScene()
+        {
+            ResetSaveData();
+
+            yield return LoadScene("Prologue Screen");
+            Assert.IsNotNull(FindMonoBehaviour("MenuView"), "Prologue Screen must provide its scene menu view.");
+
+            SceneManager.LoadScene("Story Screen_1Stage");
+            yield return WaitUntilSceneLoaded("Story Screen_1Stage");
+            yield return WaitUntilSceneLoadedAdditive("HUD");
+            yield return null;
+
+            Assert.AreEqual(0, FindMonoBehaviours("MenuView").Length, "Story scenes must not keep the old MenuView ESC handler from Prologue.");
+            Assert.IsNotNull(FindMonoBehaviour("MenuHandler"), "Story scenes must use HUD MenuHandler for ESC menu input.");
+        }
+
+        [UnityTest]
         public IEnumerator StageSelectScreen_LoadsRequiredStageControllers()
         {
             ResetSaveData();
             SaveStage(3);
 
             yield return LoadScene(StartSceneName);
+            yield return WaitUntilSceneLoadedAdditive("HUD");
+            AssertNoMissingScriptsInLoadedObjects();
 
             MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
             Invoke(stageFlowController, "SendStageSelect");
             yield return WaitUntilSceneLoaded(StageSelectSceneName);
+            AssertNoMissingScriptsInLoadedObjects();
 
             Assert.IsNotNull(FindMonoBehaviour("StageSelectView"), "StageSelectView must exist.");
             Assert.IsNotNull(GetSingletonInstance("GameSaveController", "instance"), "GameSaveController must stay alive after scene load.");
             Assert.IsNotNull(GetSingletonInstance("StageFlowController", "instance"), "StageFlowController must stay alive after scene load.");
+        }
+
+        [UnityTest]
+        public IEnumerator StartGameFlow_ContinueSavedGame_LoadsStageSelectWithoutStageController()
+        {
+            ResetSaveData();
+            SaveStage(3);
+
+            yield return LoadScene(StartSceneName);
+
+            Assert.AreEqual(true, InvokeStatic("StartGameFlow", "TryContinueSavedGame"));
+
+            yield return WaitUntilSceneLoaded(StageSelectSceneName);
+
+            Assert.IsNotNull(FindMonoBehaviour("StageController"), "Stage Select Screen must provide StageController after continue.");
+        }
+
+        [UnityTest]
+        public IEnumerator StartGameFlow_NewGame_LoadsPrologueWithoutStageController()
+        {
+            ResetSaveData();
+            SaveStage(5);
+
+            yield return LoadScene(StartSceneName);
+
+            Assert.AreEqual(true, InvokeStatic("StartGameFlow", "TryStartNewGame"));
+
+            yield return WaitUntilSceneLoaded("Prologue Screen");
+
+            object gameSaveController = GetSingletonInstance("GameSaveController", "instance");
+            object saveData = Invoke(gameSaveController, "GetGameSave");
+            Assert.AreEqual(1, GetIntField(saveData, "savedStage"));
+            Assert.AreEqual(1, GetIntField(saveData, "playingStage"));
         }
 
         [UnityTest]
@@ -123,10 +197,162 @@ namespace Summoner.PlayModeTests
             MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
             Invoke(stageFlowController, "SendFight", 1);
             yield return WaitUntilSceneLoaded("Fight Screen_1Stage");
+            AssertNoMissingScriptsInLoadedObjects();
 
             Assert.IsNotNull(FindMonoBehaviour("BattleResultAlertView"), "BattleResultAlertView must exist.");
             Assert.IsNotNull(GetSingletonInstance("GameSaveController", "instance"), "GameSaveController must stay alive after scene load.");
             Assert.IsNotNull(GetSingletonInstance("StageFlowController", "instance"), "StageFlowController must stay alive after scene load.");
+        }
+
+        [UnityTest]
+        public IEnumerator FightScene_ResultAlerts_StartHidden()
+        {
+            ResetSaveData();
+            SaveStage(1);
+
+            yield return LoadScene(StartSceneName);
+
+            MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+            Invoke(stageFlowController, "SendFight", 1);
+            yield return WaitUntilSceneLoaded("Fight Screen_1Stage");
+            yield return null;
+
+            MonoBehaviour alertView = FindMonoBehaviour("BattleResultAlertView");
+            GameObject clearAlert = GetField<GameObject>(alertView, "alertClear");
+            GameObject failAlert = GetField<GameObject>(alertView, "alertFail");
+
+            Assert.IsFalse(clearAlert.activeSelf, "Clear result alert must not block the fight scene at startup.");
+            Assert.IsFalse(failAlert.activeSelf, "Fail result alert must not block the fight scene at startup.");
+        }
+
+        [UnityTest]
+        public IEnumerator FightScene_NormalSummon_ShowsThreeOptionPanels()
+        {
+            ResetSaveData();
+            SaveStage(1);
+
+            yield return LoadScene(StartSceneName);
+
+            MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+            Invoke(stageFlowController, "SendFight", 1);
+            yield return WaitUntilSceneLoaded("Fight Screen_1Stage");
+            yield return null;
+
+            MonoBehaviour summonController = FindMonoBehaviour("SummonController");
+            Invoke(summonController, "StartSummon", 0, false);
+            yield return null;
+
+            GameObject redrawPanel = GetField<GameObject>(summonController, "redrawPanel");
+            IList redrawOptionPanels = GetField<IList>(summonController, "redrawOptionPanels");
+
+            Assert.IsTrue(redrawPanel.activeSelf, "Normal summon must show the shared three-option panel.");
+            AssertThreeOptionPanel(redrawPanel, redrawOptionPanels, "Normal summon");
+        }
+
+        [UnityTest]
+        public IEnumerator FightScene_RedrawSummon_ShowsThreeOptionPanels()
+        {
+            ResetSaveData();
+            SaveStage(1);
+
+            yield return LoadScene(StartSceneName);
+
+            MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+            Invoke(stageFlowController, "SendFight", 1);
+            yield return WaitUntilSceneLoaded("Fight Screen_1Stage");
+            yield return null;
+
+            MonoBehaviour summonController = FindMonoBehaviour("SummonController");
+            Invoke(summonController, "StartSummon", 0, true);
+            yield return null;
+
+            GameObject redrawPanel = GetField<GameObject>(summonController, "redrawPanel");
+            IList redrawOptionPanels = GetField<IList>(summonController, "redrawOptionPanels");
+
+            Assert.IsTrue(redrawPanel.activeSelf, "Redraw summon must show the three-option panel.");
+            AssertThreeOptionPanel(redrawPanel, redrawOptionPanels, "Redraw summon");
+        }
+
+        [UnityTest]
+        public IEnumerator FightScene_StageTwo_NormalSummonShowsVisibleOptionPanels()
+        {
+            ResetSaveData();
+            SaveStage(2);
+
+            yield return LoadScene(StartSceneName);
+
+            MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+            Invoke(stageFlowController, "SendFight", 2);
+            yield return WaitUntilSceneLoaded("Fight Screen_2Stage");
+            yield return null;
+
+            AssertNoMissingScriptsInLoadedObjects();
+
+            GameObject summonPicker = GameObject.Find("UI_60_SummonPicker");
+            Assert.IsNotNull(summonPicker, "Fight Screen_2Stage must have a visible summon picker root.");
+            Assert.AreEqual(Vector3.one, summonPicker.transform.localScale, "Fight Screen_2Stage summon picker root must not be hidden by zero scale.");
+
+            MonoBehaviour summonController = FindMonoBehaviour("SummonController");
+            Invoke(summonController, "StartSummon", 0, false);
+            yield return null;
+
+            GameObject redrawPanel = GetField<GameObject>(summonController, "redrawPanel");
+            IList redrawOptionPanels = GetField<IList>(summonController, "redrawOptionPanels");
+
+            Assert.IsTrue(redrawPanel.activeSelf, "Stage 2 normal summon must show the three-option panel.");
+            AssertThreeOptionPanel(redrawPanel, redrawOptionPanels, "Stage 2 normal summon");
+        }
+
+        [UnityTest]
+        public IEnumerator FightScene_StageTwo_PlayerAndEnemyTurnsCanExchange()
+        {
+            ResetSaveData();
+            SaveStage(2);
+
+            yield return LoadScene(StartSceneName);
+
+            MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+            Invoke(stageFlowController, "SendFight", 2);
+            yield return WaitUntilSceneLoaded("Fight Screen_2Stage");
+            yield return null;
+
+            MonoBehaviour player = FindMonoBehaviour("PlayerController");
+            MonoBehaviour turnController = FindMonoBehaviour("TurnController");
+
+            AssertTurnState(turnController, "PlayerTurn", 1);
+
+            Invoke(player, "PlayerTurnOverBtn");
+            yield return null;
+
+            AssertTurnState(turnController, "PlayerTurn", 2);
+        }
+
+        [UnityTest]
+        public IEnumerator FightScene_StageFive_AppliesCurrentMultiplierToPlacedEnemies()
+        {
+            ResetSaveData();
+            SaveStage(5);
+
+            yield return LoadScene(StartSceneName);
+
+            MonoBehaviour stageFlowController = FindMonoBehaviour("StageFlowController");
+            Invoke(stageFlowController, "SendFightStage", 5);
+            yield return WaitUntilSceneLoaded("Fight Screen_5Stage");
+            yield return null;
+
+            MonoBehaviour plateController = FindMonoBehaviour("PlateController");
+            object enemyPlatesObject = Invoke(plateController, "GetEnermyPlates");
+            var enemyPlates = ((IEnumerable)enemyPlatesObject).Cast<object>().ToArray();
+
+            object firstEnemySummon = enemyPlates
+                .Select(plate => Invoke(plate, "GetCurrentSummon"))
+                .FirstOrDefault(summon => summon != null);
+
+            Assert.IsNotNull(firstEnemySummon, "Fight Screen_5Stage must place at least one enemy summon.");
+            Assert.AreEqual(1300d, (double)Invoke(firstEnemySummon, "GetMaxHP"), 0.01d, "Stage 5 Skeleton max HP must use the current x2 fight multiplier.");
+            Assert.AreEqual(1300d, (double)Invoke(firstEnemySummon, "GetNowHP"), 0.01d, "Stage 5 Skeleton current HP must match scaled max HP.");
+            Assert.AreEqual(300d, (double)Invoke(firstEnemySummon, "GetAttackPower"), 0.01d, "Stage 5 Skeleton attack power must use the current x2 fight multiplier.");
+            Assert.AreEqual(340d, (double)Invoke(firstEnemySummon, "GetHeavyAttackPower"), 0.01d, "Stage 5 Skeleton heavy attack power must use the current x2 fight multiplier.");
         }
 
         [UnityTest]
@@ -142,7 +368,7 @@ namespace Summoner.PlayModeTests
             yield return WaitUntilSceneLoaded("Fight Screen_1Stage");
             yield return null;
 
-            MonoBehaviour player = FindMonoBehaviour("Player");
+            MonoBehaviour player = FindMonoBehaviour("PlayerController");
             MonoBehaviour turnController = FindMonoBehaviour("TurnController");
 
             AssertTurnState(turnController, "PlayerTurn", 1);
@@ -153,13 +379,6 @@ namespace Summoner.PlayModeTests
 
             for (int expectedTurnCount = 2; expectedTurnCount <= lastExpectedTurnCount; expectedTurnCount++)
             {
-                LogAssert.Expect(LogType.Log, "플레이어 턴 종료");
-                LogAssert.Expect(LogType.Log, "적 턴 시작");
-                LogAssert.Expect(LogType.Log, "리스트를 가져와서 적 대응시작");
-                LogAssert.Expect(LogType.Log, "적 턴 종료");
-                LogAssert.Expect(LogType.Log, "현재 턴: " + expectedTurnCount);
-                LogAssert.Expect(LogType.Log, "플레이어 턴 시작");
-
                 Invoke(player, "PlayerTurnOverBtn");
                 yield return null;
 
@@ -245,6 +464,34 @@ namespace Summoner.PlayModeTests
             }
         }
 
+        private static IEnumerator WaitUntilSceneLoadedAdditive(string sceneName)
+        {
+            float timeoutAt = Time.realtimeSinceStartup + 5f;
+            while (!IsSceneLoaded(sceneName))
+            {
+                if (Time.realtimeSinceStartup > timeoutAt)
+                {
+                    Assert.Fail("Additive scene load timed out: " + sceneName);
+                }
+
+                yield return null;
+            }
+        }
+
+        private static bool IsSceneLoaded(string sceneName)
+        {
+            for (int sceneIndex = 0; sceneIndex < SceneManager.sceneCount; sceneIndex++)
+            {
+                Scene scene = SceneManager.GetSceneAt(sceneIndex);
+                if (scene.name == sceneName && scene.isLoaded)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private static void ResetSaveData()
         {
             PlayerPrefs.DeleteKey(SavedStageKey);
@@ -263,6 +510,12 @@ namespace Summoner.PlayModeTests
         {
             Type type = FindType(typeName);
             return Object.FindObjectOfType(type) as MonoBehaviour;
+        }
+
+        private static Object[] FindMonoBehaviours(string typeName)
+        {
+            Type type = FindType(typeName);
+            return Object.FindObjectsOfType(type);
         }
 
         private static object GetSingletonInstance(string typeName, string fieldName)
@@ -295,6 +548,14 @@ namespace Summoner.PlayModeTests
             return methodInfo.Invoke(target, parameters);
         }
 
+        private static object InvokeStatic(string typeName, string methodName)
+        {
+            Type type = FindType(typeName);
+            MethodInfo methodInfo = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public, null, Type.EmptyTypes, null);
+            Assert.IsNotNull(methodInfo, typeName + "." + methodName + " method was not found.");
+            return methodInfo.Invoke(null, null);
+        }
+
         private static int GetIntField(object target, string fieldName)
         {
             FieldInfo fieldInfo = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public);
@@ -308,6 +569,17 @@ namespace Summoner.PlayModeTests
             Assert.AreEqual(expectedTurnCount, (int)Invoke(turnController, "GetTurnCount"));
         }
 
+        private static void AssertThreeOptionPanel(GameObject redrawPanel, IList redrawOptionPanels, string owner)
+        {
+            Assert.GreaterOrEqual(redrawOptionPanels.Count, 3, owner + " must have at least three option panel views available.");
+
+            GridLayoutGroup gridLayout = redrawPanel.GetComponent<GridLayoutGroup>();
+            Assert.IsNotNull(gridLayout, owner + " three-option panel must use GridLayoutGroup.");
+            Assert.AreEqual(new Vector2(360f, 520f), gridLayout.cellSize, owner + " three-option panel cell size must fit one row.");
+            Assert.AreEqual(GridLayoutGroup.Constraint.FixedColumnCount, gridLayout.constraint, owner + " three-option panel must use fixed columns.");
+            Assert.AreEqual(3, gridLayout.constraintCount, owner + " three-option panel must keep all options on one row.");
+        }
+
         private static Button[] GetButtonArray(object target, string fieldName)
         {
             FieldInfo fieldInfo = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -316,6 +588,62 @@ namespace Summoner.PlayModeTests
             Button[] buttons = fieldInfo.GetValue(target) as Button[];
             Assert.IsNotNull(buttons, target.GetType().Name + "." + fieldName + " must be a Button array.");
             return buttons;
+        }
+
+        private static T GetField<T>(object target, string fieldName)
+        {
+            FieldInfo fieldInfo = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            Assert.IsNotNull(fieldInfo, target.GetType().Name + "." + fieldName + " field was not found.");
+
+            object value = fieldInfo.GetValue(target);
+            Assert.IsInstanceOf<T>(value, target.GetType().Name + "." + fieldName + " must be a " + typeof(T).Name + ".");
+            return (T)value;
+        }
+
+        private static void AssertNoMissingScriptsInLoadedObjects()
+        {
+            string[] missingScriptObjects = Resources.FindObjectsOfTypeAll<GameObject>()
+                .Where(HasMissingMonoBehaviour)
+                .Select(GetMissingScriptDescription)
+                .OrderBy(path => path)
+                .ToArray();
+
+            Assert.IsEmpty(
+                missingScriptObjects,
+                "Loaded runtime objects must not have missing scripts:\n" + string.Join("\n", missingScriptObjects));
+        }
+
+        private static bool HasMissingMonoBehaviour(GameObject gameObject)
+        {
+            if (GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(gameObject) > 0)
+            {
+                return true;
+            }
+
+            return gameObject.GetComponents<MonoBehaviour>().Any(component => component == null);
+        }
+
+        private static string GetMissingScriptDescription(GameObject gameObject)
+        {
+            Component[] components = gameObject.GetComponents<Component>();
+            string[] componentNames = components
+                .Select((component, index) => index + ":" + (component == null ? "<missing>" : component.GetType().Name))
+                .ToArray();
+
+            return GetObjectPath(gameObject) + " [" + string.Join(", ", componentNames) + "]";
+        }
+
+        private static string GetObjectPath(GameObject gameObject)
+        {
+            string path = gameObject.name;
+            Transform parent = gameObject.transform.parent;
+            while (parent != null)
+            {
+                path = parent.name + "/" + path;
+                parent = parent.parent;
+            }
+
+            return gameObject.scene.name + "/" + path;
         }
 
         private static void ResetSingleton(string typeName, string fieldName)

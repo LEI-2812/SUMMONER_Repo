@@ -36,6 +36,8 @@ namespace Summoner.EditModeTests
             StringAssert.Contains("plateController.GetEnermyPlates()", text);
             StringAssert.Contains("stageEnemyPlacementData.GetEnemyPlacementSlots(stageContext.CurrentStage)", text);
             StringAssert.Contains("targetPlate.SummonPlaceOnPlate(enemySummonPrefab)", text);
+            StringAssert.Contains("EnemyStageMultiplierApply(targetPlate)", text);
+            StringAssert.Contains("placedEnemySummon.ApplayMultiple(Summon.GetStatMultiplier())", text);
             Assert.IsFalse(text.Contains("private void Start()"));
         }
 
