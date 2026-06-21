@@ -1,109 +1,79 @@
-# Current Task
+﻿# Current Task
 
 ## 상태
 
-- 현재 도메인: Battle
+- 현재 도메인: Battle Runtime
 - 현재 상태: Ready
-- Ready 에이전트: DevAgent
+- Ready 에이전트: VerificationAgent
 
 ## 현재 기능 슬라이스
 
-다음 작업: COORD-136 | Battle SceneObject | FightScene UI 계층 정리 제안
-첫 액션: FightScene 2~7의 BattleCanvas 하위 UI 계층을 1Stage 기준으로 맞출 수 있는지 Unity 연결 위험을 분리해 Change Proposal을 제시한다.
-호출 대상: CoordinatorAgent
+다음 작업: RUNTIME-QA-13 | Battle Runtime | 직접 플레이 스모크 검증
+완료조건: Start Screen 설정 버튼, Story ESC, FightScene 1~2 일반 소환/재소환 3옵션, 결과창 시작 비활성화, Stage 5 적 배수 적용을 직접 플레이 또는 PlayMode 경로로 확인하고 Unity Console error/warning 0건을 기록한다
+첫 액션: Unity에서 Start Screen부터 1Stage 전투 진입까지 직접 플레이 흐름을 확인하고, 재현되는 오류가 있으면 코드/씬/도구 문제로 분류한다
+호출 대상: VerificationAgent
 
-## 게이트
+## 메모
 
-- DEV-100: FightScene 1~7에서 삭제된 `EnermyAlgorithm` serialized field, missing script MonoBehaviour, GameObject component 참조를 제거했다.
-- DEV-100: 현재 `EnermyAttackController`에 필요한 `plateController`, `playerAttackPrediction`, `battleController` 연결을 1~7Stage에 유지했다.
-- 검증: `enermyAlgorithm:` 및 삭제 GUID 검색 0건, `EnermyAttackController` 필드 연결 검색 확인, `git diff --check` 오류 없음.
-- 다음 Batch 목표: Battle 전체 구조개선을 진행한다. EnemyAction/Prediction 하나에 계속 머무르지 않는다.
-- Batch 단위 기준: 메서드 하나, 이름 하나, helper 하나로 DEV 작업을 쪼개지 않는다. Battle 도메인 안에서 다른 기능 영향이 최소화되는 범위로 묶어 진행한다.
-- SceneObject 목표: 전투씬 오브젝트 계층, missing/stale component, Battle controller 연결 상태를 기능 영향이 작은 범위로 정리한다. 씬/프리팹/serialized field 변경은 적용 전 대상 씬과 diff를 먼저 제시한다.
-- 첫 판단: EnemyAction/Prediction은 현재 정리 상태를 확인하고, 추가 작업이 필수인지 아니면 PlayerAction 또는 Turn Flow로 넘어갈지 결정한다.
-- 다음 후보: PlayerAction 분리, TurnController 얇게 만들기, BattleController 공격 실행 책임 정리.
-- 중단 조건: 로직 변경, public API 변경, serialized field 변경, 씬/프리팹/에셋 값 변경이 필요하면 멈춘다.
-- DEV-101: `PlayerActionController`의 턴 자원 상태를 `PlayerTurnResourceState`로 분리했다.
-- DEV-101 검증: 기존 `mana`, `usedMana`, private `hasSummonedThisTurn` 필드 잔존 검색 0건. `dotnet build`는 `project.assets.json` 누락, `dotnet restore`는 오류 0개 실패 상태로 코드 컴파일 전 중단.
-- DEV-102: `Plate.cs`와 `.meta`를 `Assets/Script/Battle/Unit/Plate/`로 이동해 `Unit` 루트를 엔티티 폴더만 남긴 구조로 정리했다.
-- DEV-102 검증: 기존 `Unit/Plate.cs`와 `.meta` 잔존 없음, `Plate.cs.meta` GUID 유지, `Assembly-CSharp.csproj` include 경로 갱신 확인.
-- DEV-103: `Player`를 `PlayerController`로, `PlayerActionController`를 `PlayerActionFlow`로 rename해 역할 이름을 맞췄다.
-- DEV-103 검증: 이전 클래스명/파일 경로 잔존 검색 0건, `.meta` GUID 유지 확인. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-104: `PlayerActionExecutor`를 추가해 소환 시작, 턴 종료, 리롤 마나 사용, 일반 공격, 즉시 특수 공격, 공격 후 처리를 `PlayerActionFlow`에서 분리했다.
-- DEV-104 검증: 실행 메서드 이동 검색 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-105: `PlayerTurnActions`를 추가하고 `PlayerController`가 `PlayerTurnResourceState`와 `PlayerTurnActions`를 조립하도록 바꿨다. `PlayerActionFlow`와 `PlayerActionExecutor`의 `TurnController`/`BattleResultController` 직접 의존을 제거했다.
-- DEV-105 검증: `PlayerActionFlow`의 `TurnController`/`BattleResultController` 직접 참조 0건, `PlayerActionExecutor`의 턴/결과 참조 0건, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-106: `PlayerSummonActions`와 `PlayerAttackActions`를 추가하고 `PlayerController`가 상태/Actions를 조립하도록 정리했다. `PlayerActionFlow`에서 소환 세부 판단, 재소환 실행, 공격 검증, 특수공격 분기, 타겟 선택 코루틴을 분리했다.
-- DEV-106 검증: `PlayerActionFlow`의 소환/공격 private 세부 메서드 잔존 0건, 신규 Actions 생성은 `PlayerController`에만 존재, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-107: `PlayerTurnProgressState`를 추가하고 `PlayerTurnActions` 호출을 플레이어 턴 의도 중심(`StartPlayerTurn`, `TryEndPlayerTurn`, `CheckPlayerClearResult`, `CheckPlayerFailResult`)으로 정리했다.
-- DEV-107 검증: Player 계층 호출부의 이전 턴 결과 메서드명 잔존 0건, 신규 턴 진행 상태 호출 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-108: 병렬 적용 후보 중 충돌이 없는 `SummonDrawService`와 `EnemyPredictionPlates` 범위를 적용했다. 소환 후보 계산은 후보 부족/중복 상황에서 멈추지 않도록 정리했고, 예측용 적 플레이트 상태는 `EnemyPredictionPlateState`로 이름을 맞췄다.
-- DEV-108 검증: `EnemyPredictionPlates`/`RestoreEnemyPlates` 잔존 0건, `EnemyPredictionPlateState` 호출부 확인, `.meta` GUID 유지, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-109: `PlateSummonExecutor`를 추가해 `Plate.cs`의 소환수 생성, 파괴, 이동 실행을 분리했다. `SummonPlaceOnPlate`, `RemoveSummon`, `DirectMoveSummon` public API와 serialized field는 유지했다.
-- DEV-109 검증: `Plate.cs`의 `Instantiate`/`Destroy`/`SetParent`/`localPosition` 실행 코드 잔존 0건, `PlateSummonExecutor` 호출 확인, `Assembly-CSharp.csproj` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-110: `PlateVisualView`를 추가해 개별 Plate의 강조 색상과 소환수 이미지 투명도 표시를 `Plate.cs`에서 분리했다. `Highlight`, `Unhighlight`, `SetSummonImageTransparency` public API와 serialized field는 유지했다.
-- DEV-110 검증: `Plate.cs`의 직접 `.color` 변경 잔존 0건, `PlateVisualView` 호출 확인, `Assembly-CSharp.csproj` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-111: `PlateCompactExecutor`를 추가해 `PlateController.CompactEnermyPlates`의 소환수 이동 실행을 분리했다. `CompactEnermyPlates` public API와 `TurnController` 호출부는 유지했다.
-- DEV-111 검증: `PlateController.cs`의 `DirectMoveSummon`/`RemoveSummon` 직접 호출 잔존 0건, `TurnController`의 `CompactEnermyPlates` 호출 유지, `Assembly-CSharp.csproj` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-112: `PlateQueryService`를 추가해 `PlateController`의 소환수 목록, 클리어 여부, 가장 가까운 점유 Plate, 소환수 수, 최저 체력 Plate 조회 계산을 분리했다. 외부 public API와 호출부는 유지했다.
-- DEV-112 검증: `PlateController.cs`의 private 조회 계산 메서드 잔존 0건, 외부 public API 호출부 유지, `PlateQueryService` 메서드 확인, `Assembly-CSharp.csproj` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- COORD-113 판단: `PlateController`의 남은 표시 흐름은 `PlateView`에 실제 표시를 위임하고 player/enemy 목록만 선택하는 public 입구 역할로 충분하다. 추가 코드 분리는 하지 않는다.
-- DEV-113: `SummonPickState`를 추가해 `SummonController`의 선택 소환수, 선택 플레이트, 소환 진행 상태 보관을 분리했다. 외부 직접 참조 보존을 위해 public `isSummoning`은 유지하고 `SummonPickState`와 동기화했다.
-- DEV-113 검증: `SummonController.cs`의 private `selectedSummon`/`selectedPlateIndex` 필드 잔존 0건, public `isSummoning` 유지, `IsSummoning()` 반환 유지, `PlayerActionFlow`의 `summonController.isSummoning` 호출부 변경 없음, `Assembly-CSharp.csproj` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-114: `SummonPlaceExecutor`를 추가해 `SummonController`의 일반 소환/재소환 Plate 배치 실행과 플레이어 소환 상태 갱신을 분리했다. `StartSummon`, `StartRedraw`, `DrawSelection`, `RedrawSelection` 흐름과 public API는 유지했다.
-- DEV-114 검증: `SummonController.cs`의 `SummonPlaceOnPlate`/`SetHasSummonedThisTurn` 직접 호출 잔존 0건, `SummonPlaceExecutor` 호출 확인, `Assembly-CSharp.csproj` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-115: `SummonPickView`를 추가해 `SummonController`의 draw/redraw 패널 열기, 후보 패널 채우기, 패널 닫기, 어두운 배경 표시를 분리했다. `PlateSelectionController`는 재소환 대상 Plate 표시만 담당하도록 줄였다.
-- DEV-115 검증: `SummonController.cs`의 패널/배경 직접 `SetActive` 잔존 0건, 후보 패널 `SetAssignedSummon`/`SetSummonImage` 직접 호출 잔존 0건, `SummonPickView` 호출 확인, `Assembly-CSharp.csproj` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-116: `SummonController.OnSelectSummon`에 남은 플레이어 Plate 하이라이트/투명도 복구 루프를 `PlateSelectionController.RestorePlayerPlateSelectionView`로 이동했다. enemy plate 표시 상태는 기존 흐름과 동일하게 건드리지 않았다.
-- DEV-116 검증: `SummonController.cs`의 직접 `GetPlayerPlates`/`Unhighlight`/`SetSummonImageTransparency` 호출 잔존 0건, `PlateSelectionController` 복구 메서드 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-117: `PlayerActionFlow.PlayerActionBlockedCheck`가 `SummonController.isSummoning` field를 직접 읽지 않고 `SummonController.IsSummoning()`을 호출하도록 변경했다. 호환을 위해 public `isSummoning` field는 유지했다.
-- DEV-117 검증: 외부 `.isSummoning` 직접 참조 0건, `Plate`/`PlayerActionFlow`의 `IsSummoning()` 호출 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-118: `BattleSpecialAttackExecutor`를 추가해 `BattleController.SpecialAttackExecute`의 특수공격 전략 분기, 대상 Plate 선택, 적용 로그 생성을 분리했다. `SpecialAttackExecute` public API와 호출부는 유지했고, null/invalid special attack index일 때 reset하지 않는 기존 흐름도 유지했다.
-- DEV-118 검증: `BattleController.cs`의 `HandleTargetedAttack`/`HandleAttackAll`/`HandleClosestEnemyAttack`/`SpecialAttackApply` 잔존 0건, `SpecialAttackExecute` 호출부 유지, `BattleSpecialAttackExecutor` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-119: `BattleAttackState`를 추가해 `BattleController`의 공격 중 여부, 공격 소환수, 현재 특수공격 정보 보관을 분리했다. public `isAttacking` field는 호환을 위해 유지하고 `BattleAttackState`와 동기화했다.
-- DEV-119 검증: `BattleController.cs`의 `attackingSummon`/`currentSpecialAttackInfo` 직접 필드 잔존 0건, 외부 `.isAttacking` 직접 참조 0건, `GetIsAttacking`/`SetIsAttacking` 호출부 유지, `BattleAttackState` include 확인, `git diff --check` 통과. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- COORD-121 판단: `BattleController.AttackStart`의 `statePanel` 조회는 Unity scene/View 연결 진입점 성격이 강해 추가 Actions/Service로 분리하지 않는다. 대신 현재 특수공격 정보 조회 판단은 `BattleAttackState` 책임으로 이동하는 것이 타당하다고 판단했다.
-- DEV-120: `BattleController`의 `HasCurrentSpecialAttackInfo`, `GetCurrentSpecialAttackInfoIndex`, `DoesCurrentSpecialAttackTargetPlayerPlate` 내부 판단을 `BattleAttackState`로 이동했다. 기존 public API와 호출부는 유지했다.
-- DEV-120 검증: 외부 호출부가 기존 `BattleController` public API를 계속 호출하는 것 확인, `DoesAttackStrategyTargetPlayerPlate` 잔존 0건. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- COORD-122 판단: `TurnController`는 턴 흐름 전환 외에 턴 수/클리어 턴 UI 텍스트 표시를 직접 수행하고 있어 View 책임 분리가 타당하다. 턴 상태 이동은 외부 조회 계약과 연결되어 있어 다음 슬라이스로 미룬다.
-- DEV-121: `TurnView`를 추가해 턴 수와 클리어 턴 UI 텍스트 표시를 분리했다. `TurnController`의 serialized `TextMeshProUGUI` field와 public API는 유지했다.
-- DEV-121 검증: `UpdateTurnCountText`/`SetClearTurnText`/`TurnCountTextUpdate`/`ClearTurnTextSet` 잔존 0건, `TurnView` 호출 확인, `Assembly-CSharp.csproj` include 1건 확인, `git diff --check` 오류 없음. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-122: Turn 관련 파일을 `Assets/Script/Battle/Flow/Turn/` 폴더로 이동했다. `TurnController.cs.meta`, `TurnSummonStateUpdater.cs.meta`, `TurnView.cs.meta`를 함께 이동해 GUID를 유지했다.
-- DEV-122 검증: 기존 `Battle/Flow/Turn*.cs*` 경로 잔존 0건, 이동 후 `TurnController` GUID `49357758035fd934b9a5c6931f6bc751` 유지, `Assembly-CSharp.csproj` Turn 경로 갱신 확인.
-- DEV-123: `TurnProgressState`를 추가해 `TurnController`의 `currentTurn`, `turnCount` 보관/변경 책임을 분리했다. `clearTurn` serialized field와 `GetCurrentTurn`, `GetTurnCount`, `GetClearTurn` public API는 유지했다.
-- DEV-123 검증: `TurnController.cs`의 `private Turn currentTurn`, `private int turnCount` 잔존 0건, `TurnProgressState` include 1건 확인, `git diff --check` 오류 없음. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- COORD-124 판단: `TurnController`의 턴 시작/종료 흐름은 소환수 상태 갱신, 플레이트 압축, 클리어 판정, 마나 지급, 플레이어/적 행동 시작을 함께 실행하므로 Controller에 남기기보다 Actions 분리가 타당하다.
-- DEV-124: `TurnPhaseActions`를 추가해 `StartCurrentTurn`, `EndCurrentTurn`, 플레이어/적 턴 시작/종료 실행 흐름을 분리했다. `TurnController`의 public API, serialized field, 외부 호출부는 유지했다.
-- DEV-124 검증: `TurnController.cs`의 `StartPlayerTurn`/`StartEnemyTurn`/`EndPlayerTurn`/`EndEnemyTurn`/`AddPlayerMana`/`TryClearBattle` 등 실행 private 메서드 잔존 0건, `TurnPhaseActions` include 확인, 외부 `TurnController` public API 호출부 유지, `git diff --check` 오류 없음. `dotnet build`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-125: `PlateInputActions`를 추가해 `Plate.cs`의 포인터 진입/이탈/클릭 입력 반응, 재소환 선택, 공격 대상 선택, 상태 패널 열기 흐름을 분리했다. `Plate`의 public API와 serialized field는 유지했다.
-- DEV-125 검증: `Plate.cs`의 입력 처리 private 메서드 잔존 0건, `PlateInputActions` include 확인, `git diff --check` 오류 없음. `dotnet build --no-restore`는 `project.assets.json` 누락으로 코드 컴파일 전 중단.
-- DEV-126: `SummonPlaceExecutor`의 일반 소환/재소환 배치 중복을 `PlacePlayerSummon`으로 모으고, `SummonController`의 일반 소환/재소환 종료 UI 정리를 `FinishPickFlow`로 모았다. public API와 serialized field는 유지했다.
-- DEV-126 검증: `PlacePlayerSummon`/`FinishPickFlow` 호출 확인, `git diff --check` 오류 없음. `dotnet build Assembly-CSharp.csproj --no-restore`는 `Temp\obj\Assembly-CSharp\project.assets.json` 누락(NETSDK1004)으로 코드 컴파일 전 중단.
-- DEV-127: `BattleResultController.ClearResultTry`가 승리 결과 시작 여부를 반환하도록 바꾸고, `TurnPhaseActions.StartPlayerTurn`이 승리 결과 시작 시 플레이어 턴 후속 처리(`UpdatePlayerSpecialCooldowns`, `PlayerTurnStart`)를 중단하도록 정리했다.
-- DEV-127 검증: `ClearResultTry` 호출부 2곳 확인, `TurnPhaseActions` 중단 흐름 확인, `git diff --check` 오류 없음. `dotnet build Assembly-CSharp.csproj --no-restore`는 `Temp\obj\Assembly-CSharp\project.assets.json` 누락(NETSDK1004)으로 코드 컴파일 전 중단.
-- DEV-128: `TurnPhaseActions.TryClearBattle`가 `player.clearTurn/player.currentTurn` 대신 `TurnController`에서 전달된 `clearTurn`과 `TurnProgressState.TurnCount`를 기준으로 승리 판정을 호출하도록 정리했다.
-- DEV-128 검증: `TurnPhaseActions.cs`의 `player.clearTurn|player.currentTurn` 검색 0건, `git diff --check` 오류 없음. 변경 파일은 현재 git 기준 untracked 경로로 표시되어 일반 `git diff`에는 출력되지 않음.
-- DEV-129: 공격 타겟 선택 인덱스를 `SummonController -> PlayerController -> PlayerAttackActions` 우회 전달에서 `BattleController -> BattleAttackState` 보관 흐름으로 이동했다. 상태 패널에서 공격자 Plate를 선택하는 `SummonController.SetPlayerSelectedIndex` 흐름은 유지했다.
-- DEV-129 검증: 공격 타겟 클릭의 `BattleController.SelectTargetPlate` 호출 확인, `PlayerAttackActions`의 `GetSelectedTargetPlateIndex`/`ClearSelectedTargetPlate` 호출 확인, 변경 파일 대상 `git diff --check` 오류 없음. 전체 `git diff --check`는 기존 `UnityTestRunner_EditMode.log` trailing whitespace로 실패. `dotnet build Assembly-CSharp.csproj --no-restore`는 기존 `Temp\obj\Assembly-CSharp\project.assets.json` 누락(NETSDK1004)으로 코드 컴파일 전 중단.
-- DEV-130: 공격자 Plate index 우회 갱신 경로(`PlateInputActions -> SummonController.SetPlayerSelectedIndex -> PlayerController -> PlayerActionFlow -> PlayerAttackActions`)를 제거했다. 공격자 index는 `SummonStatePanelView`가 패널을 연 플레이어 Plate index로 보관하고, `BattleController.AttackStart`가 `BattleAttackState.AttackingPlateIndex`로 넘긴다. `PlayerAttackActions`의 공격자 index 필드와 외부 setter는 제거했다.
-- DEV-130 검증: 공격자 index 우회 setter 검색 0건. `PlayerAttackActions.cs`의 `selectedPlateIndex` 검색 0건. 변경 파일 대상 `git diff --check`는 whitespace 오류 없이 CRLF 경고만 출력. `dotnet build Assembly-CSharp.csproj --no-restore`는 기존 `Temp\obj\Assembly-CSharp\project.assets.json` 누락(NETSDK1004)으로 C# 컴파일 전 중단.
-- DEV-131: `Plate.RestoreRedrawSummonState`의 재소환 후 상태 패널 갱신이 `selectedPlayerPlateIndex`를 기본값 `-1`로 덮지 않도록 현재 Plate의 player index를 명시 전달했다.
-- DEV-131 검증: `SetStatePanel` 호출부 확인 결과 재소환 호출과 클릭 호출 모두 index를 명시 전달한다. `git diff --check -- Assets/Script/Battle/Unit/Plate/Plate.cs` 오류 없음. `dotnet build Assembly-CSharp.csproj --no-restore`는 기존 `Temp\obj\Assembly-CSharp\project.assets.json` 누락(NETSDK1004)으로 C# 컴파일 전 중단.
-- DEV-132: `PlayerTargetSelectionActions`를 추가해 타겟형 특수공격의 타겟 선택 시작, 선택 대기, 외부 클릭 취소, 선택 완료 실행 흐름을 `PlayerAttackActions`에서 분리했다. `PlayerAttackActions`는 공격 가능 여부와 즉시/타겟 선택 분기만 담당한다.
-- DEV-132 검증: `WaitForTargetPlateSelection`과 `MousePositionInsidePlates`는 `PlayerTargetSelectionActions.cs`에만 남았다. 변경 파일 대상 `git diff --check` 오류 없음. `dotnet build Assembly-CSharp.csproj --no-restore`는 기존 `Temp\obj\Assembly-CSharp\project.assets.json` 누락(NETSDK1004)으로 C# 컴파일 전 중단.
-- DEV-133: `PlateTargetSelectionActions`를 추가해 공격 타겟 선택 중 Plate 클릭을 전투 타겟 선택 상태로 전달하는 책임을 `PlateInputActions`에서 분리했다. `PlateInputActions`는 클릭 라우팅만 유지하고, `BattleController.SelectTargetPlate` 직접 호출은 새 Actions로 이동했다.
-- DEV-133 검증: `BattleController.SelectTargetPlate` 호출은 `PlateTargetSelectionActions.cs`에만 남았다. 변경 파일 대상 `git diff --check` 오류 없음. `dotnet build Assembly-CSharp.csproj --no-restore`는 기존 `Temp\obj\Assembly-CSharp\project.assets.json` 누락(NETSDK1004)으로 C# 컴파일 전 중단.
-- COORD-134 판단: 실제 코드의 타겟 선택 API는 이미 `SelectSpecialAttackTargetPlate`, `GetSelectedSpecialAttackTargetPlateIndex`, `ClearSpecialAttackTargetSelection` 계열로 구체화되어 있다. target plate index는 `PlateTargetSelectionActions -> BattleController -> BattleAttackState -> PlayerTargetSelectionActions` 한 방향으로 흐르며, Plate 클릭이 공격 실행을 직접 우회하지 않는다. 따라서 COORD-134는 코드 변경 없이 닫고, 다음 판단은 `SummonStatePanelView`가 공격자 Plate index를 임시 보관하는 책임 경계로 이동한다.
-- DEV-135: Battle Target Selection에서 공격자 source와 target plate index 흐름을 `BattleController -> BattleAttackState` 중심으로 정리했다. `SummonStatePanelView`의 공격자 Plate index 보관과 `BattleController`의 View 역참조를 제거했고, hover/click target 판정은 `PlateTargetSelectionActions`로 단일화했다.
-- DEV-135 검증: `selectedPlayerPlateIndex`, `GetSelectedPlayerPlateIndex`, `GetStatePanelSummon` 잔존 검색 0건. `PlateInputActions`의 target 판정 중복 제거 확인. VerificationAgent가 공격 source View 우회 제거와 hover/click target 판정 중앙화를 확인했다. 변경 파일 대상 `git diff --check` 오류 없음. `dotnet build Assembly-CSharp.csproj --no-restore`는 기존 `Temp\obj\Assembly-CSharp\project.assets.json` 누락(NETSDK1004)으로 C# 컴파일 전 중단.
-
-## 운영 메모
-
-- 다음 코드 변경은 DevAgent Change Proposal과 적용 예정 diff를 먼저 제시한다.
-- 다음 세션은 개별 예측 파일 보수 작업으로 바로 들어가지 않는다. 먼저 Battle Targeting의 선택 흐름 왕복을 정리한다.
-- 씬 stale 연결 정리는 완료했다. 다음 코드 변경은 다시 Change Proposal을 제시한다.
-- 다음 세션 첫 검토 영역: `Assets/Screen/FightScene/Fight Screen_1Stage.unity`부터 FightScene 1~7의 `BattleCanvas` 하위 UI 계층, 1Stage의 `UI_30_PlayerCommands`/`UI_90_ResultAlerts`와 2~7Stage 직속 버튼/텍스트 차이.
-- 제외: 예측 확률 수치 변경, 주석/함수명만 반복 정리, 신규 공통 helper 추가, EnemyAction/Prediction에 장시간 머무는 세부 보수.
-- Batch 진행 원칙: 큰 목표는 Battle 전체 단위로 잡고, 실제 diff는 승인 가능한 작은 슬라이스로 나눈다.
-- 문서 상태 기록은 사용자 진행 승인 없이 바로 수행한다.
-- active 문서에는 현재 슬라이스와 다음 호출 대상만 둔다.
+- COORD-141~146, COORD-149~150은 적용 완료했다.
+- COORD-148의 `NotifyObservers()` private 축소는 `UpdateStateObserver` 인터페이스 구현 계약을 깨므로 복구했다.
+- COORD-147은 prefab `m_Script` GUID 연결 때문에 자동 삭제/통합을 보류했다.
+- 수정 후보 큐는 `.codex/workflow/refactor-candidates.md`에 정리했다.
+- 구조 기준은 `.codex/workflow/architecture-role-rule.md`에 정리했다.
+- 기본 계층은 `View / Controller / Flow / Service / Action / State/Data`로 본다.
+- Ready 작업은 완료조건을 먼저 걸고, 충족하면 같은 기능의 추가 미세정리로 확장하지 않는다.
+- 새 helper/service/common 계층 추가보다 얇은 래퍼 축소와 public 계약 축소를 우선한다.
+- 소환수 클래스는 prefab/component 연결 위험이 있으므로 삭제나 통합 전 반드시 scene/prefab GUID 연결을 확인한다.
+- 이번 목표는 `Summon` 로직을 크게 분리하는 것이 아니라, 과분리와 중복을 줄이면서 데이터/상태 의존을 줄이는 것이다.
+- 1차 범위는 코드-only 변경을 우선한다. prefab `m_Script`, scene, ScriptableObject 값 변경은 별도 승인 전까지 제외한다.
+- 예측 로직은 소환수별 파일에 남겨 읽히게 하고, 공용 helper/base 추출로 숨기지 않는다.
+- COORD-152는 Prediction 매칭에서 `SummonType` 계약을 제거했다. `IAttackPrediction`은 `CanPredict(Summon)`으로 자기 예측 대상 여부를 판단한다.
+- COORD-161은 적용 완료했다. 이후 COORD-163에서 남아 있던 `SummonData` serialized `summonType`까지 제거했다.
+- COORD-156은 적용 완료했다. 조건은 `PlayerAttackActions` private 메서드로 되돌렸고 별도 조건 파일은 제거했다.
+- COORD-163은 적용 완료했다. `SummonType` enum, `SummonData.summonType`, asset YAML `summonType:` 값을 제거했다.
+- COORD-164는 현재 코드에 없는 `StatusEffectController` 이름을 따라가지 않는다. 실제 대상은 `StatusEffectState`와 `Summon`의 상태효과 턴 갱신 흐름이다.
+- COORD-164는 적용 완료했다. `TurnSummonStateUpdater`의 턴 시작 상태효과 갱신 단계를 private 메서드로 분리하고 일반 공격 쿨타임 갱신 null 방어를 추가했다.
+- COORD-154는 code-only 변경 없이 보류로 닫았다. C# 외부 직접 `isAttacking` field 호출부는 없고 대표 기준은 `BattleAttackState`지만, FightScene 1~7에 `isAttacking:` serialized 값이 남아 field 제거는 scene 영향이 있다.
+- COORD-155는 적용 완료했다. 일반 소환의 빈 플레이어 Plate 조회를 `PlateController.GetFirstEmptyPlayerPlateIndex()`로 좁혔다. `GetPlayerPlates()` 전체 제거와 공격/예측 흐름 재설계는 제외했다.
+- COORD-157은 적용 완료했다. `StoryImageView`가 `InteractionController`에서 현재 대사 인덱스를 직접 조회하지 않고 `InteractionController.OnPointerClick()`에서 인덱스를 전달받도록 좁혔다.
+- COORD-159는 적용 완료했다. `StorySkipView`가 `SettingPanelView`를 직접 조회하지 않고 `GameplaySettingStore.LoadStorySkipEnabled()`로 스킵 버튼 활성 여부를 판단하도록 좁혔다.
+- COORD-158은 적용 완료했다. 씬 연결이 없는 상태를 고려해 `GameObject.Find("MenuCanvas")`는 유지하고, 옵션 패널 계층 문자열 탐색만 `FindSettingPanelTransform()`으로 모았다.
+- SCENE-WIRING-001은 적용 완료했다. `Start Screen`의 중복 `StartScreenView` 컴포넌트를 제거하고, FightScene 1~7의 `TurnController.plateController`를 `PlateController` fileID `893681172`로 명시 연결했다.
+- `StageSceneConnectionEditModeTests`는 5/5 통과했다. `CurrentTurnText`와 `ClearTurnText` 기대 경로를 실제 `UI_20_TurnStatus` 하위 구조에 맞췄다.
+- COORD-160은 적용 완료했다. `Summon.Die()`는 Plate를 직접 찾지 않는 현재 구조를 유지했고, `PlateCompactExecutor`는 기존 Plate를 먼저 비운 뒤 새 Plate에 이동하도록 순서를 바꿔 death handler가 최종 Plate 기준으로 남게 했다.
+- COORD-160 관련 경계 테스트 `Plate_RemoveSummonAlwaysClearsSlotState`, `Summon_ReportsDeathWithoutFindingPlate`는 통과했다.
+- `PlateSummonDrawStaticRegressionTests` 전체 실행은 36/36 통과했다. 기존 `TargetedAttackStrategy` 문자열 기대값은 `effectValue` 기준으로 갱신했다.
+- COORD-151은 적용 완료했다. 플레이어/적 소환수 모두 `Plate.SummonPlaceOnPlate()`에서 clone 생성 후 `Summon.SummonInitialize()`로 초기화되는 대표 흐름을 확인했고, `TryApplyAssignedSummonData()` 내부 중복 `NotifyObservers()`를 제거해 초기화 완료 알림을 `SummonInitialize()` 한 곳으로 모았다.
+- COORD-151 검증: `recompile_scripts` 0 warning, `SummonDataRegressionTests` 통과.
+- `dotnet build .\Assembly-CSharp.csproj --no-restore`는 기존 `NETSDK1004` project.assets.json 누락으로 C# 컴파일 전 중단됐다.
+- 같은 특수공격/AttackRule 미세정리는 다음 세션 작업으로 잡지 않는다. 필요하면 컴파일 실패 수습만 최소로 처리한다.
+- COORD-165는 적용 완료했다. Story Screen 1/2/3/5/7의 `StorySkipView` UnityEvent 메서드명을 `SkipAlert`로 맞췄고 `StorySystemStaticRegressionTests`는 26/26 통과했다.
+- 테스트 실행은 사용자 추가 응답 없이 자동 진행한다. 테스트 결과 확인 뒤 10분 동안 사용자 응답이 없으면, 코드/씬/에셋 수정이 필요 없는 다음 테스트 또는 문서/후보 정리 작업으로 이어간다. 코드/씬/프리팹/ScriptableObject 변경은 기존처럼 Change Proposal과 diff 승인 후 적용한다.
+- Runtime null 1차 수습은 통과했다. `GameSceneFlow.LoadHudAdditive()`는 Build Settings의 `HUD` 씬명을 사용하고, `StartScreenView.Start()`는 HUD additive 로드를 보장하며 옵션 열기 시 `MenuCanvas`를 지연 조회한다.
+- FightScene 1~7 `PlayerTurnOverBtn` UnityEvent 타입은 `PlayerController`로 맞췄고, `StageRuntimeFlowPlayModeTests`는 stale `Player` 타입 기대와 과도한 로그 순서 기대를 제거했다.
+- Plate 연결 검증을 추가했다. FightScene 1~7의 `Plate.spawnTransform`, `statePanel`, `statePanelScript`와 `PlayerPlates`/`EnemyPlate` prefab `spawnTransform`은 `StageSceneConnectionEditModeTests`로 검증한다.
+- 검증 결과: `recompile_scripts` 0 warning, `StageSceneConnectionEditModeTests` 7/7 통과, 전체 EditMode 146/146 통과, 전체 PlayMode 26/26 통과, `git diff --check` 통과.
+- SCENE-NULL-01은 적용 완료했다. Build Settings enabled scene과 `Assets/Prefabs` 전체 missing script 스캔, 소환수 prefab `shieldImage` 연결 계약을 `StageSceneConnectionEditModeTests`에 추가했다.
+- `Grass Spirit.prefab`, `HighDevil.prefab`의 기존 `ShieldImage` GameObject를 `Summon.shieldImage`에 연결했다.
+- 검증 결과: `recompile_scripts` 0 warning, `StageSceneConnectionEditModeTests` 9/9 통과, 전체 EditMode 148/148 통과, 전체 PlayMode 26/26 통과, Unity Console error 0건, `git diff --check` 통과.
+- BTL-RUNTIME-01은 적용 완료했다. `BattleProgressController`가 `BattleStageContext`를 runtime `AddComponent`로 만들지 않고 누락 시 에러를 남기도록 바꿨다.
+- FightScene 1~7의 주요 battle runtime controller 필수 연결 계약을 `StageSceneConnectionEditModeTests`에 추가했다.
+- 검증 결과: `BattleResultFlowStaticRegressionTests` 5/5, `StageSceneConnectionEditModeTests` 10/10, 관련 PlayMode 1/1, 전체 EditMode 149/149, 전체 PlayMode 26/26, Unity Console error 0건, `git diff --check` 통과.
+- RUNTIME-WIRING-02는 적용 완료했다. `StartGameFlow`의 Start/Continue `StageController` 의존을 제거했고, FightScene 1~7 `Player` UnityEvent 타입명, Thank Screen 메서드 대소문자, `StorySkipView` 시작 시점 경고, Story 3 Fox 중복 `Animation`, HUD의 잘못된 `StageController`, `MenuLoader` MonoScript import 끊김을 수습했다.
+- 검증 결과: `recompile_scripts` 0 warning, 전체 EditMode 155/155 통과, 전체 PlayMode 28/28 통과, Unity Console error 0건/warning 0건, `git diff --check` 통과.
+- RUNTIME-HOTFIX-03은 적용 완료했다. Start Screen 설정 버튼 런타임 연결, HUD 중복 로드 방지, Story ESC 중복/파괴 참조 방어, Fight 결과창 시작 비활성화, 일반 소환 3옵션 fallback, prefab `Summon.GetImage()` 지연 확보를 수습했다.
+- 검증 결과: `recompile_scripts` 0 warning, 전체 PlayMode 32/32 통과, 전체 EditMode 155/155 통과, Unity Console error 0건/warning 0건, `git diff --check` 통과.
+- RUNTIME-HOTFIX-05는 적용 완료했다. 1Stage 전투 UI의 턴/명령/결과 알림 배치를 2Stage식 full-stretch layout으로 맞췄고, 2~7Stage의 `UI_60_SummonPicker` zero-scale 상태를 1Stage식 visible layout으로 복구했다. `PlayerPlateActions`는 1~7Stage 모두 시작 비활성 상태로 맞췄다.
+- 검증 결과: `recompile_scripts` 0 warning, `StageSceneConnectionEditModeTests` 15/15 통과, 2Stage PlayMode 소환 UI/턴 교환 테스트 각각 통과, Unity Console error 0건/warning 0건, `git diff --check` 공백 오류 없음. 전체 PlayMode 클래스 실행은 MCP 요청 timeout으로 끊겨 새 2Stage 테스트만 분리 검증했다.
+- RUNTIME-HOTFIX-06은 적용 완료했다. `SummonStatusView`가 상태색/피격색을 덮기 전 원래 Image 색상을 캐싱하고, 상태가 없어지면 원래 색으로 복구하도록 좁혔다.
+- 검증 결과: `recompile_scripts` 0 warning, `SummonStatusViewTests` 12/12 통과, Unity Console error 0건/warning 0건, `git diff --check` 공백 오류 없음.
+- RUNTIME-QA-07은 완료했다. `StageRuntimeFlowPlayModeTests` 전체 17/17, 전체 PlayMode 34/34, 전체 EditMode 158/158 통과했고 Unity Console error 0건/warning 0건을 확인했다.
+- RUNTIME-HOTFIX-09는 적용 완료했다. 소환 선택 옵션 판넬 4개를 FightScene 1~7에서 `400x580`에서 `380x550`으로 줄였고, 적 배치 직후 현재 전투 배수를 적 HP/공격력에 적용하도록 했다.
+- 검증 결과: `recompile_scripts` 0 warning, `StageSceneConnectionEditModeTests` 15/15 통과, `StageEnemyPlacementStaticRegressionTests` 11/11 통과, `StageRuntimeFlowPlayModeTests` 18/18 통과, 전체 PlayMode 35/35 통과, 전체 EditMode 158/158 통과, Unity Console error 0건/warning 0건.
+- RUNTIME-HOTFIX-10은 적용 완료했다. FightScene 1~7의 소환/재소환 3옵션 공용 `RedrawPanel`을 넓히고 GridLayout을 3열 고정으로 바꿔 세 옵션이 한 줄에 나오도록 했다. 1Stage `TurnTextUI` 프레임도 텍스트 위치와 맞췄다.
+- 검증 결과: scene YAML 정적 확인은 FightScene 1~7 모두 `RedrawPanel` 1개, 3열 GridLayout 1개, `360x520` 옵션 4개로 일치했다. `git diff --check`는 공백 오류 없이 CRLF 경고만 있었다. Unity EditMode 실행은 `LicenseClient` IPC timeout으로 결과 XML 없이 중단됐고, `dotnet build/restore`는 `project.assets.json`/restore 환경 문제로 중단되어 코드 실패로 분류하지 않는다.
+- RUNTIME-HOTFIX-11은 적용 완료했다. FightScene 1~7의 1개짜리 `DrawPanel/DrawOption_1` 오브젝트와 `SummonController`의 `drawPanel/drawOptionPanels` 직렬화 경로를 제거하고, 일반 소환과 재소환 모두 공용 `RedrawPanel`의 3개 선택지로 표시되도록 통일했다.
+- 검증 결과: FightScene 1~7 정적 scene YAML 확인에서 `DrawPanel`/삭제 fileID/옛 직렬화 필드는 0건이고, `RedrawPanel` 3옵션 구조는 유지됐다. `git diff --check`는 공백 오류 없이 CRLF 경고만 있었다. Unity EditMode 실행은 `LicenseClient` IPC timeout으로 결과 XML 없이 중단됐고, `dotnet build/restore`는 `project.assets.json`/restore 환경 문제로 중단되어 코드 실패로 분류하지 않는다.
+- RUNTIME-HOTFIX-12는 적용 완료했다. FightScene 1~7의 누락된 Unity YAML 헤더 `%YAML 1.1`, `%TAG !u! tag:unity3d.com,2011:`를 복구해 `File may be corrupted or was serialized with a newer version of Unity` 씬 로드 에러를 수습했다.
+- 검증 결과: 전체 `.unity` 씬 헤더 검사 통과, FightScene 1~7 로컬 fileID 참조 누락 0건, `git diff --check -- Assets/Screen/FightScene` 통과, Unity MCP `load_scene`으로 FightScene 1~7 모두 로드 성공.
+- RUNTIME-TRIAGE-08은 완료했다. `StageSceneConnectionEditModeTests` 15/15, `PlateSummonDrawStaticRegressionTests` 36/36, `StageRuntimeFlowPlayModeTests` 19/19가 통과했고 Unity Console error/warning 0건을 확인했다.

@@ -1,53 +1,53 @@
-# Issue Board
+﻿# Issue Board
 
 현재 판단이 필요한 항목만 둔다.
-오래된 Done 목록은 남기지 않는다.
+오래된 Done 목록은 여기에 누적하지 않는다.
+상세 후보 큐는 `.codex/workflow/refactor-candidates.md`를 본다.
 
-| ID | 상태 | 도메인 | 기능 슬라이스 | 다음 행동 | 호출 대상 |
-|---|---|---|---|---|---|
-| COORD-136 | Ready | Battle SceneObject | FightScene UI 계층 정리 제안 | FightScene 2~7의 BattleCanvas 하위 UI 계층을 1Stage 기준으로 맞출 수 있는지 위험도와 diff 범위를 제안 | CoordinatorAgent |
+| ID | 상태 | 도메인 | 기능 슬라이스 | 완료조건 | 다음 행동 | 호출 대상 |
+|---|---|---|---|---|---|---|
+| RUNTIME-QA-13 | Ready | Battle Runtime | 직접 플레이 스모크 검증 | Start Screen 설정 버튼, Story ESC, FightScene 1~2 일반 소환/재소환 3옵션, 결과창 시작 비활성화, Stage 5 적 배수 적용을 직접 플레이 또는 PlayMode 경로로 확인하고 Unity Console error/warning 0건을 기록한다 | Unity에서 Start Screen부터 1Stage 전투 진입까지 직접 플레이 흐름 확인 | VerificationAgent |
 
 ## 보류/제외
 
-- DEV-100 씬 stale 연결 정리는 완료했다.
-- 다음 세션은 파일 하나씩 오래 붙잡거나 메서드 하나 단위로 쪼개지 않는다.
-- Battle 도메인 안에서 다른 기능 영향이 최소화되는 범위로 묶고, 전투씬 오브젝트 정리도 같은 Batch 판단 안에 포함한다.
-- 다음은 Battle 전체 Batch 목표와 완료 조건을 먼저 확인한다.
-- EnemyAction/Prediction은 마무리 상태만 판단하고, 필수 문제가 아니면 PlayerAction 분리 또는 Turn Flow 정리로 이동한다.
-- 후보 순서: PlayerAction 분리 -> TurnController 얇게 만들기 -> BattleController 공격 실행 책임 정리.
-- DEV-101은 PlayerAction 턴 자원 상태 분리까지 진행했다.
-- DEV-102는 Unit 루트를 Player, Enemy, Plate 엔티티 폴더만 남긴 구조로 정리했다.
-- DEV-103은 PlayerController와 PlayerActionFlow로 역할 이름을 맞췄다.
-- DEV-104는 PlayerActionExecutor로 이미 결정된 행동 실행 책임을 분리했다.
-- DEV-105는 PlayerTurnActions로 턴/결과 의존성을 PlayerActionFlow 밖으로 분리했다.
-- DEV-106은 PlayerSummonActions와 PlayerAttackActions로 소환/공격 세부 흐름을 PlayerActionFlow 밖으로 분리했다.
-- DEV-107은 PlayerTurnProgressState와 플레이어 턴 의도 중심 메서드로 턴 결과 호출 구조를 정리했다.
-- DEV-108은 병렬 가능 범위로 SummonDrawService 계산 안정화와 EnemyPredictionPlateState 이름 정리를 적용했다.
-- DEV-109는 PlateSummonExecutor로 Plate의 소환수 생성/파괴/이동 실행 책임을 분리했다.
-- DEV-110은 PlateVisualView로 Plate의 개별 표시 책임을 분리했다.
-- DEV-111은 PlateCompactExecutor로 PlateController의 적 플레이트 압축 실행 책임을 분리했다.
-- DEV-112는 PlateQueryService로 PlateController의 조회 계산 책임을 분리했다.
-- COORD-113은 PlateController의 남은 표시 흐름을 현재 PlateView 위임 구조로 충분하다고 판단해 추가 코드 변경 없이 닫았다.
-- DEV-113은 SummonPickState로 SummonController의 선택 상태 보관 책임을 분리했다.
-- DEV-114는 SummonPlaceExecutor로 SummonController의 일반 소환/재소환 배치 실행 책임을 분리했다.
-- DEV-115는 SummonPickView로 SummonController의 패널/배경/후보 표시 책임을 분리했다.
-- DEV-116은 PlateSelectionController로 소환 선택 완료 후 플레이어 Plate 표시 복구 책임을 이동했다.
-- DEV-117은 PlayerActionFlow의 SummonController.isSummoning 직접 field 참조를 IsSummoning() 호출로 바꿨다.
-- DEV-118은 BattleSpecialAttackExecutor로 BattleController의 특수공격 실행 책임을 분리했다.
-- DEV-119는 BattleAttackState로 BattleController의 공격 상태 보관 책임을 분리했다.
-- COORD-121은 BattleController.AttackStart를 현재 Controller 진입점으로 유지하고, 현재 특수공격 조회 판단만 BattleAttackState로 이동하는 것으로 닫았다.
-- DEV-120은 BattleController의 현재 특수공격 조회 public API를 유지한 채 내부 판단을 BattleAttackState로 위임했다.
-- COORD-122는 TurnController의 UI 표시 책임 분리를 우선하기로 판단했다.
-- DEV-121은 TurnView로 턴 수와 클리어 턴 UI 텍스트 표시 책임을 분리했다.
-- DEV-122는 Turn 관련 파일을 Battle/Flow/Turn 폴더로 이동하고 기존 .meta GUID를 유지했다.
-- DEV-123은 TurnProgressState로 TurnController의 현재 턴과 턴 수 상태 보관 책임을 분리했다.
-- DEV-124는 TurnPhaseActions로 TurnController의 턴 시작/종료 실행 흐름을 분리했다.
-- DEV-130은 SummonController를 통한 공격자 Plate index 우회 갱신 경로를 제거하고, 상태 패널/BattleAttackState를 통해 공격자 index를 보관하도록 정리했다.
-- DEV-131은 재소환 후 상태 패널 갱신 시 공격자 Plate index가 `-1`로 덮이지 않도록 `Plate.RestoreRedrawSummonState`에서 현재 player Plate index를 명시 전달했다.
-- DEV-132는 PlayerTargetSelectionActions를 추가해 타겟형 특수공격의 선택 대기/취소/완료 실행 흐름을 PlayerAttackActions에서 분리했다.
-- DEV-133은 PlateTargetSelectionActions를 추가해 Plate 클릭 입력에서 전투 타겟 선택 상태 변경 책임을 분리했다.
-- COORD-134는 현재 target plate index 흐름이 한 방향으로 정리되어 있고 public API 이름도 `SpecialAttackTargetSelection` 계열로 충분히 구체적이라 코드 변경 없이 닫았다.
-- DEV-135는 공격자 source를 View가 보관하지 않고 BattleController/BattleAttackState로 등록하도록 바꿨고, target hover/click 판정을 PlateTargetSelectionActions로 모았다.
-- DEV-135 VerificationAgent는 View 우회 제거와 target 판정 중앙화를 확인했다. 추가로 상태 패널 연결 누락 방어를 반영했다.
-- 추가 씬, 프리팹, ScriptableObject asset 값, 저장 데이터 변경은 별도 승인 전까지 제외한다.
-- 제외: 예측 확률 수치 변경, 함수명/주석만 반복 정리, 신규 공통 helper 추가, EnemyAction/Prediction에 장시간 머무는 작업.
+- 전체 후보 목록은 `refactor-candidates.md`에 둔다.
+- COORD-147: fallback-only 소환수 클래스 삭제/통합은 16개 prefab `m_Script` GUID와 Fight Screen 소환 리스트 연결 때문에 별도 prefab migration 승인 전까지 보류한다.
+- COORD-152: Prediction 매칭에서 옛 소환 타입 계약을 제거했다.
+- COORD-161: `Summon` 런타임 타입 필드/API와 fallback 타입 인자는 제거했다.
+- COORD-156: `PlayerAttackCondition` 과분리는 제거했다. 공격 조건은 `PlayerAttackActions` private guard로 둔다.
+- COORD-163: `SummonType` enum, `SummonData.summonType`, asset YAML `summonType:` 값은 제거했다.
+- COORD-164: `TurnSummonStateUpdater`의 턴 시작 상태효과 갱신 단계를 분리하고 일반 공격 쿨타임 갱신 null 방어를 추가했다.
+- COORD-154: C# 외부 직접 `isAttacking` 호출부는 없지만 FightScene 1~7에 serialized `isAttacking:` 값이 남아 field 제거는 별도 scene 영향 승인 전까지 보류한다.
+- COORD-155: 일반 소환의 빈 플레이어 Plate 조회를 `PlateController.GetFirstEmptyPlayerPlateIndex()`로 좁혔다. `GetPlayerPlates()` 전체 제거는 공격/예측 흐름 영향이 있어 이번 슬라이스에서 제외했다.
+- COORD-157: `StoryImageView`가 `InteractionController`에서 현재 대사 인덱스를 직접 조회하지 않고 `InteractionController.OnPointerClick()`에서 인덱스를 전달받도록 좁혔다.
+- COORD-159: `StorySkipView`가 `SettingPanelView`를 직접 조회하지 않고 `GameplaySettingStore.LoadStorySkipEnabled()`로 스킵 버튼 활성 여부를 판단하도록 좁혔다.
+- COORD-158: 씬 연결이 없는 상태를 고려해 `GameObject.Find("MenuCanvas")`는 유지하고, 옵션 패널 계층 문자열 탐색만 `FindSettingPanelTransform()`으로 모았다.
+- SCENE-WIRING-001: `Start Screen`의 중복 `StartScreenView` 컴포넌트를 제거하고, FightScene 1~7의 `TurnController.plateController`를 `PlateController` fileID `893681172`로 명시 연결했다.
+- 연결 테스트 후속 처리: `CurrentTurnText`와 `ClearTurnText` 기대 경로를 실제 `UI_20_TurnStatus` 하위 구조에 맞췄고 `StageSceneConnectionEditModeTests`는 5/5 통과했다.
+- COORD-160: `PlateCompactExecutor`가 기존 Plate를 먼저 비운 뒤 새 Plate에 summon을 이동하도록 정리했다. 직접 관련 경계 테스트는 통과했다.
+- 테스트 이슈 정리: `PlateSummonDrawStaticRegressionTests`의 `TargetedAttackStrategy` 문자열 기대값을 현재 `effectValue` 기준으로 갱신했고, 전체 클래스는 36/36 통과했다.
+- COORD-151: 플레이어/적 소환수 초기화 대표 흐름이 `Plate.SummonPlaceOnPlate()` -> `Summon.SummonInitialize()`임을 확인했고, 초기화 완료 알림을 `SummonInitialize()` 한 곳으로 모았다. `SummonDataRegressionTests`는 통과했다.
+- AttackRule 미세정리는 같은 기능 반복 제한 규칙에 따라 다음 작업으로 잡지 않는다. 컴파일 실패가 있으면 실패 수습만 최소 범위로 처리한다.
+- `MenuView`/`MenuHandler` 통합은 씬 연결 영향이 있어 자동 적용하지 않는다.
+- `Summon` 대분리는 영향 범위가 커서 지금 바로 시작하지 않는다.
+- 새 helper/service/common 계층 추가는 제외한다.
+- Scene, prefab, ScriptableObject 값 변경은 별도 승인 전까지 제외한다.
+- COORD-165: Story Screen 1/2/3/5/7의 `StorySkipView` UnityEvent 메서드명을 현재 public 메서드 `SkipAlert`에 맞췄다. `StorySystemStaticRegressionTests`는 26/26 통과했다.
+- COORD-SCAN: 멀티에이전트 구조/연결 후보 재점검을 완료했다. 이후 BTL-SCENE-03은 테스트-only 연결 검증으로 처리했고, 현재 Ready는 SCENE-NULL-01이다.
+- BTL-SCENE-03: `StageSceneConnectionEditModeTests`에 Plate runtime 연결과 Plate prefab `spawnTransform` 검증을 추가했다. `StageSceneConnectionEditModeTests` 7/7, 전체 EditMode 146/146, 전체 PlayMode 26/26 통과.
+- Runtime null 1차 수습: Start Screen HUD additive 로드 경로와 `MenuCanvas` 지연 조회, FightScene 1~7 `PlayerController` UnityEvent 타입, PlayMode stale expectation을 정리했다.
+- SCENE-NULL-01: Build Settings enabled scene과 `Assets/Prefabs` 전체 missing script 스캔, 소환수 prefab `shieldImage` 연결 계약을 추가했다. `Grass Spirit.prefab`, `HighDevil.prefab`의 기존 `ShieldImage` GameObject를 `Summon.shieldImage`에 연결했다. `StageSceneConnectionEditModeTests` 9/9, 전체 EditMode 148/148, 전체 PlayMode 26/26 통과.
+- BTL-RUNTIME-01: `BattleProgressController`의 runtime `AddComponent<BattleStageContext>()` fallback을 제거했고, FightScene 1~7 battle runtime controller 필수 연결 계약을 추가했다. 전체 EditMode 149/149, 전체 PlayMode 26/26 통과.
+- RUNTIME-WIRING-02: `StartGameFlow`의 `StageController` 의존 제거, Fight/Thank UnityEvent 직렬화 교정, `StorySkipView` 지연 핸들러 조회, Story 3 Fox 애니메이션 중복 제거, HUD `StageController` 제거, `MenuLoader` MonoScript import 복구를 적용했다. 전체 EditMode 155/155, 전체 PlayMode 28/28, Unity Console error/warning 0건을 확인했다.
+- RUNTIME-HOTFIX-03: Start Screen 설정 버튼 런타임 연결, HUD 중복 로드 방지, Story ESC 중복/파괴 참조 방어, Fight 결과창 시작 비활성화, 일반 소환 3옵션 fallback, prefab `Summon.GetImage()` 지연 확보를 적용했다. 전체 EditMode 155/155, 전체 PlayMode 32/32, Unity Console error/warning 0건을 확인했다.
+- RUNTIME-HOTFIX-05: 1Stage 전투 UI의 턴/명령/결과 알림 배치를 2Stage 기준으로 정리했고, 2~7Stage `UI_60_SummonPicker` zero-scale과 `PlayerPlateActions` 시작 활성 차이를 수습했다. `StageSceneConnectionEditModeTests` 15/15, 2Stage PlayMode 소환 UI/턴 교환 테스트 통과, Unity Console error/warning 0건을 확인했다.
+- RUNTIME-HOTFIX-06: `SummonStatusView`가 상태색/피격색을 덮기 전 원래 Image 색상을 캐싱하고, 상태 해제 시 원래 색으로 복구하도록 수정했다. `SummonStatusViewTests` 12/12, Unity Console error/warning 0건을 확인했다.
+- RUNTIME-QA-07: 1~2Stage 전투 진입, 소환 선택 UI, 턴 교환, 결과창 시작 비활성 상태를 PlayMode 경로로 재점검했다. `StageRuntimeFlowPlayModeTests` 17/17, 전체 PlayMode 34/34, 전체 EditMode 158/158, Unity Console error/warning 0건을 확인했다.
+- RUNTIME-HOTFIX-09: FightScene 1~7의 소환 선택 옵션 판넬을 `400x580`에서 `380x550`으로 줄였고, 적 배치 직후 현재 전투 배수를 적 HP/공격력에 적용하도록 수정했다. `StageSceneConnectionEditModeTests` 15/15, `StageEnemyPlacementStaticRegressionTests` 11/11, `StageRuntimeFlowPlayModeTests` 18/18, 전체 PlayMode 35/35, 전체 EditMode 158/158, Unity Console error/warning 0건을 확인했다.
+- RUNTIME-HOTFIX-10: FightScene 1~7의 소환/재소환 3옵션 `RedrawPanel`을 `360x520` cell, 3열 고정 GridLayout, 넓은 panel 폭으로 맞췄고 1Stage `TurnTextUI` 프레임 배치를 텍스트와 맞췄다. 정적 scene YAML 확인과 `git diff --check`는 통과했지만 Unity 실행은 `LicenseClient` IPC timeout으로 결과 XML 없이 중단됐다.
+- RUNTIME-HOTFIX-11: FightScene 1~7의 1개짜리 `DrawPanel/DrawOption_1` 오브젝트와 `SummonController`의 `drawPanel/drawOptionPanels` 직렬화 경로를 제거했다. 일반 소환과 재소환은 모두 공용 `RedrawPanel` 3옵션을 사용한다. 정적 scene YAML 확인과 `git diff --check`는 통과했지만 Unity 실행은 `LicenseClient` IPC timeout으로 결과 XML 없이 중단됐다.
+- RUNTIME-HOTFIX-12: FightScene 1~7의 Unity YAML 헤더 누락으로 발생한 `File may be corrupted or was serialized with a newer version of Unity` 씬 로드 에러를 복구했다. 전체 `.unity` 헤더 검사, FightScene 로컬 fileID 참조 검사, `git diff --check`, Unity MCP `load_scene` 1~7Stage 확인을 통과했다.
+- RUNTIME-TRIAGE-08: 남은 런타임 후보 재선정을 완료했다. 자동 검증 기준으로 `StageSceneConnectionEditModeTests` 15/15, `PlateSummonDrawStaticRegressionTests` 36/36, `StageRuntimeFlowPlayModeTests` 19/19가 통과했고 Unity Console error/warning 0건을 확인했다. 남은 확인은 직접 플레이 스모크 검증으로 넘긴다.
+- Backlog 후보: STORY-01 StorySkipView 씬 이동 책임, STAGE-02 StageSelectView controller 연결, VHO-03 SettingPanel 직접 호출 우회.
+- 보류 후보: STAGE-01 StageFlowController fallback 제거, STORY-02 InteractionController 종료 처리 분리, STORY-03 Story component wiring serialized 전환, BTL-RUNTIME-02 runtime AddComponent 제거, BTL-PRED-04 prediction 구성 위치 검증, VHO-01 StartScreen 대분리, VHO-02 MenuHandler 입력 정책 분리, VHO-04 Option View 적용/저장 분리, VHO-05 구형 MenuView 잔존 연결.
+- 운영 규칙: 테스트 실행은 자동 진행한다. 테스트 결과 확인 뒤 10분 동안 사용자 응답이 없으면 코드/씬/에셋 수정이 필요 없는 다음 테스트 또는 문서/후보 정리 작업으로 이어간다. 코드/씬/프리팹/ScriptableObject 변경은 기존처럼 Change Proposal과 diff 승인 후 적용한다.

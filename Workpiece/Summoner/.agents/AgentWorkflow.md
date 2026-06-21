@@ -33,8 +33,8 @@ CoordinatorAgent -> ReleaseAgent
 
 | 상태 | 통과 조건 | 다음 |
 |---|---|---|
-| Coordinator Ready | 기능 슬라이스, 제외 범위, 호출 대상 확정 | DevAgent 또는 선택 에이전트 |
-| Dev ChangeProposal | 수정 대상, 변경 범위, 적용 예정 diff, 검증 게이트 제시 | 사용자 승인 또는 Coordinator Ready |
+| Coordinator Ready | 기능 슬라이스, 완료조건, 제외 범위, 호출 대상 확정 | DevAgent 또는 선택 에이전트 |
+| Dev ChangeProposal | 수정 대상, 변경 범위, 적용 예정 diff, 완료조건, 검증 게이트 제시 | 사용자 승인 또는 Coordinator Ready |
 | Dev InProgress | 승인된 diff 범위 안에서 기능 슬라이스 구현, 필요한 검색/컴파일 1차 확인 | Coordinator Ready |
 | Verification Gate | review mode 또는 QA mode 결과 정리 | Coordinator Ready 또는 DevAgent |
 | Documentation Gate | 필요한 문서 정리 | Coordinator Ready |
@@ -43,11 +43,15 @@ CoordinatorAgent -> ReleaseAgent
 - Ready는 하나만 둔다.
 - CoordinatorAgent는 보고 가치가 낮은 문서 갱신과 에이전트 인계를 사용자 승인 없이 진행한다.
 - CoordinatorAgent는 코드 diff 승인, 위험 작업, 제품 판단, 환경/코드 실패 분류처럼 사용자 판단이 필요한 것만 보여준다.
+- CoordinatorAgent는 기능 슬라이스를 Ready로 두기 전에 완료조건을 먼저 정한다.
+- CoordinatorAgent는 같은 기능 슬라이스에서 이름, 주석, 테스트 문자열 같은 미세정리가 두 번 연속 이어지면 추가 정리를 다음 작업으로 잡지 않는다.
 - DevAgent는 코드 변경 전에 적용 예정 diff를 보여주고 진행 여부를 확인한다.
 - 승인 전에는 제품 코드, 테스트 코드, 에셋을 수정하지 않는다.
 - 문서 상태 기록은 승인 대기 없이 최소 범위로 바로 진행한다.
 - 승인은 제시된 diff와 변경 범위에만 적용한다.
 - 작업 중 diff 범위가 넓어지면 새 ChangeProposal로 되돌린다.
+- DevAgent는 완료조건을 만족하면 같은 기능 슬라이스의 남은 이름/주석/미세 구조 정리를 이유로 계속 리팩토링하지 않는다.
+- DevAgent는 승인된 기능 슬라이스 안에서도 미세정리만 2회 이상 반복되면 계속 수정하지 않고 Coordinator Ready로 되돌린다.
 - DevAgent 뒤에 VerificationAgent를 자동으로 붙이지 않는다.
 - VerificationAgent는 호출 조건이 있을 때만 사용한다.
 - DocumentationAgent는 상시 기록 담당이 아니다.
@@ -70,6 +74,7 @@ CoordinatorAgent -> ReleaseAgent
 
 EditMode와 PlayMode는 작은 변경마다 반복하지 않는다.
 같은 기능 슬라이스 안에서는 기능 게이트에서 한 번 실행하는 것이 기본이다.
+같은 기능 슬라이스에서 이미 검증한 경로는 이름, 주석, 테스트 문자열 정리 때문에 반복 검증하지 않는다.
 
 ## 문서 최소화
 
@@ -83,6 +88,8 @@ EditMode와 PlayMode는 작은 변경마다 반복하지 않는다.
 
 - 모든 기능을 Coordinator -> Dev -> Review -> QA 파이프라인으로 고정하기
 - 네이밍 정리를 독립 작업으로 계속 고르기
+- 같은 기능 슬라이스에서 미세정리만 2회 이상 반복하기
+- 완료조건을 만족한 기능을 같은 세션에서 계속 확장하기
 - 작은 변경마다 EditMode/PlayMode 반복 실행
 - 기능 개발 중간마다 VerificationAgent 호출
 - DocumentationAgent를 상시 기록 담당으로 붙이기
