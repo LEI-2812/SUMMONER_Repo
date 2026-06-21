@@ -1771,7 +1771,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 268141389}
         m_TargetAssemblyTypeName: StorySkipView, Assembly-CSharp
-        m_MethodName: skipAlert
+        m_MethodName: SkipAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

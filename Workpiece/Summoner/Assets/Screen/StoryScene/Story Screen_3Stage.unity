@@ -1943,7 +1943,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 268141389}
         m_TargetAssemblyTypeName: StorySkipView, Assembly-CSharp
-        m_MethodName: skipAlert
+        m_MethodName: SkipAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2139,7 +2139,6 @@ GameObject:
   - component: {fileID: 1586064225}
   - component: {fileID: 1586064228}
   - component: {fileID: 1586064229}
-  - component: {fileID: 1586064230}
   m_Layer: 5
   m_Name: Character_Fox
   m_TagString: Untagged
@@ -2255,21 +2254,6 @@ MonoBehaviour:
   fox: {fileID: 1586064223}
   foxAni: {fileID: 1586064228}
   interactionController: {fileID: 1102135335}
---- !u!111 &1586064230
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1586064223}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 5208acd7cc87d83449ec03943498df4f, type: 2}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &1593890170
 GameObject:
   m_ObjectHideFlags: 0

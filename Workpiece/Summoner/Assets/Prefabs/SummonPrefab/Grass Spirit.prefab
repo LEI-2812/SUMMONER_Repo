@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   summonData: {fileID: 11400000, guid: c7b6ae3b0c0641f7d54f7fb5abcd7667, type: 2}
-  shieldImage: {fileID: 0}
+  shieldImage: {fileID: 3801987164548947946}
   animator: {fileID: 3963563253523807730}
   normalAttackSprite: {fileID: 0}
   specialAttackSprite: {fileID: 0}
