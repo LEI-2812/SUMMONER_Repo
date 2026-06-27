@@ -9,12 +9,26 @@ CoordinatorAgent는 사용자의 요청과 현재 코드 상태를 보고, 다�
 ## 흐름
 
 1. 현재 요청, 코드 상태, 작업 범위를 비교한다.
-2. 폴더가 아니라 대표 진입점부터 결과 처리까지 이어지는 기능 슬라이스, 완료조건, 제외 범위, 첫 액션을 정한다.
-3. 씬 오브젝트 이동이 필요하면 코드 배치 계약 제거를 먼저 DevAgent에 넘긴다.
-4. 구조 변경, 씬 연결, 런타임 흐름 영향이 있으면 VerificationAgent 호출 여부를 정한다.
-5. 같은 기능 슬라이스에서 이름, 주석, 테스트 문자열 같은 미세정리가 두 번 연속 이어졌는지 확인한다.
-6. 사용자에게 보여줄 일과 바로 처리할 일을 구분한다.
-7. 필요한 에이전트를 하나만 Ready로 둔다.
+2. 현재 이름보다 실제 책임을 먼저 본다. 기준은 `Presentation / Application / Domain / Infrastructure`다.
+3. 폴더가 아니라 대표 진입점부터 결과 처리까지 이어지는 기능 슬라이스, 완료조건, 제외 범위, 첫 액션을 정한다.
+4. 큰 구조 정리라면 분석 하위 에이전트를 feature별로 나눠 읽기 전용으로 병렬 호출할 수 있다.
+5. 씬 오브젝트 이동이 필요하면 코드 배치 계약 제거를 먼저 DevAgent에 넘긴다.
+6. 구조 변경, 씬 연결, 런타임 흐름 영향이 있으면 VerificationAgent 호출 여부를 정한다.
+7. 같은 기능 슬라이스에서 이름, 주석, 테스트 문자열 같은 미세정리가 두 번 연속 이어졌는지 확인한다.
+8. 사용자에게 보여줄 일과 바로 처리할 일을 구분한다.
+9. 필요한 에이전트를 하나만 Ready로 둔다.
+
+## 아키텍처 라우팅 기준
+
+- UI 입력과 화면 갱신은 `Presentation`의 Controller/View로 둔다.
+- 사용자 기능 흐름, 저장, 씬 전환, 전투 결과 조율은 `Application`의 UseCase로 둔다.
+- 전투 규칙, 턴 규칙, 상태, 선택 규칙은 `Domain`의 Rule/State/Entity/Strategy로 둔다.
+- PlayerPrefs, 파일, 외부 API, 유료 LLM, 클라우드는 `Infrastructure`로 둔다.
+- `Action`, `Runner`, `Flow`, `Executor`, `Handler` 이름이 보이면 먼저 실제 책임을 분류한다.
+- `Action` 또는 `Runner`가 흐름 조율을 담당하면 UseCase 후보로 잡는다.
+- `Service`가 계산/조회/생성보다 큰 사용자 흐름을 조율하면 UseCase 후보로 잡는다.
+- `Executor`가 단순 wrapper이면 UseCase 내부 단계로 낮출 후보로 잡는다.
+- Turn은 `TurnController + ChangeTurnUseCase`를 우선 목표로 잡고, 상태 분기가 커질 때만 `TurnStateMachine` 후보로 올린다.
 
 ## 기능 슬라이스 종료 규칙
 

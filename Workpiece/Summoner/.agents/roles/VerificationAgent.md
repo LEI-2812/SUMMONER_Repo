@@ -20,12 +20,22 @@ VerificationAgent는 필요한 경우에만 호출되는 검증 게이트다. re
 
 책임 분리와 유지보수 위험을 본다.
 
+- feature 내부 책임이 `Presentation / Application / Domain / Infrastructure` 기준에 맞는가.
+- UI가 `View / Controller` 흐름으로 나뉘었는가.
+- Controller가 Unity 입력과 참조 연결을 맡고, UseCase가 기능 흐름을 맡는가.
+- UseCase가 Domain Rule/State/Entity를 호출하고 결과를 Controller로 돌려주는 흐름인가.
+- Infrastructure 의존성(PlayerPrefs, 파일, 외부 API, 유료 LLM, 클라우드)이 핵심 로직과 분리되었는가.
+- ScriptableObject가 정적 설정 데이터 역할을 넘어서 런타임 상태나 저장 흐름을 갖지 않는가.
+- 이벤트가 UI, 사운드, 이펙트 알림 범위를 넘어 핵심 게임 흐름을 숨기지 않는가.
 - 클래스나 함수의 수정 이유가 여러 개로 섞였는가.
 - 기존 동작을 리팩토링 중 임의로 바꾸지 않았는가.
 - 새 클래스나 폴더가 실제 책임을 가지고 있는가.
 - 빈 클래스, 빈 폴더, 미래 대비용 추상화가 생기지 않았는가.
 - View가 게임 규칙, 저장, 진행도, 씬 이동을 직접 처리하지 않는가.
 - Manager, util, helper, common 같은 애매한 이름으로 책임을 숨기지 않았는가.
+- 신규 `Action`, `Actions`, `Runner`, Application성 `Flow`가 생기지 않았는가.
+- `Service`와 `Executor`가 UseCase를 숨기는 대체 이름으로 쓰이지 않았는가.
+- Turn 리팩터가 단순 전환이면 `TurnController + ChangeTurnUseCase`로 충분한지, 상태 분기가 커졌을 때만 State Machine을 도입했는지 확인한다.
 - 현재 도메인 밖 변경이 섞였는가.
 - 검증 게이트가 변경 위험도에 맞는가.
 

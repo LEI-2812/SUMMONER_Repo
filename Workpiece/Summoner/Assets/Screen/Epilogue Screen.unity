@@ -1263,9 +1263,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 737927099}
-        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: ToMainAlert
+      - m_Target: {fileID: 737927104}
+        m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
+        m_MethodName: ShowToMainAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2389,7 +2389,6 @@ GameObject:
   - component: {fileID: 430804886}
   - component: {fileID: 430804888}
   - component: {fileID: 430804887}
-  - component: {fileID: 430804889}
   m_Layer: 5
   m_Name: Story Image
   m_TagString: Untagged
@@ -2454,26 +2453,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 430804885}
   m_CullTransparentMesh: 1
---- !u!114 &430804889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 430804885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaa2bfb37e86da24ba13ec777526997a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteArray:
-  - {fileID: 21300000, guid: 6cde5c08fcd44a04eab2a7409714cacd, type: 3}
-  - {fileID: 21300000, guid: f7910c002d9d1e8419a9828ae24f91cc, type: 3}
-  - {fileID: 21300000, guid: b0feba29e72465542a0be868c5d356c8, type: 3}
-  - {fileID: 21300000, guid: bc6a977c5c179764f91da354a25830bc, type: 3}
-  - {fileID: 21300000, guid: c2f36ff770254c94581206701ae66d2a, type: 3}
-  - {fileID: 21300000, guid: 7c8c1ad20bce5a545a469f62bcbb424b, type: 3}
-  targetImage: {fileID: 430804887}
 --- !u!1 &451068846
 GameObject:
   m_ObjectHideFlags: 0
@@ -4717,7 +4696,10 @@ GameObject:
   - component: {fileID: 737927102}
   - component: {fileID: 737927101}
   - component: {fileID: 737927100}
-  - component: {fileID: 737927099}
+  - component: {fileID: 737927104}
+  - component: {fileID: 737927105}
+  - component: {fileID: 737927106}
+  - component: {fileID: 737927107}
   - component: {fileID: 737927098}
   - component: {fileID: 737927097}
   m_Layer: 5
@@ -4919,7 +4901,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &737927099
+--- !u!114 &737927104
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4928,19 +4910,62 @@ MonoBehaviour:
   m_GameObject: {fileID: 737927096}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f023f0b7f78c9644b836fba3d8fc238, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 11500000, guid: e50897eb2b4de6c48a0c55f8b5bdba7e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
   menuPanel: {fileID: 286848623}
-  toMain: {fileID: 1858845164}
-  toMainResult: {fileID: 1858845166}
-  settingPanel: {fileID: 890000003}
-  setting: {fileID: 1161797845}
-  toQuit: {fileID: 727375346}
-  toQuitResult: {fileID: 727375347}
   backGroundPanel: {fileID: 1057337888}
   menuClick: {fileID: 737927098}
   alertClick: {fileID: 737927097}
+  toMainAlertHandler: {fileID: 737927105}
+  toQuitAlertHandler: {fileID: 737927106}
+  skipAlertHandler: {fileID: 0}
+  settingHandler: {fileID: 737927107}
+--- !u!114 &737927105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737927096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27362fa9faa59fd419a3d70e43f5d956, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  alertObject: {fileID: 1858845164}
+  alertScript: {fileID: 1858845166}
+  alertClick: {fileID: 737927097}
+--- !u!114 &737927106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737927096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f6b2d30e907df4eabbdc528221444d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  alertObject: {fileID: 727375346}
+  alertScript: {fileID: 727375347}
+  alertClick: {fileID: 737927097}
+--- !u!114 &737927107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737927096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff207ebeea7d3984aa442854e9d0dee3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  settingPanel: {fileID: 890000003}
+  setting: {fileID: 1161797845}
+  menuClick: {fileID: 737927098}
 --- !u!114 &737927100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5749,12 +5774,12 @@ GameObject:
   - component: {fileID: 900800012}
   - component: {fileID: 900800011}
   - component: {fileID: 900800010}
-  - component: {fileID: 900800009}
   - component: {fileID: 900800008}
   - component: {fileID: 900800007}
   - component: {fileID: 900800006}
   - component: {fileID: 900800014}
   - component: {fileID: 900800015}
+  - component: {fileID: 900800016}
   m_Layer: 5
   m_Name: TalkManager
   m_TagString: Untagged
@@ -5839,18 +5864,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   csv_FileName: SummonContext
---- !u!114 &900800009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900800005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40db078f40ce2d348a9587fe18f933b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &900800010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5941,6 +5954,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storyNum: 8
+--- !u!114 &900800016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900800005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d21a9de0b9b4f5e9c1f1d9286a62474, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  storyDialogueView: {fileID: 900800007}
+  playerMove: {fileID: 0}
 --- !u!1 &902968612
 GameObject:
   m_ObjectHideFlags: 0
@@ -6509,9 +6536,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 737927099}
-        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: ToQuitAlert
+      - m_Target: {fileID: 737927104}
+        m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
+        m_MethodName: ShowToQuitAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10373,9 +10400,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 737927099}
-        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: OpenSettingCanvas
+      - m_Target: {fileID: 737927104}
+        m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
+        m_MethodName: OpenSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

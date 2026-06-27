@@ -1,31 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 public class ParentSummonImage : MonoBehaviour
 {
-    [Header("적 소환수 넣기")]
-    [SerializeField] private Summon summon; // 적 소환수 직접 할당
-    private Plate plate; // 부모 Plate 컴포넌트를 받기 위한 변수
+    [Header("소환수 설정")]
+    [SerializeField] private Summon summon; // 배치할 소환수 프리팹
 
-    void Awake()
+    private BattleBoardInputController plate; // 소환수를 배치할 플레이트
+
+    private void Awake()
     {
-        // 부모 오브젝트에 붙어 있는 Plate 컴포넌트를 가져옴
-        plate = GetComponent<Plate>();
+        // 같은 오브젝트에 연결된 플레이트를 찾는다.
+        plate = GetComponent<BattleBoardInputController>();
 
-        // 소환수가 제대로 할당되었는지 확인
-        if (summon != null)
+        if (summon == null)
         {
-            // 부모 Plate에 소환수를 설정
-            if (plate != null)
-            {
-                plate.SummonPlaceOnPlate(summon, isResummon: false); // 부모 Plate에 소환수 배치
-            }
+            Debug.Log("배치할 소환수가 없습니다.");
+            return;
         }
-        else
+
+        if (plate == null)
         {
-            Debug.Log("할당된 소환수가 없습니다.");
+            Debug.Log("소환수를 배치할 플레이트가 없습니다.");
+            return;
         }
+
+        plate.SummonPlaceOnPlate(summon, isResummon: false);
     }
-
 }

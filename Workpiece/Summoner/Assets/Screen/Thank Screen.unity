@@ -3266,9 +3266,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1948006729}
-        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: OpenSettingCanvas
+      - m_Target: {fileID: 1948006734}
+        m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
+        m_MethodName: OpenSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4402,9 +4402,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1948006729}
-        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: ToMainAlert
+      - m_Target: {fileID: 1948006734}
+        m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
+        m_MethodName: ShowToMainAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8844,9 +8844,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1948006729}
-        m_TargetAssemblyTypeName: MenuView, Assembly-CSharp
-        m_MethodName: ToQuitAlert
+      - m_Target: {fileID: 1948006734}
+        m_TargetAssemblyTypeName: MenuHandler, Assembly-CSharp
+        m_MethodName: ShowToQuitAlert
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11303,7 +11303,10 @@ GameObject:
   - component: {fileID: 1948006732}
   - component: {fileID: 1948006731}
   - component: {fileID: 1948006730}
-  - component: {fileID: 1948006729}
+  - component: {fileID: 1948006734}
+  - component: {fileID: 1948006735}
+  - component: {fileID: 1948006736}
+  - component: {fileID: 1948006737}
   - component: {fileID: 1948006728}
   - component: {fileID: 1948006727}
   m_Layer: 5
@@ -11505,7 +11508,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1948006729
+--- !u!114 &1948006734
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11514,19 +11517,62 @@ MonoBehaviour:
   m_GameObject: {fileID: 1948006726}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f023f0b7f78c9644b836fba3d8fc238, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 11500000, guid: e50897eb2b4de6c48a0c55f8b5bdba7e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
   menuPanel: {fileID: 152420381}
-  toMain: {fileID: 1044036459}
-  toMainResult: {fileID: 1044036461}
-  settingPanel: {fileID: 1868913629}
-  setting: {fileID: 2074911162}
-  toQuit: {fileID: 1992571165}
-  toQuitResult: {fileID: 1992571166}
   backGroundPanel: {fileID: 2034453325}
   menuClick: {fileID: 1948006728}
   alertClick: {fileID: 1948006727}
+  toMainAlertHandler: {fileID: 1948006735}
+  toQuitAlertHandler: {fileID: 1948006736}
+  skipAlertHandler: {fileID: 0}
+  settingHandler: {fileID: 1948006737}
+--- !u!114 &1948006735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948006726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27362fa9faa59fd419a3d70e43f5d956, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  alertObject: {fileID: 1044036459}
+  alertScript: {fileID: 1044036461}
+  alertClick: {fileID: 1948006727}
+--- !u!114 &1948006736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948006726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f6b2d30e907df4eabbdc528221444d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  alertObject: {fileID: 1992571165}
+  alertScript: {fileID: 1992571166}
+  alertClick: {fileID: 1948006727}
+--- !u!114 &1948006737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948006726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff207ebeea7d3984aa442854e9d0dee3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  settingPanel: {fileID: 1868913629}
+  setting: {fileID: 2074911162}
+  menuClick: {fileID: 1948006728}
 --- !u!114 &1948006730
 MonoBehaviour:
   m_ObjectHideFlags: 0

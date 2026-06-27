@@ -45,6 +45,50 @@ ReleaseAgent
 - `manager`, `helper`, `util`, `common` 같은 모호한 이름으로 책임을 숨기지 않는다.
 - 외부 API, 유료 LLM, 클라우드 서비스는 핵심 로직과 분리한다.
 
+## 목표 아키텍처
+
+- Unity 기본 구조는 Component-based로 유지한다. MonoBehaviour는 씬 연결, Unity 생명주기, serialized reference 경계다.
+- 전체 폴더는 Feature-based로 정리한다. 폴더는 기술 계층보다 `Battle`, `Turn`, `Summon`, `Save`, `Story`, `Stage`, `Option` 같은 기능 흐름을 먼저 드러낸다.
+- Feature 내부 책임은 필요한 경우에만 `Presentation / Application / Domain / Infrastructure`로 나눈다.
+- 빈 계층 폴더나 미래 대비용 클래스를 만들지 않는다. 실제 책임이 생긴 순간에만 계층을 만든다.
+- UI는 `View / Controller`로 통일한다.
+- View는 화면 표시, 사운드/이펙트 출력, 버튼 이벤트 전달만 담당한다.
+- Controller는 MonoBehaviour 참조 연결, Unity 입력 수신, UseCase 호출, View 갱신 조율을 담당한다.
+- Application 계층은 사용자 기능 흐름을 `UseCase` 이름으로 통일한다.
+- Domain 계층은 Entity, State, Rule, Strategy처럼 게임 규칙과 상태를 담당한다.
+- Infrastructure 계층은 PlayerPrefs, 파일, 외부 API, 유료 LLM, 클라우드 같은 교체 가능한 외부 연동을 담당한다.
+- ScriptableObject는 Unity 에디터에서 편집하는 정적 게임 데이터로 사용한다. 런타임 상태와 외부 저장 처리는 넣지 않는다.
+- 이벤트는 UI, 사운드, 이펙트 알림 정도에만 사용한다. 핵심 게임 흐름은 명시 호출로 읽히게 둔다.
+
+기본 흐름:
+
+```text
+사용자 입력
+↓
+Controller
+↓
+UseCase
+↓
+Entity / Domain Rule
+↓
+UseCase 결과
+↓
+Controller
+↓
+View 갱신
+```
+
+턴 흐름:
+
+```text
+TurnController
+-> ChangeTurnUseCase
+-> TurnState / TurnRule
+-> TurnController
+```
+
+턴 분기가 커지면 `TurnStateMachine`을 도입한다. 단순한 플레이어/적 턴 전환만으로는 State Machine을 만들지 않는다.
+
 ## 기능 흐름 단일화 규칙
 
 - 기능 흐름은 하나의 대표 진입점에서 시작해 한 방향으로 진행한다.
@@ -194,3 +238,33 @@ MCP timeout, Transport closed, Connection failed는 먼저 도구/환경 문제�
 - 완료된 DEV 목록을 active 문서에 쌓기
 - 검증하지 않은 내용을 Pass 또는 구현완료로 쓰기
 - MCP 오류를 코드 실패로 단정하기
+
+## Application UseCase Naming Rule
+
+- Application 계층에서 사용자 기능 흐름을 조합하거나 저장, 씬 전환, 외부 연동 호출을 묶는 클래스는 `UseCase` 이름으로 통일한다.
+- `ApplicationService`, `AppService`, `Manager`, `Handler`, `Flow`, `Action`, `Runner`를 같은 책임의 대체 이름으로 새로 만들지 않는다.
+- `Service`는 계산, 조회, 생성, 실행 전 준비처럼 하위 책임이 분명할 때만 사용한다.
+- `Executor`는 공통 실행 정책이 있는 경우에만 유지한다. 단순 호출 wrapper는 해당 UseCase 내부 단계로 낮춘다.
+- 기존 `Flow`, `Action`, `Runner`, `Service`, `Executor` 이름은 일괄 변경하지 않는다. 해당 기능 slice에서 실제 Application 기능 흐름이면 `UseCase`로 rename한다.
+- `Action` / `Actions` / `Runner`는 새로 만들지 않는다. 기존 클래스는 해당 기능 slice에서 `UseCase`, `Rule`, 또는 Controller의 private 단계로 낮출지 판단한다.
+- `Flow`는 신규 Application 이름으로 쓰지 않는다. 기존 scene-flow 클래스는 기능 slice에서 `UseCase`로 이동할 때까지 유지할 수 있다.
+- `Handler`는 명확한 UI/event 처리일 때만 유지한다. 저장, 씬 이동, 게임 진행을 처리하면 Controller + UseCase로 분리한다.
+
+## 반복 작업 하네스
+
+큰 구조 정리는 다음 루프를 반복한다.
+
+```text
+분석
+-> DevAgent Change Proposal
+-> 사용자 승인
+-> 개발
+-> VerificationAgent 검증
+-> CoordinatorAgent 다음 slice 선정
+```
+
+- 분석 단계에서는 하위 에이전트를 여러 개 사용할 수 있다. 단, 각 하위 에이전트는 서로 다른 feature나 질문을 맡아야 한다.
+- 하위 에이전트 분석은 파일을 수정하지 않는다.
+- 개발 하위 에이전트는 disjoint write set이 명확할 때만 사용한다.
+- 제품 코드 변경은 반드시 DevAgent Change Proposal과 적용 예정 diff 이후 진행한다.
+- 문서 상태 기록과 다음 작업 인계는 사용자 승인 없이 최소 범위로 바로 갱신할 수 있다.

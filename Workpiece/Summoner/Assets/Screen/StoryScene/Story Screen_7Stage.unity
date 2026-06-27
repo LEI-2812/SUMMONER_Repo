@@ -425,8 +425,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce73e9dab229134d95d4cd0cddb67ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alertSkip: {fileID: 0}
-  alertSkipResult: {fileID: 0}
   SkipBtn: {fileID: 1391477646}
   skipSound: {fileID: 268141390}
 --- !u!82 &268141390
@@ -646,7 +644,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1102135341}
-        m_TargetAssemblyTypeName: Stage7_Controller, Assembly-CSharp
+        m_TargetAssemblyTypeName: Stage7Scenario, Assembly-CSharp
         m_MethodName: OnClickDialogue
         m_Mode: 1
         m_Arguments:
@@ -929,10 +927,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e5e7efd23269d44b934e7121f01445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  storyController: {fileID: 1102135341}
   player: {fileID: 637407121}
   rectTr: {fileID: 637407122}
   playerAni: {fileID: 637407126}
-  interactionController: {fileID: 1102135335}
   walkSound: {fileID: 637407131}
   effectSound: {fileID: 637407132}
 --- !u!82 &637407131
@@ -1412,14 +1410,13 @@ GameObject:
   - component: {fileID: 1102135333}
   - component: {fileID: 1102135339}
   - component: {fileID: 1102135338}
-  - component: {fileID: 1102135337}
   - component: {fileID: 1102135336}
   - component: {fileID: 1102135335}
   - component: {fileID: 1102135334}
   - component: {fileID: 1102135340}
   - component: {fileID: 1102135341}
   m_Layer: 5
-  m_Name: TalkManager
+  m_Name: StageController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1460,6 +1457,7 @@ MonoBehaviour:
     name: 
     line: {x: 0, y: 0}
     dialogues: []
+  dialogueStore: {fileID: 0}
 --- !u!114 &1102135335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1474,8 +1472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: {fileID: 1729739219}
   dialogueContext: {fileID: 1211233011}
-  interactionEvent: {fileID: 1102135334}
-  fadeController: {fileID: 194662371}
+  fadePanelView: {fileID: 194662371}
 --- !u!114 &1102135336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1488,19 +1485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a60d0a924f35f25459fd242b8f944014, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csv_FileName: SummonContext
---- !u!114 &1102135337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1102135332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40db078f40ce2d348a9587fe18f933b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  csvFileName: SummonContext
 --- !u!114 &1102135338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1551,7 +1536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a77d96a038c01040ae4fb06376dab31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storyNum: 7
+  storyNumber: 7
 --- !u!114 &1102135341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1564,10 +1549,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e0639090485e2444912fa0eec61af8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueBox: {fileID: 1118826677}
-  playerAni: {fileID: 637407126}
-  interactionController: {fileID: 1102135335}
+  storyDialogueView: {fileID: 1102135335}
   playerMove: {fileID: 637407130}
+  dialogueBox: {fileID: 1118826677}
 --- !u!1 &1118826677
 GameObject:
   m_ObjectHideFlags: 0

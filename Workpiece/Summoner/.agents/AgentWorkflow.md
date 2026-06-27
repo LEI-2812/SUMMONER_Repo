@@ -29,10 +29,35 @@ CoordinatorAgent -> ReleaseAgent
 - DocumentationAgent: 기능 완료, handoff, release note 문서 정리.
 - ReleaseAgent: 릴리즈/배포/버전 정리.
 
+## 아키텍처 기준
+
+기본 구조는 `Feature -> Presentation / Application / Domain / Infrastructure`다.
+
+```text
+User Input
+-> Controller
+-> UseCase
+-> Entity / Domain Rule
+-> UseCase Result
+-> Controller
+-> View Update
+```
+
+- Unity는 Component-based로 유지한다.
+- 폴더는 Feature-based로 정리한다.
+- UI는 `View / Controller`만 사용한다.
+- Application 흐름은 `UseCase` 이름으로 통일한다.
+- Domain은 Entity, State, Rule, Strategy를 담당한다.
+- Infrastructure는 PlayerPrefs, 파일, 외부 API, 유료 LLM, 클라우드처럼 교체 가능한 외부 연동을 담당한다.
+- ScriptableObject는 정적 게임 데이터로 사용하고, 런타임 상태나 저장 흐름을 넣지 않는다.
+- 이벤트는 UI, 사운드, 이펙트 알림에만 제한한다.
+- 세부 기준은 `.codex/workflow/architecture-role-rule.md`를 우선한다.
+
 ## 상태 하네스
 
 | 상태 | 통과 조건 | 다음 |
 |---|---|---|
+| Analysis | 전체 코드 또는 feature slice를 읽고 현재 책임/이름/위험을 분류 | Coordinator Ready |
 | Coordinator Ready | 기능 슬라이스, 완료조건, 제외 범위, 호출 대상 확정 | DevAgent 또는 선택 에이전트 |
 | Dev ChangeProposal | 수정 대상, 변경 범위, 적용 예정 diff, 완료조건, 검증 게이트 제시 | 사용자 승인 또는 Coordinator Ready |
 | Dev InProgress | 승인된 diff 범위 안에서 기능 슬라이스 구현, 필요한 검색/컴파일 1차 확인 | Coordinator Ready |
@@ -44,6 +69,9 @@ CoordinatorAgent -> ReleaseAgent
 - CoordinatorAgent는 보고 가치가 낮은 문서 갱신과 에이전트 인계를 사용자 승인 없이 진행한다.
 - CoordinatorAgent는 코드 diff 승인, 위험 작업, 제품 판단, 환경/코드 실패 분류처럼 사용자 판단이 필요한 것만 보여준다.
 - CoordinatorAgent는 기능 슬라이스를 Ready로 두기 전에 완료조건을 먼저 정한다.
+- 큰 구조 정리는 `분석 -> Dev ChangeProposal -> 개발 -> Verification Gate`를 반복한다.
+- 분석 단계에서는 여러 하위 에이전트를 병렬로 쓸 수 있다. 하위 에이전트는 서로 다른 feature나 질문을 맡고, 읽기 전용으로 현재 책임과 위험을 분류한다.
+- 개발 하위 에이전트는 수정 파일 범위가 서로 겹치지 않을 때만 사용한다.
 - CoordinatorAgent는 같은 기능 슬라이스에서 이름, 주석, 테스트 문자열 같은 미세정리가 두 번 연속 이어지면 추가 정리를 다음 작업으로 잡지 않는다.
 - DevAgent는 코드 변경 전에 적용 예정 diff를 보여주고 진행 여부를 확인한다.
 - 승인 전에는 제품 코드, 테스트 코드, 에셋을 수정하지 않는다.

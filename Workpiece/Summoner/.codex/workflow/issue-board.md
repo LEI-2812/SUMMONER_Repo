@@ -6,11 +6,32 @@
 
 | ID | 상태 | 도메인 | 기능 슬라이스 | 완료조건 | 다음 행동 | 호출 대상 |
 |---|---|---|---|---|---|---|
-| RUNTIME-QA-13 | Ready | Battle Runtime | 직접 플레이 스모크 검증 | Start Screen 설정 버튼, Story ESC, FightScene 1~2 일반 소환/재소환 3옵션, 결과창 시작 비활성화, Stage 5 적 배수 적용을 직접 플레이 또는 PlayMode 경로로 확인하고 Unity Console error/warning 0건을 기록한다 | Unity에서 Start Screen부터 1Stage 전투 진입까지 직접 플레이 흐름 확인 | VerificationAgent |
+| TURN-ENEMY-01 | Verification Blocked | Battle/Turn | 적 공격 시작 실패와 턴 종료 결정 계약 명확화 | 적 공격 시작 실패 여부가 `IEnemyAttackFlow` 계약으로 드러나고, `EnemyTurnProgressUseCase`가 턴 종료 결정을 명시적으로 처리한다 | MCP timeout 해소 후 `recompile_scripts`와 관련 정적 회귀 테스트를 재실행한다 | VerificationAgent |
+| BATTLE-ATTACK-04 | Candidate | Battle/Attack | Enemy 공격 UseCase의 BattleController 의존 축소 | Enemy reaction/turn UseCase가 필요한 공격 실행 계약만 보도록 축소한다 | BATTLE-ATTACK-03 이후 enemy 호출부에 같은 계약을 적용할지 판단 | CoordinatorAgent |
+| CTRL-001 | Candidate | Summon | plain C# PlateSelectionController 이름/책임 정리 | 씬에 붙지 않은 `PlateSelectionController`가 Controller 이름을 쓰지 않고 redraw plate selection 책임을 드러낸다 | TURN-ENEMY-01 이후 controller 최소화 첫 slice로 검토한다 | CoordinatorAgent |
 
 ## 보류/제외
 
 - 전체 후보 목록은 `refactor-candidates.md`에 둔다.
+- 구조 기준은 `Feature -> Presentation / Application / Domain / Infrastructure`로 갱신했다.
+- 기본 흐름은 `Controller -> UseCase -> Entity/Domain Rule -> UseCase Result -> Controller -> View`다.
+- Turn 목표는 `TurnController + ChangeTurnUseCase`이며, 상태 분기가 커질 때만 State Machine을 제안한다.
+- `Action`, `Actions`, `Runner`, Application성 `Flow`는 새로 만들지 않는다.
+- 첫 제품 코드 slice는 Save로 둔다. Turn/Summon/Menu/Story는 scene, prefab, ScriptableObject, runtime 연결 위험 때문에 후속 slice로 분리한다.
+- BATTLE-ATTACK-03: `IBattleAttackExecution`, `IBattleAttackTargetSelection`을 도입해 Player 공격/타겟 선택 Application의 `BattleController` 구체 타입 의존을 줄였다. 씬 연결은 유지했고 `recompile_scripts` 0 warning, 관련 정적 회귀 테스트 1/1 통과.
+- SAVE-APP-001: `GameSaveController` public API와 scene 연결을 유지하고 저장 조작 흐름을 `GameSaveUseCase`로 분리했다. `GameSystemStaticRegressionTests`, `GameSaveProgressReadTests`, `GameSaveContinueTests` 통과.
+- TURN-APP-001: `TurnPhaseActions`를 `ChangeTurnUseCase`로 이관했다. StateMachine은 아직 도입하지 않았고, `TurnController` public/internal entrypoint와 serialized field는 유지했다.
+- `PlateSummonDrawStaticRegressionTests` 전체 클래스 실패 6건은 TURN-APP-001 변경 원인이 아니라 기존 Player/Enemy/Prediction 문자열 기대값 노후화로 분류했다.
+- TEST-STATIC-001: stale 문자열 기대값을 현재 코드 기준으로 갱신했고, `PlateSummonDrawStaticRegressionTests` 36/36 통과.
+- ENEMY-ACTION-001: `EnemyAttackExecutor.ExecuteSpecialAttack()`의 bool 결과를 적 반응/턴 호출부가 반영하도록 수정했고, 관련 정적/PlayMode 검증 통과.
+- ENEMY-ACTION-001 보강: `SpecialAttackExecutor.Execute()`의 알 수 없는 전략 fallback도 `false`로 맞췄다.
+- TURN-APP-002: `TryClearBattle()`을 `TryStopTurnForClearResult()`로 바꾸고, 실패 판정 이동은 제품 동작 변경 가능성이 있어 제외했다.
+- ENEMY-ACTION-002 일부: `SpecialAttackUseCase`와 `TryExecuteSpecialAttack` 이름 정리를 완료했다.
+- PLAYER-EXEC-001: `PlayerActionExecutor` 제거 완료. `PlayerSummonActions` 내부 private 단계로 흡수했다.
+- PLAYER-01: `PlayerSummonActions`를 `PlayerSummonUseCase`로 rename했다.
+- PLAYER-02: `PlayerAttackActions`를 `PlayerAttackUseCase`로 rename했다.
+- ENEMY-TURN-001: `EnemyTurnActionRunner.RunEnemyAction()`을 `EnemyTurnUseCase.ExecuteEnemyTurn()`으로 rename했다.
+- PLATE-APP-001: `PlateInputActions`의 클릭 의도 흐름을 `PlateClickUseCase`로 추출했다.
 - COORD-147: fallback-only 소환수 클래스 삭제/통합은 16개 prefab `m_Script` GUID와 Fight Screen 소환 리스트 연결 때문에 별도 prefab migration 승인 전까지 보류한다.
 - COORD-152: Prediction 매칭에서 옛 소환 타입 계약을 제거했다.
 - COORD-161: `Summon` 런타임 타입 필드/API와 fallback 타입 인자는 제거했다.
@@ -51,3 +72,4 @@
 - Backlog 후보: STORY-01 StorySkipView 씬 이동 책임, STAGE-02 StageSelectView controller 연결, VHO-03 SettingPanel 직접 호출 우회.
 - 보류 후보: STAGE-01 StageFlowController fallback 제거, STORY-02 InteractionController 종료 처리 분리, STORY-03 Story component wiring serialized 전환, BTL-RUNTIME-02 runtime AddComponent 제거, BTL-PRED-04 prediction 구성 위치 검증, VHO-01 StartScreen 대분리, VHO-02 MenuHandler 입력 정책 분리, VHO-04 Option View 적용/저장 분리, VHO-05 구형 MenuView 잔존 연결.
 - 운영 규칙: 테스트 실행은 자동 진행한다. 테스트 결과 확인 뒤 10분 동안 사용자 응답이 없으면 코드/씬/에셋 수정이 필요 없는 다음 테스트 또는 문서/후보 정리 작업으로 이어간다. 코드/씬/프리팹/ScriptableObject 변경은 기존처럼 Change Proposal과 diff 승인 후 적용한다.
+- 2026-06-22 구조 진행 완료: `TurnStateMachine`, `AttackStateMachine`, `BattleResultUseCase`, 공격 시작/일반공격/타겟선택 UseCase를 도입했다. 다음 작업은 공격 Application의 구체 컨트롤러 의존 축소다.

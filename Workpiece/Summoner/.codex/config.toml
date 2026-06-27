@@ -34,10 +34,10 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.mcp-unity.tools.list_assets]
-approval_mode = "auto"
+approval_mode = "approve"
 
 [mcp_servers.mcp-unity.tools.find_assets]
-approval_mode = "auto"
+approval_mode = "approve"
 
 [mcp_servers.mcp-unity.tools.get_scene_info]
 approval_mode = "approve"
@@ -61,4 +61,16 @@ approval_mode = "approve"
 approval_mode = "approve"
 
 [mcp_servers.mcp-unity.tools.get_gameobject]
+approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.batch_execute]
+approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.add_package]
+approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.update_component]
+approval_mode = "approve"
+
+[mcp_servers.mcp-unity.tools.delete_gameobject]
 approval_mode = "approve"

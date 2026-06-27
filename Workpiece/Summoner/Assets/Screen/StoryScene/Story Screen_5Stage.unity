@@ -336,8 +336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce73e9dab229134d95d4cd0cddb67ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alertSkip: {fileID: 0}
-  alertSkipResult: {fileID: 0}
   SkipBtn: {fileID: 1391477646}
   skipSound: {fileID: 268141390}
 --- !u!82 &268141390
@@ -557,7 +555,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1102135341}
-        m_TargetAssemblyTypeName: Stage5_Controller, Assembly-CSharp
+        m_TargetAssemblyTypeName: Stage5Scenario, Assembly-CSharp
         m_MethodName: OnClickDialogue
         m_Mode: 1
         m_Arguments:
@@ -711,8 +709,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c990820bf985cb40b9e177ef94d25ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  storyController: {fileID: 1102135341}
   enemy: {fileID: 385715859}
-  interactionController: {fileID: 1102135335}
 --- !u!1 &498320788
 GameObject:
   m_ObjectHideFlags: 0
@@ -966,10 +964,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e5e7efd23269d44b934e7121f01445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  storyController: {fileID: 1102135341}
   player: {fileID: 637407121}
   rectTr: {fileID: 637407122}
   playerAni: {fileID: 637407126}
-  interactionController: {fileID: 1102135335}
   walkSound: {fileID: 637407132}
   effectSound: {fileID: 637407131}
 --- !u!82 &637407131
@@ -1377,7 +1375,6 @@ GameObject:
   - component: {fileID: 1102135333}
   - component: {fileID: 1102135339}
   - component: {fileID: 1102135338}
-  - component: {fileID: 1102135337}
   - component: {fileID: 1102135336}
   - component: {fileID: 1102135335}
   - component: {fileID: 1102135334}
@@ -1385,7 +1382,7 @@ GameObject:
   - component: {fileID: 1102135341}
   - component: {fileID: 1102135342}
   m_Layer: 5
-  m_Name: TalkManager
+  m_Name: StageController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1426,6 +1423,7 @@ MonoBehaviour:
     name: 
     line: {x: 0, y: 0}
     dialogues: []
+  dialogueStore: {fileID: 0}
 --- !u!114 &1102135335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1440,8 +1438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: {fileID: 1729739219}
   dialogueContext: {fileID: 1211233011}
-  interactionEvent: {fileID: 1102135334}
-  fadeController: {fileID: 1308499937}
+  fadePanelView: {fileID: 1308499937}
 --- !u!114 &1102135336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1454,19 +1451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a60d0a924f35f25459fd242b8f944014, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csv_FileName: SummonContext
---- !u!114 &1102135337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1102135332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40db078f40ce2d348a9587fe18f933b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  csvFileName: SummonContext
 --- !u!114 &1102135338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1517,7 +1502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a77d96a038c01040ae4fb06376dab31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storyNum: 5
+  storyNumber: 5
 --- !u!114 &1102135341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1530,11 +1515,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c591eba457da455408df873163e19074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  storyDialogueView: {fileID: 1102135335}
+  playerMove: {fileID: 637407130}
   bangImage: {fileID: 1479969613}
   dialogueBox: {fileID: 1118826677}
-  playerAni: {fileID: 637407126}
-  interactionController: {fileID: 1102135335}
-  playerMove: {fileID: 637407130}
   enemyMove: {fileID: 385715864}
   bangSound: {fileID: 8300000, guid: 8c34848214db1f340ba454bf0f9c5002, type: 3}
   audioSource: {fileID: 1102135342}

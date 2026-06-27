@@ -476,6 +476,11 @@ namespace McpUnity.Resources
                 return true;
             }
 
+            if (property.GetCustomAttribute<ObsoleteAttribute>() != null)
+            {
+                return true;
+            }
+
             if (GloballySkippedPropertyNames.Contains(property.Name))
             {
                 return true;

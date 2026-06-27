@@ -2,25 +2,166 @@
 
 ## 상태
 
-- 현재 도메인: Battle Runtime
-- 현재 상태: Ready
-- Ready 에이전트: VerificationAgent
+- 현재 도메인: Battle / Player
+- 현재 상태: 다음 세션 목표 작성 완료
+- Ready 에이전트: DevAgent
 
 ## 현재 기능 슬라이스
 
-다음 작업: RUNTIME-QA-13 | Battle Runtime | 직접 플레이 스모크 검증
-완료조건: Start Screen 설정 버튼, Story ESC, FightScene 1~2 일반 소환/재소환 3옵션, 결과창 시작 비활성화, Stage 5 적 배수 적용을 직접 플레이 또는 PlayMode 경로로 확인하고 Unity Console error/warning 0건을 기록한다
-첫 액션: Unity에서 Start Screen부터 1Stage 전투 진입까지 직접 플레이 흐름을 확인하고, 재현되는 오류가 있으면 코드/씬/도구 문제로 분류한다
-호출 대상: VerificationAgent
+다음 작업: PLAYER-CONTROLLER-DELETE-002 | Battle/Player | PlayerController 삭제를 한 번에 처리
+완료조건: FightScene 1~7의 버튼 UnityEvent와 serialized reference가 `PlayerController` 없이 동작하는 구조로 이관되고, `PlayerController.cs/.meta`와 scene component 참조가 제거된다. 새 Controller는 만들지 않는다.
+첫 액션: FightScene 1~7의 `PlayerController` GUID, Button UnityEvent 메서드, `battleResultController`/`summonController`/`turnRuntime` serialized 참조를 검색해 이관 대상 목록을 확정한다.
+호출 대상: DevAgent
 
 ## 메모
 
+- 다음 세션 목표는 외부 시각화 산출물이 아니라 workflow 문서 기준으로만 이어간다.
+- PLAYER-CONTROLLER-DELETE-002는 작은 public API 정리로 새지 말고 `PlayerController` 삭제 완료까지 한 slice로 처리한다. 예상 작업은 버튼 UnityEvent 진입점 이관, `PlayerTurnUseCase` 생성 위치 이관, `PlayerView`/`PlayerFeedbackView`/`SummonStatePanelView` 연결 위치 이관, FightScene 1~7 component 제거, `PlayerController.cs/.meta` 삭제, Unity `recompile_scripts`, FightScene 1~7 `load_scene` 확인이다.
+- 검증은 사용자 요청에 따라 TestRunner 없이 검색, Unity `recompile_scripts`, FightScene 1~7 `load_scene`만 사용한다.
+- 현재 목표는 전투 쪽에서 불필요하게 Controller에 남아 있는 책임을 줄이는 것이다. 이 목표가 닫히기 전까지 Option/Stage/Story/Menu 같은 다른 구조 후보로 우회하지 않는다.
+- SUM-PLAYER-001은 적용 및 검증 완료했다. `SummonController`의 소환 완료 후 `PlayerController.SetHasSummonedThisTurn()` 우회 호출을 제거하고, 소환 완료 처리는 `PlayerSummonUseCase -> PlayerTurnStateMachine`으로 단일화했다. 추가로 호출 없는 `PlayerController`/`PlayerTurnUseCase` wrapper와 `SummonController`의 미사용 public API/serialized `player` 참조를 제거했다. 검증은 관련 검색 0건, Unity `recompile_scripts` 0 warning, FightScene 1~7 `load_scene` 성공으로 닫았다. TestRunner는 실행하지 않았다.
+- PLATE-CONTROLLER-PUBLIC-API-002는 적용 및 검증 완료했다. 호출 없는 `PlateController.GetPlayerSummons()`, `GetEnermySummons()`, `GetPlateIndex(Plate)`를 제거했고, `TurnSummonStateUpdater`는 `GetPlayerPlates()/GetEnermyPlates()`에서 현재 Summon을 뽑는 private 단계로 바꿨다. 관련 `PlateController` API 검색 0건, Unity `recompile_scripts` 0 warning으로 닫았다. TestRunner는 실행하지 않았다.
+- BATTLE-RESULT-CONTROLLER-BOUNDARY-002는 적용 및 검증 완료했다. 호출 없는 `BattleResultController.Clear()`와 `Fail()`을 제거했고, 결과 Controller public 계약은 `IBattleResultFlow.ClearResultTry()`/`FailResultTry()`만 남겼다. UnityEvent 메서드명 검색 0건, Unity `recompile_scripts` 0 warning으로 닫았다. TestRunner는 실행하지 않았다.
+- 첫 slice는 `BattleProgressController`다. 이유는 저장 진행도 변경과 씬 이동 결정이 Presentation Controller에 남아 있어 `architecture-role-rule.md`의 Controller 역할 규칙과 직접 충돌하기 때문이다.
+- 삭제 목표다. 전투 Controller 7개는 FightScene 1~7에 GUID로 연결되어 있으므로, 삭제 가능한 얇은 component부터 기존 Runtime/대표 진입점으로 흡수하고 scene component를 제거한다.
+- BATTLE-RESULT-CONTROLLER-001은 적용 및 검증 완료했다. `BattleResultProgressUseCase`를 추가해 저장 진행도 변경과 결과 후 씬 이동 결정을 Application으로 옮겼고, `BattleProgressController`는 scene component 경계와 위임 역할만 맡는다.
+- BATTLE-RESULT-CONTROLLER-001 검증: Unity `recompile_scripts` 0 warning, `BattleResultFlowStaticRegressionTests` 5/5, `StageTransitionController_SendNextStageAfterBattle_LoadsExpectedNextScene` 1/1 통과. 수정 범위 `git diff --check`는 CRLF 경고만 있고 공백 오류는 없다.
+- BATTLE-RESULT-CONTROLLER-001 보강: 남아 있던 `GameSaveController.cs/.meta`와 FightScene 1~7/Stage Select의 빈 `GameSaveController` scene object를 제거했다. 저장/스테이지 진행도 조회는 `GameSaveUseCase -> PlayerPrefsSaveStore` 경로로 통일했다.
+- BATTLE-RESULT-CONTROLLER-001 보강 검증: 제품 코드/씬/prefab/resource 범위 `GameSaveController` 검색 0건, 삭제된 script GUID 검색 0건, Unity `Assets/Refresh`, `recompile_scripts` 0 warning. 사용자의 요청에 따라 TestRunner는 실행하지 않았다.
+- 테스트 코드 제거: 사용자 요청에 따라 `Assets/Tests` 전체, 테스트 asmdef, 루트 테스트 csproj, `Summoner.sln`의 테스트 프로젝트 참조를 제거했다. 이후 검증은 TestRunner 없이 검색과 Unity `recompile_scripts` 중심으로 진행한다.
+- BATTLE-START-CONTROLLER-001은 적용 및 검증 완료했다. `BattleStartUseCase`를 추가해 `BattleStartController`가 적 배치와 턴 시작 순서를 직접 조합하지 않고 위임하게 했다. FightScene 1~7의 `BattleStartController` GUID와 `turnController` serialized field 호환은 유지했다.
+- BATTLE-START-CONTROLLER-001 검증: `BattleStartController` 직접 `EnemyPlacementApply`/`StartTurnFlow` 호출 검색 0건, FightScene 1~7 기존 GUID/serialized field 유지 확인, Unity `Assets/Refresh`, `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- BATTLE-ENEMY-PLACEMENT-001은 적용 및 검증 완료했다. `BattleEnemyPlacementUseCase`를 추가해 stage data 순회, plate index 검증, summon prefab 검증, 적 소환 배치, stage multiplier 적용을 Application으로 옮겼다. `BattleEnemyPlacementController`는 scene reference 확보, null guard, enemy plate 목록 전달만 맡는다.
+- BATTLE-ENEMY-PLACEMENT-001 검증: `BattleEnemyPlacementController` 직접 `GetEnemyPlacementSlots`/`SummonPlaceOnPlate`/`ApplayMultiple`/`GetComponentInChildren` 호출 검색 0건, Unity `Assets/Refresh`, `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- BATTLE-ENEMY-ATTACK-CONTROLLER-001은 적용 및 검증 완료했다. `EnemyAttackUseCase`를 추가해 player attack prediction 생성, enemy plate 순회, `EnemyTurnUseCase.ExecuteEnemyTurn()` 반복 실행을 Application으로 옮겼다. `EnermyAttackController`는 scene reference 확인, `AttackStateMachine` 확보, UseCase 호출만 맡는다.
+- BATTLE-ENEMY-ATTACK-CONTROLLER-001 검증: `EnermyAttackController` 직접 `PlayerAttackPredictionListBuilder`/`EnemyTurnUseCase`/`GetEnermyPlates`/`ExecuteEnemyTurn`/prediction list loop 검색 0건, Unity `Assets/Refresh`, `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- BATTLE-PLATE-CONTROLLER-001은 적용 및 검증 완료했다. `PlateCompactUseCase`를 추가해 enemy plate 압축 정책을 Application으로 옮겼다. `PlateController`는 `CompactEnermyPlates()` public entrypoint와 scene plate list 전달만 맡는다.
+- BATTLE-PLATE-CONTROLLER-001 검증: `PlateController` 직접 `DirectMoveSummon`/`RemoveSummon`/`nextAvailableIndex`/압축 loop 검색 0건, Unity `Assets/Refresh`, `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- BATTLE-RESULT-PROGRESS-002는 적용 및 검증 완료했다. `BattleProgressController`와 `BattleStageContext`에서 `PlayerPrefsSaveStore` 직접 생성을 제거했고, 현재 stage fallback과 저장/씬 이동 조립은 `BattleResultProgressUseCase`가 맡는다. `Battle/0_Presentation/Result` 저장/씬 이동 검색 0건, Unity `recompile_scripts` 0 warning. `Assets/Refresh`는 MCP timeout으로 끊겼지만 이후 재컴파일이 통과해 도구 timeout으로 분류했다. TestRunner는 실행하지 않았다.
+- BATTLE-PROGRESS-CONTROLLER-DELETE-001은 적용 및 검증 완료했다. `BattleProgressController.cs/.meta`와 FightScene 1~7의 해당 component를 제거했고, 결과 alert callback 후 저장/씬 이동 처리는 `BattleResultController -> BattleResultProgressUseCase`로 직접 이어진다. 검색 결과 `BattleProgressController` 이름/GUID/fileID 0건, `Assets/Refresh`, `recompile_scripts` 0 warning, FightScene 1~7 Unity `load_scene` 성공. TestRunner는 실행하지 않았다.
+- BATTLE-START-CONTROLLER-DELETE-001은 적용 및 검증 완료했다. `BattleStartController.cs/.meta`와 단순 wrapper였던 `BattleStartUseCase.cs/.meta`를 제거했고, 적 배치 후 턴 시작 흐름은 `TurnRuntime.Start() -> StartBattleFlow() -> EnemyPlacementApply() -> StartTurnFlow()`로 흡수했다. 검색 결과 `BattleStartController` 이름/GUID/fileID 0건, `Assets/Refresh`, `recompile_scripts` 0 warning, FightScene 1~7 Unity `load_scene` 성공. TestRunner는 실행하지 않았다.
+- BATTLE-ENEMY-PLACEMENT-CONTROLLER-DELETE-001은 적용 및 검증 완료했다. `BattleEnemyPlacementController.cs/.meta`를 제거했고, `StageEnemyPlacementData` scene 참조와 적 배치 UseCase 호출은 `TurnRuntime` 시작 흐름으로 흡수했다. 검색 결과 `BattleEnemyPlacementController` 이름/GUID/fileID 0건, `Assets/Refresh`, `recompile_scripts` 0 warning, FightScene 1~7 Unity `load_scene` 성공. TestRunner는 실행하지 않았다.
+- BATTLE-ENEMY-ATTACK-CONTROLLER-DELETE-001은 적용 및 검증 완료했다. `EnermyAttackController.cs/.meta`를 제거했고, `EnemyAttackUseCase` 실행은 기존 `Enermy` runtime component가 직접 맡는다. 검색 결과 `EnermyAttackController` 이름/GUID/호출 메서드 0건, `Assets/Refresh`, `recompile_scripts` 0 warning, FightScene 1~7 Unity `load_scene` 성공. TestRunner는 실행하지 않았다.
+- 현재 Battle 폴더에 남은 Controller 파일은 `PlateController`, `PlayerController`, `BattleResultController` 3개다. 이 셋은 보드 상태/플레이어 입력/결과 UI 경계이므로 삭제 전 경계 검토가 필요하다.
+- BATTLE-REMAINING-CONTROLLER-REVIEW-001은 검토 완료했다. `PlateController`는 scene plate list registry와 plate view highlight 경계, `PlayerController`는 Unity button event와 PlayerView 생성/연결 경계, `BattleResultController`는 result alert callback과 `IBattleResultFlow` 구현 경계다. 세 파일은 얇은 wrapper가 아니므로 이번 삭제 목표에서는 유지한다. 새 Controller는 만들지 않았다.
+- ATTACK-STATE-MACHINE-BOUNDARY-001은 적용 및 검증 완료했다. `AttackStateMachine`에서 `PlateController` 생성자 의존과 `ResetAllPlateHighlight()` 호출을 제거했다. 공격 상태 reset은 Domain 상태머신이 맡고, plate highlight reset은 `PlayerAttackUseCase`, Enemy reaction/usecase, `PlayerTurnState`처럼 `PlateController`를 이미 가진 호출자가 명시적으로 처리한다. 검색 결과 `AttackStateMachine`의 `PlateController`/highlight 의존 0건, Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- PLAYER-CONTROLLER-PUBLIC-API-001은 적용 및 검증 완료했다. scene UnityEvent나 코드 호출이 없는 `PlayerController.HasSummonedThisTurn()`, `UpdateManaUI()`, `AddMana()` public wrapper를 제거했다. `SetHasSummonedThisTurn`, button entrypoint, `GetPlayerTurnUseCase`는 실제 호출부가 있어 유지했다. 검색 결과 제거 wrapper 외부 호출 0건, Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- PLATE-CONTROLLER-APPLICATION-DEPENDENCY-001 1차는 적용 및 검증 완료했다. `EnemyPredictionPlateState`가 `PlateController` 전체 대신 `IReadOnlyList<Plate>` player/enemy 목록만 받아 snapshot을 만들도록 낮췄다. 검색 결과 `EnemyPredictionPlateState`의 `PlateController` 직접 의존 0건, Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- PLATE-PREDICTION-BUILDER-DEPENDENCY-001은 적용 및 검증 완료했다. `PlayerAttackPredictionListBuilder`가 `PlateController` 전체 대신 player/enemy plate 목록을 받아 prediction snapshot을 만들도록 낮췄다. 검색 결과 builder의 `PlateController`/plate 조회 직접 의존 0건, Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- SPECIAL-ATTACK-PLATE-LISTS-001은 적용 및 검증 완료했다. `SpecialAttackUseCase`가 `PlateController` 전체 대신 player/enemy plate 목록만 받아 특수공격 대상 plate를 고르도록 낮췄다. 검색 결과 `SpecialAttackUseCase`의 `PlateController` 직접 의존 0건, 옛 `new SpecialAttackUseCase(plateController)` 호출 0건, Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- PLATE-CONTROLLER-QUERY-API-001은 적용 및 검증 완료했다. 호출이 없던 `GetClosestEnermyPlateIndexExcept`, `GetEnermySummonCount`, `GetLowestHealthPlayerPlateIndex`, `HighlightEnermyPlates`, `CanSelectAttackTargetPlate`, `ContainsPlayerPlate`, `ContainsEnermyPlate`를 제거했고, 내부 단계로만 쓰이던 `HideEnemyPlates`, `ResetEnermyPlateHighlight`, `GetAttackTargetPlateIndex`, `GetAttackTargetPlateName`은 private로 낮췄다. 삭제/축소 대상 검색 0건, Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- PLATE-LIST-EXPOSURE-SCAN-001은 완료했다. `GetPlayerPlates()`/`GetEnermyPlates()` 호출부를 분류했고, 가장 작은 후속 축소 대상으로 `EnemyNormalAttackReactionUseCase`를 선택했다.
+- ENEMY-NORMAL-REACTION-PLATE-LISTS-001은 적용 및 검증 완료했다. `EnemyNormalAttackReactionUseCase`가 player plate 목록을 생성 시 한 번만 받고 반복 조회를 제거했으며, `PlateController.GetPlayerSummonCount()` public API도 제거했다. 검색 결과 `GetPlayerSummonCount` 0건, Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- ENEMY-ATTACK-PLATE-LISTS-001은 적용 및 검증 완료했다. `EnemyAttackUseCase`가 `PlateController` field를 들고 실행 중 plate 목록을 다시 조회하지 않고, 생성 시 확보한 player/enemy plate 목록을 사용한다. 해당 파일의 실행 단계 `GetPlayerPlates()`/`GetEnermyPlates()` 호출 0건, Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- ENEMY-SPECIAL-TURN-PLATE-LISTS-001은 적용 및 검증 완료했다. `EnemySpecialAttackReactionUseCase`와 `EnemyTurnUseCase`는 `SpecialAttackUseCase` 생성에 필요한 plate 목록만 생성자에서 local로 받아 넘기고, 실행 단계에는 `PlateController` 목록 조회를 남기지 않았다. Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- PLAYER-ATTACK-TARGET-PLATE-LISTS-001은 적용 및 검증 완료했다. `PlayerAttackUseCase`와 `PlayerTargetSelectionUseCase`의 실행 중 plate 목록 재조회를 생성자 초기화 목록 사용으로 낮췄다. 첫 Unity `recompile_scripts`는 MCP `Connection failed`로 끊겼고, 재시도에서 0 warning으로 통과했다. TestRunner는 실행하지 않았다.
+- SUMMON-CONTROLLER-PLATE-LISTS-001은 적용 및 검증 완료했다. `SummonController`가 player plate 목록을 `Awake()`에서 보관하고 소환 배치/재소환 표시 복구에서 `PlateController.GetPlayerPlates()`를 반복 호출하지 않도록 낮췄다. Unity `recompile_scripts` 0 warning. TestRunner는 실행하지 않았다.
+- PLATE-LIST-EXPOSURE-REVIEW-003은 완료했다. 남은 `GetPlayerPlates()`/`GetEnermyPlates()` 호출은 UseCase 생성자 초기화, `SummonController.Awake()` 초기화, `TurnRuntime.ApplyEnemyPlacement()`의 전투 시작 scene boundary로 분류했다. `TurnRuntime`의 적 배치 조회는 scene runtime 경계라 유지한다.
+- GAME-SAVE-CONTROLLER-STALE-SCENE-001은 적용 및 검증 완료했다. `Fight Screen_1Stage.unity`에 남아 있던 `GameSaveController` scene object와 해당 Transform/MonoBehaviour/fileID 참조를 제거했다. `GameSaveController` 이름, 삭제 fileID, script GUID 검색 0건, Unity `recompile_scripts` 0 warning, 1Stage scene load 성공. TestRunner는 실행하지 않았다.
+- BATTLE-CONTROLLER-FINAL-REVIEW-001은 완료했다. Battle 폴더의 남은 Controller 파일은 `PlateController`, `PlayerController`, `BattleResultController` 3개뿐이며, 삭제한 `BattleProgressController`, `BattleStartController`, `BattleEnemyPlacementController`, `EnermyAttackController`, `GameSaveController` 이름은 Assets 코드/scene/prefab 검색 0건이다. 남은 3개는 각각 plate scene registry/view highlight, player UnityEvent/button wiring, battle result alert callback/flow boundary라 유지한다.
+- COORD-SCAN-002는 완료했다. 멀티 에이전트 3개로 Battle/Turn, Summon/Player, 전체 role-rule 후보를 읽기 전용 점검했고, 다음 code-only 후보를 `TURN-APP-001`로 선정했다. Option 후보는 전투 목표 밖이라 후순위로 보류했다.
+- TURN-APP-001은 적용 및 검증 완료했다. `PlayerTurnState`에서 `IBattleResultFlow`와 `clearTurn` 직접 의존을 제거하고, 클리어 결과 판정은 `PlayerTurnState -> PlayerTurnUseCase -> PlayerTurnProgressUseCase`로 이동했다. 첫 Unity `recompile_scripts`는 MCP 연결 실패였고, 재시도에서 0 warning으로 통과했다. TestRunner는 실행하지 않았다.
+- 구조 목표는 `.codex/workflow/architecture-role-rule.md`의 `Source Structure Direction`과 `Current Structure Improvement Map`에 정리했다. 기준은 기능 흐름 먼저, 계층은 그 안에서만 사용한다.
+- 구조 달성 계획은 `.codex/workflow/refactor-candidates.md`의 `구조 목표 달성 계획`에 정리했다. 진행 순서는 `Battle/Attack` -> `Turn/PlayerTurn` -> `Battle/PlayerAttack` -> `Battle/Enemy` -> `Option/Menu/Stage/Story`다.
+- ATTACK-STRUCTURE-001은 적용 및 검증 완료했다. `AttackStateMachine`에서 일반 공격 실행 소유를 제거하고, `PlayerAttackUseCase`와 `EnemyNormalAttackReactionRule`이 `NormalAttackUseCase`를 직접 사용한다.
+- ATTACK-STRUCTURE-001 검증: `AttackStateMachine.ExecuteNormalAttack` 검색 0건, Unity `recompile_scripts` 0 warning, `TurnStateMachineStructureTests` 9/9, `PlateSummonDrawStaticRegressionTests` 36/36 통과. `dotnet build --no-restore`는 기존 `NETSDK1004 project.assets.json` 누락으로 중단되어 코드 실패로 보지 않는다.
+- PLAYER-CONTROLLER-001은 적용 및 검증 완료했다. `PlayerViewBehaviour`를 `PlayerController`로 rename하고 `.meta` GUID를 보존했으며, `PlayerTurnState`가 제거된 `PlayerTurnStart()` 우회 없이 `PlayerTurnUseCase.StartPlayerTurn()`을 직접 호출한다. FightScene 1~7 UnityEvent 타입명도 `PlayerController`로 갱신했다.
+- PLAYER-CONTROLLER-001 검증: `PlayerViewBehaviour` 검색 0건(Assets 코드/테스트/scene 범위), Unity `recompile_scripts` 0 warning, `TurnStateMachineStructureTests` 9/9, `StageSceneConnectionEditModeTests` 15/15, `PlateSummonDrawStaticRegressionTests` 36/36, `FightScene_StageTwo_PlayerAndEnemyTurnsCanExchange` 1/1 통과.
+- PLAYER-ATTACK-STRUCTURE-001은 적용 및 검증 완료했다. `AttackStateMachine`에서 `SpecialAttackUseCase` 실행 소유를 제거하고, `PlayerAttackUseCase`와 Enemy Application 흐름이 `SpecialAttackUseCase`를 직접 실행한다. 얇은 `AttackTargetSelectionUseCase` 파일도 제거했고, 상태머신은 타겟 선택 상태 조회와 전이만 담당한다.
+- PLAYER-ATTACK-STRUCTURE-001 검증: `AttackTargetSelectionUseCase` 파일 없음, 제품 코드 `attackStateMachine.TryExecuteSpecialAttack` 검색 0건, Unity `recompile_scripts` 0 warning, `TurnStateMachineStructureTests` 9/9, `PlateSummonDrawStaticRegressionTests` 36/36, `FightScene_StageTwo_PlayerAndEnemyTurnsCanExchange` 1/1 통과.
+- ENEMY-RULE-STRUCTURE-001은 적용 및 검증 완료했다. 실행과 로그를 포함하던 `EnemyNormalAttackReactionRule`, `EnemySpecialAttackReactionRule`을 각각 `EnemyNormalAttackReactionUseCase`, `EnemySpecialAttackReactionUseCase`로 rename하고 `.meta` GUID를 보존했다. 판단 전용 이름은 `EnemyAttackDecisionRule`에만 남겼다.
+- ENEMY-RULE-STRUCTURE-001 검증: 옛 `Enemy*ReactionRule` 이름 검색 0건, Unity `Assets/Refresh`, `recompile_scripts` 0 warning, `PlateSummonDrawStaticRegressionTests` 36/36, `TurnStateMachineStructureTests` 9/9, `FightScene_StageTwo_PlayerAndEnemyTurnsCanExchange` 1/1 통과. `Assembly-CSharp.csproj` compile include도 새 파일명으로 갱신했다.
+- OPTION-STRUCTURE-001은 적용 및 검증 완료했다. `GameplaySettingUseCase`를 추가해 `GameplaySettingView`가 `GameplaySettingStore`를 직접 생성하지 않고 `View -> UseCase -> Store`로 읽히게 했다. scene/prefab serialized field는 건드리지 않았다.
+- OPTION-STRUCTURE-001 검증: Unity `Assets/Refresh`, `recompile_scripts` 0 warning, `GameSystemStaticRegressionTests` 20/20, `GameSaveProgressReadTests.StartNewGame_ResetsProgressAndKeepsOptionPrefs` 1/1 통과. 수정 범위 `git diff --check`는 CRLF 경고만 있고 공백 오류는 없다.
+- MENU-STRUCTURE-001은 적용 및 검증 완료했다. `MenuHandler`의 `ShowToMainAlert`, `ShowToQuitAlert`, `ShowSkipAlert` public 진입점은 유지하고, 반복되던 클릭음/handler null 검사/`ShowAlert` 실행 조립을 private `ShowMenuAlert()`와 `PlayMenuClick()`으로 모았다. `MenuView` 삭제나 scene UnityEvent 변경은 제외했다.
+- MENU-STRUCTURE-001 검증: Unity `recompile_scripts` 0 warning, `GameSystemStaticRegressionTests` 21/21 통과. 수정 범위 `git diff --check`는 CRLF 경고만 있고 공백 오류는 없다.
+- STORY-01은 적용 및 직접 검증 완료했다. `StorySkipView`의 취소 분기에서 중복 `SkipAlertHandler.HideAlert()` 호출을 제거하고, base 호출만 하던 `SkipAlertHandler.ShowAlert()` wrapper도 제거했다. alert 결과 정리는 `BaseAlertHandler`가 맡고, 전투 씬 이동은 기존 `StorySkipUseCase.SkipToCurrentPlayingFight()`에 남겼다.
+- STORY-01 검증: Unity `recompile_scripts` 0 warning, `StorySkipView_DelegatesSkipFlowToUseCase` 1/1 통과. `StorySystemStaticRegressionTests` 전체 클래스는 30/45 통과, 15개 실패했지만 실패 원인은 현재 파일명(`StoryScenarioBase`, `Stage1Scenario` 등)과 맞지 않는 stale 테스트 경로 기대값으로 분류했다.
+- STAGE-02는 적용 및 검증 완료했다. `StageSelectView`는 이미 `StageSelectUseCase`를 직접 사용하고 `StageController`/`FindObjectOfType` 의존이 없음을 확인했다. scene UnityEvent가 쓰는 `stageLoader` alias는 유지하고, 미사용 public alias `SendStage(int)`만 제거했다.
+- STAGE-02 검증: `StageSelectView`/Stage Select scene/test 검색에서 `SendStage` 호출 0건, scene은 `stageLoader`만 참조, Unity `recompile_scripts` 0 warning, `GameSystemStaticRegressionTests` 21/21 통과.
+- TEST-STORY-STATIC-001은 적용 및 검증 완료했다. `StorySystemStaticRegressionTests`의 stale Scenario 경로와 기대 class 이름을 현재 `StoryScenarioBase`, `PrologueScenario`, `EpilogueScenario`, `Stage1Scenario` 계열 파일명으로 갱신했다. 제품 코드는 변경하지 않았다.
+- TEST-STORY-STATIC-001 검증: Unity `recompile_scripts` 0 warning, `StorySystemStaticRegressionTests` 45/45 통과.
+- VHO-03은 적용 및 검증 완료했다. `SettingHandler.OpenSettings()`가 `SettingPanelView.OpenOption()` 토글을 호출하지 않고 `settingPanel.SetActive(true)`로 열기를 담당하게 했고, HUD의 직접 `SettingPanelView.OpenOption` UnityEvent를 `SettingHandler.CloseSettings`로 돌렸다. `SettingPanelView.OpenOption` 자체는 Start/Prologue/Epilogue/Thank scene 호환을 위해 유지했다.
+- VHO-03 검증: HUD 직접 `SettingPanelView.OpenOption` 검색 0건, Unity `recompile_scripts` 0 warning, `GameSystemStaticRegressionTests` 22/22, `HudScene_HasOrganizedRootGroups` 1/1 통과.
+- BTL-PRED-04는 적용 및 검증 완료했다. `StageSceneConnectionEditModeTests`에 FightScene 1~7의 `PlayerAttackPrediction` GameObject가 `Cat/Eagle/Fox/Rabbit/Snake/WolfAttackPrediction` 컴포넌트를 함께 가지는지 확인하는 씬 연결 테스트를 추가했다. 제품 코드와 scene/prefab은 변경하지 않았다.
+- BTL-PRED-04 검증: Unity `recompile_scripts` 0 warning, `FightScreens_HaveRequiredPlayerAttackPredictionComponents` 1/1, `StageSceneConnectionEditModeTests` 16/16 통과. 수정 범위 `git diff --check`는 CRLF 경고만 있고 공백 오류는 없다.
+- MENU-SCENE-001은 적용 및 검증 완료했다. Prologue/Epilogue/Thank scene의 기존 `MenuView` UnityEvent는 유지하되, `MenuView`를 scene 호환 adapter로 낮추고 실제 메뉴 토글/알림/설정 실행은 런타임 구성된 `MenuHandler`, `BaseAlertHandler`, `SettingHandler` 흐름으로 위임하게 했다. scene/prefab은 변경하지 않았다.
+- MENU-SCENE-001 검증: Unity `recompile_scripts` 0 warning, `GameSystemStaticRegressionTests` 23/23, `PrologueMenuView_DoesNotPersistIntoStoryScene` 1/1, `BuildSceneButtons_HaveResolvableUnityEventTargets` 1/1 통과. 수정 범위 `git diff --check`는 CRLF 경고만 있고 공백 오류는 없다.
+- MENU-SCENE-002는 적용 및 검증 완료했다. Prologue/Epilogue/Thank scene의 `MenuCanvas`에 `MenuHandler`, `ToMainAlertHandler`, `ToQuitAlertHandler`, `SettingHandler`를 직렬화하고 버튼 UnityEvent target을 `MenuView`에서 `MenuHandler`로 이관했다. `MenuView` component와 파일은 아직 삭제하지 않았다.
+- MENU-SCENE-002 검증: `MenuView` UnityEvent target 검색 0건, Unity `recompile_scripts` 0 warning, `GameSystemStaticRegressionTests` 24/24, `BuildSceneButtons_HaveResolvableUnityEventTargets` 1/1, `PrologueMenuView_DoesNotPersistIntoStoryScene` 1/1, `StageSceneConnectionEditModeTests` 16/16 통과. 수정 범위 `git diff --check`는 CRLF 경고만 있고 공백 오류는 없다.
+- MENU-SCENE-003은 적용 및 검증 완료했다. Prologue/Epilogue/Thank scene의 `MenuView` component를 제거하고 `MenuView.cs/.meta`를 삭제했다. `MenuHandler` 직접 연결은 유지되며, `Assembly-CSharp.csproj`의 stale compile include도 제거했다.
+- MENU-SCENE-003 검증: `MenuView`/GUID 검색 0건, Unity `Assets/Refresh`, `recompile_scripts` 0 warning, `GameSystemStaticRegressionTests` 24/24, `StageSceneConnectionEditModeTests` 16/16, `PrologueMenuHandler_DoesNotPersistIntoStoryScene` 1/1 통과. 수정 범위 `git diff --check`는 CRLF 경고만 있고 공백 오류는 없다.
+- 다음 작업은 바로 코드 수정이 아니라 CoordinatorAgent 구조 scan이다. 후보를 하나만 Ready로 올린 뒤 DevAgent Change Proposal로 이어간다.
+- PLAYER-TURN-STATE-001은 적용 및 최소 검증 완료했다. `PlayerTurnActionResult`를 도입해 소환/재소환/일반공격/특수공격 Try 결과를 `Failed`, `Completed`, `WaitingForTarget`으로 명시하고, `PlayerTurnUseCase.CompletePlayerAction()`이 타겟 선택 대기 중에는 상태를 유지하고 그 외에는 `CompleteAction()`으로 Idle 복귀시킨다.
+- 현재 에러 수습: `StageSceneConnectionEditModeTests.cs`의 HUD alert 경로 문자열 리터럴 깨짐으로 `CS1010 Newline in constant` 등 3개 컴파일 에러가 발생했다. 깨진 4개 경로 문자열을 `알림창` 경로로 복구했고 `recompile_scripts` 0 warning을 확인했다.
+- PLAYER-TURN-STATE-001 검증: `recompile_scripts` 0 warning, `TurnStateMachineStructureTests` 7/7, `PlateSummonDrawStaticRegressionTests` 36/36, Unity Console error 0건. 중간 MCP `501`은 재시도 후 통과해 도구 연결 문제로 분류했다.
+- TURN-ENEMY-01은 코드 적용했지만 검증 완료로 닫지 않았다. `IEnemyAttackFlow.EnermyAttackStart()`는 bool을 반환하고, `EnermyAttackController`는 공격 시작 실패 시 false를 반환하며, `EnemyTurnProgressUseCase`는 실패 시 턴 종료를 중단한다.
+- TURN-ENEMY-01 검증 상태: 정적 검색과 수정 범위 `git diff --check`는 통과했다. Unity MCP `run_tests`, `recompile_scripts`, `Assets/Refresh`가 연속 timeout으로 중단됐다. `dotnet build .\Assembly-CSharp.csproj --no-restore`는 기존 `NETSDK1004 project.assets.json` 누락으로 중단되어 코드 실패로 분류하지 않는다.
+- BATTLE-ATTACK-03은 적용 및 최소 검증 완료했다. `IBattleAttackExecution`과 `IBattleAttackTargetSelection` 계약을 도입했고, `PlayerAttackUseCase`, `PlayerTargetSelectionUseCase`, `PlayerTurnUseCase`는 `BattleController` 구체 타입 대신 공격/타겟 선택 계약을 사용한다. `PlayerController` serialized `BattleController` 참조와 씬 연결은 유지했다.
+- BATTLE-ATTACK-03 검증: 새 정적 회귀 테스트 RED 확인 후 구현, `Assets/Refresh`, `recompile_scripts` 0 warning, `PlateSummonDrawStaticRegressionTests.Player_DelegatesSpecialAttackTargetTypeToBattleController` 1/1 통과. 전체 `git diff --check`는 기존 `Assets/Animation/Character_Fox.controller` trailing whitespace 때문에 실패했지만, BATTLE-ATTACK-03 수정 범위의 `git diff --check -- <touched files>`는 통과했다.
+- 2026-06-22 구조 리팩토링 현재 인계:
+  - `Turn`은 `TurnStateMachine` + `ChangeTurnUseCase` + `PlayerTurnPhase`/`EnemyTurnPhase` 구조로 정리했다.
+  - `Turn/2_Domain`에는 `TurnStateMachine.cs`만 남겼고, `TurnSummonStateUpdater`는 Application으로 이동했다.
+  - 턴 전이는 `TurnStateMachine.MoveNextTurn()`이 `TurnTransition`을 반환하고, 각 `ITurnPhase.AfterTransition()`이 후처리한다.
+  - `Battle/Attack`은 `AttackStateMachine` + `AttackState`를 도입했다.
+  - `BattleController`는 `StartAttackUseCase`, `NormalAttackUseCase`, `SpecialAttackUseCase`, `AttackTargetSelectionUseCase`로 위임한다.
+  - 턴 종료 시 `PlayerTurnPhase.Exit()`가 `IAttackTurnState.ResetAttackStateForTurnEnd()`를 호출해 공격 상태를 정리한다.
+  - `BattleResultController`의 결과 판정은 `BattleResultUseCase`로 이동했고 호출부는 `IBattleResultFlow` 계약을 사용한다.
+  - `PlayerController.currentTurn/clearTurn` 런타임 중복 상태는 제거했다.
+  - `Executor` 파일/클래스/문자열 검색 0건, 깨진 한글 문자열 검색 0건을 확인했다.
+  - 검증: `recompile_scripts` 0 warning, `BattleResultFlowStaticRegressionTests` 5/5, `PlateSummonDrawStaticRegressionTests` 36/36, `StageEnemyPlacementStaticRegressionTests.TurnController_RoutesTurnFlowThroughStateMachineUseCase` 통과.
+  - MCP `501` 연결 오류가 반복됐지만 재시도 후 컴파일/테스트가 통과했다. 코드 실패로 분류하지 않는다.
 - COORD-141~146, COORD-149~150은 적용 완료했다.
 - COORD-148의 `NotifyObservers()` private 축소는 `UpdateStateObserver` 인터페이스 구현 계약을 깨므로 복구했다.
 - COORD-147은 prefab `m_Script` GUID 연결 때문에 자동 삭제/통합을 보류했다.
 - 수정 후보 큐는 `.codex/workflow/refactor-candidates.md`에 정리했다.
 - 구조 기준은 `.codex/workflow/architecture-role-rule.md`에 정리했다.
-- 기본 계층은 `View / Controller / Flow / Service / Action / State/Data`로 본다.
+- 기본 계층은 `Feature -> Presentation / Application / Domain / Infrastructure`로 본다.
+- 기본 흐름은 `Controller -> UseCase -> Entity/Domain Rule -> UseCase Result -> Controller -> View`다.
+- UI는 `View / Controller`로 통일하고, Application 기능 흐름은 `UseCase` 이름으로 통일한다.
+- `Action`, `Actions`, `Runner`, Application성 `Flow`는 새로 만들지 않는다.
+- Turn 목표는 `TurnController + ChangeTurnUseCase`이며, 상태 분기가 커질 때만 State Machine을 제안한다.
+- 전체 코드 1차 분석 결과 첫 제품 코드 slice는 Save가 가장 안전하다. scene/prefab/ScriptableObject asset 값을 건드리지 않고 기존 `GameSaveController` 연결을 유지할 수 있기 때문이다.
+- SAVE-APP-001은 적용 및 검증 완료했다. `GameSaveController`는 public API와 scene 연결을 유지하고 저장 조작 흐름을 `Assets/Script/7_Save/Application/GameSaveUseCase.cs`로 위임한다.
+- SAVE-APP-001 검증: `recompile_scripts` 0 warning, `GameSystemStaticRegressionTests`, `GameSaveProgressReadTests`, `GameSaveContinueTests` 통과.
+- TURN-APP-001은 적용 및 검증 완료했다. `TurnPhaseActions`를 `ChangeTurnUseCase`로 이관했고 `TurnController`의 serialized field와 public/internal 진입점은 유지했다.
+- TURN-APP-001 검증: `recompile_scripts` 0 warning, `BattleResultFlowStaticRegressionTests`, `StageEnemyPlacementStaticRegressionTests`, `StageSceneConnectionEditModeTests`, `FightScene_StageTwo_PlayerAndEnemyTurnsCanExchange`, `FightScene_PlayerAndEnemyTurns_ExchangeTwoOrThreeTimes` 통과.
+- `PlateSummonDrawStaticRegressionTests` 전체 클래스는 30/36 통과, 6개 실패했다. 실패는 `PlayerTurnFlow` 삭제 후 `PlayerTurnUseCase` 전환, EnemyAttackExecutor/EnemyTurnActionRunner/PlayerAttackPrediction 기존 문자열 기대값 노후화로 분류하고 TURN-APP-001 검증 실패로 보지 않는다.
+- TEST-STATIC-001은 적용 및 검증 완료했다. `PlateSummonDrawStaticRegressionTests`의 stale 문자열 기대값을 현재 Player/Enemy/Prediction 책임 경계에 맞게 갱신했고, 예측 스냅샷이 runtime summon을 직접 변경하지 않도록 clone 경로를 테스트에 추가했다.
+- TEST-STATIC-001 검증: `PlateSummonDrawStaticRegressionTests` 36/36 통과.
+- ENEMY-ACTION-001은 적용 및 검증 완료했다. `EnemyAttackExecutor.ExecuteSpecialAttack()`이 실행 성공 여부를 반환하고, 적 반응/회복 선사용 호출부가 실패를 성공처럼 처리하지 않도록 했다.
+- ENEMY-ACTION-001 검증: `recompile_scripts` 0 warning, `PlateSummonDrawStaticRegressionTests` 36/36, `FightScene_StageTwo_PlayerAndEnemyTurnsCanExchange`, `FightScene_PlayerAndEnemyTurns_ExchangeTwoOrThreeTimes` 통과.
+- ENEMY-ACTION-001 보강: `SpecialAttackExecutor.Execute()`의 알 수 없는 전략 fallback도 실행 실패로 `false`를 반환하도록 맞췄다. 동일 검증 게이트는 다시 통과했다.
+- TURN-APP-002는 적용 및 검증 완료했다. `ChangeTurnUseCase`의 클리어 결과 게이트 이름을 `TryStopTurnForClearResult()`로 바꿔 턴 시작 중단 의도를 드러냈고, 실패 판정 이동은 동작 변경 위험 때문에 제외했다.
+- TURN-APP-002 검증: `recompile_scripts` 0 warning, `BattleResultFlowStaticRegressionTests` 5/5, `FightScene_StageTwo_PlayerAndEnemyTurnsCanExchange` 통과.
+- ENEMY-ACTION-002 일부 적용: `BattleController.SpecialAttackExecute`와 `SpecialAttackExecutor.Execute`를 `TryExecuteSpecialAttack` 계약으로 정리했고, `SpecialAttackExecutor`는 `SpecialAttackUseCase`로 rename했다.
+- PLAYER-EXEC-001은 적용 및 검증 완료했다. 단순 wrapper `PlayerActionExecutor`를 제거하고 `PlayerSummonActions` private 단계로 흡수했다.
+- 검증: `recompile_scripts` 0 warning, `PlateSummonDrawStaticRegressionTests` 36/36, `FightScene_StageTwo_NormalSummonShowsVisibleOptionPanels` 통과.
+- PLAYER-01은 적용 및 검증 완료했다. `PlayerSummonActions`를 `PlayerSummonUseCase`로 rename했고, 호출부/csproj/test 기대값을 갱신했다.
+- PLAYER-02는 적용 및 검증 완료했다. `PlayerAttackActions`를 `PlayerAttackUseCase`로 rename했고 `PlayerTurnUseCase -> PlayerAttackUseCase -> BattleController/SpecialAttackUseCase` 흐름을 맞췄다.
+- ENEMY-TURN-001은 적용 및 검증 완료했다. `EnemyTurnActionRunner.RunEnemyAction()`을 `EnemyTurnUseCase.ExecuteEnemyTurn()`으로 rename했다.
+- PLATE-APP-001은 적용 및 검증 완료했다. `PlateInputActions.TryHandleClick()`의 재소환 선택, 공격 대상 선택, 상태 패널 열기 흐름을 `Assets/Script/5_Battle/4_Plate/Application/PlateClickUseCase.cs`로 추출했다.
+- 최근 검증: 각 slice별 `recompile_scripts` 0 warning, `PlateSummonDrawStaticRegressionTests` 36/36, 관련 PlayMode 1/1 통과.
+- BATTLE-FOLDER-001은 적용 및 검증 완료했다. Turn은 `Presentation/Domain`으로 나누고, Battle UseCase 파일은 `Assets/Script/5_Battle/Application/{Turn,Attack,Player,Enemy,Plate}`로 모았다.
+- BATTLE-FOLDER-001 검증: `recompile_scripts` 0 warning, `BattleResultFlowStaticRegressionTests` 5/5, `StageEnemyPlacementStaticRegressionTests` 11/11, `PlateSummonDrawStaticRegressionTests` 36/36, 관련 PlayMode 2개 통과.
+- FEATURE-FOLDER-001은 적용 및 검증 완료했다. `Turn`과 `Save`를 `Assets/Script/Turn`, `Assets/Script/Save` 최상위 feature 폴더로 이동했고 내부를 `Presentation/Application/Domain/Infrastructure` 기준으로 맞췄다.
+- FEATURE-FOLDER-001 검증: `recompile_scripts` 0 warning, `BattleResultFlowStaticRegressionTests` 5/5, `GameSystemStaticRegressionTests` 19/19, `StageEnemyPlacementStaticRegressionTests` 11/11, `FightScene_StageTwo_PlayerAndEnemyTurnsCanExchange` 통과.
+- FEATURE-FOLDER-002는 적용 및 최소 검증 완료했다. `6_Summons`, `5_Battle/5_SummonPick`, `5_Battle/9_View`의 Summon 관련 파일을 `Assets/Script/Summon/{Presentation,Application,Domain}`으로 이동했다.
+- FEATURE-FOLDER-002 검증: old path 검색 0건, `recompile_scripts` 0 warning.
+- FEATURE-FOLDER-003은 적용 및 최소 검증 완료했다. `5_Battle/6_AttackRule`은 `5_Battle/Domain/Attack`, `5_Battle/8_Status`는 `5_Battle/Domain/Status`로 이동했다.
+- FEATURE-FOLDER-003 검증: old path 검색 0건, `recompile_scripts` 0 warning.
+- FEATURE-FOLDER-004~005는 적용 및 최소 검증 완료했다. `Battle`, `Core`, `Menu`, `Option`, `Save`, `Stage`, `StartScreen`, `Story`, `Summon`, `Turn` 최상위 feature 폴더로 번호 폴더를 제거하고, Battle 내부 Prediction/Plate/Enemy/Player/Result/Start 파일을 계층별로 이동했다.
+- FEATURE-FOLDER-004~005 검증: old path 검색 0건, 번호 폴더 검색 0건, `recompile_scripts` 0 warning.
+- NAMING-APP-001은 적용 및 최소 검증 완료했다. `GameSceneFlow`, `MenuNavigationFlow`, `StartGameFlow`, `StorySceneFlow`를 각각 `*UseCase`로 rename했다.
+- NAMING-APP-002는 적용 및 최소 검증 완료했다. `StageFlowController`를 `StageTransitionController`로 rename해 Presentation으로 이동하고, 스테이지 전환 판단을 `StageTransitionUseCase`로 분리했다.
+- NAMING-APP-003은 적용 및 최소 검증 완료했다. `PlayerTargetSelectionActions`는 `PlayerTargetSelectionUseCase`, `PlayerTurnActions`는 `PlayerTurnProgressUseCase`, `PlateInputActions`는 `PlateInputUseCase`, `PlateTargetSelectionActions`는 `PlateTargetSelectionService`로 rename했다.
+- NAMING-APP-003 검증: `Actions/Runner/Flow` 파일명 검색 0건, `recompile_scripts` 0 warning, `git diff --check` 공백 오류 없음.
+- FOLDER-INDEX-001은 적용 및 최소 검증 완료했다. feature 폴더 내부 계층을 `0_Presentation`, `1_Application`, `2_Domain`, `3_Infrastructure`로 rename했고, Domain 내부 세부 폴더명은 유지했다.
+- FOLDER-INDEX-001 검증: 인덱스 없는 계층 폴더 검색 0건, old layer path 검색 0건, `recompile_scripts` 0 warning, `git diff --check` 공백 오류 없음.
+- NAMING-APP-004는 적용 및 최소 검증 완료했다. `PlateSummonExecutor`, `PlateCompactExecutor`, `EnemyAttackExecutor`를 제거하고 호출자 내부 private 단계로 흡수했다.
+- NAMING-APP-004 보강: `EnemyPredictionReactionService`는 `EnemyPredictionReactionUseCase`로, `EnemyNormalAttackReactionService`/`EnemySpecialAttackReactionService`는 `Rule`로 rename했다. `PlateTargetSelectionService`는 `PlateInputUseCase`/`PlateClickUseCase` 내부 단계로 흡수했다.
+- NAMING-APP-004 검증: `Executor` 파일/클래스/문자열 검색 0건, 남은 `Service`는 `PlateQueryService`, `SummonDrawService` 2건, `recompile_scripts` 0 warning.
+- 인코딩 복구 메모: CP949/깨진 한글 문자열이 섞인 파일을 문자열 치환하는 과정에서 일부 표시/로그 문자열이 손상되어 ASCII placeholder로 복구했다. 로직 계산값은 유지했고 재컴파일은 통과했다.
 - Ready 작업은 완료조건을 먼저 걸고, 충족하면 같은 기능의 추가 미세정리로 확장하지 않는다.
 - 새 helper/service/common 계층 추가보다 얇은 래퍼 축소와 public 계약 축소를 우선한다.
 - 소환수 클래스는 prefab/component 연결 위험이 있으므로 삭제나 통합 전 반드시 scene/prefab GUID 연결을 확인한다.
