@@ -13,6 +13,7 @@ public class StartScreenView : MonoBehaviour
     public GameObject loadAlert;
     public ConfirmAlertView loadAlertResult;
     public Button loadButton;
+    [SerializeField] private StageTextView loadStageTextView;
 
     [Header("옵션 버튼")]
     public Button settingBtn;
@@ -22,7 +23,6 @@ public class StartScreenView : MonoBehaviour
 
     private readonly StartNewGameUseCase startNewGameUseCase = new StartNewGameUseCase();
     private readonly ContinueGameUseCase continueGameUseCase = new ContinueGameUseCase();
-    private readonly OpenStartOptionUseCase openStartOptionUseCase = new OpenStartOptionUseCase();
     private readonly ExitGameUseCase exitGameUseCase = new ExitGameUseCase();
 
     void Start()
@@ -65,13 +65,20 @@ public class StartScreenView : MonoBehaviour
 
     public void StartSavedStage() 
     {
-        if (!continueGameUseCase.HasSavedGame())
+        if (!continueGameUseCase.TryGetSavedStageDisplayData(out StageDisplayData stageDisplayData))
         {
             loadButton.interactable = false;
             return;
         }
 
+        if (loadStageTextView == null)
+        {
+            Debug.LogError("이어하기 확인창의 StageTextView가 연결되지 않았습니다.");
+            return;
+        }
+
         audioSource.Play();
+        loadStageTextView.Show(stageDisplayData);
         loadAlert.SetActive(true);
         loadAlertResult.ResetAlert();
 
@@ -100,7 +107,13 @@ public class StartScreenView : MonoBehaviour
         audioSource?.Play();
 
         SettingPanelView settingPanelView = FindObjectOfType<SettingPanelView>();
-        openStartOptionUseCase.TryOpenOption(settingPanelView);
+        if (settingPanelView == null)
+        {
+            Debug.LogError("SettingPanelView를 찾을 수 없습니다.");
+            return;
+        }
+
+        settingPanelView.OpenOption();
     }
 
     //게임 종료

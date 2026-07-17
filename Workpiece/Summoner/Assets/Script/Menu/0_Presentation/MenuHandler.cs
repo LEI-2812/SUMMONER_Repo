@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 // 역할: MenuHandler의 책임을 정의한다.
 public class MenuHandler : MonoBehaviour
 {
     public static MenuHandler instance;
+
+    private readonly ExitGameUseCase exitGameUseCase = new ExitGameUseCase();
 
     [Header("참조")]
     [SerializeField] private GameObject menuPanel;
@@ -24,26 +25,6 @@ public class MenuHandler : MonoBehaviour
     [Header("참조")]
     [SerializeField] private SettingHandler settingHandler;
 
-
-    internal void InitializeSceneMenu(
-        GameObject menuPanel,
-        GameObject backGroundPanel,
-        AudioSource menuClick,
-        AudioSource alertClick,
-        ToMainAlertHandler toMainAlertHandler,
-        ToQuitAlertHandler toQuitAlertHandler,
-        SkipAlertHandler skipAlertHandler,
-        SettingHandler settingHandler)
-    {
-        this.menuPanel = menuPanel;
-        this.backGroundPanel = backGroundPanel;
-        this.menuClick = menuClick;
-        this.alertClick = alertClick;
-        this.toMainAlertHandler = toMainAlertHandler;
-        this.toQuitAlertHandler = toQuitAlertHandler;
-        this.skipAlertHandler = skipAlertHandler;
-        this.settingHandler = settingHandler;
-    }
 
     private void Awake()
     {
@@ -77,7 +58,7 @@ public class MenuHandler : MonoBehaviour
             return;
         }
 
-        if (SceneManager.GetActiveScene().name != "Start Screen")
+        if (!GameSceneUseCase.IsStartScreenActive())
         {
             ToggleMenu();
         }
@@ -100,14 +81,14 @@ public class MenuHandler : MonoBehaviour
     {
         ShowMenuAlert(toMainAlertHandler, "toMainAlertHandler가 할당되지 않았습니다.", () =>
         {
-            MenuNavigationUseCase.ReturnToStartScreen();
+            GameSceneUseCase.LoadStartScreen();
             ToggleMenu();
         });
     }
 
     public void ShowToQuitAlert()
     {
-        ShowMenuAlert(toQuitAlertHandler, "toQuitAlertHandler가 할당되지 않았습니다.", Application.Quit);
+        ShowMenuAlert(toQuitAlertHandler, "toQuitAlertHandler가 할당되지 않았습니다.", exitGameUseCase.ExitGame);
     }
 
     public void ShowSkipAlert()

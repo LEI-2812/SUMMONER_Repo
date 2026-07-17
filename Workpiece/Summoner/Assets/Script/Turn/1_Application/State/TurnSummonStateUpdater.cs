@@ -1,5 +1,5 @@
 // 역할: TurnSummonStateUpdater의 책임을 정의한다.
-internal sealed class TurnSummonStateUpdater
+class TurnSummonStateUpdater
 {
     private readonly ITurnSummonBoard turnSummonBoard;
 

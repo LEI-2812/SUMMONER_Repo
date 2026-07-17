@@ -4,15 +4,34 @@ using UnityEngine;
 public class PlayerCommandController : MonoBehaviour, ICoroutineRunner
 {
     private HandlePlayerCommandUseCase handlePlayerCommandUseCase;
+    private SummonSelectionController summonSelectionController;
 
-    internal void SetHandlePlayerCommandUseCase(HandlePlayerCommandUseCase useCase)
+    internal void Initialize(
+        HandlePlayerCommandUseCase useCase,
+        SummonSelectionController selectionController)
     {
         handlePlayerCommandUseCase = useCase;
+        summonSelectionController = selectionController;
     }
 
     public void OnClickSummon()
     {
-        handlePlayerCommandUseCase?.ExecuteSummon();
+        if (handlePlayerCommandUseCase == null || summonSelectionController == null)
+        {
+            return;
+        }
+
+        SummonSelectionStartResult startResult = handlePlayerCommandUseCase.ExecuteSummon();
+        if (!startResult.DidStart)
+        {
+            return;
+        }
+
+        summonSelectionController.StartSummon(
+            startResult.PlateIndex,
+            false,
+            handlePlayerCommandUseCase.CompleteSummonSelection);
+        handlePlayerCommandUseCase.ConfirmSummonSelectionStarted(startResult);
     }
 
     public void OnClickEndTurn()
@@ -22,7 +41,24 @@ public class PlayerCommandController : MonoBehaviour, ICoroutineRunner
 
     public void OnClickRedraw()
     {
-        handlePlayerCommandUseCase?.ExecuteRedraw();
+        if (handlePlayerCommandUseCase == null || summonSelectionController == null)
+        {
+            return;
+        }
+
+        SummonSelectionStartResult startResult = handlePlayerCommandUseCase.ExecuteRedraw();
+        if (!startResult.DidStart)
+        {
+            return;
+        }
+
+        if (!summonSelectionController.StartRedraw(handlePlayerCommandUseCase.CompleteSummonSelection))
+        {
+            handlePlayerCommandUseCase.CancelSummonSelectionStart();
+            return;
+        }
+
+        handlePlayerCommandUseCase.ConfirmSummonSelectionStarted(startResult);
     }
 
     public void OnClickNormalAttack()

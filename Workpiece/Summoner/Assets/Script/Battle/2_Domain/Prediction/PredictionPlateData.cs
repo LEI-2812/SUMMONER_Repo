@@ -1,5 +1,5 @@
 // 역할: PredictionPlateData의 책임을 정의한다.
-public sealed class PredictionPlateData : IPlateState
+public class PredictionPlateData : IPlateState
 {
     private readonly int plateIndex;
     private readonly Summon currentSummon;

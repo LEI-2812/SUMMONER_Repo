@@ -5,7 +5,7 @@ public enum BattleResultPhase
     FailStarted
 }
 
-public sealed class BattleResultStateMachine
+public class BattleResultStateMachine
 {
     public BattleResultPhase CurrentState { get; private set; } = BattleResultPhase.Playing;
 

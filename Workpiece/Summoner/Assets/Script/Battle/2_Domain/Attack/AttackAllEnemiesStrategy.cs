@@ -5,6 +5,27 @@ public class AttackAllEnemiesStrategy : IAttackStrategy
 {
     public List<Summon> SelectTargets(AttackData attackData, Summon attacker, IReadOnlyList<BattleBoardInputController> targetPlates, int selectedPlateIndex)
     {
-        return new AllEnemiesAttackTargetSelector().SelectTargets(attacker, targetPlates, selectedPlateIndex);
+        List<Summon> targets = new List<Summon>();
+
+        if (targetPlates == null)
+        {
+            return targets;
+        }
+
+        foreach (BattleBoardInputController plate in targetPlates)
+        {
+            if (plate == null)
+            {
+                continue;
+            }
+
+            Summon target = plate.GetCurrentSummon();
+            if (target != null)
+            {
+                targets.Add(target);
+            }
+        }
+
+        return targets;
     }
 }

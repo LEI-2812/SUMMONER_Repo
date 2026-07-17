@@ -20,7 +20,7 @@ public class AudioSettingView : MonoBehaviour
     private float masterVolume = 1f;
     private float bgmVolume = 1f;
     private float sfxVolume = 1f;
-    private readonly AudioSettingStore audioSettingStore = new AudioSettingStore();
+    private readonly AudioSettingUseCase audioSettingUseCase = new AudioSettingUseCase();
 
     void Start()
     {
@@ -28,30 +28,30 @@ public class AudioSettingView : MonoBehaviour
         bgmVolumeSlider.onValueChanged.AddListener(SetBGMVolume);
         sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
 
-        masterVolumeSlider.value = audioSettingStore.LoadMasterVolume();
-        bgmVolumeSlider.value = audioSettingStore.LoadBgmVolume();
-        sfxVolumeSlider.value = audioSettingStore.LoadSfxVolume();
+        masterVolumeSlider.value = audioSettingUseCase.LoadMasterVolume();
+        bgmVolumeSlider.value = audioSettingUseCase.LoadBgmVolume();
+        sfxVolumeSlider.value = audioSettingUseCase.LoadSfxVolume();
     }
 
     public void SetMasterVolume(float volume)
     {
         masterVolume = volume;
         ApplyVolumes();
-        audioSettingStore.SaveMasterVolume(volume);
+        audioSettingUseCase.SaveMasterVolume(volume);
     }
 
     public void SetBGMVolume(float volume)
     {
         bgmVolume = volume;
         ApplyVolumes();
-        audioSettingStore.SaveBgmVolume(volume);
+        audioSettingUseCase.SaveBgmVolume(volume);
     }
 
     public void SetSFXVolume(float volume)
     {
         sfxVolume = volume;
         ApplyVolumes();
-        audioSettingStore.SaveSfxVolume(volume);
+        audioSettingUseCase.SaveSfxVolume(volume);
     }
 
     private void ApplyVolumes()

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public sealed class StageDataStore
+public class StageDataStore
 {
     private const string StageResultDataResourceName = "StageResultData";
 

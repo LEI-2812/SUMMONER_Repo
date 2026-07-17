@@ -1,18 +1,7 @@
 // 역할: storyNumber에 맞는 다음 씬 이동을 처리한다.
 public class StorySceneUseCase
 {
-    public string GetNextSceneName(int storyNumber)
-    {
-        switch (storyNumber)
-        {
-            case 0:
-                return "Stage Select Screen";
-            case 8:
-                return "Thank Screen";
-            default:
-                return "Fight Screen_" + storyNumber + "Stage";
-        }
-    }
+    private readonly StageTransitionUseCase stageTransitionUseCase = new StageTransitionUseCase();
 
     public void LoadNextScene(int storyNumber)
     {
@@ -28,11 +17,6 @@ public class StorySceneUseCase
             return;
         }
 
-        GameSceneUseCase.LoadFight(storyNumber);
-    }
-
-    public void LoadFightScene(int stageNumber)
-    {
-        GameSceneUseCase.LoadFight(stageNumber);
+        stageTransitionUseCase.SendFightStage(storyNumber);
     }
 }

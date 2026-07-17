@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 // 역할: StoryScenarioBase의 책임을 정의한다.
 public abstract class StoryScenarioBase : MonoBehaviour, IPointerClickHandler
 {
-    private readonly GameplaySettingStore gameplaySettingStore = new GameplaySettingStore();
+    private readonly GameplaySettingUseCase gameplaySettingUseCase = new GameplaySettingUseCase();
     private readonly StoryDialogueUseCase storyDialogueUseCase = new StoryDialogueUseCase();
     private readonly StoryStepUseCase storyStepUseCase = new StoryStepUseCase();
     private readonly StorySceneUseCase storySceneUseCase = new StorySceneUseCase();
@@ -127,6 +127,6 @@ public abstract class StoryScenarioBase : MonoBehaviour, IPointerClickHandler
 
     private bool IsOnlyMouseEnabled()
     {
-        return gameplaySettingStore.LoadOnlyMouseEnabled();
+        return gameplaySettingUseCase.LoadOnlyMouseEnabled();
     }
 }

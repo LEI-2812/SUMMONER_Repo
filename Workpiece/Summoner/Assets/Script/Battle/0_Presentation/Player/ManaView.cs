@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // 역할: ManaView의 책임을 정의한다.
-public sealed class ManaView
+public class ManaView
 {
     private readonly List<RawImage> manaImages;
     private readonly Texture emptyManaTexture;

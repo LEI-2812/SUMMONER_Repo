@@ -1,4 +1,4 @@
-internal struct EnemySpecialAttackPickData
+struct EnemySpecialAttackPickData
 {
     public bool HasValue { get; }
 

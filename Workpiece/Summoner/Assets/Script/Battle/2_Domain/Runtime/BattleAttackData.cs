@@ -1,4 +1,4 @@
-public sealed class BattleAttackData
+public class BattleAttackData
 {
     public bool IsSpecialAttackTargetSelectionActive { get; private set; }
     public Summon AttackingSummon { get; private set; }

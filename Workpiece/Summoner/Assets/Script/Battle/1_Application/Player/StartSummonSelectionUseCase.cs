@@ -1,74 +1,89 @@
 // 역할: StartSummonSelectionUseCase의 책임을 정의한다.
 using System;
 
+public readonly struct SummonSelectionStartResult
+{
+    private SummonSelectionStartResult(bool didStart, int plateIndex, bool isRedraw)
+    {
+        DidStart = didStart;
+        PlateIndex = plateIndex;
+        IsRedraw = isRedraw;
+    }
+
+    public bool DidStart { get; }
+    public int PlateIndex { get; }
+    public bool IsRedraw { get; }
+
+    public static SummonSelectionStartResult Failed()
+    {
+        return new SummonSelectionStartResult(false, -1, false);
+    }
+
+    public static SummonSelectionStartResult StartSummon(int plateIndex)
+    {
+        return new SummonSelectionStartResult(true, plateIndex, false);
+    }
+
+    public static SummonSelectionStartResult StartRedraw()
+    {
+        return new SummonSelectionStartResult(true, -1, true);
+    }
+}
+
 public class StartSummonSelectionUseCase
 {
-    private readonly SummonSelectionController summonSelectionController;
     private readonly Func<int> findFirstEmptyPlayerPlateIndex;
+    private readonly Func<bool> hasRedrawTarget;
     private readonly PlayerActionStateMachine playerActionStateMachine;
-    private readonly PlayerFeedbackView feedbackView;
 
     public StartSummonSelectionUseCase(
-        SummonSelectionController summonSelectionController,
         Func<int> findFirstEmptyPlayerPlateIndex,
-        PlayerActionStateMachine playerActionStateMachine,
-        PlayerFeedbackView feedbackView)
+        Func<bool> hasRedrawTarget,
+        PlayerActionStateMachine playerActionStateMachine)
     {
-        this.summonSelectionController = summonSelectionController;
         this.findFirstEmptyPlayerPlateIndex = findFirstEmptyPlayerPlateIndex;
+        this.hasRedrawTarget = hasRedrawTarget;
         this.playerActionStateMachine = playerActionStateMachine;
-        this.feedbackView = feedbackView;
     }
 
-    public PlayerActionResult ExecuteSummon()
-    {
-        if (!TryStartSummonOnEmptyPlate())
-        {
-            feedbackView.Log("모든 플레이트에 소환수가 있습니다.");
-            return PlayerActionResult.Failed;
-        }
-
-        return PlayerActionResult.WaitingForTarget;
-    }
-
-    private bool TryStartSummonOnEmptyPlate()
+    public SummonSelectionStartResult PrepareSummon()
     {
         int emptyPlateIndex = findFirstEmptyPlayerPlateIndex();
         if (emptyPlateIndex < 0)
         {
-            return false;
+            return SummonSelectionStartResult.Failed();
         }
 
-        StartSummonOnPlate(emptyPlateIndex);
-        return true;
+        return SummonSelectionStartResult.StartSummon(emptyPlateIndex);
     }
 
-    private void StartSummonOnPlate(int plateIndex)
+    public SummonSelectionStartResult PrepareRedraw()
     {
-        feedbackView.Log(plateIndex + "번째 플레이트에서 소환을 시작합니다.");
-        summonSelectionController.StartSummon(plateIndex, false, CompleteSummonSelection);
-        playerActionStateMachine.UseSummonMana();
-        feedbackView.PlayClick();
-    }
-
-    public PlayerActionResult ExecuteRedraw()
-    {
-        if (!summonSelectionController.StartRedraw(CompleteSummonSelection))
+        if (!hasRedrawTarget())
         {
-            return PlayerActionResult.Failed;
+            return SummonSelectionStartResult.Failed();
         }
 
-        UseRedrawMana();
-        return PlayerActionResult.WaitingForTarget;
+        return SummonSelectionStartResult.StartRedraw();
     }
 
-    private void UseRedrawMana()
+    public void ConfirmSelectionStarted(SummonSelectionStartResult startResult)
     {
-        playerActionStateMachine.UseRedrawMana();
-        feedbackView.PlayClick();
+        if (!startResult.DidStart)
+        {
+            return;
+        }
+
+        if (startResult.IsRedraw)
+        {
+            playerActionStateMachine.UseRedrawMana();
+            return;
+        }
+
+        playerActionStateMachine.UseSummonMana();
     }
 
-    private void CompleteSummonSelection()
+    public void CompleteSelection()
     {
         playerActionStateMachine.SetHasSummonedThisTurn(true);
         playerActionStateMachine.CompleteAction();

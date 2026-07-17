@@ -3,19 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public interface stateObserver
-{
-    void StateUpdate();
-}
-
-public interface UpdateStateObserver
-{
-    void AddObserver(stateObserver observer);
-    void RemoveObserver(stateObserver observer);
-    void NotifyObservers();
-}
-
-public class SummonStatePanelView : MonoBehaviour, stateObserver
+public class SummonStatePanelView : MonoBehaviour
 {
     private const float SpecialAttackButtonSpacing = 70f;
 
@@ -43,7 +31,7 @@ public class SummonStatePanelView : MonoBehaviour, stateObserver
     {
         statePanel.gameObject.SetActive(true);
         this.stateSummon = stateSummon;
-        stateSummon.AddObserver(this);
+        stateSummon.AddStateChangedHandler(StateUpdate);
 
         if (summonImage != null && stateSummon != null && stateSummon.GetImage() != null)
         {

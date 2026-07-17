@@ -1,17 +1,7 @@
 // 역할: GameplaySettingUseCase의 책임을 정의한다.
 public class GameplaySettingUseCase
 {
-    private readonly GameplaySettingStore gameplaySettingStore;
-
-    public GameplaySettingUseCase()
-        : this(new GameplaySettingStore())
-    {
-    }
-
-    public GameplaySettingUseCase(GameplaySettingStore gameplaySettingStore)
-    {
-        this.gameplaySettingStore = gameplaySettingStore;
-    }
+    private readonly GameplaySettingStore gameplaySettingStore = new GameplaySettingStore();
 
     public bool LoadStorySkipEnabled()
     {

@@ -14,7 +14,7 @@ public enum SummonRank
 [RequireComponent(typeof(SummonSoundView))]
 [RequireComponent(typeof(SummonImageView))]
 // 역할: 소환수의 전투 스탯, 공격 실행, 상태 효과, 사망 처리를 관리한다.
-public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
+public class Summon : MonoBehaviour, IStatusTarget
 {
     [SerializeField] private SummonData summonData;
     [SerializeField] private GameObject shieldImage;
@@ -27,8 +27,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
     private SummonStatusView statusView;
     private SummonSoundView soundView;
     private Action<Summon> deathHandler;
-
-    private List<stateObserver> observers = new List<stateObserver>();
+    private Action stateChanged;
 
 
     protected virtual void Awake()
@@ -212,7 +211,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
 
     public void ApplyAttackCooldown(AttackData attackStrategy) => AttackCooldownApply(attackStrategy);
 
-    public void StatusChangedNotify() => NotifyObservers();
+    public void StatusChangedNotify() => NotifyStateChanged();
 
     public void UpgradeAttackPower(double multiplier)
     {
@@ -231,7 +230,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
     {
         entity.Heal(healAmount);
         Debug.Log($"{entity.Name}이 {healAmount}만큼 체력을 회복했습니다.");
-        NotifyObservers();
+        NotifyStateChanged();
         animator.SetTrigger("hitted");
         statusView.HealColorShow();
         soundView.BuffSoundPlay();
@@ -249,7 +248,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
 
         DamageApply(damage);
         DeathHandle(damage);
-        NotifyObservers();
+        NotifyStateChanged();
     }
 
     private double DamageRoundDown(double damage)
@@ -329,7 +328,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
             ApplyFallbackData();
         }
 
-        NotifyObservers();
+        NotifyStateChanged();
     }
 
     protected virtual void ApplyFallbackData()
@@ -377,10 +376,11 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
     public static double GetStatMultiplier() => multiple;
     public static void StatMultiplierSet(double value) => multiple = value;
 
-    public virtual void ApplayMultiple(double m)
+    public virtual void ApplyStageMultiplier(double multiplier)
     {
         EntityEnsure();
-        entity.ScaleStats(m);
+        entity.ScaleStats(multiplier);
+        NotifyStateChanged();
     }
 
 
@@ -399,7 +399,7 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
         entity.AddShield(shieldAmount);
         shieldImage.SetActive(true);
         Debug.Log("보호막 부여. 현재 보호막: " + entity.Shield);
-        NotifyObservers();
+        NotifyStateChanged();
     }
     public double GetShield() => entity.Shield;
     public double GetInitialShield() => entity.InitialShield;
@@ -570,16 +570,13 @@ public class Summon : MonoBehaviour, UpdateStateObserver, IStatusTarget
 
     public void ClearDeathHandler() => deathHandler = null;
 
-    public void AddObserver(stateObserver observer) => observers.Add(observer);
+    public void AddStateChangedHandler(Action handler) => stateChanged += handler;
 
-    public void RemoveObserver(stateObserver observer) => observers.Remove(observer);
+    public void RemoveStateChangedHandler(Action handler) => stateChanged -= handler;
 
-    public void NotifyObservers()
+    private void NotifyStateChanged()
     {
-        foreach (var observer in observers)
-        {
-            observer.StateUpdate();
-        }
+        stateChanged?.Invoke();
     }
 
     public Summon Clone()

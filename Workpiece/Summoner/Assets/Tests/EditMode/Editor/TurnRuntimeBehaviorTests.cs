@@ -24,7 +24,7 @@ public class TurnRuntimeBehaviorTests
     public void BattleSceneRuntime_StartTurnFlow_DoesNotRestartAlreadyStartedTurnFlow()
     {
         string source = File.ReadAllText("Assets/Script/Battle/0_Presentation/Runtime/BattleSceneRuntime.cs");
-        string methodBody = GetMethodBody(source, "internal void StartTurnFlow()");
+        string methodBody = GetMethodBody(source, "private void StartTurnFlow()");
 
         StringAssert.Contains("if (hasStartedTurnFlow)", methodBody);
         StringAssert.Contains("hasStartedTurnFlow = true;", methodBody);

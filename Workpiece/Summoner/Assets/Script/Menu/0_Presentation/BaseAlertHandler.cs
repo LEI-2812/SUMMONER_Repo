@@ -3,19 +3,11 @@ using UnityEngine;
 
 
 // 역할: BaseAlertHandler의 책임을 정의한다.
-// 역할: BaseAlertHandler의 책임을 정의한다.
 public abstract class BaseAlertHandler : MonoBehaviour
 {
     [SerializeField] protected GameObject alertObject;
     [SerializeField] protected ConfirmAlertView alertScript;
     [SerializeField] protected AudioSource alertClick;
-
-    internal void InitializeAlert(GameObject alertObject, ConfirmAlertView alertScript, AudioSource alertClick)
-    {
-        this.alertObject = alertObject;
-        this.alertScript = alertScript;
-        this.alertClick = alertClick;
-    }
 
     public virtual void ShowAlert(System.Action<bool> callback)
     {

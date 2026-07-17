@@ -1,14 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class StartBattleUseCase
+public class StartBattleUseCase
 {
     public void Execute(
         BattleStageData battleStageData,
         IReadOnlyList<BattleBoardInputController> enemyPlates,
         StageEnemyPlacementData stageEnemyPlacementData)
     {
-        if (battleStageData == null || enemyPlates == null || stageEnemyPlacementData == null)
+        if (battleStageData == null)
+        {
+            Debug.LogWarning("전투 스테이지 데이터가 없어 배수를 적용할 수 없습니다.");
+            return;
+        }
+
+        Summon.StatMultiplierSet(battleStageData.GetSummonStatMultiplier());
+
+        if (enemyPlates == null || stageEnemyPlacementData == null)
         {
             Debug.LogWarning("적 배치 데이터가 없습니다. 스테이지 적 배치 없이 전투를 시작합니다.");
             return;
@@ -76,7 +84,7 @@ public sealed class StartBattleUseCase
             return;
         }
 
-        placedEnemySummon.ApplayMultiple(Summon.GetStatMultiplier());
+        placedEnemySummon.ApplyStageMultiplier(Summon.GetStatMultiplier());
     }
 
     private bool EnemyPlateHasSummon(BattleBoardInputController targetPlate)

@@ -3731,7 +3731,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 22108468}
         m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
-        m_MethodName: stageLoader
+        m_MethodName: SelectStage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4669,7 +4669,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 22108468}
         m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
-        m_MethodName: stageLoader
+        m_MethodName: SelectStage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5124,7 +5124,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 22108468}
         m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
-        m_MethodName: stageLoader
+        m_MethodName: SelectStage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6988,7 +6988,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 22108468}
         m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
-        m_MethodName: stageLoader
+        m_MethodName: SelectStage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8103,7 +8103,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 22108468}
         m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
-        m_MethodName: stageLoader
+        m_MethodName: SelectStage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11179,7 +11179,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 22108468}
         m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
-        m_MethodName: stageLoader
+        m_MethodName: SelectStage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11399,7 +11399,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 22108468}
         m_TargetAssemblyTypeName: StageSelectView, Assembly-CSharp
-        m_MethodName: stageLoader
+        m_MethodName: SelectStage
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

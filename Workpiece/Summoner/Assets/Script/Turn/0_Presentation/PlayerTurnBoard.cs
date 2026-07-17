@@ -1,4 +1,4 @@
-internal sealed class PlayerTurnBoard : IPlayerTurnBoard
+class PlayerTurnBoard : IPlayerTurnBoard
 {
     private readonly PlateBoardView plateBoardController;
 

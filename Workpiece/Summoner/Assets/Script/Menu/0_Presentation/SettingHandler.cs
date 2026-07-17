@@ -8,13 +8,6 @@ public class SettingHandler : MonoBehaviour
     [SerializeField] private SettingPanelView setting;
     [SerializeField] private AudioSource menuClick;
 
-    internal void InitializeSettings(GameObject settingPanel, SettingPanelView setting, AudioSource menuClick)
-    {
-        this.settingPanel = settingPanel;
-        this.setting = setting;
-        this.menuClick = menuClick;
-    }
-
     public void OpenSettings()
     {
         if (!ResolveSetting참조())

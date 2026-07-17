@@ -44,12 +44,4 @@ public class GameplaySettingView : MonoBehaviour
     {
         audioSource.Play();
     }
-
-    public bool GetIsStorySkip() { return isStorySkip.isOn; }
-
-    public void SetIsStorySkip(bool isSkip) { this.isStorySkip.isOn = isSkip; }
-
-    public bool GetIsOnlyMouse() { return isOnlyMouse.isOn; }
-
-    public void SetIsOnlyMouse(bool isMouse) { this.isOnlyMouse.isOn = isMouse; }
 }

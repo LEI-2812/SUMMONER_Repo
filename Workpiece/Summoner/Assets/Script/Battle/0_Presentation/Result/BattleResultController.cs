@@ -9,7 +9,7 @@ public class BattleResultController : MonoBehaviour
     [SerializeField] private BattleRuntimeData battleRuntimeData;
 
     private readonly BattleResultStateMachine resultStateMachine = new BattleResultStateMachine();
-    private StageTransitionController stageTransitionController;
+    private readonly StageTransitionUseCase stageTransitionUseCase = new StageTransitionUseCase();
 
     private void Awake()
     {
@@ -57,7 +57,7 @@ public class BattleResultController : MonoBehaviour
     {
         return new CompleteBattleResultUseCase(
             battleRuntimeData != null ? battleRuntimeData.StageData : null,
-            stageTransitionController);
+            stageTransitionUseCase);
     }
 
     private void Ensure참조()
@@ -82,9 +82,5 @@ public class BattleResultController : MonoBehaviour
             Debug.LogError("BattleResultController에 BattleRuntimeData가 필요합니다.");
         }
 
-        if (stageTransitionController == null)
-        {
-            stageTransitionController = StageTransitionController.GetOrCreate();
-        }
     }
 }

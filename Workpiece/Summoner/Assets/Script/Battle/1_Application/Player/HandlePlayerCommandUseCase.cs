@@ -1,38 +1,39 @@
 // 역할: HandlePlayerCommandUseCase의 책임을 정의한다.
-public sealed class HandlePlayerCommandUseCase
+public interface IPlayerCommandOutput
+{
+    void ShowPlayerActionState(int mana, bool canSummon, bool canRedraw);
+    void PlayClick();
+    void PlayFail();
+    void Log(string message);
+    void StartFailResult(int clearTurn, int currentTurn);
+    bool TryStartClearResult(bool isEnemyBoardClear, int clearTurn, int currentTurn);
+    bool IsEnemyBoardClear();
+    void CompactEnemyBoard();
+    void HideSummonStatePanel();
+}
+
+public class HandlePlayerCommandUseCase
 {
     private readonly string playerName;
     private readonly StartSummonSelectionUseCase startSummonSelectionUseCase;
     private readonly ExecutePlayerAttackUseCase attackUseCase;
     private readonly IPlayerTurnProgress turnProgress;
-    private readonly BattleResultController battleResultController;
-    private readonly PlateBoardView plateBoardController;
-    private readonly PlayerHudView hudView;
-    private readonly ManaView manaView;
-    private readonly PlayerFeedbackView feedbackView;
+    private readonly IPlayerCommandOutput output;
     private readonly PlayerActionStateMachine playerActionStateMachine;
 
     public HandlePlayerCommandUseCase(
         string playerName,
         PlayerActionStateMachine playerActionStateMachine,
         IPlayerTurnProgress turnProgress,
-        BattleResultController battleResultController,
-        PlateBoardView plateBoardController,
         StartSummonSelectionUseCase startSummonSelectionUseCase,
         ExecutePlayerAttackUseCase attackUseCase,
-        PlayerHudView hudView,
-        ManaView manaView,
-        PlayerFeedbackView feedbackView)
+        IPlayerCommandOutput output)
     {
         this.playerName = playerName;
         this.turnProgress = turnProgress;
-        this.battleResultController = battleResultController;
-        this.plateBoardController = plateBoardController;
         this.startSummonSelectionUseCase = startSummonSelectionUseCase;
         this.attackUseCase = attackUseCase;
-        this.hudView = hudView;
-        this.manaView = manaView;
-        this.feedbackView = feedbackView;
+        this.output = output;
         this.playerActionStateMachine = playerActionStateMachine;
     }
 
@@ -44,25 +45,60 @@ public sealed class HandlePlayerCommandUseCase
 
     public void StartPlayerTurn()
     {
-        feedbackView.Log("플레이어 턴을 시작했습니다.");
-        feedbackView.Log($"{playerName} current mana: {playerActionStateMachine.Mana}");
+        output.Log("플레이어 턴을 시작했습니다.");
+        output.Log($"{playerName} current mana: {playerActionStateMachine.Mana}");
         playerActionStateMachine.StartTurn();
         UpdateManaUI();
         TryStartFailResult();
     }
 
-    public void ExecuteSummon()
+    public SummonSelectionStartResult ExecuteSummon()
     {
-        RunPlayerTurnAction(
+        SummonSelectionStartResult startResult = PrepareSummonSelection(
             playerActionStateMachine.TryStartSummon,
-            startSummonSelectionUseCase.ExecuteSummon);
+            startSummonSelectionUseCase.PrepareSummon);
+        if (!startResult.DidStart)
+        {
+            output.Log("모든 플레이트에 소환수가 있거나 지금은 소환할 수 없습니다.");
+        }
+
+        return startResult;
     }
 
-    public void ExecuteRedraw()
+    public SummonSelectionStartResult ExecuteRedraw()
     {
-        RunPlayerTurnAction(
+        SummonSelectionStartResult startResult = PrepareSummonSelection(
             playerActionStateMachine.TryStartRedraw,
-            startSummonSelectionUseCase.ExecuteRedraw);
+            startSummonSelectionUseCase.PrepareRedraw);
+        if (!startResult.DidStart)
+        {
+            output.Log("다시 뽑기할 소환수가 없거나 지금은 다시 뽑을 수 없습니다.");
+        }
+
+        return startResult;
+    }
+
+    public void ConfirmSummonSelectionStarted(SummonSelectionStartResult startResult)
+    {
+        startSummonSelectionUseCase.ConfirmSelectionStarted(startResult);
+        if (!startResult.IsRedraw)
+        {
+            output.Log(startResult.PlateIndex + "번째 플레이트에서 소환을 시작합니다.");
+        }
+
+        output.PlayClick();
+        UpdateManaUI();
+    }
+
+    public void CancelSummonSelectionStart()
+    {
+        playerActionStateMachine.CompleteAction();
+        output.PlayFail();
+    }
+
+    public void CompleteSummonSelection()
+    {
+        startSummonSelectionUseCase.CompleteSelection();
     }
 
     public void ExecuteNormalAttack()
@@ -94,20 +130,20 @@ public sealed class HandlePlayerCommandUseCase
     {
         if (!playerActionStateMachine.TryStartEndTurn())
         {
-            feedbackView.PlayFail();
+            output.PlayFail();
             return;
         }
 
         if (!TryEndPlayerTurnProgress())
         {
             playerActionStateMachine.CompleteAction();
-            feedbackView.PlayFail();
-            feedbackView.Log("플레이어 턴을 종료할 수 없습니다.");
+            output.PlayFail();
+            output.Log("플레이어 턴을 종료할 수 없습니다.");
             return;
         }
 
-        feedbackView.Log("플레이어 턴을 종료했습니다.");
-        feedbackView.PlayClick();
+        output.Log("플레이어 턴을 종료했습니다.");
+        output.PlayClick();
     }
 
     public void AddMana()
@@ -123,14 +159,15 @@ public sealed class HandlePlayerCommandUseCase
 
     private void UpdateManaUI()
     {
-        manaView.ShowMana(playerActionStateMachine.Mana);
-        hudView.ShowSummonAvailable(playerActionStateMachine.CanShowSummonAvailable());
-        hudView.ShowRedrawAvailable(playerActionStateMachine.CanRedraw());
+        output.ShowPlayerActionState(
+            playerActionStateMachine.Mana,
+            playerActionStateMachine.CanShowSummonAvailable(),
+            playerActionStateMachine.CanRedraw());
     }
 
     private void TryStartFailResult()
     {
-        battleResultController.TryStartFailResult(
+        output.StartFailResult(
             turnProgress.GetClearTurn(),
             turnProgress.GetTurnCount());
     }
@@ -142,11 +179,32 @@ public sealed class HandlePlayerCommandUseCase
     {
         if (!tryStartAction())
         {
-            feedbackView.PlayFail();
+            output.PlayFail();
             return;
         }
 
         CompletePlayerAction(executeAction(), onCompleted);
+    }
+
+    private SummonSelectionStartResult PrepareSummonSelection(
+        System.Func<bool> tryStartAction,
+        System.Func<SummonSelectionStartResult> prepareSelection)
+    {
+        if (!tryStartAction())
+        {
+            output.PlayFail();
+            return SummonSelectionStartResult.Failed();
+        }
+
+        SummonSelectionStartResult startResult = prepareSelection();
+        if (startResult.DidStart)
+        {
+            return startResult;
+        }
+
+        playerActionStateMachine.CompleteAction();
+        output.PlayFail();
+        return SummonSelectionStartResult.Failed();
     }
 
     private void CompletePlayerAction(PlayerActionResult actionResult, System.Action onCompleted = null)
@@ -174,9 +232,9 @@ public sealed class HandlePlayerCommandUseCase
 
     private void ProcessAfterPlayerAttack()
     {
-        CheckPlayerClearResult(plateBoardController.IsEnemyPlateClear());
-        plateBoardController.CompactEnemyPlates();
-        hudView.HideStatePanel();
+        CheckPlayerClearResult(output.IsEnemyBoardClear());
+        output.CompactEnemyBoard();
+        output.HideSummonStatePanel();
     }
 
     private bool TryEndPlayerTurnProgress()
@@ -192,7 +250,7 @@ public sealed class HandlePlayerCommandUseCase
 
     private bool CheckPlayerClearResult(bool isEnemyPlateClear)
     {
-        return battleResultController.TryStartClearResult(
+        return output.TryStartClearResult(
             isEnemyPlateClear,
             turnProgress.GetClearTurn(),
             turnProgress.GetTurnCount());

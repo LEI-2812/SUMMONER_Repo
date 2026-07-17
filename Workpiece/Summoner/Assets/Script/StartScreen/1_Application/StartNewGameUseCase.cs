@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 // 역할: StartNewGameUseCase의 책임을 정의한다.
@@ -6,17 +5,7 @@ public class StartNewGameUseCase
 {
     private const int NewGameStartStage = 1;
 
-    private readonly GameSaveUseCase gameSaveUseCase;
-
-    public StartNewGameUseCase()
-        : this(new GameSaveUseCase(new StageProgressSaveStore()))
-    {
-    }
-
-    public StartNewGameUseCase(GameSaveUseCase gameSaveUseCase)
-    {
-        this.gameSaveUseCase = gameSaveUseCase ?? throw new ArgumentNullException(nameof(gameSaveUseCase));
-    }
+    private readonly GameSaveUseCase gameSaveUseCase = new GameSaveUseCase();
 
     public bool TryStartNewGame()
     {

@@ -1,11 +1,11 @@
 // 역할: 전투 턴의 현재 상태와 턴 수 전이를 관리한다.
-internal enum TurnPhase
+enum TurnPhase
 {
     PlayerTurn,
     EnemyTurn
 }
 
-internal sealed class TurnStateMachine
+class TurnStateMachine
 {
     public TurnPhase CurrentTurn { get; private set; }
     public int TurnCount { get; private set; }
@@ -37,4 +37,3 @@ internal sealed class TurnStateMachine
         return CurrentTurn == TurnPhase.EnemyTurn;
     }
 }
-

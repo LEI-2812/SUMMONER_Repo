@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-internal sealed class TurnSummonBoard : ITurnSummonBoard
+class TurnSummonBoard : ITurnSummonBoard
 {
     private readonly PlateBoardView plateBoardController;
 

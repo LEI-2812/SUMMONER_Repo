@@ -1,20 +1,9 @@
-using System;
 using UnityEngine;
 
 // 역할: ContinueGameUseCase의 책임을 정의한다.
 public class ContinueGameUseCase
 {
-    private readonly GameSaveUseCase gameSaveUseCase;
-
-    public ContinueGameUseCase()
-        : this(new GameSaveUseCase(new StageProgressSaveStore()))
-    {
-    }
-
-    public ContinueGameUseCase(GameSaveUseCase gameSaveUseCase)
-    {
-        this.gameSaveUseCase = gameSaveUseCase ?? throw new ArgumentNullException(nameof(gameSaveUseCase));
-    }
+    private readonly GameSaveUseCase gameSaveUseCase = new GameSaveUseCase();
 
     public bool HasSavedGame()
     {
@@ -31,6 +20,19 @@ public class ContinueGameUseCase
         }
 
         savedStage = gameSaveUseCase.GetGameSave().savedStage;
+        return true;
+    }
+
+    public bool TryGetSavedStageDisplayData(out StageDisplayData stageDisplayData)
+    {
+        stageDisplayData = default;
+
+        if (!TryGetSavedStage(out int savedStage))
+        {
+            return false;
+        }
+
+        stageDisplayData = new StageDisplayData(savedStage);
         return true;
     }
 

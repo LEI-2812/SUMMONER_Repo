@@ -28,12 +28,12 @@ public class VideoSettingView : MonoBehaviour
         FullScreenMode.Windowed
     };
 
-    private readonly VideoSettingStore videoSettingStore = new VideoSettingStore();
+    private readonly VideoSettingUseCase videoSettingUseCase = new VideoSettingUseCase();
 
     void Awake()
     {
-        int savedResolutionIndex = videoSettingStore.LoadValidResolutionIndex(resolutionToggles.Count);
-        int savedScreenModeIndex = videoSettingStore.LoadValidScreenModeIndex(screenModeToggles.Count);
+        int savedResolutionIndex = videoSettingUseCase.LoadResolutionIndex(resolutionToggles.Count);
+        int savedScreenModeIndex = videoSettingUseCase.LoadScreenModeIndex(screenModeToggles.Count);
 
         for (int i = 0; i < resolutionToggles.Count; i++)
         {
@@ -68,12 +68,12 @@ public class VideoSettingView : MonoBehaviour
             if (isResolution)
             {
                 SetResolution(resolutions[index].x, resolutions[index].y);
-                videoSettingStore.SaveResolutionIndex(index);
+                videoSettingUseCase.SaveResolutionIndex(index);
             }
             else
             {
                 SetScreenMode(screenModes[index]);
-                videoSettingStore.SaveScreenModeIndex(index);
+                videoSettingUseCase.SaveScreenModeIndex(index);
             }
         }
     }

@@ -1,16 +1,10 @@
 ﻿using System;
 
 // 역할: GameSaveUseCase의 책임을 정의한다.
-// 역할: GameSaveUseCase의 책임을 정의한다.
 public class GameSaveUseCase
 {
-    private readonly StageProgressSaveStore saveStore;
+    private readonly StageProgressSaveStore saveStore = new StageProgressSaveStore();
     private GameSaveData currentSaveData;
-
-    public GameSaveUseCase(StageProgressSaveStore saveStore)
-    {
-        this.saveStore = saveStore ?? throw new ArgumentNullException(nameof(saveStore));
-    }
 
     public void LoadGameSave()
     {

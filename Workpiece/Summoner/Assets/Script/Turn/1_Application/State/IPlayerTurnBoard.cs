@@ -1,4 +1,4 @@
-internal interface IPlayerTurnBoard
+interface IPlayerTurnBoard
 {
     void CompactEnemyPlates();
     bool IsEnemyPlateClear();

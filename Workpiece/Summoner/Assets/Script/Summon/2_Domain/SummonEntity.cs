@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 // 역할: SummonEntity의 책임을 정의한다.
-public sealed class SummonEntity
+public class SummonEntity
 {
     public string Name { get; private set; }
     public SummonRank Rank { get; private set; }
@@ -47,12 +47,12 @@ public sealed class SummonEntity
         AttackPower = (int)(AttackPower * multiplier);
         BaseAttackPower = AttackPower;
         HeavyAttackPower = (int)(HeavyAttackPower * multiplier);
-        ScaleFixedAttackDamage(multiplier);
+        ScaleFixedAttackValues(multiplier);
     }
 
-    private void ScaleFixedAttackDamage(double multiplier)
+    private void ScaleFixedAttackValues(double multiplier)
     {
-        NormalAttack?.ScaleFixedDamage(multiplier);
+        NormalAttack?.ScaleFixedValue(multiplier);
 
         if (SpecialAttacks == null)
         {
@@ -61,7 +61,7 @@ public sealed class SummonEntity
 
         foreach (AttackData specialAttack in SpecialAttacks)
         {
-            specialAttack?.ScaleFixedDamage(multiplier);
+            specialAttack?.ScaleFixedValue(multiplier);
         }
     }
 

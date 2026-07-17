@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 // 역할: AttackData의 책임을 정의한다.
-public sealed class AttackData
+public class AttackData
 {
     private readonly AttackCooldownStore cooldownStore;
 
@@ -52,9 +52,9 @@ public sealed class AttackData
         return EffectValue;
     }
 
-    public void ScaleFixedDamage(double multiplier)
+    public void ScaleFixedValue(double multiplier)
     {
-        if (StatusType != StatusType.None)
+        if (StatusType != StatusType.None && StatusType != StatusType.Shield)
         {
             return;
         }

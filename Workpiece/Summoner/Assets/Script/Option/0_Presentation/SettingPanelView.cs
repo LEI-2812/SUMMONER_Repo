@@ -116,11 +116,4 @@ public class SettingPanelView : MonoBehaviour
             settingPanel.SetActive(true);
         }
     }
-
-
-    public AudioSettingView GetAudioController() { return audioController; }
-
-    public VideoSettingView GetVideoController() { return videoController; }
-
-    public GameplaySettingView GetGamePlayController() { return gamePlayController; }
 }

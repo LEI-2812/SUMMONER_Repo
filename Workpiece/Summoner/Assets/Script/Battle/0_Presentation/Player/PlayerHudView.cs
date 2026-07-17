@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // 역할: PlayerHudView의 책임을 정의한다.
-public sealed class PlayerHudView
+public class PlayerHudView
 {
     private readonly Button summonButton;
     private readonly TextMeshProUGUI summonButtonText;

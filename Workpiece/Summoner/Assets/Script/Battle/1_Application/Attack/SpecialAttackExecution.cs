@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 역할: EnemySpecialAttackExecution의 책임을 정의한다.
-public class EnemySpecialAttackExecution
+// 역할: 플레이어와 적이 함께 사용하는 특수 공격 실행 순서를 처리한다.
+public class SpecialAttackExecution
 {
     private readonly IReadOnlyList<BattleBoardInputController> playerPlates;
     private readonly IReadOnlyList<BattleBoardInputController> enemyPlates;
 
-    public EnemySpecialAttackExecution(
+    public SpecialAttackExecution(
         IReadOnlyList<BattleBoardInputController> playerPlates,
         IReadOnlyList<BattleBoardInputController> enemyPlates)
     {
@@ -20,7 +20,7 @@ public class EnemySpecialAttackExecution
         Summon attackSummon,
         int selectedPlateIndex,
         int specialAttackIndex,
-        bool isPlayer)
+        bool isPlayerAttacker)
     {
         if (attackSummon == null)
         {
@@ -41,13 +41,13 @@ public class EnemySpecialAttackExecution
             return false;
         }
 
-        if (!CanExecuteTargetedAttack(attackStrategy, selectedPlateIndex, isPlayer))
+        if (!CanExecuteTargetedAttack(attackStrategy, selectedPlateIndex, isPlayerAttacker))
         {
-            Debug.Log(GetTargetedAttackInvalidLog(isPlayer));
+            Debug.Log(GetTargetedAttackInvalidLog(isPlayerAttacker));
             return false;
         }
 
-        IReadOnlyList<BattleBoardInputController> targetPlates = GetSpecialAttackTargetPlates(attackStrategy, isPlayer);
+        IReadOnlyList<BattleBoardInputController> targetPlates = GetSpecialAttackTargetPlates(attackStrategy, isPlayerAttacker);
 
         attackSummon.AttackSoundPlay();
         ApplySpecialAttack(
@@ -59,7 +59,7 @@ public class EnemySpecialAttackExecution
         attackSummon.PlayAttackMotion(false);
         attackSummon.ApplyAttackCooldown(attackStrategy);
         attackSummon.SetAttackAvailable(false);
-        Debug.Log(GetSpecialAttackSuccessLog(attackStrategy, selectedPlateIndex, isPlayer));
+        Debug.Log(GetSpecialAttackSuccessLog(attackStrategy, selectedPlateIndex, isPlayerAttacker));
         return true;
     }
 
@@ -75,14 +75,14 @@ public class EnemySpecialAttackExecution
             && attackSummon.GetSpecialAttackStrategy()[specialAttackIndex] != null;
     }
 
-    private bool CanExecuteTargetedAttack(AttackData attackStrategy, int selectedPlateIndex, bool isPlayer)
+    private bool CanExecuteTargetedAttack(AttackData attackStrategy, int selectedPlateIndex, bool isPlayerAttacker)
     {
         if (!attackStrategy.IsStrategy<TargetedAttackStrategy>() || attackStrategy.TargetsOwnPlates())
         {
             return true;
         }
 
-        IReadOnlyList<BattleBoardInputController> targetPlates = GetSpecialAttackTargetPlates(attackStrategy, isPlayer);
+        IReadOnlyList<BattleBoardInputController> targetPlates = GetSpecialAttackTargetPlates(attackStrategy, isPlayerAttacker);
         return IsValidPlateIndex(selectedPlateIndex, targetPlates.Count);
     }
 
@@ -91,11 +91,11 @@ public class EnemySpecialAttackExecution
         return selectedPlateIndex >= 0 && selectedPlateIndex < plateCount;
     }
 
-    private IReadOnlyList<BattleBoardInputController> GetSpecialAttackTargetPlates(AttackData attackStrategy, bool isPlayer)
+    private IReadOnlyList<BattleBoardInputController> GetSpecialAttackTargetPlates(AttackData attackStrategy, bool isPlayerAttacker)
     {
         bool targetsOwnPlates = attackStrategy.TargetsOwnPlates();
 
-        if (isPlayer == targetsOwnPlates)
+        if (isPlayerAttacker == targetsOwnPlates)
         {
             return playerPlates;
         }
@@ -215,25 +215,25 @@ public class EnemySpecialAttackExecution
     private string GetSpecialAttackSuccessLog(
         AttackData attackStrategy,
         int selectedPlateIndex,
-        bool isPlayer)
+        bool isPlayerAttacker)
     {
         if (attackStrategy.IsStrategy<TargetedAttackStrategy>())
         {
-            return isPlayer
+            return isPlayerAttacker
                 ? $"플레이어가 {selectedPlateIndex}번 플레이트에 대상 지정 특수 공격을 사용했습니다."
                 : $"적이 {selectedPlateIndex}번 플레이트에 대상 지정 특수 공격을 사용했습니다.";
         }
 
         if (attackStrategy.IsStrategy<AttackAllEnemiesStrategy>())
         {
-            return isPlayer
+            return isPlayerAttacker
                 ? "Player used all-target special attack."
                 : "Enemy used all-target special attack.";
         }
 
         if (attackStrategy.IsStrategy<ClosestEnemyAttackStrategy>())
         {
-            return isPlayer
+            return isPlayerAttacker
                 ? "Player used closest-target special attack."
                 : "Enemy used closest-target special attack.";
         }
@@ -241,9 +241,9 @@ public class EnemySpecialAttackExecution
         return "Special attack executed.";
     }
 
-    private string GetTargetedAttackInvalidLog(bool isPlayer)
+    private string GetTargetedAttackInvalidLog(bool isPlayerAttacker)
     {
-        return isPlayer
+        return isPlayerAttacker
             ? "플레이어 대상 지정 특수 공격의 적 플레이트 인덱스가 유효하지 않습니다."
             : "적 대상 지정 특수 공격의 플레이어 플레이트 인덱스가 유효하지 않습니다.";
     }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: EnemyNormalAttackReaction의 책임을 정의한다.
-internal class EnemyNormalAttackReaction
+class EnemyNormalAttackReaction
 {
     private delegate EnemySpecialAttackPickData SpecialAttackPickStep(AttackData attackStrategy, int specialAttackIndex);
 
@@ -12,7 +12,7 @@ internal class EnemyNormalAttackReaction
 
     private readonly AttackStateMachine attackStateMachine;
 
-    private readonly EnemySpecialAttackExecution specialAttackExecution;
+    private readonly SpecialAttackExecution specialAttackExecution;
 
     public EnemyNormalAttackReaction(
         PlateBoardView plateBoardController,
@@ -21,7 +21,7 @@ internal class EnemyNormalAttackReaction
         this.plateBoardController = plateBoardController;
         playerPlates = plateBoardController.GetPlayerPlates();
         this.attackStateMachine = attackStateMachine;
-        specialAttackExecution = new EnemySpecialAttackExecution(
+        specialAttackExecution = new SpecialAttackExecution(
             playerPlates,
             plateBoardController.GetEnemyPlates());
     }
@@ -349,7 +349,7 @@ internal class EnemyNormalAttackReaction
             attacker,
             pick.TargetPlateIndex,
             pick.SpecialAttackIndex,
-            false);
+            isPlayerAttacker: false);
         if (executed)
         {
             attackStateMachine.CompleteAttack();

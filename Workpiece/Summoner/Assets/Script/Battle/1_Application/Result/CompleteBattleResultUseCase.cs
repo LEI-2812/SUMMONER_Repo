@@ -5,27 +5,15 @@ public class CompleteBattleResultUseCase
     private const int FinalStageNumber = 7;
 
     private readonly BattleStageData battleStageData;
-    private readonly GameSaveUseCase gameSaveUseCase;
-    private readonly StageTransitionController stageTransitionController;
+    private readonly GameSaveUseCase gameSaveUseCase = new GameSaveUseCase();
+    private readonly StageTransitionUseCase stageTransitionUseCase;
 
     public CompleteBattleResultUseCase(
         BattleStageData battleStageData,
-        StageTransitionController stageTransitionController)
-        : this(
-            battleStageData,
-            new GameSaveUseCase(new StageProgressSaveStore()),
-            stageTransitionController)
-    {
-    }
-
-    public CompleteBattleResultUseCase(
-        BattleStageData battleStageData,
-        GameSaveUseCase gameSaveUseCase,
-        StageTransitionController stageTransitionController)
+        StageTransitionUseCase stageTransitionUseCase)
     {
         this.battleStageData = battleStageData;
-        this.gameSaveUseCase = gameSaveUseCase;
-        this.stageTransitionController = stageTransitionController;
+        this.stageTransitionUseCase = stageTransitionUseCase;
     }
 
     public void ExecuteClear(bool shouldRetry)
@@ -38,7 +26,7 @@ public class CompleteBattleResultUseCase
         int stageNum = GetCurrentStage();
         if (shouldRetry)
         {
-            stageTransitionController.SendFight(stageNum);
+            stageTransitionUseCase.SendFightStage(stageNum);
             return;
         }
 
@@ -47,7 +35,7 @@ public class CompleteBattleResultUseCase
             return;
         }
 
-        stageTransitionController.SendNextStageAfterBattle(stageNum);
+        stageTransitionUseCase.SendNextStageAfterBattle(stageNum);
     }
 
     public void ExecuteFail(bool shouldRetry)
@@ -60,11 +48,11 @@ public class CompleteBattleResultUseCase
         int stageNum = GetCurrentStage();
         if (shouldRetry)
         {
-            stageTransitionController.SendFight(stageNum);
+            stageTransitionUseCase.SendFightStage(stageNum);
             return;
         }
 
-        stageTransitionController.SendStageSelect();
+        stageTransitionUseCase.SendStageSelect();
     }
 
     private bool CanHandleResult()
@@ -81,9 +69,9 @@ public class CompleteBattleResultUseCase
             return false;
         }
 
-        if (stageTransitionController == null)
+        if (stageTransitionUseCase == null)
         {
-            Debug.LogError("StageTransitionController가 없어 전투 결과를 처리할 수 없습니다.");
+            Debug.LogError("StageTransitionUseCase가 없어 전투 결과를 처리할 수 없습니다.");
             return false;
         }
 

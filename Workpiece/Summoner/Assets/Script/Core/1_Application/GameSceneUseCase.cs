@@ -10,6 +10,11 @@ public static class GameSceneUseCase
         SceneManager.LoadScene("Start Screen");
     }
 
+    public static bool IsStartScreenActive()
+    {
+        return SceneManager.GetActiveScene().name == "Start Screen";
+    }
+
     public static void LoadHudAdditive()
     {
         if (IsHudLoaded())

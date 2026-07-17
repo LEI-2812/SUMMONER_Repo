@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 // 역할: PlayerTurnState의 책임을 정의한다.
-internal sealed class PlayerTurnState
+class PlayerTurnState
 {
     private readonly HandlePlayerCommandUseCase handlePlayerCommandUseCase;
     private readonly IPlayerTurnBoard turnBoard;

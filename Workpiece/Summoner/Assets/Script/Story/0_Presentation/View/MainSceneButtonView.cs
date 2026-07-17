@@ -6,6 +6,6 @@ public class MainSceneButtonView : MonoBehaviour, IPointerClickHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
-        MenuNavigationUseCase.ReturnToStartScreen();
+        GameSceneUseCase.LoadStartScreen();
     }
 }

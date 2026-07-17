@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -7,8 +6,7 @@ using UnityEngine.EventSystems;
 public class BattleBoardInputController : MonoBehaviour,
     IPointerEnterHandler,
     IPointerExitHandler,
-    IPointerClickHandler,
-    UpdateStateObserver
+    IPointerClickHandler
 {
     private bool isInSummon = false;
     [SerializeField] private Summon currentSummon;
@@ -34,8 +32,6 @@ public class BattleBoardInputController : MonoBehaviour,
     [Header("사운드")]
     [SerializeField] private AudioSource clickSound;
 
-    private List<stateObserver> observers = new List<stateObserver>();
-
     void Start()
     {
         statePanel.SetActive(false);
@@ -43,14 +39,7 @@ public class BattleBoardInputController : MonoBehaviour,
         EnsureAttackStateMachine();
         plateImage = GetComponent<Image>();
         visualView = new PlateVisualView(plateImage, summonImg);
-        selectBoardTargetUseCase = new SelectBoardTargetUseCase(
-            this,
-            summonSelectionController,
-            attackStateMachine,
-            plateBoardController,
-            statePanel,
-            statePanelScript,
-            clickSound);
+        selectBoardTargetUseCase = new SelectBoardTargetUseCase(attackStateMachine);
     }
 
     public void SummonPlaceOnPlate(Summon summon, bool isResummon = false)
@@ -131,14 +120,18 @@ public class BattleBoardInputController : MonoBehaviour,
     }
 
 
-    private void DestroySummonInstance(Summon summon, stateObserver statePanelObserver)
+    private void DestroySummonInstance(Summon summon, SummonStatePanelView statePanelView)
     {
         if (summon == null)
         {
             return;
         }
 
-        summon.RemoveObserver(statePanelObserver);
+        if (statePanelView != null)
+        {
+            summon.RemoveStateChangedHandler(statePanelView.StateUpdate);
+        }
+
         Object.Destroy(summon.gameObject);
     }
 
@@ -160,8 +153,7 @@ public class BattleBoardInputController : MonoBehaviour,
             return;
         }
 
-        currentSummon.AddObserver(statePanelScript);
-        NotifyObservers();
+        currentSummon.AddStateChangedHandler(statePanelScript.StateUpdate);
     }
 
     private void RestoreRedrawSummonState(bool isResummon, bool previousAttackState)
@@ -198,17 +190,122 @@ public class BattleBoardInputController : MonoBehaviour,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        selectBoardTargetUseCase.ExecutePointerEnter();
+        BoardTargetInput input = CreateBoardTargetInput();
+        if (input.CurrentSummon == null)
+        {
+            return;
+        }
+
+        bool showHighlight = input.IsSummonSelectionActive
+            || (input.IsAttackTargetSelectionActive && input.CanSelectAttackTarget);
+        if (showHighlight)
+        {
+            Highlight();
+        }
+
+        float transparency = input.IsAttackTargetSelectionActive && !input.CanSelectAttackTarget
+            ? 0.5f
+            : 1.0f;
+        SetSummonImageTransparency(transparency);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        selectBoardTargetUseCase.ExecutePointerExit();
+        BoardTargetInput input = CreateBoardTargetInput();
+        if (input.CurrentSummon == null)
+        {
+            return;
+        }
+
+        if (input.IsSummonSelectionActive || input.IsAttackTargetSelectionActive)
+        {
+            Unhighlight();
+        }
+
+        if (input.IsSummonSelectionActive)
+        {
+            SetSummonImageTransparency(0.5f);
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        selectBoardTargetUseCase.Execute();
+        BoardTargetInput input = CreateBoardTargetInput();
+        ApplyClickAction(selectBoardTargetUseCase.Execute(input), input);
+        PlayClickSound();
+    }
+
+    private BoardTargetInput CreateBoardTargetInput()
+    {
+        bool isSummonSelectionActive = summonSelectionController != null
+            && summonSelectionController.IsSummoning();
+        bool isAttackTargetSelectionActive = attackStateMachine != null
+            && attackStateMachine.IsSpecialAttackTargetSelectionActive();
+        int attackTargetPlateIndex = -1;
+        string attackTargetPlateName = "none";
+        bool canSelectAttackTarget = false;
+
+        if (isAttackTargetSelectionActive && plateBoardController != null)
+        {
+            bool targetsPlayerPlate = attackStateMachine.DoesCurrentSpecialAttackTargetPlayerPlate();
+            canSelectAttackTarget = plateBoardController.TryGetAttackTargetPlate(
+                this,
+                targetsPlayerPlate,
+                out attackTargetPlateIndex,
+                out attackTargetPlateName);
+        }
+
+        int playerPlateIndex = plateBoardController == null
+            ? -1
+            : plateBoardController.GetPlayerPlateIndex(this);
+        bool isEnemyPlate = plateBoardController != null
+            && plateBoardController.GetEnemyPlateIndex(this) >= 0;
+
+        return new BoardTargetInput(
+            currentSummon,
+            isSummonSelectionActive,
+            isAttackTargetSelectionActive,
+            canSelectAttackTarget,
+            attackTargetPlateIndex,
+            attackTargetPlateName,
+            playerPlateIndex,
+            isEnemyPlate,
+            statePanel != null && statePanelScript != null);
+    }
+
+    private void ApplyClickAction(BoardClickAction action, BoardTargetInput input)
+    {
+        switch (action)
+        {
+            case BoardClickAction.SelectRedrawPlate:
+                summonSelectionController.SelectPlate(this);
+                Unhighlight();
+                SetSummonImageTransparency(1.0f);
+                break;
+
+            case BoardClickAction.SelectAttackTarget:
+                Debug.Log($"{input.AttackTargetPlateName} 플레이트 {input.AttackTargetPlateIndex}번을 선택했습니다.");
+                Unhighlight();
+                break;
+
+            case BoardClickAction.InvalidAttackTarget:
+                Debug.Log("유효하지 않은 공격 대상 플레이트입니다.");
+                break;
+
+            case BoardClickAction.ShowSummonStatus:
+                Debug.Log("소환수 상태 패널 열기: " + input.CurrentSummon.GetSummonName());
+                statePanel.SetActive(true);
+                statePanelScript.SetStatePanel(input.CurrentSummon, input.IsEnemyPlate);
+                break;
+        }
+    }
+
+    private void PlayClickSound()
+    {
+        if (clickSound != null && clickSound.isActiveAndEnabled && clickSound.gameObject.activeInHierarchy)
+        {
+            clickSound.Play();
+        }
     }
 
     public void SetSummonImageTransparency(float alpha)
@@ -281,21 +378,4 @@ public class BattleBoardInputController : MonoBehaviour,
         return isInSummon;
     }
 
-    public void AddObserver(stateObserver observer)
-    {
-        observers.Add(observer);
-    }
-
-    public void RemoveObserver(stateObserver observer)
-    {
-        observers.Remove(observer);
-    }
-
-    public void NotifyObservers()
-    {
-        foreach (var observer in observers)
-        {
-            observer.StateUpdate();
-        }
-    }
 }

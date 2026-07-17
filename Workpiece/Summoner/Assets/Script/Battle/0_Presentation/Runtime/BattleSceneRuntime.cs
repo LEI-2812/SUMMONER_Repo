@@ -87,7 +87,7 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         StartTurnFlow();
     }
 
-    internal void StartTurnFlow()
+    private void StartTurnFlow()
     {
         if (hasStartedTurnFlow)
         {
@@ -131,11 +131,6 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
     public bool IsPlayerTurn()
     {
         return turnStateMachine.IsPlayerTurn();
-    }
-
-    internal TurnPhase GetCurrentTurn()
-    {
-        return turnStateMachine.CurrentTurn;
     }
 
     private void Ensure참조()
@@ -205,7 +200,7 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         if (handlePlayerCommandUseCase == null)
         {
             handlePlayerCommandUseCase = CreateHandlePlayerCommandUseCase();
-            player.SetHandlePlayerCommandUseCase(handlePlayerCommandUseCase);
+            player.Initialize(handlePlayerCommandUseCase, summonSelectionController);
             ConnectSummonStatePanelView();
             handlePlayerCommandUseCase.ResetPlayerSetting();
         }
@@ -218,33 +213,35 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         AttackStateMachine attackStateMachine = attackStateMachineHost.GetAttackStateMachine();
         var playerActionStateMachine = new PlayerActionStateMachine();
         var startSummonSelectionUseCase = new StartSummonSelectionUseCase(
-            summonSelectionController,
             plateBoardController.GetFirstEmptyPlayerPlateIndex,
-            playerActionStateMachine,
-            GetPlayerFeedbackView());
+            () => !plateBoardController.IsPlayerPlateClear(),
+            playerActionStateMachine);
         IReadOnlyList<BattleBoardInputController> playerPlates = plateBoardController.GetPlayerPlates();
         IReadOnlyList<BattleBoardInputController> enemyPlates = plateBoardController.GetEnemyPlates();
-        var targetSelectionView = new PlayerTargetSelectionView(summonSelectionController, plateBoardController);
         var attackUseCase = new ExecutePlayerAttackUseCase(
             player,
             attackStateMachine,
             playerPlates,
             enemyPlates,
-            new BoardOutsideClickInput(),
-            targetSelectionView,
-            GetPlayerFeedbackView());
+            new PlayerAttackOutput(
+                playerPlates,
+                enemyPlates,
+                summonSelectionController,
+                plateBoardController,
+                GetPlayerFeedbackView()));
 
         return new HandlePlayerCommandUseCase(
             player.gameObject.name,
             playerActionStateMachine,
             this,
-            battleResultController,
-            plateBoardController,
             startSummonSelectionUseCase,
             attackUseCase,
-            GetPlayerHudView(),
-            GetManaView(),
-            GetPlayerFeedbackView());
+            new PlayerCommandOutput(
+                battleResultController,
+                plateBoardController,
+                GetPlayerHudView(),
+                GetManaView(),
+                GetPlayerFeedbackView()));
     }
 
     private PlayerHudView GetPlayerHudView()
@@ -309,7 +306,7 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         if (enemyTurnState == null)
         {
             enemyTurnState = new EnemyTurnState(
-                enemyTurnController,
+                enemyTurnController.StartEnemyTurn,
                 GetTurnSummonStateUpdater());
         }
 

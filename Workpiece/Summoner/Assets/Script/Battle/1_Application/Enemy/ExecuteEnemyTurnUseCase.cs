@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-internal sealed class ExecuteEnemyTurnUseCase
+class ExecuteEnemyTurnUseCase
 {
     private readonly IReadOnlyList<BattleBoardInputController> playerPlates;
     private readonly IReadOnlyList<BattleBoardInputController> enemyPlates;
@@ -10,7 +10,7 @@ internal sealed class ExecuteEnemyTurnUseCase
     private readonly EnemySpecialAttackReaction specialAttackReaction;
     private readonly AttackStateMachine attackStateMachine;
     private readonly PlateBoardView plateBoardController;
-    private readonly EnemySpecialAttackExecution specialAttackExecution;
+    private readonly SpecialAttackExecution specialAttackExecution;
 
     public ExecuteEnemyTurnUseCase(
         PlateBoardView plateBoardController,
@@ -29,7 +29,7 @@ internal sealed class ExecuteEnemyTurnUseCase
             plateBoardController,
             normalAttackReaction,
             attackStateMachine);
-        specialAttackExecution = new EnemySpecialAttackExecution(
+        specialAttackExecution = new SpecialAttackExecution(
             playerPlates,
             enemyPlates);
     }
@@ -226,7 +226,7 @@ internal sealed class ExecuteEnemyTurnUseCase
             attackingSummon,
             enemyPlateIndex,
             healSpecialAttackIndex,
-            false))
+            isPlayerAttacker: false))
         {
             return false;
         }

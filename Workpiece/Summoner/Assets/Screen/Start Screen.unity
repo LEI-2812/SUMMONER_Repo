@@ -3166,6 +3166,7 @@ MonoBehaviour:
   loadAlert: {fileID: 1051069145}
   loadAlertResult: {fileID: 1051069150}
   loadButton: {fileID: 959661037}
+  loadStageTextView: {fileID: 1977827101}
   settingBtn: {fileID: 629438704}
   audioSource: {fileID: 980270652}
 --- !u!82 &980270652

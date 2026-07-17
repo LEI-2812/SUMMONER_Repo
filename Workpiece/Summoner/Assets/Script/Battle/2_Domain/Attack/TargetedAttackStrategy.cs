@@ -7,9 +7,35 @@ public class TargetedAttackStrategy : IAttackStrategy
     {
         if (attackData.StatusType == StatusType.Shield || attackData.StatusType == StatusType.OnceInvincibility)
         {
-            return new SelfAttackTargetSelector().SelectTargets(attacker, targetPlates, selectedPlateIndex);
+            List<Summon> selfTarget = new List<Summon>();
+
+            if (attacker != null)
+            {
+                selfTarget.Add(attacker);
+            }
+
+            return selfTarget;
         }
 
-        return new SelectedPlateAttackTargetSelector().SelectTargets(attacker, targetPlates, selectedPlateIndex);
+        List<Summon> targets = new List<Summon>();
+
+        if (targetPlates == null || selectedPlateIndex < 0 || selectedPlateIndex >= targetPlates.Count)
+        {
+            return targets;
+        }
+
+        BattleBoardInputController targetPlate = targetPlates[selectedPlateIndex];
+        if (targetPlate == null)
+        {
+            return targets;
+        }
+
+        Summon target = targetPlate.GetCurrentSummon();
+        if (target != null)
+        {
+            targets.Add(target);
+        }
+
+        return targets;
     }
 }

@@ -2,18 +2,40 @@
 
 ## 상태
 
-- 현재 도메인: Battle / Player
-- 현재 상태: 다음 세션 목표 작성 완료
+- 현재 도메인: StartScreen / Option / Menu / Battle
+- 현재 상태: 두 번째 구조 축소 계획의 저위험 1차 적용 및 Unity 검증 완료
 - Ready 에이전트: DevAgent
 
 ## 현재 기능 슬라이스
 
-다음 작업: PLAYER-CONTROLLER-DELETE-002 | Battle/Player | PlayerController 삭제를 한 번에 처리
-완료조건: FightScene 1~7의 버튼 UnityEvent와 serialized reference가 `PlayerController` 없이 동작하는 구조로 이관되고, `PlayerController.cs/.meta`와 scene component 참조가 제거된다. 새 Controller는 만들지 않는다.
-첫 액션: FightScene 1~7의 `PlayerController` GUID, Button UnityEvent 메서드, `battleResultController`/`summonController`/`turnRuntime` serialized 참조를 검색해 이관 대상 목록을 확정한다.
+다음 작업: SIMPLE-CONSTRUCTOR-004 | Cross Feature | 호출되지 않는 보조 생성자와 반복 조립 축소
+완료조건: 제품 코드와 테스트에서 호출되지 않는 보조 생성자만 제거하고, 실제 교체 지점으로 사용되는 생성자와 외부 저장/씬 경계는 유지한다.
+첫 액션: `GameSaveUseCase`, `StageSelectUseCase`, `StorySceneUseCase`, `StorySkipUseCase`, StartScreen/Option UseCase의 생성자 호출 위치를 다시 세어 제거/유지 목록과 전/후 diff를 제안한다.
 호출 대상: DevAgent
 
 ## 메모
+
+- SIMPLE-STRUCTURE-001 적용: `StartScreenView -> OpenStartOptionUseCase -> ISettingPanel -> SettingPanelView`를 `StartScreenView -> SettingPanelView.OpenOption()`으로 줄였고 `OpenStartOptionUseCase.cs/.meta`를 제거했다. 삭제 GUID의 scene/prefab 참조는 0건이다.
+- SIMPLE-STRUCTURE-002 적용: `MenuNavigationUseCase` 한 줄 래퍼를 제거하고 `MenuHandler`와 `MainSceneButtonView`가 `GameSceneUseCase.LoadStartScreen()`을 직접 호출하게 했다. 삭제 GUID의 scene/prefab 참조는 0건이다.
+- SIMPLE-DEAD-CODE-003 적용: 호출 0인 Menu `Initialize*` 3개, Option getter/setter 7개, `BattleSceneRuntime.GetCurrentTurn()`, `BattleBoardInputController`의 비어 있는 Observer 구현을 제거했다. 실제 `Summon -> SummonStatePanelView` Observer 연결은 유지했다.
+- SIMPLE-DEAD-CODE-003 접근 제한자 정리: 같은 클래스에서만 호출되는 `BattleSceneRuntime.StartTurnFlow()`를 `internal`에서 `private`로 좁히고 구조 테스트 문자열을 함께 갱신했다. `internal`을 줄이기 위해 API를 `public`으로 넓히지 않았다.
+- 저위험 1차 검증: 삭제 타입/이름/GUID 잔존 0건, 수정 범위 `git diff --check` 공백 오류 0건, Unity `Assets/Refresh` 후 `Tundra build success`, `Mono: successfully reloaded assembly`, `TurnRuntimeBehaviorTests` 3/3 통과를 확인했다.
+- UI 연결 검증: Start Screen의 `OpenOption`/`StartSavedStage`, Prologue/Epilogue/Thank/HUD의 `ShowToMainAlert`/`OpenSettings`/`CloseSettings`/`SettingPanelView.OpenOption` UnityEvent 대상은 유지된다. MCP 라이브 GameObject 재조회는 직접 세션 timeout으로 끝나 실제 버튼 클릭 육안 확인은 남아 있다.
+- CONTINUE-STAGE-TEXT-001 적용: 이어하기 입력은 `StartScreenView.StartSavedStage -> ContinueGameUseCase.TryGetSavedStageDisplayData -> StageDisplayData -> StageTextView.Show` 순서로 처리한다. Start Screen의 `loadStageTextView`는 이어하기 알림창 자식 컴포넌트 `{fileID: 1977827101}`에 명시적으로 연결했다.
+- CONTINUE-STAGE-TEXT-001 검증: Unity MCP에서 Start Screen 로드 상태, `Button_saveplay`/자식 Text 활성 상태, Console error 0건을 확인했다. `StartSavedStage` UnityEvent와 `StageTextView.stageText` 직렬화 참조가 유효하며 스크립트 도메인 재로드도 통과했다. MCP로 실제 마우스 클릭까지 자동화하지는 않았으므로 최종 육안 확인은 이어하기 버튼 1회 클릭으로 남긴다.
+- SECOND-SIMPLE-PLAN-001 분석: subagent 3개가 과분리, 접근 제한자, 코드 축소를 각각 읽기 전용 감사했다. 현재 `sealed class` 29개, 명시적 top-level `internal` 타입 14개를 확인했다. 일괄 공개 API 확대는 하지 않고, 수정하는 클래스에서 근거 없는 `sealed`만 제거하며 top-level `internal`은 의미가 같을 때만 생략한다.
+- 두 번째 계획 순서: `OpenStartOptionUseCase/ISettingPanel` 제거 -> `MenuNavigationUseCase` 제거 -> 호출 0인 Observer/Initialize/getter 제거 -> 미사용 보조 생성자 축소 -> Story 대화 진행 중복 축소 -> Player 공격 내부 1회 어댑터 축소 -> 보드 입력 DTO 왕복 축소. 뒤로 갈수록 PlayMode 검증 범위를 넓힌다.
+- 유지 경계: `IPlayerAttackOutput`, `IPlayerCommandOutput`, `IPlayerTurnProgress`, `ICoroutineRunner`, `IPlayerTurnBoard`, `ITurnSummonBoard`, 공격 Strategy는 구현 수가 아니라 Application이 Unity Presentation/입력에 직접 의존하지 않게 하는 역할이 있으므로 유지한다.
+- `internal`을 줄이기 위해 `PlayerCommandController.Initialize`를 `public`으로 넓히지는 않는다. 교차 클래스 조립 전용이라는 현재 의미가 있으므로 유지한다.
+- ARCH-FLOW-001 적용: 소환 시작은 `PlayerCommandController -> StartSummonSelectionUseCase 결과 -> SummonSelectionController`로 바뀌었고, `HandlePlayerCommandUseCase`의 구체 Controller/View 의존은 `IPlayerCommandOutput`으로 낮췄다.
+- BATTLE-INPUT-RESULT-001 적용: 플레이어 공격의 UI/입력/로그 출력은 `IPlayerAttackOutput`으로 분리했고, 보드 입력은 `BattleBoardInputController -> SelectBoardTargetUseCase -> BoardClickResult/BoardPointerResult -> BattleBoardInputController` 흐름으로 통일했다.
+- STAGE-FLOW-001 적용: Stage 표시의 직접 SaveStore 조회를 제거하고 `StageSelectUseCase -> StageTextView.Show`로 통일했다. Stage Select UnityEvent 7개는 `SelectStage(int)` 하나로 통일했다.
+- STAGE-TRANSITION-FLOW-001 적용: 씬 미참조 `StageTransitionController`와 동적 `GetOrCreate()`를 제거하고 `StageTransitionUseCase -> GameSceneUseCase`로 통일했다.
+- STAGE-STORY-FLOW-001 적용: Stage 선택은 순수 유효성 검사 후 저장하고 배율은 씬 이동 때 한 번만 설정한다. Story 완료/스킵의 전투 이동도 `StageTransitionUseCase`를 사용한다.
+- OPTION/STORY 경계 적용: Audio/Video/Gameplay 설정 접근은 각 SettingUseCase를 거치고, Story도 GameplaySettingUseCase를 사용한다.
+- 공통 종료 흐름 적용: Menu와 StartScreen은 `Core/ExitGameUseCase` 하나를 사용한다. 기존 `.meta` GUID는 보존했다.
+- 검증: 삭제 타입/GUID 참조 0건, `SelectStage` UnityEvent 7건, `git diff --check` 공백 오류 0건. Unity Editor 로그에서 `Tundra build success`와 `Mono: successfully reloaded assembly`를 확인했다. 실제 씬 입력 동작은 아직 확인하지 않았다.
+- 후속 구조 부채: 적 공격 반응/전략 일부의 `PlateBoardView`와 `BattleBoardInputController` 의존은 공격 대상 모델 변경이 필요한 별도 작업으로 남긴다.
 
 - 다음 세션 목표는 외부 시각화 산출물이 아니라 workflow 문서 기준으로만 이어간다.
 - PLAYER-CONTROLLER-DELETE-002는 작은 public API 정리로 새지 말고 `PlayerController` 삭제 완료까지 한 slice로 처리한다. 예상 작업은 버튼 UnityEvent 진입점 이관, `PlayerTurnUseCase` 생성 위치 이관, `PlayerView`/`PlayerFeedbackView`/`SummonStatePanelView` 연결 위치 이관, FightScene 1~7 component 제거, `PlayerController.cs/.meta` 삭제, Unity `recompile_scripts`, FightScene 1~7 `load_scene` 확인이다.

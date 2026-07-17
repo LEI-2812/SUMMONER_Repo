@@ -1,14 +1,15 @@
-// 역할: EnemyTurnState의 책임을 정의한다.
-internal sealed class EnemyTurnState
+using System;
+
+class EnemyTurnState
 {
-    private readonly EnemyTurnRuntime enemyTurnController;
+    private readonly Action startEnemyTurn;
     private readonly TurnSummonStateUpdater turnSummonStateUpdater;
 
     public EnemyTurnState(
-        EnemyTurnRuntime enemyTurnController,
+        Action startEnemyTurn,
         TurnSummonStateUpdater turnSummonStateUpdater)
     {
-        this.enemyTurnController = enemyTurnController;
+        this.startEnemyTurn = startEnemyTurn;
         this.turnSummonStateUpdater = turnSummonStateUpdater;
     }
 
@@ -16,7 +17,7 @@ internal sealed class EnemyTurnState
     {
         turnSummonStateUpdater.ApplyPlayerTurnStartEffects();
         turnSummonStateUpdater.UpdateEnemySpecialCooldowns();
-        enemyTurnController.StartEnemyTurn();
+        startEnemyTurn();
     }
 
     public void Exit()

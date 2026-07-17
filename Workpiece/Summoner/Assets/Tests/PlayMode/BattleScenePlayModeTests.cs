@@ -242,8 +242,7 @@ public class BattleScenePlayModeTests
             int stage = i + 1;
             double multiplier = ExpectedStageMultipliers[i];
 
-            Assert.IsTrue(PrepareFightStage(stage), "전투 스테이지 배수 준비가 성공해야 합니다: " + stage);
-            yield return LoadScene(FightScenePaths[i]);
+            Assert.IsTrue(SendFightStage(stage), "전투 스테이지 이동 준비가 성공해야 합니다: " + stage);
             yield return null;
 
             MonoBehaviour playerCommandController = FindComponent("PlayerCommandController");
@@ -278,8 +277,7 @@ public class BattleScenePlayModeTests
         const int stage = 7;
         const double multiplier = 2.5;
 
-        Assert.IsTrue(PrepareFightStage(stage), "전투 스테이지 배수 준비가 성공해야 합니다: " + stage);
-        yield return LoadScene(FightScenePaths[stage - 1]);
+        Assert.IsTrue(SendFightStage(stage), "전투 스테이지 이동 준비가 성공해야 합니다: " + stage);
         yield return null;
 
         MonoBehaviour playerCommandController = FindComponent("PlayerCommandController");
@@ -773,16 +771,16 @@ public class BattleScenePlayModeTests
         return summons;
     }
 
-    private static bool PrepareFightStage(int stage)
+    private static bool SendFightStage(int stage)
     {
         System.Type transitionUseCaseType = FindType("StageTransitionUseCase");
         Assert.NotNull(transitionUseCaseType, "StageTransitionUseCase 타입을 찾을 수 있어야 합니다.");
 
         object transitionUseCase = System.Activator.CreateInstance(transitionUseCaseType);
         MethodInfo method = transitionUseCaseType.GetMethod(
-            "TryPrepareFightStage",
+            "SendFightStage",
             BindingFlags.Instance | BindingFlags.Public);
-        Assert.NotNull(method, "StageTransitionUseCase.TryPrepareFightStage 메서드가 필요합니다.");
+        Assert.NotNull(method, "StageTransitionUseCase.SendFightStage 메서드가 필요합니다.");
 
         return (bool)method.Invoke(transitionUseCase, new object[] { stage });
     }

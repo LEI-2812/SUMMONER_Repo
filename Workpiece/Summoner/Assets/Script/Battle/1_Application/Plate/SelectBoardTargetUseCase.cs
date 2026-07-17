@@ -1,264 +1,114 @@
-using UnityEngine;
+public enum BoardClickAction
+{
+    None,
+    SelectRedrawPlate,
+    SelectAttackTarget,
+    InvalidAttackTarget,
+    ShowSummonStatus
+}
 
+public readonly struct BoardTargetInput
+{
+    public readonly Summon CurrentSummon;
+    public readonly bool IsSummonSelectionActive;
+    public readonly bool IsAttackTargetSelectionActive;
+    public readonly bool CanSelectAttackTarget;
+    public readonly int AttackTargetPlateIndex;
+    public readonly string AttackTargetPlateName;
+    public readonly int PlayerPlateIndex;
+    public readonly bool IsEnemyPlate;
+    public readonly bool CanShowSummonStatus;
+
+    public BoardTargetInput(
+        Summon currentSummon,
+        bool isSummonSelectionActive,
+        bool isAttackTargetSelectionActive,
+        bool canSelectAttackTarget,
+        int attackTargetPlateIndex,
+        string attackTargetPlateName,
+        int playerPlateIndex,
+        bool isEnemyPlate,
+        bool canShowSummonStatus)
+    {
+        CurrentSummon = currentSummon;
+        IsSummonSelectionActive = isSummonSelectionActive;
+        IsAttackTargetSelectionActive = isAttackTargetSelectionActive;
+        CanSelectAttackTarget = canSelectAttackTarget;
+        AttackTargetPlateIndex = attackTargetPlateIndex;
+        AttackTargetPlateName = attackTargetPlateName;
+        PlayerPlateIndex = playerPlateIndex;
+        IsEnemyPlate = isEnemyPlate;
+        CanShowSummonStatus = canShowSummonStatus;
+    }
+}
+
+// 역할: 보드 입력 상태를 보고 실행할 전투 행동을 결정한다.
 public class SelectBoardTargetUseCase
 {
-    private readonly BattleBoardInputController plate;
-    private readonly SummonSelectionController summonSelectionController;
     private readonly AttackStateMachine attackStateMachine;
-    private readonly PlateBoardView plateBoardController;
-    private readonly GameObject statePanel;
-    private readonly SummonStatePanelView statePanelView;
-    private readonly AudioSource clickSound;
 
-    public SelectBoardTargetUseCase(
-        BattleBoardInputController plate,
-        SummonSelectionController summonSelectionController,
-        AttackStateMachine attackStateMachine,
-        PlateBoardView plateBoardController,
-        GameObject statePanel,
-        SummonStatePanelView statePanelView,
-        AudioSource clickSound)
+    public SelectBoardTargetUseCase(AttackStateMachine attackStateMachine)
     {
-        this.plate = plate;
-        this.summonSelectionController = summonSelectionController;
         this.attackStateMachine = attackStateMachine;
-        this.plateBoardController = plateBoardController;
-        this.statePanel = statePanel;
-        this.statePanelView = statePanelView;
-        this.clickSound = clickSound;
     }
 
-    public void Execute()
+    public BoardClickAction Execute(BoardTargetInput input)
     {
-        if (TrySelectResummonPlate())
+        if (input.CurrentSummon != null && input.IsSummonSelectionActive)
         {
-            PlayClickSound();
-            return;
+            return BoardClickAction.SelectRedrawPlate;
         }
 
-        if (TrySelectAttackTargetPlate())
+        if (input.CurrentSummon != null && input.IsAttackTargetSelectionActive)
         {
-            PlayClickSound();
-            return;
+            return SelectAttackTarget(input);
         }
 
-        TryShowSummonStatusPanel();
-        PlayClickSound();
+        return SelectSummonStatus(input);
     }
 
-    public void ExecutePointerEnter()
+    private BoardClickAction SelectAttackTarget(BoardTargetInput input)
     {
-        ShowSummonHoverEnter();
-        ShowSummonSelectionHoverEnter();
-        ShowAttackTargetHoverEnter();
-    }
-
-    public void ExecutePointerExit()
-    {
-        ShowSummonSelectionHoverExit();
-        ShowAttackTargetHoverExit();
-    }
-
-    private void PlayClickSound()
-    {
-        if (clickSound != null && clickSound.isActiveAndEnabled && clickSound.gameObject.activeInHierarchy)
+        if (!input.CanSelectAttackTarget || attackStateMachine == null)
         {
-            clickSound.Play();
-        }
-    }
-
-    private bool TrySelectResummonPlate()
-    {
-        if (!IsSummonSelectionActive() || !plate.GetIsInSummon())
-        {
-            return false;
+            return BoardClickAction.InvalidAttackTarget;
         }
 
-        summonSelectionController.SelectPlate(plate);
-        plate.Unhighlight();
-        plate.SetSummonImageTransparency(1.0f);
-        return true;
+        attackStateMachine.SelectTargetPlate(input.AttackTargetPlateIndex);
+        return BoardClickAction.SelectAttackTarget;
     }
 
-    private void ShowSummonHoverEnter()
+    private BoardClickAction SelectSummonStatus(BoardTargetInput input)
     {
-        if (plate.GetCurrentSummon() == null)
+        if (input.CurrentSummon == null
+            || input.IsSummonSelectionActive
+            || input.IsAttackTargetSelectionActive)
         {
-            return;
+            return BoardClickAction.None;
         }
 
-        plate.SetSummonImageTransparency(1.0f);
-    }
-
-    private void ShowSummonSelectionHoverEnter()
-    {
-        if (!plate.GetIsInSummon() || !IsSummonSelectionActive())
-        {
-            return;
-        }
-
-        plate.Highlight();
-        plate.SetSummonImageTransparency(1.0f);
-    }
-
-    private void ShowAttackTargetHoverEnter()
-    {
-        if (!BattleAttackActiveOnPlate())
-        {
-            return;
-        }
-
-        if (CanSelectCurrentPlateAsAttackTarget())
-        {
-            plate.Highlight();
-            return;
-        }
-
-        plate.SetSummonImageTransparency(0.5f);
-    }
-
-    private void ShowSummonSelectionHoverExit()
-    {
-        if (plate.GetCurrentSummon() == null || !IsSummonSelectionActive())
-        {
-            return;
-        }
-
-        plate.Unhighlight();
-        plate.SetSummonImageTransparency(0.5f);
-    }
-
-    private void ShowAttackTargetHoverExit()
-    {
-        if (!BattleAttackActiveOnPlate())
-        {
-            return;
-        }
-
-        plate.Unhighlight();
-    }
-
-    private void TryShowSummonStatusPanel()
-    {
-        Summon currentSummon = plate.GetCurrentSummon();
-        if (currentSummon == null || IsSummonSelectionActive() || IsBattleAttacking())
-        {
-            return;
-        }
-
-        Debug.Log("소환수 상태 패널 열기: " + currentSummon.GetSummonName());
-        if (statePanel == null || statePanelView == null)
+        if (!input.CanShowSummonStatus)
         {
             attackStateMachine?.ClearPlayerAttackSource();
-            return;
+            return BoardClickAction.None;
         }
 
-        int plateIndex = GetPlayerPlateIndex();
-        bool isEnemyPlate = IsCurrentEnemyPlate();
         if (attackStateMachine == null)
         {
-            return;
+            return BoardClickAction.None;
         }
 
-        if (isEnemyPlate)
+        if (input.IsEnemyPlate)
         {
             attackStateMachine.ClearPlayerAttackSource();
         }
         else
         {
-            attackStateMachine.SelectPlayerAttackSource(currentSummon, plateIndex);
+            attackStateMachine.SelectPlayerAttackSource(
+                input.CurrentSummon,
+                input.PlayerPlateIndex);
         }
 
-        statePanel.SetActive(true);
-        statePanelView.SetStatePanel(currentSummon, isEnemyPlate);
-    }
-
-    private bool TrySelectAttackTargetPlate()
-    {
-        if (!BattleAttackActiveOnPlate())
-        {
-            return false;
-        }
-
-        if (!TrySelectSpecialAttackTarget(plate, out int plateIndex, out string plateName))
-        {
-            Debug.Log("유효하지 않은 공격 대상 플레이트입니다.");
-            return false;
-        }
-
-        Debug.Log($"{plateName} 플레이트 {plateIndex}번을 선택했습니다.");
-        plate.Unhighlight();
-        return true;
-    }
-
-    private bool CanSelectCurrentPlateAsAttackTarget()
-    {
-        if (plateBoardController == null)
-        {
-            return false;
-        }
-
-        bool targetsPlayerPlate = attackStateMachine != null && attackStateMachine.DoesCurrentSpecialAttackTargetPlayerPlate();
-        return plateBoardController.TryGetAttackTargetPlate(plate, targetsPlayerPlate, out _, out _);
-    }
-
-    private bool TrySelectSpecialAttackTarget(
-        BattleBoardInputController selectedPlate,
-        out int plateIndex,
-        out string plateName)
-    {
-        if (!TryGetTargetPlateIndex(selectedPlate, out plateIndex, out plateName))
-        {
-            return false;
-        }
-
-        attackStateMachine.SelectTargetPlate(plateIndex);
-        return true;
-    }
-
-    private bool TryGetTargetPlateIndex(
-        BattleBoardInputController selectedPlate,
-        out int plateIndex,
-        out string plateName)
-    {
-        plateIndex = -1;
-        plateName = "none";
-
-        if (attackStateMachine == null || plateBoardController == null)
-        {
-            return false;
-        }
-
-        bool targetsPlayerPlate = attackStateMachine.DoesCurrentSpecialAttackTargetPlayerPlate();
-        return plateBoardController.TryGetAttackTargetPlate(
-            selectedPlate,
-            targetsPlayerPlate,
-            out plateIndex,
-            out plateName);
-    }
-
-    private bool BattleAttackActiveOnPlate()
-    {
-        return plate.GetIsInSummon() && IsBattleAttacking();
-    }
-
-    private bool IsSummonSelectionActive()
-    {
-        return summonSelectionController != null && summonSelectionController.IsSummoning();
-    }
-
-    private bool IsBattleAttacking()
-    {
-        return attackStateMachine != null && attackStateMachine.IsSpecialAttackTargetSelectionActive();
-    }
-
-    private int GetPlayerPlateIndex()
-    {
-        return plateBoardController == null ? -1 : plateBoardController.GetPlayerPlateIndex(plate);
-    }
-
-    private bool IsCurrentEnemyPlate()
-    {
-        return plateBoardController != null && plateBoardController.GetEnemyPlateIndex(plate) >= 0;
+        return BoardClickAction.ShowSummonStatus;
     }
 }

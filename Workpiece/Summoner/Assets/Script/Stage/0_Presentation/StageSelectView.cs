@@ -18,7 +18,7 @@ public class StageSelectView : MonoBehaviour
         ButtonInteractivity(stageNum);
     }
 
-    public void StageLoader(int stage)
+    public void SelectStage(int stage)
     {
         Debug.Log("버튼 클릭");
         if (audioSource != null)
@@ -27,11 +27,6 @@ public class StageSelectView : MonoBehaviour
         }
 
         stageSelectUseCase.SelectStage(stage);
-    }
-
-    public void stageLoader(int stage)
-    {
-        StageLoader(stage);
     }
 
     void ButtonInteractivity(int stageNumber)

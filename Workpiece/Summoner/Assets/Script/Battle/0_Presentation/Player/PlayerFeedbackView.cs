@@ -27,8 +27,9 @@ public class PlayerFeedbackView
         Debug.Log(message);
     }
 
-    public void LogError(string message)
+    public void LogWarning(string message)
     {
-        Debug.LogError(message);
+        Debug.LogWarning(message);
     }
+
 }

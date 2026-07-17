@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public sealed class SelectSummonUseCase
+public class SelectSummonUseCase
 {
     public bool Execute(
         IReadOnlyList<BattleBoardInputController> playerPlates,
@@ -33,6 +33,6 @@ public sealed class SelectSummonUseCase
             return;
         }
 
-        placedSummon.ApplayMultiple(Summon.GetStatMultiplier());
+        placedSummon.ApplyStageMultiplier(Summon.GetStatMultiplier());
     }
 }

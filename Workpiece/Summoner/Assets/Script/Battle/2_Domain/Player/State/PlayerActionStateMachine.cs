@@ -19,7 +19,7 @@ public enum PlayerActionResult
 }
 
 // 역할: PlayerActionStateMachine의 책임을 정의한다.
-public sealed class PlayerActionStateMachine
+public class PlayerActionStateMachine
 {
     public PlayerActionState CurrentState { get; private set; }
     public int Mana { get; private set; }

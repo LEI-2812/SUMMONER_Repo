@@ -1,6 +1,6 @@
 using System;
 
-internal sealed class ChangeTurnUseCase
+class ChangeTurnUseCase
 {
     private readonly TurnStateMachine turnStateMachine;
     private readonly Func<PlayerTurnState> createPlayerTurnState;

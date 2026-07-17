@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: PredictionBoardData의 책임을 정의한다.
-public sealed class PredictionBoardData
+public class PredictionBoardData
 {
     public IReadOnlyList<PredictionPlateData> PlayerPlates { get; }
     public IReadOnlyList<PredictionPlateData> EnemyPlates { get; }

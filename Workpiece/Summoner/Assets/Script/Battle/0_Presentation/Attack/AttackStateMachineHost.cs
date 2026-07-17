@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 역할: AttackStateMachineHost의 책임을 정의한다.
-public sealed class AttackStateMachineHost : MonoBehaviour
+public class AttackStateMachineHost : MonoBehaviour
 {
     private BattleRuntimeData battleRuntimeData;
     private AttackStateMachine attackStateMachine;
