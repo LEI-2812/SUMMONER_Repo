@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // 역할: CSV에서 읽은 대사를 번호별로 보관하고 범위 조회를 제공한다.
 public class DialogueStore : MonoBehaviour
 {
     [SerializeField]
     [Header("참조")]
-    [FormerlySerializedAs("csv_FileName")]
     private string csvFileName;
 
     private readonly Dictionary<int, Dialogue> dialoguesByNumber = new Dictionary<int, Dialogue>();

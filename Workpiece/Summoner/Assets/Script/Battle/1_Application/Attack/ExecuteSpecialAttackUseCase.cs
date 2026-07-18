@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: 플레이어와 적이 함께 사용하는 특수 공격 실행 순서를 처리한다.
-public class SpecialAttackExecution
+public class ExecuteSpecialAttackUseCase
 {
-    private readonly IReadOnlyList<BattleBoardInputController> playerPlates;
-    private readonly IReadOnlyList<BattleBoardInputController> enemyPlates;
+    private readonly BattleBoardData board;
 
-    public SpecialAttackExecution(
-        IReadOnlyList<BattleBoardInputController> playerPlates,
-        IReadOnlyList<BattleBoardInputController> enemyPlates)
+    public ExecuteSpecialAttackUseCase(BattleBoardData board)
     {
-        this.playerPlates = playerPlates;
-        this.enemyPlates = enemyPlates;
+        this.board = board;
     }
 
     public bool Execute(
@@ -47,14 +43,12 @@ public class SpecialAttackExecution
             return false;
         }
 
-        IReadOnlyList<BattleBoardInputController> targetPlates = GetSpecialAttackTargetPlates(attackStrategy, isPlayerAttacker);
-
         attackSummon.AttackSoundPlay();
         ApplySpecialAttack(
             attackSummon,
             attackStrategy,
-            targetPlates,
-            selectedPlateIndex);
+            selectedPlateIndex,
+            isPlayerAttacker);
 
         attackSummon.PlayAttackMotion(false);
         attackSummon.ApplyAttackCooldown(attackStrategy);
@@ -82,7 +76,7 @@ public class SpecialAttackExecution
             return true;
         }
 
-        IReadOnlyList<BattleBoardInputController> targetPlates = GetSpecialAttackTargetPlates(attackStrategy, isPlayerAttacker);
+        IReadOnlyList<PlateData> targetPlates = GetSpecialAttackTargetPlates(attackStrategy, isPlayerAttacker);
         return IsValidPlateIndex(selectedPlateIndex, targetPlates.Count);
     }
 
@@ -91,25 +85,26 @@ public class SpecialAttackExecution
         return selectedPlateIndex >= 0 && selectedPlateIndex < plateCount;
     }
 
-    private IReadOnlyList<BattleBoardInputController> GetSpecialAttackTargetPlates(AttackData attackStrategy, bool isPlayerAttacker)
+    private IReadOnlyList<PlateData> GetSpecialAttackTargetPlates(AttackData attackStrategy, bool isPlayerAttacker)
     {
         bool targetsOwnPlates = attackStrategy.TargetsOwnPlates();
 
         if (isPlayerAttacker == targetsOwnPlates)
         {
-            return playerPlates;
+            return board.PlayerPlates;
         }
 
-        return enemyPlates;
+        return board.EnemyPlates;
     }
 
     private void ApplySpecialAttack(
         Summon attacker,
         AttackData attackStrategy,
-        IReadOnlyList<BattleBoardInputController> targetPlates,
-        int selectedPlateIndex)
+        int selectedPlateIndex,
+        bool isPlayerAttacker)
     {
-        List<Summon> targets = attackStrategy.SelectTargets(attacker, targetPlates, selectedPlateIndex);
+        List<Summon> targets = attackStrategy.SelectTargets(
+            new AttackTargetInput(attacker, board, selectedPlateIndex, isPlayerAttacker));
         if (targets.Count == 0)
         {
             Debug.Log("특수 공격 대상이 없습니다.");

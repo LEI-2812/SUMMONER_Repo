@@ -1,32 +1,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 역할: EnemyNormalAttackReaction의 책임을 정의한다.
-class EnemyNormalAttackReaction
+// 역할: 적의 일반 공격과 일반 공격 대체 행동을 실행한다.
+class ExecuteEnemyNormalAttackUseCase
 {
     private delegate EnemySpecialAttackPickData SpecialAttackPickStep(AttackData attackStrategy, int specialAttackIndex);
 
-    private readonly PlateBoardView plateBoardController;
-
-    private readonly IReadOnlyList<BattleBoardInputController> playerPlates;
+    private readonly BattleBoardData board;
+    private readonly IReadOnlyList<PlateData> playerPlates;
 
     private readonly AttackStateMachine attackStateMachine;
 
-    private readonly SpecialAttackExecution specialAttackExecution;
+    private readonly ExecuteSpecialAttackUseCase executeSpecialAttackUseCase;
 
-    public EnemyNormalAttackReaction(
-        PlateBoardView plateBoardController,
+    public ExecuteEnemyNormalAttackUseCase(
+        BattleBoardData board,
         AttackStateMachine attackStateMachine)
     {
-        this.plateBoardController = plateBoardController;
-        playerPlates = plateBoardController.GetPlayerPlates();
+        this.board = board;
+        playerPlates = board.PlayerPlates;
         this.attackStateMachine = attackStateMachine;
-        specialAttackExecution = new SpecialAttackExecution(
-            playerPlates,
-            plateBoardController.GetEnemyPlates());
+        executeSpecialAttackUseCase = new ExecuteSpecialAttackUseCase(board);
     }
 
-    public void ExecuteNormalReaction(Summon attacker, int attackerPlateIndex, int targetPlateIndex)
+    public void Execute(Summon attacker, int attackerPlateIndex, int targetPlateIndex)
     {
         if (!HasSpecialAttacks(attacker))
         {
@@ -92,7 +89,7 @@ class EnemyNormalAttackReaction
             return;
         }
 
-        ExecuteNormalAttack(attacker, playerPlates, targetPlateIndex);
+        ExecuteNormalAttack(attacker, targetPlateIndex);
         Debug.Log($"{attacker.GetSummonName()}이 일반 공격을 사용했습니다.");
     }
 
@@ -103,14 +100,12 @@ class EnemyNormalAttackReaction
         attacker.SetAttackPower(attacker.GetHeavyAttackPower());
         ExecuteNormalAttack(
             attacker,
-            playerPlates,
-            plateBoardController.GetClosestPlayerPlateIndexExcept(attacker));
+            board.FindClosestPlayerPlateIndex(attacker));
         attacker.SetAttackPower(originPower);
     }
 
     private void ExecuteNormalAttack(
         Summon attackSummon,
-        IReadOnlyList<BattleBoardInputController> targetPlates,
         int selectedPlateIndex)
     {
         if (attackSummon == null)
@@ -132,7 +127,8 @@ class EnemyNormalAttackReaction
             return;
         }
 
-        List<Summon> targets = attackStrategy.SelectTargets(attackSummon, targetPlates, selectedPlateIndex);
+        List<Summon> targets = attackStrategy.SelectTargets(
+            new AttackTargetInput(attackSummon, board, selectedPlateIndex, false));
         if (targets.Count == 0)
         {
             Debug.Log("일반 공격 대상이 없습니다.");
@@ -166,7 +162,7 @@ class EnemyNormalAttackReaction
         int count = 0;
         for (int i = 0; i < playerPlates.Count; i++)
         {
-            if (playerPlates[i].GetIsInSummon())
+            if (playerPlates[i].GetCurrentSummon() != null)
             {
                 count++;
             }
@@ -229,7 +225,7 @@ class EnemyNormalAttackReaction
 
     private bool HasPlayerSummonOverMediumRank()
     {
-        foreach (BattleBoardInputController plate in playerPlates)
+        foreach (PlateData plate in playerPlates)
         {
             Summon summon = plate.GetCurrentSummon();
             if (summon != null && (summon.GetSummonRank() == SummonRank.Medium || summon.GetSummonRank() == SummonRank.High))
@@ -345,7 +341,7 @@ class EnemyNormalAttackReaction
             return false;
         }
 
-        bool executed = specialAttackExecution.Execute(
+        bool executed = executeSpecialAttackUseCase.Execute(
             attacker,
             pick.TargetPlateIndex,
             pick.SpecialAttackIndex,
@@ -367,6 +363,5 @@ class EnemyNormalAttackReaction
     private void ResetAttackState()
     {
         attackStateMachine.Reset();
-        plateBoardController.ResetAllPlateHighlight();
     }
 }

@@ -3,20 +3,20 @@ using System;
 class EnemyTurnState
 {
     private readonly Action startEnemyTurn;
-    private readonly TurnSummonStateUpdater turnSummonStateUpdater;
+    private readonly UpdateTurnSummonStateUseCase updateTurnSummonStateUseCase;
 
     public EnemyTurnState(
         Action startEnemyTurn,
-        TurnSummonStateUpdater turnSummonStateUpdater)
+        UpdateTurnSummonStateUseCase updateTurnSummonStateUseCase)
     {
         this.startEnemyTurn = startEnemyTurn;
-        this.turnSummonStateUpdater = turnSummonStateUpdater;
+        this.updateTurnSummonStateUseCase = updateTurnSummonStateUseCase;
     }
 
     public void Enter()
     {
-        turnSummonStateUpdater.ApplyPlayerTurnStartEffects();
-        turnSummonStateUpdater.UpdateEnemySpecialCooldowns();
+        updateTurnSummonStateUseCase.ApplyPlayerTurnStartEffects();
+        updateTurnSummonStateUseCase.UpdateEnemySpecialCooldowns();
         startEnemyTurn();
     }
 

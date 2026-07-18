@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // 역할: 현재 스토리 번호에 맞는 대사 목록을 불러온다.
 public class StageDialogueLoader : MonoBehaviour
@@ -8,7 +7,6 @@ public class StageDialogueLoader : MonoBehaviour
     [Header("Dialogue")]
     private DialogueEvent dialogue;
 
-    [FormerlySerializedAs("databaseManager")]
     [SerializeField] private DialogueStore dialogueStore;
 
     private StoryDialogueRange storyDialogueRange;

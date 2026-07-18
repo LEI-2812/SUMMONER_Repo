@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 // 역할: CatAttackPrediction의 책임을 정의한다.
-public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
+public class CatAttackPrediction : IAttackPrediction
 {
     public bool CanPredict(Summon summon)
     {
         return summon is Cat;
     }
 
-    public AttackPredictionData GetAttackPrediction(Summon cat, int catPlateIndex, IReadOnlyList<IPlateState> playerPlates, IReadOnlyList<IPlateState> enemyPlates)
+    public AttackPredictionData GetAttackPrediction(Summon cat, PredictionBoardData board)
     {
+        int catPlateIndex = board.FindPlayerPlateIndex(cat);
+        IReadOnlyList<IPlateState> playerPlates = board.PlayerPlates;
+        IReadOnlyList<IPlateState> enemyPlates = board.EnemyPlates;
         AttackProbabilityData AttackProbabilityData = new AttackProbabilityData(50f, 50f);
         int attackIndex = GetClosestEnemyIndex(enemyPlates);
 
@@ -19,14 +21,14 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
 
         if (normalAttackKillIndex != -1)
         {
-            AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+            AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "고양이 일반 공격으로 적 처치 가능");
             attackIndex = normalAttackKillIndex;
         }
         else
         {
             if (specialAttackKillIndex != -1)
             {
-                AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "reason");
+                AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "고양이 특수 공격으로 적 처치 가능");
                 attackIndex = specialAttackKillIndex;
             }
             else
@@ -114,14 +116,12 @@ public class CatAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
-        return currentProbabilities;
+        return currentProbabilities.AddPredictionReason(reason);
     }
 }

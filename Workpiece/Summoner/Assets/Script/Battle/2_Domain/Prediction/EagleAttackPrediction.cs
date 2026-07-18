@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 // 역할: EagleAttackPrediction의 책임을 정의한다.
-public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
+public class EagleAttackPrediction : IAttackPrediction
 {
 
     public bool CanPredict(Summon summon)
@@ -13,8 +12,11 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
     }
 
 
-    public AttackPredictionData GetAttackPrediction(Summon eagle, int eaglePlateIndex, IReadOnlyList<IPlateState> playerPlates, IReadOnlyList<IPlateState> enemyPlates)
+    public AttackPredictionData GetAttackPrediction(Summon eagle, PredictionBoardData board)
     {
+        int eaglePlateIndex = board.FindPlayerPlateIndex(eagle);
+        IReadOnlyList<IPlateState> playerPlates = board.PlayerPlates;
+        IReadOnlyList<IPlateState> enemyPlates = board.EnemyPlates;
         AttackProbabilityData AttackProbabilityData = new AttackProbabilityData(50f, 50f);
         int attackIndex = GetClosestEnemyIndex(enemyPlates);
 
@@ -29,12 +31,12 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
                 if (normalAttackLowestIndex != -1)
                 {
                     attackIndex = normalAttackLowestIndex;
-                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "독수리 체력 차이가 큰 적을 일반 공격으로 처치 가능");
                 }
                 else
                 {
                     attackIndex = lowestHealthDifferenceIndex;
-                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "reason");
+                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "독수리 체력 차이가 큰 적에게 특수 공격 사용");
                 }
             }
             else
@@ -44,7 +46,7 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
                 if (healthWithin10PercentIndex != -1)
                 {
                     attackIndex = healthWithin10PercentIndex;
-                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 20f, false, "reason");
+                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 20f, false, "독수리 적들의 체력 차이가 10% 이내");
                 }
             }
         }
@@ -55,7 +57,7 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
             if (normalAttackKillIndex != -1)
             {
                 attackIndex = normalAttackKillIndex;
-                AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+                AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "독수리 일반 공격으로 적 처치 가능");
             }
             else
             {
@@ -64,7 +66,7 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
                 if (specialAttackKillIndex != -1)
                 {
                     attackIndex = specialAttackKillIndex;
-                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "reason");
+                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "독수리 특수 공격으로 적 처치 가능");
                 }
                 else
                 {
@@ -74,13 +76,12 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
                     }
                     else
                     {
-                        AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 5f, false, "독수리 일반 공격이 더 많은 피해를 줌");
+                        AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 5f, false, "독수리 특수 공격이 더 많은 피해를 줌");
                     }
                 }
             }
         }
 
-        Debug.Log("독수리 공격 대상: " + attackIndex);
         if (!eagle.TryGetFirstAvailableSpecialAttack(out AttackData specialAttack, out int specialAttackIndex))
         {
             return new AttackPredictionData(eagle, eaglePlateIndex, eagle.GetAttackStrategy(), 0, enemyPlates, attackIndex, AttackProbabilityData);
@@ -364,14 +365,12 @@ public class EagleAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
-        return currentProbabilities;
+        return currentProbabilities.AddPredictionReason(reason);
     }
 }

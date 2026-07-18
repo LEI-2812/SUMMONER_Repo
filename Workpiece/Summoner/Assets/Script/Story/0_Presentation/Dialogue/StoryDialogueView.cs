@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 // 역할: 스토리 대사와 이미지를 화면에 표시한다.
@@ -11,7 +10,6 @@ public class StoryDialogueView : MonoBehaviour, IPointerClickHandler
     public Text characterName;
     public Text dialogueContext;
 
-    [FormerlySerializedAs("fadeController")]
     [SerializeField] private FadePanelView fadePanelView;
 
     private StoryImageView storyImageView;

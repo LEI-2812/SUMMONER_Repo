@@ -1,35 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 역할: EnemySpecialAttackReaction의 책임을 정의한다.
-class EnemySpecialAttackReaction
+// 역할: 플레이어 공격 예측에 맞는 적 반응을 실행한다.
+class ExecuteEnemyReactionUseCase
 {
     private delegate EnemySpecialAttackPickData SpecialAttackPickStep(AttackData attackStrategy, int specialAttackIndex);
 
-    private readonly PlateBoardView plateBoardController;
-
-    private readonly EnemyNormalAttackReaction normalAttackReaction;
+    private readonly BattleBoardData board;
+    private readonly ExecuteEnemyNormalAttackUseCase executeNormalAttackUseCase;
 
     private readonly AttackStateMachine attackStateMachine;
 
-    private readonly SpecialAttackExecution specialAttackExecution;
+    private readonly ExecuteSpecialAttackUseCase executeSpecialAttackUseCase;
 
-    public EnemySpecialAttackReaction(
-        PlateBoardView plateBoardController,
-        EnemyNormalAttackReaction normalAttackReaction,
+    public ExecuteEnemyReactionUseCase(
+        BattleBoardData board,
+        ExecuteEnemyNormalAttackUseCase executeNormalAttackUseCase,
         AttackStateMachine attackStateMachine)
     {
-        this.plateBoardController = plateBoardController;
-        IReadOnlyList<BattleBoardInputController> playerPlates = plateBoardController.GetPlayerPlates();
-        IReadOnlyList<BattleBoardInputController> enemyPlates = plateBoardController.GetEnemyPlates();
-        this.normalAttackReaction = normalAttackReaction;
+        this.board = board;
+        this.executeNormalAttackUseCase = executeNormalAttackUseCase;
         this.attackStateMachine = attackStateMachine;
-        specialAttackExecution = new SpecialAttackExecution(
-            playerPlates,
-            enemyPlates);
+        executeSpecialAttackUseCase = new ExecuteSpecialAttackUseCase(board);
     }
 
-    public bool TryReactToPrediction(
+    public bool TryExecute(
         Summon attacker,
         int attackerPlateIndex,
         AttackPredictionData playerPrediction)
@@ -91,7 +86,7 @@ class EnemySpecialAttackReaction
     {
         if (!HasSpecialAttacks(attacker))
         {
-            normalAttackReaction.ExecuteNormalReaction(
+            executeNormalAttackUseCase.Execute(
                 attacker,
                 attackerPlateIndex,
                 playerPrediction.GetAttackSummonPlateIndex());
@@ -102,7 +97,7 @@ class EnemySpecialAttackReaction
         EnemySpecialAttackPickData pick = PickPoisonReaction(
             attacker,
             playerPrediction,
-            plateBoardController.GetLowestHealthEnemyPlateIndex());
+            board.FindLowestHealthEnemyPlateIndex());
         return TryExecuteSpecialAttackPick(attacker, pick);
     }
 
@@ -113,7 +108,7 @@ class EnemySpecialAttackReaction
     {
         if (!HasSpecialAttacks(attacker))
         {
-            normalAttackReaction.ExecuteNormalReaction(
+            executeNormalAttackUseCase.Execute(
                 attacker,
                 attackerPlateIndex,
                 playerPrediction.GetAttackSummonPlateIndex());
@@ -135,7 +130,7 @@ class EnemySpecialAttackReaction
     {
         if (!HasSpecialAttacks(attacker))
         {
-            normalAttackReaction.ExecuteNormalReaction(
+            executeNormalAttackUseCase.Execute(
                 attacker,
                 attackerPlateIndex,
                 playerPrediction.GetAttackSummonPlateIndex());
@@ -157,7 +152,7 @@ class EnemySpecialAttackReaction
     {
         if (!HasSpecialAttacks(attacker))
         {
-            normalAttackReaction.ExecuteNormalReaction(
+            executeNormalAttackUseCase.Execute(
                 attacker,
                 attackerPlateIndex,
                 playerPrediction.GetAttackSummonPlateIndex());
@@ -176,7 +171,7 @@ class EnemySpecialAttackReaction
     {
         if (!HasSpecialAttacks(attacker))
         {
-            normalAttackReaction.ExecuteNormalReaction(
+            executeNormalAttackUseCase.Execute(
                 attacker,
                 attackerPlateIndex,
                 playerPrediction.GetAttackSummonPlateIndex());
@@ -315,7 +310,7 @@ class EnemySpecialAttackReaction
             return false;
         }
 
-        bool executed = specialAttackExecution.Execute(
+        bool executed = executeSpecialAttackUseCase.Execute(
             attacker,
             pick.TargetPlateIndex,
             pick.SpecialAttackIndex,
@@ -337,6 +332,5 @@ class EnemySpecialAttackReaction
     private void ResetAttackState()
     {
         attackStateMachine.Reset();
-        plateBoardController.ResetAllPlateHighlight();
     }
 }

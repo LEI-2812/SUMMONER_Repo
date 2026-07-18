@@ -5818,7 +5818,7 @@ MonoBehaviour:
   characterName: {fileID: 487251044}
   dialogueContext: {fileID: 1610194284}
   interactionEvent: {fileID: 900800006}
-  fadeController: {fileID: 1667339754}
+  fadePanelView: {fileID: 1667339754}
 --- !u!114 &900800008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5831,7 +5831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a60d0a924f35f25459fd242b8f944014, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csv_FileName: SummonContext
+  csvFileName: SummonContext
 --- !u!114 &900800010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5924,7 +5924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a77d96a038c01040ae4fb06376dab31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storyNum: 0
+  storyNumber: 0
 --- !u!114 &900800016
 MonoBehaviour:
   m_ObjectHideFlags: 0

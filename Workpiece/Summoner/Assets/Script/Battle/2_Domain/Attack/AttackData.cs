@@ -3,7 +3,7 @@ using System.Collections.Generic;
 // 역할: AttackData의 책임을 정의한다.
 public class AttackData
 {
-    private readonly AttackCooldownStore cooldownStore;
+    private readonly AttackCooldownState cooldownState;
 
     public AttackData(
         IAttackStrategy strategy,
@@ -16,7 +16,7 @@ public class AttackData
         StatusType = statusType;
         EffectValue = effectValue;
         StatusTime = statusTime;
-        cooldownStore = new AttackCooldownStore(cooldownDuration);
+        cooldownState = new AttackCooldownState(cooldownDuration);
     }
 
     public IAttackStrategy Strategy { get; }
@@ -24,9 +24,9 @@ public class AttackData
     public double EffectValue { get; private set; }
     public int StatusTime { get; }
 
-    public List<Summon> SelectTargets(Summon attacker, IReadOnlyList<BattleBoardInputController> targetPlates, int selectedPlateIndex)
+    public List<Summon> SelectTargets(AttackTargetInput input)
     {
-        return Strategy.SelectTargets(this, attacker, targetPlates, selectedPlateIndex);
+        return Strategy.SelectTargets(this, input);
     }
 
     public bool TargetsOwnPlates()
@@ -69,21 +69,21 @@ public class AttackData
 
     public int GetCooltime()
     {
-        return cooldownStore.GetCooltime();
+        return cooldownState.GetCooltime();
     }
 
     public int GetCurrentCooldown()
     {
-        return cooldownStore.GetCurrentCooldown();
+        return cooldownState.GetCurrentCooldown();
     }
 
     public void ApplyCooldown()
     {
-        cooldownStore.ApplyCooldown();
+        cooldownState.ApplyCooldown();
     }
 
     public void ReduceCooldown()
     {
-        cooldownStore.ReduceCooldown();
+        cooldownState.ReduceCooldown();
     }
 }

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 // 역할: 공격 흐름의 상태 전환을 관리한다.
 public class AttackStateMachine
 {
@@ -21,7 +19,6 @@ public class AttackStateMachine
 
         if (battleAttackData.AttackingSummon == null)
         {
-            Debug.Log("선택된 공격 소환수가 없습니다.");
             return null;
         }
 

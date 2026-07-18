@@ -1,22 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [RequireComponent(typeof(PlateView))]
 public class PlateBoardView : MonoBehaviour
 {
     [SerializeField] private List<BattleBoardInputController> playerPlates;
-    [FormerlySerializedAs("enermyPlates")]
     [SerializeField] private List<BattleBoardInputController> enemyPlates;
 
     private PlateView plateView;
-    private readonly PlateQueryService queryService = new PlateQueryService();
     private List<BattleBoardInputController> plates = new List<BattleBoardInputController>();
+    private BattleBoardData battleBoardData;
 
     private void Awake()
     {
         EnsurePlateView();
         InitializePlates();
+        EnsureBattleBoardData();
     }
 
     private void EnsurePlateView()
@@ -39,34 +38,65 @@ public class PlateBoardView : MonoBehaviour
         plates.AddRange(enemyPlates);
     }
 
+    private void EnsureBattleBoardData()
+    {
+        if (battleBoardData != null)
+        {
+            return;
+        }
+
+        List<PlateData> playerPlateData = CreatePlateData(playerPlates);
+        List<PlateData> enemyPlateData = CreatePlateData(enemyPlates);
+        battleBoardData = new BattleBoardData(playerPlateData, enemyPlateData);
+    }
+
+    private static List<PlateData> CreatePlateData(
+        IReadOnlyList<BattleBoardInputController> boardInputs)
+    {
+        var plateDataList = new List<PlateData>();
+        if (boardInputs == null)
+        {
+            return plateDataList;
+        }
+
+        for (int index = 0; index < boardInputs.Count; index++)
+        {
+            var plateData = new PlateData(index);
+            plateDataList.Add(plateData);
+            boardInputs[index]?.ConnectPlateData(plateData);
+        }
+
+        return plateDataList;
+    }
+
     public bool IsEnemyPlateClear()
     {
-        return queryService.ArePlatesClear(enemyPlates);
+        return GetBattleBoardData().AreEnemyPlatesClear();
     }
 
     public bool IsPlayerPlateClear()
     {
-        return queryService.ArePlatesClear(playerPlates);
+        return GetBattleBoardData().ArePlayerPlatesClear();
     }
 
     public int GetClosestPlayerPlateIndexExcept(Summon attackingSummon)
     {
-        return queryService.FindClosestOccupiedPlateIndex(playerPlates, attackingSummon);
+        return GetBattleBoardData().FindClosestPlayerPlateIndex(attackingSummon);
     }
 
     public int GetClosestPlayerPlateIndex()
     {
-        return queryService.FindClosestOccupiedPlateIndex(playerPlates, null);
+        return GetBattleBoardData().FindClosestPlayerPlateIndex();
     }
 
     public int GetLowestHealthEnemyPlateIndex()
     {
-        return queryService.FindLowestHealthPlateIndex(enemyPlates);
+        return GetBattleBoardData().FindLowestHealthEnemyPlateIndex();
     }
 
     public int GetFirstEmptyPlayerPlateIndex()
     {
-        return queryService.FindFirstEmptyPlateIndex(playerPlates);
+        return GetBattleBoardData().FindFirstEmptyPlayerPlateIndex();
     }
 
     public void CompactEnemyPlates()
@@ -197,5 +227,11 @@ public class PlateBoardView : MonoBehaviour
     public IReadOnlyList<BattleBoardInputController> GetEnemyPlates()
     {
         return enemyPlates;
+    }
+
+    public BattleBoardData GetBattleBoardData()
+    {
+        EnsureBattleBoardData();
+        return battleBoardData;
     }
 }

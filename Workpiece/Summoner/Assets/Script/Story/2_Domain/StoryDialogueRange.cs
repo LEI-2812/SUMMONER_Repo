@@ -1,11 +1,9 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // 역할: 스토리 번호에 맞는 CSV 대사 번호 범위를 제공한다.
 public class StoryDialogueRange : MonoBehaviour
 {
     [Header("참조")]
-    [FormerlySerializedAs("storyNum")]
     [SerializeField] private int storyNumber;
 
     [SerializeField] private StoryDialogueRangeItem[] dialogueRanges =

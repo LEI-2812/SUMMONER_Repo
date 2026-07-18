@@ -58,8 +58,7 @@ MonoBehaviour:
   statePanelScript: {fileID: 0}
   summonImg: {fileID: 0}
   spawnTransform: {fileID: 3387548503586862205}
-  summonController: {fileID: 0}
-  battleController: {fileID: 0}
+  summonSelectionController: {fileID: 0}
   clickSound: {fileID: 0}
 --- !u!222 &1136704465557030633
 CanvasRenderer:

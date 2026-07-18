@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 // 역할: Cat의 책임을 정의한다.
@@ -15,7 +14,11 @@ public class Cat : Summon
 
     }
 
-    public override void SpecialAttack(IReadOnlyList<BattleBoardInputController> enemyPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
+    public override void SpecialAttack(
+        BattleBoardData board,
+        int selectedPlateIndex,
+        int SpecialAttackArrayIndex,
+        bool isPlayerAttack)
     {
         if (!SpecialAttackIndexCheck(SpecialAttackArrayIndex))
         {
@@ -33,19 +36,21 @@ public class Cat : Summon
 
         CatSpecialAttackWithHeavyAttackPowerExecute(
             specialAttack,
-            enemyPlates,
-            selectedPlateIndex);
+            board,
+            selectedPlateIndex,
+            isPlayerAttack);
     }
 
     private void CatSpecialAttackWithHeavyAttackPowerExecute(
         AttackData specialAttack,
-        IReadOnlyList<BattleBoardInputController> enemyPlates,
-        int selectedPlateIndex)
+        BattleBoardData board,
+        int selectedPlateIndex,
+        bool isPlayerAttack)
     {
         double originAttackPower = GetAttackPower();
         SetAttackPower(GetHeavyAttackPower());
 
-        SpecialAttackExecute(specialAttack, enemyPlates, selectedPlateIndex);
+        SpecialAttackExecute(specialAttack, board, selectedPlateIndex, isPlayerAttack);
         SetAttackPower(originAttackPower);
     }
 

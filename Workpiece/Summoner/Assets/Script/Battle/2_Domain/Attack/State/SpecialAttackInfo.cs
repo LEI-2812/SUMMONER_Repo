@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 // 역할: AttackType 값의 종류를 정의한다.
 public enum AttackType

@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 역할: StatusStore의 책임을 정의한다.
-public class StatusStore
+// 역할: 소환수에게 적용 중인 상태 목록을 관리한다.
+public class ActiveStatusList
 {
     private List<StatusData> activeStatuses;
 
-    public StatusStore()
+    public ActiveStatusList()
         : this(new List<StatusData>())
     {
     }
 
-    public StatusStore(List<StatusData> activeStatuses)
+    public ActiveStatusList(List<StatusData> activeStatuses)
     {
         this.activeStatuses = activeStatuses;
     }

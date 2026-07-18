@@ -3,35 +3,31 @@ using UnityEngine;
 
 class ExecuteEnemyTurnUseCase
 {
-    private readonly IReadOnlyList<BattleBoardInputController> playerPlates;
-    private readonly IReadOnlyList<BattleBoardInputController> enemyPlates;
+    private readonly IReadOnlyList<PlateData> enemyPlates;
     private readonly PlayerAttackPrediction playerAttackPrediction;
-    private readonly EnemyNormalAttackReaction normalAttackReaction;
-    private readonly EnemySpecialAttackReaction specialAttackReaction;
+    private readonly ExecuteEnemyNormalAttackUseCase executeNormalAttackUseCase;
+    private readonly ExecuteEnemyReactionUseCase executeEnemyReactionUseCase;
     private readonly AttackStateMachine attackStateMachine;
-    private readonly PlateBoardView plateBoardController;
-    private readonly SpecialAttackExecution specialAttackExecution;
+    private readonly BattleBoardData board;
+    private readonly ExecuteSpecialAttackUseCase executeSpecialAttackUseCase;
 
     public ExecuteEnemyTurnUseCase(
-        PlateBoardView plateBoardController,
+        BattleBoardData board,
         PlayerAttackPrediction playerAttackPrediction,
         AttackStateMachine attackStateMachine)
     {
-        playerPlates = plateBoardController.GetPlayerPlates();
-        enemyPlates = plateBoardController.GetEnemyPlates();
+        enemyPlates = board.EnemyPlates;
         this.playerAttackPrediction = playerAttackPrediction;
         this.attackStateMachine = attackStateMachine;
-        this.plateBoardController = plateBoardController;
-        normalAttackReaction = new EnemyNormalAttackReaction(
-            plateBoardController,
+        this.board = board;
+        executeNormalAttackUseCase = new ExecuteEnemyNormalAttackUseCase(
+            board,
             attackStateMachine);
-        specialAttackReaction = new EnemySpecialAttackReaction(
-            plateBoardController,
-            normalAttackReaction,
+        executeEnemyReactionUseCase = new ExecuteEnemyReactionUseCase(
+            board,
+            executeNormalAttackUseCase,
             attackStateMachine);
-        specialAttackExecution = new SpecialAttackExecution(
-            playerPlates,
-            enemyPlates);
+        executeSpecialAttackUseCase = new ExecuteSpecialAttackUseCase(board);
     }
 
     public void Execute()
@@ -42,18 +38,55 @@ class ExecuteEnemyTurnUseCase
 
     private List<AttackPredictionData> BuildPlayerAttackPredictions()
     {
-        PredictionBoardData boardData = new PredictionBoardData(
-            playerPlates,
-            enemyPlates);
-        List<AttackPredictionData> playerAttackPredictions = playerAttackPrediction.GetPlayerAttackPredictionList(
-            boardData.PlayerPlates,
-            boardData.EnemyPlates);
+        PredictionBoardData boardData = new PredictionBoardData(board);
+        List<AttackPredictionData> playerAttackPredictions =
+            playerAttackPrediction.GetPlayerAttackPredictionList(boardData);
         if (playerAttackPredictions.Count == 0)
         {
             Debug.Log("플레이어 공격 예측 목록이 비어 있습니다.");
         }
+        else
+        {
+            LogPlayerAttackPredictions(playerAttackPredictions);
+        }
 
         return playerAttackPredictions;
+    }
+
+    private void LogPlayerAttackPredictions(
+        IReadOnlyList<AttackPredictionData> playerAttackPredictions)
+    {
+        for (int index = 0; index < playerAttackPredictions.Count; index++)
+        {
+            AttackPredictionData prediction = playerAttackPredictions[index];
+            Summon summon = prediction.GetAttackSummon();
+            AttackProbabilityData probability = prediction.GetAttackProbability();
+            string algorithmName = GetPredictionAlgorithmName(summon);
+            string predictedAttack = prediction.GetAttackStrategy() == summon.GetAttackStrategy()
+                ? "일반 공격"
+                : "특수 공격";
+
+            Debug.Log(
+                $"[공격 예측] {algorithmName} 실행 | "
+                + $"소환수: {summon.GetSummonName()} | "
+                + $"공격 칸: {prediction.GetAttackSummonPlateIndex()} | "
+                + $"대상 칸: {prediction.GetTargetPlateIndex()} | "
+                + $"예측 공격: {predictedAttack} | "
+                + $"일반: {probability.normalAttackProbability}% | "
+                + $"특수: {probability.specialAttackProbability}% | "
+                + $"이유: {probability.GetPredictionReason()}");
+        }
+    }
+
+    private string GetPredictionAlgorithmName(Summon summon)
+    {
+        AttackData[] availableSpecialAttacks = summon.GetAvailableSpecialAttacks();
+        if (availableSpecialAttacks == null || availableSpecialAttacks.Length == 0)
+        {
+            return "NormalAttackPrediction";
+        }
+
+        return summon.GetType().Name + "AttackPrediction";
     }
 
     private void RunEnemyActions(List<AttackPredictionData> playerAttackPredictions)
@@ -144,10 +177,10 @@ class ExecuteEnemyTurnUseCase
     {
         if (playerAttackPredictions.Count == 0)
         {
-            normalAttackReaction.ExecuteNormalReaction(
+            executeNormalAttackUseCase.Execute(
                 attacker,
                 attackerPlateIndex,
-                plateBoardController.GetClosestPlayerPlateIndex());
+                board.FindClosestPlayerPlateIndex());
             Debug.Log("플레이어 예측이 없어 적이 일반 공격을 사용했습니다.");
             return playerAttackPredictions;
         }
@@ -165,10 +198,10 @@ class ExecuteEnemyTurnUseCase
             return playerAttackPredictions;
         }
 
-        normalAttackReaction.ExecuteNormalReaction(
+        executeNormalAttackUseCase.Execute(
             attacker,
             attackerPlateIndex,
-            plateBoardController.GetClosestPlayerPlateIndex());
+            board.FindClosestPlayerPlateIndex());
         Debug.Log("일치하는 반응이 없어 적이 일반 공격을 사용했습니다.");
         return playerAttackPredictions;
     }
@@ -191,7 +224,7 @@ class ExecuteEnemyTurnUseCase
                 continue;
             }
 
-            if (specialAttackReaction.TryReactToPrediction(attacker, attackerPlateIndex, playerPrediction))
+            if (executeEnemyReactionUseCase.TryExecute(attacker, attackerPlateIndex, playerPrediction))
             {
                 reactedPredictionIndex = i;
                 return true;
@@ -222,7 +255,7 @@ class ExecuteEnemyTurnUseCase
             return false;
         }
 
-        if (!specialAttackExecution.Execute(
+        if (!executeSpecialAttackUseCase.Execute(
             attackingSummon,
             enemyPlateIndex,
             healSpecialAttackIndex,
@@ -299,6 +332,5 @@ class ExecuteEnemyTurnUseCase
     private void ResetAttackState()
     {
         attackStateMachine.Reset();
-        plateBoardController.ResetAllPlateHighlight();
     }
 }

@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 // 역할: FoxAttackPrediction의 책임을 정의한다.
-public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
+public class FoxAttackPrediction : IAttackPrediction
 {
 
     public bool CanPredict(Summon summon)
@@ -11,8 +10,11 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
         return summon is Fox;
     }
 
-    public AttackPredictionData GetAttackPrediction(Summon fox, int foxPlateIndex, IReadOnlyList<IPlateState> playerPlates, IReadOnlyList<IPlateState> enemyPlates)
+    public AttackPredictionData GetAttackPrediction(Summon fox, PredictionBoardData board)
     {
+        int foxPlateIndex = board.FindPlayerPlateIndex(fox);
+        IReadOnlyList<IPlateState> playerPlates = board.PlayerPlates;
+        IReadOnlyList<IPlateState> enemyPlates = board.EnemyPlates;
         AttackProbabilityData AttackProbabilityData = new AttackProbabilityData(50f, 50f);
         int attackIndex = GetClosestEnemyIndex(enemyPlates);
         IReadOnlyList<IPlateState> targetPlate = enemyPlates;
@@ -25,7 +27,10 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
 
         if (cursedSummonIndex != -1)
         {
-            AttackProbabilityData = new AttackProbabilityData(0f, 100f);
+            AttackProbabilityData = new AttackProbabilityData(
+                0f,
+                100f,
+                "여우 저주 상태인 아군에게 특수 공격 사용");
             return new AttackPredictionData(fox, foxPlateIndex, specialAttack, specialAttackIndex, playerPlates, cursedSummonIndex, AttackProbabilityData);
         }
 
@@ -51,7 +56,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
                     if (normalAttack30PerKillIndex != -1)
                     {
                         attackIndex = under30Index;
-                        AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+                        AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "여우 체력 30% 이하 적을 일반 공격으로 처치 가능");
                     }
                 }
             }
@@ -73,7 +78,7 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
 
                 if (normalAttackKillIndex != -1)
                 {
-                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "여우 일반 공격으로 적 처치 가능");
                 }
             }
         }
@@ -253,14 +258,12 @@ public class FoxAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
-        return currentProbabilities;
+        return currentProbabilities.AddPredictionReason(reason);
     }
 }

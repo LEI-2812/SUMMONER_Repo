@@ -866,7 +866,7 @@ MonoBehaviour:
   - {fileID: 1434509436}
   - {fileID: 1152497999}
   - {fileID: 21840651}
-  plateController: {fileID: 893681172}
+  plateBoardController: {fileID: 893681172}
   clickSound: {fileID: 290545742}
 --- !u!82 &290545742
 AudioSource:
@@ -1013,10 +1013,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54f8e91b2b5c5854f954c13d647766ad, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  turnRuntime: {fileID: 893681170}
-  plateController: {fileID: 893681172}
-  playerAttackPrediction: {fileID: 893681179}
-  attackStateMachineProvider: {fileID: 893681171}
+  battleSceneRuntime: {fileID: 893681170}
+  plateBoardController: {fileID: 893681172}
 --- !u!1 &342250388
 GameObject:
   m_ObjectHideFlags: 0
@@ -1353,15 +1351,11 @@ PrefabInstance:
       value:
       objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
-      propertyPath: battleController
-      value:
-      objectReference: {fileID: 893681171}
-    - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
       propertyPath: statePanelScript
       value:
       objectReference: {fileID: 1291976794}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
-      propertyPath: summonController
+      propertyPath: summonSelectionController
       value:
       objectReference: {fileID: 290545741}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
@@ -2785,15 +2779,11 @@ PrefabInstance:
       value:
       objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-      propertyPath: battleController
-      value:
-      objectReference: {fileID: 893681171}
-    - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: statePanelScript
       value:
       objectReference: {fileID: 1291976794}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-      propertyPath: summonController
+      propertyPath: summonSelectionController
       value:
       objectReference: {fileID: 290545741}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
@@ -3304,10 +3294,10 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   player: {fileID: 1469478338}
-  enermy: {fileID: 313031151}
-  plateController: {fileID: 893681172}
+  enemyTurnController: {fileID: 313031151}
+  plateBoardController: {fileID: 893681172}
   battleResultController: {fileID: 2140000003}
-  battleRuntimeData: {fileID: 893681187}
+  defaultStage: 1
   stageEnemyPlacementData: {fileID: 11400000, guid: b45f72d8c743c6247a1f8bd9d6601ee5, type: 2}
   manaList:
   - {fileID: 1585337844}
@@ -3327,21 +3317,9 @@ MonoBehaviour:
   statePanel: {fileID: 1291976792}
   clickSound: {fileID: 1469478340}
   failSound: {fileID: 1469478341}
-  summonController: {fileID: 290545741}
-  stageBattleRuleData: {fileID: 0}
+  summonSelectionController: {fileID: 290545741}
+  stageResultData: {fileID: 0}
   clearTurn: 7
---- !u!114 &893681171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f535900890d12364e8736cd3533bf6ae, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
 --- !u!114 &893681172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3358,94 +3336,10 @@ MonoBehaviour:
   - {fileID: 1259393891}
   - {fileID: 387366343}
   - {fileID: 1693056098}
-  enermyPlates:
+  enemyPlates:
   - {fileID: 9184813848463463012}
   - {fileID: 1856290379}
   - {fileID: 792077600}
---- !u!114 &893681179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4208a767cafbe48a458450dba43d0a, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &893681180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dee950ed2629dc8498d71778e1d94f71, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &893681181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aae015dee961c44d9c756990533d3d1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &893681182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6a275dabf9c63b4ead09c092fcf5349, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &893681183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 488ab5df43f41c64cb71e1d2134555ef, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &893681184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fcb56653b5fa2e4f8efb66dfd65b205, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &893681185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f43ba149b0784942a9fa334d497d6fd, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
 --- !u!114 &893681186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3458,19 +3352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31e56c88446c4724ab0ba36b22bf9d5f, type: 3}
   m_Name:
   m_EditorClassIdentifier:
---- !u!114 &893681187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2140000011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38f3715b471b7e54eb774dc2398e155b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  defaultStage: 1
 --- !u!1 &959924360
 GameObject:
   m_ObjectHideFlags: 0
@@ -4397,15 +4278,11 @@ PrefabInstance:
       value:
       objectReference: {fileID: 1291976790}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
-      propertyPath: battleController
-      value:
-      objectReference: {fileID: 893681171}
-    - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
       propertyPath: statePanelScript
       value:
       objectReference: {fileID: 1291976794}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
-      propertyPath: summonController
+      propertyPath: summonSelectionController
       value:
       objectReference: {fileID: 290545741}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
@@ -6682,15 +6559,11 @@ PrefabInstance:
       value:
       objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
-      propertyPath: battleController
-      value:
-      objectReference: {fileID: 893681171}
-    - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
       propertyPath: statePanelScript
       value:
       objectReference: {fileID: 1291976794}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
-      propertyPath: summonController
+      propertyPath: summonSelectionController
       value:
       objectReference: {fileID: 290545741}
     - target: {fileID: 6417078377840297505, guid: 425618ad78d48fc47930e89c04062585, type: 3}
@@ -7491,15 +7364,11 @@ PrefabInstance:
       value:
       objectReference: {fileID: 1291976790}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-      propertyPath: battleController
-      value:
-      objectReference: {fileID: 893681171}
-    - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: statePanelScript
       value:
       objectReference: {fileID: 1291976794}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-      propertyPath: summonController
+      propertyPath: summonSelectionController
       value:
       objectReference: {fileID: 290545741}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
@@ -8115,7 +7984,6 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   alertView: {fileID: 1469478339}
-  battleRuntimeData: {fileID: 893681187}
 --- !u!1 &2140000005
 GameObject:
   m_ObjectHideFlags: 0
@@ -8158,14 +8026,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2140000008}
   - component: {fileID: 893681172}
-  - component: {fileID: 893681171}
-  - component: {fileID: 893681179}
-  - component: {fileID: 893681185}
-  - component: {fileID: 893681184}
-  - component: {fileID: 893681183}
-  - component: {fileID: 893681182}
-  - component: {fileID: 893681181}
-  - component: {fileID: 893681180}
   - component: {fileID: 893681186}
   m_Layer: 0
   m_Name: 0_Board_Runtime
@@ -8230,7 +8090,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2140000012}
-  - component: {fileID: 893681187}
   - component: {fileID: 1469478339}
   - component: {fileID: 1469478342}
   - component: {fileID: 1469478343}
@@ -8282,15 +8141,11 @@ PrefabInstance:
       value:
       objectReference: {fileID: 0}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-      propertyPath: battleController
-      value:
-      objectReference: {fileID: 893681171}
-    - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
       propertyPath: statePanelScript
       value:
       objectReference: {fileID: 1291976794}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}
-      propertyPath: summonController
+      propertyPath: summonSelectionController
       value:
       objectReference: {fileID: 290545741}
     - target: {fileID: 6417078377840297505, guid: 5235d1e84b862924486d612bdee2af51, type: 3}

@@ -6,16 +6,16 @@ public class StatusEffectBehaviorTests
     [Test]
     public void Curse_RestoresAttackPower_WhenStatusExpires()
     {
-        StatusStore statusStore = new StatusStore();
+        ActiveStatusList activeStatusList = new ActiveStatusList();
         FakeStatusTarget target = new FakeStatusTarget
         {
             AttackPower = 100
         };
 
-        statusStore.Apply(StatusDataFactory.Create(StatusType.Curse, 1, 0.2), target);
+        activeStatusList.Apply(StatusDataFactory.Create(StatusType.Curse, 1, 0.2), target);
         Assert.AreEqual(80, target.AttackPower);
 
-        statusStore.Update(StatusTiming.StunAndCurse, target);
+        activeStatusList.Update(StatusTiming.StunAndCurse, target);
 
         Assert.AreEqual(100, target.AttackPower);
     }
@@ -23,12 +23,12 @@ public class StatusEffectBehaviorTests
     [Test]
     public void LifeDrain_WithOneTurnDuration_DamagesAndHealsOnce()
     {
-        StatusStore statusStore = new StatusStore();
+        ActiveStatusList activeStatusList = new ActiveStatusList();
         FakeStatusTarget target = new FakeStatusTarget();
         FakeStatusTarget attacker = new FakeStatusTarget();
 
-        statusStore.Apply(StatusDataFactory.Create(StatusType.LifeDrain, 1, 20, attacker), target);
-        statusStore.Update(StatusTiming.Damage, target);
+        activeStatusList.Apply(StatusDataFactory.Create(StatusType.LifeDrain, 1, 20, attacker), target);
+        activeStatusList.Update(StatusTiming.Damage, target);
 
         Assert.AreEqual(20, target.DamageTaken);
         Assert.AreEqual(20, attacker.HealReceived);
@@ -37,11 +37,11 @@ public class StatusEffectBehaviorTests
     [Test]
     public void Shield_Reapply_RefreshesToNewShieldAmount()
     {
-        StatusStore statusStore = new StatusStore();
+        ActiveStatusList activeStatusList = new ActiveStatusList();
         FakeStatusTarget target = new FakeStatusTarget();
 
-        statusStore.Apply(StatusDataFactory.Create(StatusType.Shield, 2, 50), target);
-        statusStore.Apply(StatusDataFactory.Create(StatusType.Shield, 2, 80), target);
+        activeStatusList.Apply(StatusDataFactory.Create(StatusType.Shield, 2, 50), target);
+        activeStatusList.Apply(StatusDataFactory.Create(StatusType.Shield, 2, 80), target);
 
         Assert.AreEqual(80, target.Shield);
     }
@@ -85,7 +85,7 @@ public class StatusEffectBehaviorTests
         Assert.AreEqual(0.3, percentHealSpecial.GetSpecialDamage());
     }
 
-    private sealed class FakeStatusTarget : IStatusTarget
+    private class FakeStatusTarget : IStatusTarget
     {
         public double AttackPower { get; set; }
         public double DamageTaken { get; private set; }

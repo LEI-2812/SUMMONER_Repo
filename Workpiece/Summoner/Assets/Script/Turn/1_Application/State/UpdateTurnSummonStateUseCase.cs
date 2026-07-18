@@ -1,9 +1,9 @@
-// 역할: TurnSummonStateUpdater의 책임을 정의한다.
-class TurnSummonStateUpdater
+// 역할: 턴 시작과 종료에 맞춰 소환수 상태를 갱신한다.
+class UpdateTurnSummonStateUseCase
 {
     private readonly ITurnSummonBoard turnSummonBoard;
 
-    public TurnSummonStateUpdater(ITurnSummonBoard turnSummonBoard)
+    public UpdateTurnSummonStateUseCase(ITurnSummonBoard turnSummonBoard)
     {
         this.turnSummonBoard = turnSummonBoard;
     }

@@ -27,10 +27,10 @@ public class PredictionBehaviorTests
         TestCat cat = CreateComponent<TestCat>("Cat");
         cat.SummonInitialize();
         AttackData expectedSpecialAttack = PutFirstSpecialAttackOnCooldown(cat);
-        IReadOnlyList<IPlateState> enemyPlates = CreateEnemyPlates();
+        PredictionBoardData board = CreatePredictionBoard(cat);
 
-        CatAttackPrediction prediction = CreateComponent<CatAttackPrediction>("CatPrediction");
-        AttackPredictionData result = prediction.GetAttackPrediction(cat, 0, new List<IPlateState>(), enemyPlates);
+        var prediction = new CatAttackPrediction();
+        AttackPredictionData result = prediction.GetAttackPrediction(cat, board);
 
         Assert.AreSame(expectedSpecialAttack, result.GetAttackStrategy());
         Assert.AreEqual(1, result.GetSpecialAttackArrayIndex());
@@ -42,10 +42,10 @@ public class PredictionBehaviorTests
         TestSnake snake = CreateComponent<TestSnake>("Snake");
         snake.SummonInitialize();
         AttackData expectedSpecialAttack = PutFirstSpecialAttackOnCooldown(snake);
-        IReadOnlyList<IPlateState> enemyPlates = CreateEnemyPlates();
+        PredictionBoardData board = CreatePredictionBoard(snake);
 
-        SnakeAttackPrediction prediction = CreateComponent<SnakeAttackPrediction>("SnakePrediction");
-        AttackPredictionData result = prediction.GetAttackPrediction(snake, 0, new List<IPlateState>(), enemyPlates);
+        var prediction = new SnakeAttackPrediction();
+        AttackPredictionData result = prediction.GetAttackPrediction(snake, board);
 
         Assert.AreSame(expectedSpecialAttack, result.GetAttackStrategy());
         Assert.AreEqual(1, result.GetSpecialAttackArrayIndex());
@@ -54,7 +54,7 @@ public class PredictionBehaviorTests
     [Test]
     public void PoisonAllReaction_UsesAttackSummonPlateIndex_WhenFallingBackToNormalAttack()
     {
-        string source = File.ReadAllText("Assets/Script/Battle/1_Application/Enemy/EnemySpecialAttackReaction.cs");
+        string source = File.ReadAllText("Assets/Script/Battle/1_Application/Enemy/ExecuteEnemyReactionUseCase.cs");
         int methodStart = source.IndexOf("private bool TryReactToPoisonAllAttack", System.StringComparison.Ordinal);
         Assert.GreaterOrEqual(methodStart, 0);
 
@@ -81,18 +81,21 @@ public class PredictionBehaviorTests
         return specialAttacks[1];
     }
 
-    private IReadOnlyList<IPlateState> CreateEnemyPlates()
+    private PredictionBoardData CreatePredictionBoard(Summon playerSummon)
     {
         TestEnemySummon enemy = CreateComponent<TestEnemySummon>("Enemy");
         enemy.SummonInitialize();
-        return new List<IPlateState>
-        {
-            new FakePlateState(0, enemy),
-            new FakePlateState(1, null)
-        };
+        var playerPlate = new PlateData(0);
+        playerPlate.SetCurrentSummon(playerSummon);
+        var firstEnemyPlate = new PlateData(0);
+        firstEnemyPlate.SetCurrentSummon(enemy);
+        var board = new BattleBoardData(
+            new List<PlateData> { playerPlate },
+            new List<PlateData> { firstEnemyPlate, new PlateData(1) });
+        return new PredictionBoardData(board);
     }
 
-    private sealed class TestCat : Cat
+    private class TestCat : Cat
     {
         protected override void ApplyFallbackData()
         {
@@ -104,7 +107,7 @@ public class PredictionBehaviorTests
         }
     }
 
-    private sealed class TestSnake : Snake
+    private class TestSnake : Snake
     {
         protected override void ApplyFallbackData()
         {
@@ -116,7 +119,7 @@ public class PredictionBehaviorTests
         }
     }
 
-    private sealed class TestEnemySummon : Summon
+    private class TestEnemySummon : Summon
     {
         protected override void ApplyFallbackData()
         {
@@ -125,18 +128,4 @@ public class PredictionBehaviorTests
         }
     }
 
-    private sealed class FakePlateState : IPlateState
-    {
-        private readonly int plateIndex;
-        private readonly Summon summon;
-
-        public FakePlateState(int plateIndex, Summon summon)
-        {
-            this.plateIndex = plateIndex;
-            this.summon = summon;
-        }
-
-        public Summon GetCurrentSummon() => summon;
-        public int GetPlateIndex() => plateIndex;
-    }
 }

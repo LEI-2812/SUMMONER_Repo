@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 // 역할: AttackPrediction의 책임을 정의한다.
 public class AttackPredictionData

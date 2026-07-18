@@ -1,38 +1,49 @@
-using System;
-using System.Collections.Generic;
+public readonly struct SelectSummonResult
+{
+    private SelectSummonResult(
+        bool didSelect,
+        int plateIndex,
+        Summon selectedSummon,
+        bool isRedraw)
+    {
+        DidSelect = didSelect;
+        PlateIndex = plateIndex;
+        SelectedSummon = selectedSummon;
+        IsRedraw = isRedraw;
+    }
+
+    public bool DidSelect { get; }
+    public int PlateIndex { get; }
+    public Summon SelectedSummon { get; }
+    public bool IsRedraw { get; }
+
+    public static SelectSummonResult Failed()
+    {
+        return new SelectSummonResult(false, -1, null, false);
+    }
+
+    public static SelectSummonResult Selected(
+        int plateIndex,
+        Summon selectedSummon,
+        bool isRedraw)
+    {
+        return new SelectSummonResult(true, plateIndex, selectedSummon, isRedraw);
+    }
+}
 
 public class SelectSummonUseCase
 {
-    public bool Execute(
-        IReadOnlyList<BattleBoardInputController> playerPlates,
+    public SelectSummonResult Execute(
+        int playerPlateCount,
         int plateIndex,
         Summon selectedSummon,
-        bool isRedraw,
-        Action onSummonPlaced)
+        bool isRedraw)
     {
-        if (playerPlates == null || selectedSummon == null)
+        if (selectedSummon == null || plateIndex < 0 || plateIndex >= playerPlateCount)
         {
-            return false;
+            return SelectSummonResult.Failed();
         }
 
-        if (plateIndex < 0 || plateIndex >= playerPlates.Count)
-        {
-            return false;
-        }
-
-        playerPlates[plateIndex].SummonPlaceOnPlate(selectedSummon, isRedraw);
-        ApplyPlayerStageMultiplier(playerPlates[plateIndex].GetCurrentSummon());
-        onSummonPlaced?.Invoke();
-        return true;
-    }
-
-    private void ApplyPlayerStageMultiplier(Summon placedSummon)
-    {
-        if (placedSummon == null)
-        {
-            return;
-        }
-
-        placedSummon.ApplyStageMultiplier(Summon.GetStatMultiplier());
+        return SelectSummonResult.Selected(plateIndex, selectedSummon, isRedraw);
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 // 역할: PredictionBoardData의 책임을 정의한다.
 public class PredictionBoardData
@@ -8,14 +7,26 @@ public class PredictionBoardData
     public IReadOnlyList<PredictionPlateData> EnemyPlates { get; }
 
     public PredictionBoardData(
-        IReadOnlyList<BattleBoardInputController> playerPlates,
-        IReadOnlyList<BattleBoardInputController> enemyPlates)
+        BattleBoardData board)
     {
-        PlayerPlates = CollectPlayerPlates(playerPlates);
-        EnemyPlates = CollectEnemyPlatesWithPredictedStatus(enemyPlates);
+        PlayerPlates = CollectPlayerPlates(board.PlayerPlates);
+        EnemyPlates = CollectEnemyPlatesWithPredictedStatus(board.EnemyPlates);
     }
 
-    private List<PredictionPlateData> CollectPlayerPlates(IReadOnlyList<BattleBoardInputController> playerPlates)
+    public int FindPlayerPlateIndex(Summon summon)
+    {
+        for (int index = 0; index < PlayerPlates.Count; index++)
+        {
+            if (PlayerPlates[index].GetCurrentSummon() == summon)
+            {
+                return PlayerPlates[index].GetPlateIndex();
+            }
+        }
+
+        return -1;
+    }
+
+    private List<PredictionPlateData> CollectPlayerPlates(IReadOnlyList<PlateData> playerPlates)
     {
         List<PredictionPlateData> playerPlateStates = new List<PredictionPlateData>();
 
@@ -27,14 +38,13 @@ public class PredictionBoardData
                 continue;
             }
 
-            Debug.Log($"{summon.GetSummonName()}을 예측 목록에 추가했습니다.");
             playerPlateStates.Add(new PredictionPlateData(i, summon));
         }
 
         return playerPlateStates;
     }
 
-    private List<PredictionPlateData> CollectEnemyPlatesWithPredictedStatus(IReadOnlyList<BattleBoardInputController> sourceEnemyPlates)
+    private List<PredictionPlateData> CollectEnemyPlatesWithPredictedStatus(IReadOnlyList<PlateData> sourceEnemyPlates)
     {
         List<PredictionPlateData> adjustedEnemyPlates = new List<PredictionPlateData>();
 

@@ -3,15 +3,9 @@ using UnityEngine;
 // 역할: EnemyTurnRuntime의 책임을 정의한다.
 public class EnemyTurnRuntime : MonoBehaviour
 {
-    [UnityEngine.Serialization.FormerlySerializedAs("turnController")]
-    [UnityEngine.Serialization.FormerlySerializedAs("turnRuntime")]
     [SerializeField] private BattleSceneRuntime battleSceneRuntime;
-    [UnityEngine.Serialization.FormerlySerializedAs("plateController")]
     [SerializeField] private PlateBoardView plateBoardController;
-    [SerializeField] private PlayerAttackPrediction playerAttackPrediction;
-    [UnityEngine.Serialization.FormerlySerializedAs("battleController")]
-    [UnityEngine.Serialization.FormerlySerializedAs("attackStateMachineProvider")]
-    [SerializeField] private AttackStateMachineHost attackStateMachineHost;
+    private PlayerAttackPrediction playerAttackPrediction;
 
     private AttackStateMachine attackStateMachine;
     private ExecuteEnemyTurnUseCase executeEnemyTurnUseCase;
@@ -28,20 +22,18 @@ public class EnemyTurnRuntime : MonoBehaviour
             Debug.LogError("EnemyTurnRuntime에 PlateBoardView가 필요합니다.");
         }
 
-        if (playerAttackPrediction == null)
-        {
-            Debug.LogError("EnemyTurnRuntime에 PlayerAttackPrediction이 필요합니다.");
-        }
-
-        if (attackStateMachineHost == null)
-        {
-            Debug.LogError("EnemyTurnRuntime에 AttackStateMachineHost가 필요합니다.");
-        }
+        playerAttackPrediction = new PlayerAttackPrediction();
 
         if (battleSceneRuntime == null)
         {
             Debug.LogError("EnemyTurnRuntime에 BattleSceneRuntime이 필요합니다.");
         }
+    }
+
+    public void ConnectAttackState(AttackStateMachine attackStateMachine)
+    {
+        this.attackStateMachine = attackStateMachine;
+        executeEnemyTurnUseCase = null;
     }
 
     public void StartEnemyTurn()
@@ -92,6 +84,7 @@ public class EnemyTurnRuntime : MonoBehaviour
         }
 
         GetExecuteEnemyTurnUseCase().Execute();
+        plateBoardController.ResetAllPlateHighlight();
         return true;
     }
 
@@ -100,22 +93,12 @@ public class EnemyTurnRuntime : MonoBehaviour
         if (executeEnemyTurnUseCase == null)
         {
             executeEnemyTurnUseCase = new ExecuteEnemyTurnUseCase(
-                plateBoardController,
+                plateBoardController.GetBattleBoardData(),
                 playerAttackPrediction,
-                GetAttackStateMachine());
+                attackStateMachine);
         }
 
         return executeEnemyTurnUseCase;
-    }
-
-    private AttackStateMachine GetAttackStateMachine()
-    {
-        if (attackStateMachine == null)
-        {
-            attackStateMachine = attackStateMachineHost.GetAttackStateMachine();
-        }
-
-        return attackStateMachine;
     }
 
     private bool CanStartEnemyAttack()
@@ -126,15 +109,9 @@ public class EnemyTurnRuntime : MonoBehaviour
             return false;
         }
 
-        if (playerAttackPrediction == null)
+        if (attackStateMachine == null)
         {
-            Debug.LogError("PlayerAttackPrediction 없이는 EnemyTurnRuntime이 공격할 수 없습니다.");
-            return false;
-        }
-
-        if (attackStateMachineHost == null)
-        {
-            Debug.LogError("AttackStateMachineHost 없이는 EnemyTurnRuntime이 공격할 수 없습니다.");
+            Debug.LogError("AttackStateMachine 없이는 EnemyTurnRuntime이 공격할 수 없습니다.");
             return false;
         }
 

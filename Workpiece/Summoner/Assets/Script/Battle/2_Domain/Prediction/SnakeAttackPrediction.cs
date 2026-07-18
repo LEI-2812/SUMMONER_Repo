@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 // 역할: SnakeAttackPrediction의 책임을 정의한다.
-public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
+public class SnakeAttackPrediction : IAttackPrediction
 {
 
     public bool CanPredict(Summon summon)
@@ -11,14 +10,20 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
         return summon is Snake;
     }
 
-    public AttackPredictionData GetAttackPrediction(Summon snake, int snakePlateIndex, IReadOnlyList<IPlateState> playerPlates, IReadOnlyList<IPlateState> enemyPlates)
+    public AttackPredictionData GetAttackPrediction(Summon snake, PredictionBoardData board)
     {
+        int snakePlateIndex = board.FindPlayerPlateIndex(snake);
+        IReadOnlyList<IPlateState> playerPlates = board.PlayerPlates;
+        IReadOnlyList<IPlateState> enemyPlates = board.EnemyPlates;
         AttackProbabilityData AttackProbabilityData = new AttackProbabilityData(50f, 50f);
         int attackIndex = GetClosestEnemyIndex(enemyPlates);
 
         if (IsEnemyAlreadyPoisoned(enemyPlates) || !CanUseSpecialAttack(snake))
         {
-            AttackProbabilityData = new AttackProbabilityData(100f, 0f);
+            AttackProbabilityData = new AttackProbabilityData(
+                100f,
+                0f,
+                "뱀 적이 이미 중독 상태이거나 특수 공격 사용 불가");
             return new AttackPredictionData(snake, snakePlateIndex, snake.GetAttackStrategy(), 0, enemyPlates, attackIndex, AttackProbabilityData);
         }
 
@@ -40,14 +45,14 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
         }
         else
         {
-            AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+            AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "뱀 적이 2마리 미만");
             if (AllEnemyHealthOver50(enemyPlates))
             {
                 AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "뱀 적의 체력이 50% 이상");
             }
             if (GetIndexOfNormalAttackCanKill(snake, enemyPlates) != -1)
             {
-                AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+                AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "뱀 일반 공격으로 적 처치 가능");
             }
         }
 
@@ -179,14 +184,12 @@ public class SnakeAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
-        return currentProbabilities;
+        return currentProbabilities.AddPredictionReason(reason);
     }
 }

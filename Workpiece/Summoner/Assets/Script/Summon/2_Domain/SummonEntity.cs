@@ -16,7 +16,7 @@ public class SummonEntity
     public bool HasOnceInvincibility { get; private set; }
     public AttackData NormalAttack { get; private set; }
     public AttackData[] SpecialAttacks { get; private set; }
-    public StatusStore StatusStore { get; private set; } = new StatusStore();
+    private ActiveStatusList activeStatusList = new ActiveStatusList();
 
     public void SetBattleStats(
         string name,
@@ -186,32 +186,32 @@ public class SummonEntity
 
     public void ApplyStatus(StatusData status, IStatusTarget target)
     {
-        StatusStore.Apply(status, target);
+        activeStatusList.Apply(status, target);
     }
 
     public void UpdateStatus(StatusTiming timing, IStatusTarget target)
     {
-        StatusStore.Update(timing, target);
+        activeStatusList.Update(timing, target);
     }
 
     public void RemoveStatus(StatusType statusType, IStatusTarget target)
     {
-        StatusStore.Remove(statusType, target);
+        activeStatusList.Remove(statusType, target);
     }
 
     public List<StatusType> GetStatusTypes()
     {
-        return StatusStore.GetTypes();
+        return activeStatusList.GetTypes();
     }
 
     public IReadOnlyList<StatusData> GetActiveStatuses()
     {
-        return StatusStore.GetActiveStatuses();
+        return activeStatusList.GetActiveStatuses();
     }
 
     public bool ContainsStatus(StatusType statusType)
     {
-        return StatusStore.Contains(statusType);
+        return activeStatusList.Contains(statusType);
     }
 
     public void SetOnceInvincibility(bool hasOnceInvincibility)

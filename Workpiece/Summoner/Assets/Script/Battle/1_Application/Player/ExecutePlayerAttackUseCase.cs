@@ -1,148 +1,197 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
-public interface IPlayerAttackOutput
+public enum PlayerAttackSound
 {
-    void PlayClick();
-    void PlayFail();
-    void Log(string message);
-    void LogWarning(string message);
-    void ShowTargetSelection(bool dimPlayerPlates);
-    void HideTargetSelection();
-    void ResetTargetSelection();
-    bool IsOutsidePlayerPlatesClick();
-    bool IsOutsideEnemyPlatesClick();
+    None,
+    Click,
+    Fail
 }
 
-// 역할: ExecutePlayerAttackUseCase의 책임을 정의한다.
-public class ExecutePlayerAttackUseCase
+public enum PlayerAttackTargetBoard
 {
-    private readonly ICoroutineRunner coroutineRunner;
-    private readonly AttackStateMachine attackStateMachine;
-    private readonly IReadOnlyList<BattleBoardInputController> playerPlates;
-    private readonly IReadOnlyList<BattleBoardInputController> enemyPlates;
-    private readonly IPlayerAttackOutput output;
-    private readonly SpecialAttackExecution specialAttackExecution;
+    None,
+    Player,
+    Enemy
+}
 
-    public ExecutePlayerAttackUseCase(
-        ICoroutineRunner coroutineRunner,
-        AttackStateMachine attackStateMachine,
-        IReadOnlyList<BattleBoardInputController> playerPlates,
-        IReadOnlyList<BattleBoardInputController> enemyPlates,
-        IPlayerAttackOutput output)
+public readonly struct PlayerAttackResult
+{
+    public PlayerAttackResult(
+        PlayerActionResult actionResult,
+        PlayerAttackSound sound,
+        PlayerAttackTargetBoard targetBoard,
+        IReadOnlyList<string> messages,
+        IReadOnlyList<string> warnings)
     {
-        this.coroutineRunner = coroutineRunner;
-        this.attackStateMachine = attackStateMachine;
-        this.playerPlates = playerPlates;
-        this.enemyPlates = enemyPlates;
-        this.output = output;
-        specialAttackExecution = new SpecialAttackExecution(playerPlates, enemyPlates);
+        ActionResult = actionResult;
+        Sound = sound;
+        TargetBoard = targetBoard;
+        Messages = messages;
+        Warnings = warnings;
     }
 
-    public PlayerActionResult ExecuteNormalAttack()
+    public PlayerActionResult ActionResult { get; }
+    public PlayerAttackSound Sound { get; }
+    public PlayerAttackTargetBoard TargetBoard { get; }
+    public IReadOnlyList<string> Messages { get; }
+    public IReadOnlyList<string> Warnings { get; }
+}
+
+// 역할: 플레이어 공격 규칙을 실행하고 Controller가 처리할 결과를 반환한다.
+public class ExecutePlayerAttackUseCase
+{
+    private readonly AttackStateMachine attackStateMachine;
+    private readonly BattleBoardData board;
+    private readonly ExecuteSpecialAttackUseCase executeSpecialAttackUseCase;
+
+    public ExecutePlayerAttackUseCase(
+        AttackStateMachine attackStateMachine,
+        BattleBoardData board)
     {
-        Summon attacker = PrepareNormalAttackSummon();
+        this.attackStateMachine = attackStateMachine;
+        this.board = board;
+        executeSpecialAttackUseCase = new ExecuteSpecialAttackUseCase(board);
+    }
+
+    public PlayerAttackResult ExecuteNormalAttack()
+    {
+        var messages = new List<string>();
+        var warnings = new List<string>();
+        Summon attacker = PrepareNormalAttackSummon(messages);
         if (attacker == null)
         {
-            return PlayerActionResult.Failed;
+            return CreateResult(PlayerActionResult.Failed, PlayerAttackSound.Fail, messages, warnings);
         }
 
         ExecuteNormalAttack(
             attacker,
-            enemyPlates,
-            attackStateMachine.GetAttackingPlateIndex());
+            attackStateMachine.GetAttackingPlateIndex(),
+            messages,
+            warnings);
         attackStateMachine.CompleteAttack();
         ResetAttackState();
-        output.PlayClick();
-        return PlayerActionResult.Completed;
+        return CreateResult(PlayerActionResult.Completed, PlayerAttackSound.Click, messages, warnings);
     }
 
-    public PlayerActionResult ExecuteSpecialAttack(
-        int specialAttackIndex,
-        Action onWaitTargetSelection,
-        Action onAttackCompleted,
-        Action onTargetSelectionCanceled)
+    public PlayerAttackResult ExecuteSpecialAttack(int specialAttackIndex)
     {
-        Summon attacker = PrepareSpecialAttackSummon(specialAttackIndex);
+        var messages = new List<string>();
+        Summon attacker = PrepareSpecialAttackSummon(specialAttackIndex, messages);
         if (attacker == null)
         {
-            return PlayerActionResult.Failed;
+            return CreateResult(PlayerActionResult.Failed, PlayerAttackSound.Fail, messages);
         }
 
         int attackIndex = attackStateMachine.GetCurrentSpecialAttackInfoIndex();
         AttackData attackStrategy = attacker.GetSpecialAttackStrategy()[attackIndex];
         if (IsSpecialAttackCooldown(attackStrategy))
         {
-            output.Log("Special attack is cooling down.");
+            messages.Add("Special attack is cooling down.");
             ResetAttackState();
-            output.PlayFail();
-            return PlayerActionResult.Failed;
+            return CreateResult(PlayerActionResult.Failed, PlayerAttackSound.Fail, messages);
         }
 
         if (attackStrategy.IsStrategy<TargetedAttackStrategy>())
         {
-            StartTargetedSpecialAttack(
-                attacker,
-                attackIndex,
-                onWaitTargetSelection,
-                onAttackCompleted,
-                onTargetSelectionCanceled);
-            return PlayerActionResult.WaitingForTarget;
+            attackStateMachine.StartTargetSelection();
+            attackStateMachine.ClearTargetSelection();
+            PlayerAttackTargetBoard targetBoard = attackStateMachine.DoesCurrentSpecialAttackTargetPlayerPlate()
+                ? PlayerAttackTargetBoard.Player
+                : PlayerAttackTargetBoard.Enemy;
+            return new PlayerAttackResult(
+                PlayerActionResult.WaitingForTarget,
+                PlayerAttackSound.Click,
+                targetBoard,
+                messages,
+                new List<string>());
         }
 
         if (!ExecuteImmediateSpecialAttack(attacker, attackIndex))
         {
-            return PlayerActionResult.Failed;
+            return CreateResult(PlayerActionResult.Failed, PlayerAttackSound.None, messages);
         }
 
-        return PlayerActionResult.Completed;
+        return CreateResult(PlayerActionResult.Completed, PlayerAttackSound.Click, messages);
     }
 
-    private Summon PrepareNormalAttackSummon()
+    public PlayerAttackResult ExecuteSelectedSpecialAttack(int selectedTargetPlateIndex)
+    {
+        Summon attacker = attackStateMachine.GetAttackingSummon();
+        int attackIndex = attackStateMachine.GetCurrentSpecialAttackInfoIndex();
+        attackStateMachine.ClearTargetSelection();
+
+        bool attackExecuted = executeSpecialAttackUseCase.Execute(
+            attacker,
+            selectedTargetPlateIndex,
+            attackIndex,
+            isPlayerAttacker: true);
+
+        if (attackExecuted)
+        {
+            attackStateMachine.CompleteAttack();
+            ResetAttackState();
+            return CreateResult(PlayerActionResult.Completed, PlayerAttackSound.None);
+        }
+
+        ResetAttackState();
+        return CreateResult(PlayerActionResult.Failed, PlayerAttackSound.None);
+    }
+
+    public void CancelTargetSelection()
+    {
+        attackStateMachine.CancelTargetSelection();
+        ResetAttackState();
+    }
+
+    public bool IsTargetSelectionActive()
+    {
+        return attackStateMachine.IsSpecialAttackTargetSelectionActive();
+    }
+
+    public int GetSelectedTargetPlateIndex()
+    {
+        return attackStateMachine.GetSelectedSpecialAttackTargetPlateIndex();
+    }
+
+    private Summon PrepareNormalAttackSummon(List<string> messages)
     {
         Summon attacker = attackStateMachine.StartAttack(0);
         if (attacker == null)
         {
             ResetAttackState();
-            output.PlayFail();
             return null;
         }
 
         if (!CanSelectedSummonAttack(attacker))
         {
-            output.Log("선택한 소환수는 공격할 수 없습니다.");
+            messages.Add("선택한 소환수는 공격할 수 없습니다.");
             ResetAttackState();
-            output.PlayFail();
             return null;
         }
 
         return attacker;
     }
 
-    private Summon PrepareSpecialAttackSummon(int attackIndex)
+    private Summon PrepareSpecialAttackSummon(int attackIndex, List<string> messages)
     {
         Summon attacker = attackStateMachine.StartAttack(attackIndex);
         if (attacker == null)
         {
             ResetAttackState();
-            output.PlayFail();
             return null;
         }
 
         if (!attackStateMachine.HasCurrentSpecialAttackInfo())
         {
-            output.Log("Selected summon has no special attack data.");
+            messages.Add("Selected summon has no special attack data.");
             ResetAttackState();
-            output.PlayFail();
             return null;
         }
 
         if (!CanSelectedSummonAttack(attacker))
         {
-            output.Log("선택한 소환수는 공격할 수 없습니다.");
+            messages.Add("선택한 소환수는 공격할 수 없습니다.");
             ResetAttackState();
-            output.PlayFail();
             return null;
         }
 
@@ -151,7 +200,7 @@ public class ExecutePlayerAttackUseCase
 
     private bool ExecuteImmediateSpecialAttack(Summon attacker, int attackIndex)
     {
-        if (!specialAttackExecution.Execute(
+        if (!executeSpecialAttackUseCase.Execute(
                 attacker,
                 attackStateMachine.GetAttackingPlateIndex(),
                 attackIndex,
@@ -163,144 +212,12 @@ public class ExecutePlayerAttackUseCase
 
         attackStateMachine.CompleteAttack();
         ResetAttackState();
-        output.PlayClick();
         return true;
-    }
-
-    private void StartTargetedSpecialAttack(
-        Summon attacker,
-        int attackIndex,
-        Action onWaitTargetSelection,
-        Action onCompleted,
-        Action onCanceled)
-    {
-        output.PlayClick();
-        onWaitTargetSelection?.Invoke();
-        StartTargetSelection(
-            selectedTargetPlateIndex => ExecuteSelectedSpecialAttack(
-                attacker,
-                attackIndex,
-                selectedTargetPlateIndex,
-                onCompleted,
-                onCanceled),
-            () => CancelTargetSelection(onCanceled));
-    }
-
-    private void StartTargetSelection(Action<int> onTargetSelected, Action onTargetSelectionCanceled)
-    {
-        if (attackStateMachine.DoesCurrentSpecialAttackTargetPlayerPlate())
-        {
-            StartPlayerPlateSelection(onTargetSelected, onTargetSelectionCanceled);
-            return;
-        }
-
-        StartEnemyPlateSelection(onTargetSelected, onTargetSelectionCanceled);
-    }
-
-    private void StartPlayerPlateSelection(Action<int> onTargetSelected, Action onTargetSelectionCanceled)
-    {
-        output.Log("플레이어 플레이트를 선택하세요.");
-        coroutineRunner.StartCoroutine(WaitForTargetPlateSelection(
-            true,
-            false,
-            "플레이어 플레이트 선택을 기다립니다.",
-            "대상 선택이 취소되었습니다.",
-            "특수 공격 대상으로 플레이어 플레이트 {0}번을 선택했습니다.",
-            onTargetSelected,
-            onTargetSelectionCanceled));
-    }
-
-    private void StartEnemyPlateSelection(Action<int> onTargetSelected, Action onTargetSelectionCanceled)
-    {
-        output.Log("적 플레이트를 선택하세요.");
-        coroutineRunner.StartCoroutine(WaitForTargetPlateSelection(
-            false,
-            true,
-            "적 플레이트 선택을 기다립니다.",
-            "대상 선택이 취소되었습니다.",
-            "특수 공격 대상으로 적 플레이트 {0}번을 선택했습니다.",
-            onTargetSelected,
-            onTargetSelectionCanceled));
-    }
-
-    private IEnumerator WaitForTargetPlateSelection(
-        bool targetsPlayerPlates,
-        bool downTransparencyForPlayerPlate,
-        string waitLog,
-        string outsideClickLog,
-        string executeLogFormat,
-        Action<int> onTargetSelected,
-        Action onTargetSelectionCanceled)
-    {
-        attackStateMachine.StartTargetSelection();
-        output.ShowTargetSelection(downTransparencyForPlayerPlate);
-        attackStateMachine.ClearTargetSelection();
-        output.Log(waitLog);
-
-        while (attackStateMachine.GetSelectedSpecialAttackTargetPlateIndex() < 0)
-        {
-            if (attackStateMachine.IsSpecialAttackTargetSelectionActive()
-                && IsOutsideTargetPlatesClick(targetsPlayerPlates))
-            {
-                output.Log(outsideClickLog);
-                output.HideTargetSelection();
-                attackStateMachine.CancelTargetSelection();
-                onTargetSelectionCanceled?.Invoke();
-                yield break;
-            }
-
-            yield return null;
-        }
-
-        int selectedTargetPlateIndex = attackStateMachine.GetSelectedSpecialAttackTargetPlateIndex();
-        output.Log(string.Format(executeLogFormat, selectedTargetPlateIndex));
-        output.HideTargetSelection();
-        attackStateMachine.ClearTargetSelection();
-        onTargetSelected?.Invoke(selectedTargetPlateIndex);
-    }
-
-    private bool IsOutsideTargetPlatesClick(bool targetsPlayerPlates)
-    {
-        return targetsPlayerPlates
-            ? output.IsOutsidePlayerPlatesClick()
-            : output.IsOutsideEnemyPlatesClick();
-    }
-
-    private void ExecuteSelectedSpecialAttack(
-        Summon attacker,
-        int attackIndex,
-        int selectedTargetPlateIndex,
-        Action onCompleted,
-        Action onFailed)
-    {
-        bool attackExecuted = specialAttackExecution.Execute(
-            attacker,
-            selectedTargetPlateIndex,
-            attackIndex,
-            isPlayerAttacker: true);
-
-        if (attackExecuted)
-        {
-            attackStateMachine.CompleteAttack();
-            ResetAttackState();
-            onCompleted?.Invoke();
-            return;
-        }
-
-        ResetAttackState();
-        onFailed?.Invoke();
-    }
-
-    private void CancelTargetSelection(Action onCanceled)
-    {
-        ResetAttackState();
-        onCanceled?.Invoke();
     }
 
     private void ResetAttackState()
     {
         attackStateMachine.Reset();
-        output.ResetTargetSelection();
     }
 
     private bool CanSelectedSummonAttack(Summon attacker)
@@ -316,31 +233,33 @@ public class ExecutePlayerAttackUseCase
 
     private void ExecuteNormalAttack(
         Summon attackSummon,
-        IReadOnlyList<BattleBoardInputController> targetPlates,
-        int selectedPlateIndex)
+        int selectedPlateIndex,
+        List<string> messages,
+        List<string> warnings)
     {
         AttackData attackStrategy = attackSummon.GetAttackStrategy();
         if (attackStrategy == null)
         {
-            output.Log("일반 공격 데이터가 없습니다.");
+            messages.Add("일반 공격 데이터가 없습니다.");
             return;
         }
 
         if (!attackSummon.CanUseAttackStrategy(attackStrategy))
         {
-            output.Log("일반 공격이 쿨타임 중이거나 사용할 수 없습니다.");
+            messages.Add("일반 공격이 쿨타임 중이거나 사용할 수 없습니다.");
             return;
         }
 
-        List<Summon> targets = attackStrategy.SelectTargets(attackSummon, targetPlates, selectedPlateIndex);
+        List<Summon> targets = attackStrategy.SelectTargets(
+            new AttackTargetInput(attackSummon, board, selectedPlateIndex, true));
         if (targets.Count == 0)
         {
-            output.Log("일반 공격 대상이 없습니다.");
+            messages.Add("일반 공격 대상이 없습니다.");
         }
 
         foreach (Summon target in targets)
         {
-            ApplyNormalAttackEffect(attackSummon, attackStrategy, target);
+            ApplyNormalAttackEffect(attackSummon, attackStrategy, target, messages, warnings);
         }
 
         attackSummon.PlayAttackMotion(true);
@@ -348,17 +267,35 @@ public class ExecutePlayerAttackUseCase
         attackSummon.SetAttackAvailable(false);
     }
 
-    private void ApplyNormalAttackEffect(Summon attacker, AttackData attackStrategy, Summon target)
+    private void ApplyNormalAttackEffect(
+        Summon attacker,
+        AttackData attackStrategy,
+        Summon target,
+        List<string> messages,
+        List<string> warnings)
     {
         if (attackStrategy.GetStatusType() != StatusType.None)
         {
-            output.LogWarning($"일반 공격으로 적용할 수 없는 상태입니다: {attackStrategy.GetStatusType()}");
+            warnings.Add($"일반 공격으로 적용할 수 없는 상태입니다: {attackStrategy.GetStatusType()}");
             return;
         }
 
         double damage = attacker.GetAttackPower();
-        output.Log($"{attacker.GetSummonName()}이 {target.GetSummonName()}을 공격했습니다.");
+        messages.Add($"{attacker.GetSummonName()}이 {target.GetSummonName()}을 공격했습니다.");
         target.TakeDamage(damage);
     }
 
+    private static PlayerAttackResult CreateResult(
+        PlayerActionResult actionResult,
+        PlayerAttackSound sound,
+        IReadOnlyList<string> messages = null,
+        IReadOnlyList<string> warnings = null)
+    {
+        return new PlayerAttackResult(
+            actionResult,
+            sound,
+            PlayerAttackTargetBoard.None,
+            messages ?? new List<string>(),
+            warnings ?? new List<string>());
+    }
 }

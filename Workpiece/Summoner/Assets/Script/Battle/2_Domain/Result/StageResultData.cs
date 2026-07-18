@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [CreateAssetMenu(menuName = "Summoner/Stage Result Data")]
 // 역할: StageResultData의 책임을 정의한다.
@@ -9,7 +8,6 @@ public class StageResultData : ScriptableObject
 {
     [Header("스테이지 결과 조건")]
     [Tooltip("Clear turn condition per battle stage.")]
-    [FormerlySerializedAs("stageBattleRules")]
     [SerializeField] private List<StageResultCondition> conditions = new List<StageResultCondition>();
 
     public int GetClearTurn(int stage, int defaultClearTurn)

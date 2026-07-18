@@ -1,95 +1,97 @@
 using System.Collections.Generic;
-using UnityEngine;
+
+public readonly struct EnemyPlacementResult
+{
+    public EnemyPlacementResult(int plateIndex, Summon enemySummonPrefab)
+    {
+        PlateIndex = plateIndex;
+        EnemySummonPrefab = enemySummonPrefab;
+    }
+
+    public int PlateIndex { get; }
+    public Summon EnemySummonPrefab { get; }
+}
+
+public class StartBattleResult
+{
+    public StartBattleResult(
+        double summonStatMultiplier,
+        IReadOnlyList<EnemyPlacementResult> enemyPlacements,
+        IReadOnlyList<string> warnings)
+    {
+        SummonStatMultiplier = summonStatMultiplier;
+        EnemyPlacements = enemyPlacements;
+        Warnings = warnings;
+    }
+
+    public double SummonStatMultiplier { get; }
+    public IReadOnlyList<EnemyPlacementResult> EnemyPlacements { get; }
+    public IReadOnlyList<string> Warnings { get; }
+}
 
 public class StartBattleUseCase
 {
-    public void Execute(
+    public StartBattleResult Execute(
         BattleStageData battleStageData,
-        IReadOnlyList<BattleBoardInputController> enemyPlates,
-        StageEnemyPlacementData stageEnemyPlacementData)
+        StageEnemyPlacementData stageEnemyPlacementData,
+        int enemyPlateCount)
     {
+        var placements = new List<EnemyPlacementResult>();
+        var warnings = new List<string>();
+
         if (battleStageData == null)
         {
-            Debug.LogWarning("전투 스테이지 데이터가 없어 배수를 적용할 수 없습니다.");
-            return;
+            warnings.Add("전투 스테이지 데이터가 없어 배수를 적용할 수 없습니다.");
+            return new StartBattleResult(1.0, placements, warnings);
         }
 
-        Summon.StatMultiplierSet(battleStageData.GetSummonStatMultiplier());
-
-        if (enemyPlates == null || stageEnemyPlacementData == null)
+        double statMultiplier = battleStageData.GetSummonStatMultiplier();
+        if (stageEnemyPlacementData == null)
         {
-            Debug.LogWarning("적 배치 데이터가 없습니다. 스테이지 적 배치 없이 전투를 시작합니다.");
-            return;
+            warnings.Add("적 배치 데이터가 없습니다. 스테이지 적 배치 없이 전투를 시작합니다.");
+            return new StartBattleResult(statMultiplier, placements, warnings);
         }
 
-        if (enemyPlates.Count == 0)
+        if (enemyPlateCount <= 0)
         {
-            Debug.LogWarning("적 플레이트가 비어 있습니다. 스테이지 적 배치 없이 전투를 시작합니다.");
-            return;
+            warnings.Add("적 플레이트가 비어 있습니다. 스테이지 적 배치 없이 전투를 시작합니다.");
+            return new StartBattleResult(statMultiplier, placements, warnings);
         }
 
-        PlaceStageEnemies(
-            battleStageData.CurrentStage,
-            stageEnemyPlacementData,
-            enemyPlates);
+        foreach (EnemyPlacementSlot slot in stageEnemyPlacementData.GetEnemyPlacementSlots(
+                     battleStageData.CurrentStage))
+        {
+            AddEnemyPlacement(slot, enemyPlateCount, placements, warnings);
+        }
+
+        return new StartBattleResult(statMultiplier, placements, warnings);
     }
 
-    private void PlaceStageEnemies(
-        int currentStage,
-        StageEnemyPlacementData stageEnemyPlacementData,
-        IReadOnlyList<BattleBoardInputController> enemyPlates)
+    private static void AddEnemyPlacement(
+        EnemyPlacementSlot slot,
+        int enemyPlateCount,
+        List<EnemyPlacementResult> placements,
+        List<string> warnings)
     {
-        foreach (EnemyPlacementSlot enemyPlacementSlot in stageEnemyPlacementData.GetEnemyPlacementSlots(currentStage))
-        {
-            ApplyEnemyPlacementSlot(enemyPlacementSlot, enemyPlates);
-        }
-    }
-
-    private void ApplyEnemyPlacementSlot(EnemyPlacementSlot enemyPlacementSlot, IReadOnlyList<BattleBoardInputController> enemyPlates)
-    {
-        if (enemyPlacementSlot == null)
+        if (slot == null)
         {
             return;
         }
 
-        int plateIndex = enemyPlacementSlot.GetPlateIndex();
-        if (plateIndex < 0 || plateIndex >= enemyPlates.Count)
+        int plateIndex = slot.GetPlateIndex();
+        if (plateIndex < 0 || plateIndex >= enemyPlateCount)
         {
-            Debug.LogWarning("유효하지 않은 적 플레이트 인덱스: " + plateIndex);
+            warnings.Add("유효하지 않은 적 플레이트 인덱스: " + plateIndex);
             return;
         }
 
-        Summon enemySummonPrefab = enemyPlacementSlot.GetEnemySummonPrefab();
+        Summon enemySummonPrefab = slot.GetEnemySummonPrefab();
         if (enemySummonPrefab == null)
         {
-            Debug.LogWarning("적 소환수 프리팹이 없습니다.");
+            warnings.Add("적 소환수 프리팹이 없습니다.");
             return;
         }
 
-        BattleBoardInputController targetPlate = enemyPlates[plateIndex];
-        if (targetPlate == null || EnemyPlateHasSummon(targetPlate))
-        {
-            return;
-        }
-
-        targetPlate.SummonPlaceOnPlate(enemySummonPrefab);
-        ApplyEnemyStageMultiplier(targetPlate);
-    }
-
-    private void ApplyEnemyStageMultiplier(BattleBoardInputController targetPlate)
-    {
-        Summon placedEnemySummon = targetPlate.GetCurrentSummon();
-        if (placedEnemySummon == null)
-        {
-            return;
-        }
-
-        placedEnemySummon.ApplyStageMultiplier(Summon.GetStatMultiplier());
-    }
-
-    private bool EnemyPlateHasSummon(BattleBoardInputController targetPlate)
-    {
-        return targetPlate.GetCurrentSummon() != null
-            || targetPlate.GetComponentInChildren<Summon>(true) != null;
+        placements.Add(new EnemyPlacementResult(plateIndex, enemySummonPrefab));
     }
 }

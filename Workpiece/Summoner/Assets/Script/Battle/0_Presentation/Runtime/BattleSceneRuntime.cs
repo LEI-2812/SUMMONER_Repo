@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
@@ -8,36 +7,22 @@ using UnityEngine.UI;
 public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
 {
     [SerializeField] private PlayerCommandController player;
-    [FormerlySerializedAs("enermy")]
     [SerializeField] private EnemyTurnRuntime enemyTurnController;
-    [FormerlySerializedAs("plateController")]
     [SerializeField] private PlateBoardView plateBoardController;
     [SerializeField] private BattleResultController battleResultController;
-    [FormerlySerializedAs("stageContext")]
-    [SerializeField] private BattleRuntimeData battleRuntimeData;
+    [SerializeField] private int defaultStage = 1;
     [SerializeField] private StageEnemyPlacementData stageEnemyPlacementData;
     [Header("플레이어 UI")]
-    [FormerlySerializedAs("manaList")]
     [SerializeField] private List<RawImage> manaList;
-    [FormerlySerializedAs("notHaveTexture")]
     [SerializeField] private Texture notHaveTexture;
-    [FormerlySerializedAs("haveTexture")]
     [SerializeField] private Texture haveTexture;
-    [FormerlySerializedAs("summonButton")]
     [SerializeField] private Button summonButton;
-    [FormerlySerializedAs("reSummonButton")]
     [SerializeField] private Button reSummonButton;
-    [FormerlySerializedAs("statePanel")]
     [SerializeField] private Image statePanel;
-    [FormerlySerializedAs("clickSound")]
     [SerializeField] private AudioSource clickSound;
-    [FormerlySerializedAs("failSound")]
     [SerializeField] private AudioSource failSound;
-    [FormerlySerializedAs("summonController")]
     [SerializeField] private SummonSelectionController summonSelectionController;
-    [FormerlySerializedAs("stageBattleRuleData")]
     [SerializeField] private StageResultData stageResultData;
-    [FormerlySerializedAs("defaultClearTurn")]
     [SerializeField] private int clearTurn = 1;
     [Header("턴 UI")]
     [SerializeField] private TextMeshProUGUI turnCountText;
@@ -46,12 +31,14 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
     private readonly TurnStateMachine turnStateMachine = new TurnStateMachine();
     private readonly StartBattleUseCase startBattleUseCase = new StartBattleUseCase();
     private readonly StageDataStore stageDataStore = new StageDataStore();
-    private TurnSummonStateUpdater turnSummonStateUpdater;
+    private UpdateTurnSummonStateUseCase updateTurnSummonStateUseCase;
     private ChangeTurnUseCase changeTurnUseCase;
     private HandlePlayerCommandUseCase handlePlayerCommandUseCase;
     private PlayerTurnState playerTurnState;
     private EnemyTurnState enemyTurnState;
-    private AttackStateMachineHost attackStateMachineHost;
+    private BattleStageData battleStageData;
+    private BattleAttackData battleAttackData;
+    private AttackStateMachine attackStateMachine;
     private PlayerHudView playerHudView;
     private ManaView manaView;
     private PlayerFeedbackView feedbackView;
@@ -59,6 +46,13 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
     private int resolvedClearTurn;
     private bool hasStartedBattleFlow;
     private bool hasStartedTurnFlow;
+
+    private void Awake()
+    {
+        CreateBattleState();
+        Ensure참조();
+        ConnectBattleState();
+    }
 
     private void Start()
     {
@@ -80,11 +74,50 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         }
 
         hasStartedBattleFlow = true;
-        startBattleUseCase.Execute(
-            battleRuntimeData.StageData,
-            plateBoardController.GetEnemyPlates(),
-            stageEnemyPlacementData);
+        IReadOnlyList<BattleBoardInputController> enemyPlates = plateBoardController.GetEnemyPlates();
+        StartBattleResult startResult = startBattleUseCase.Execute(
+            battleStageData,
+            stageEnemyPlacementData,
+            enemyPlates == null ? 0 : enemyPlates.Count);
+        ApplyStartBattleResult(startResult, enemyPlates);
         StartTurnFlow();
+    }
+
+    private void ApplyStartBattleResult(
+        StartBattleResult result,
+        IReadOnlyList<BattleBoardInputController> enemyPlates)
+    {
+        if (result == null)
+        {
+            return;
+        }
+
+        Summon.StatMultiplierSet(result.SummonStatMultiplier);
+
+        for (int index = 0; index < result.Warnings.Count; index++)
+        {
+            Debug.LogWarning(result.Warnings[index]);
+        }
+
+        if (enemyPlates == null)
+        {
+            return;
+        }
+
+        for (int index = 0; index < result.EnemyPlacements.Count; index++)
+        {
+            EnemyPlacementResult placement = result.EnemyPlacements[index];
+            BattleBoardInputController targetPlate = enemyPlates[placement.PlateIndex];
+            if (targetPlate == null
+                || targetPlate.GetCurrentSummon() != null
+                || targetPlate.GetComponentInChildren<Summon>(true) != null)
+            {
+                continue;
+            }
+
+            targetPlate.SummonPlaceOnPlate(placement.EnemySummonPrefab);
+            targetPlate.GetCurrentSummon()?.ApplyStageMultiplier(result.SummonStatMultiplier);
+        }
     }
 
     private void StartTurnFlow()
@@ -136,12 +169,54 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
     private void Ensure참조()
     {
         EnsurePlateBoardView();
-        EnsureAttackStateMachineHost();
         EnsureBattleResultController();
-        EnsureBattleRuntimeData();
         EnsureStageResultData();
         ResolveClearTurn();
         EnsureTurnProgressText();
+    }
+
+    private void CreateBattleState()
+    {
+        battleStageData = new BattleStageData(defaultStage);
+        battleAttackData = new BattleAttackData();
+        attackStateMachine = new AttackStateMachine(battleAttackData);
+    }
+
+    private void ConnectBattleState()
+    {
+        if (enemyTurnController != null)
+        {
+            enemyTurnController.ConnectAttackState(attackStateMachine);
+        }
+
+        if (battleResultController != null)
+        {
+            battleResultController.ConnectBattleStage(battleStageData);
+        }
+
+        if (plateBoardController == null)
+        {
+            return;
+        }
+
+        ConnectBoardInputs(plateBoardController.GetPlayerPlates());
+        ConnectBoardInputs(plateBoardController.GetEnemyPlates());
+    }
+
+    private void ConnectBoardInputs(IReadOnlyList<BattleBoardInputController> boardInputs)
+    {
+        if (boardInputs == null)
+        {
+            return;
+        }
+
+        for (int index = 0; index < boardInputs.Count; index++)
+        {
+            if (boardInputs[index] != null)
+            {
+                boardInputs[index].ConnectAttackState(attackStateMachine);
+            }
+        }
     }
 
     private void EnsurePlateBoardView()
@@ -157,14 +232,15 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         }
     }
 
-    private TurnSummonStateUpdater GetTurnSummonStateUpdater()
+    private UpdateTurnSummonStateUseCase GetUpdateTurnSummonStateUseCase()
     {
-        if (turnSummonStateUpdater == null)
+        if (updateTurnSummonStateUseCase == null)
         {
-            turnSummonStateUpdater = new TurnSummonStateUpdater(new TurnSummonBoard(plateBoardController));
+            updateTurnSummonStateUseCase = new UpdateTurnSummonStateUseCase(
+                new TurnSummonBoard(plateBoardController));
         }
 
-        return turnSummonStateUpdater;
+        return updateTurnSummonStateUseCase;
     }
 
     private ChangeTurnUseCase GetChangeTurnUseCase()
@@ -184,12 +260,14 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
     {
         if (playerTurnState == null)
         {
+            GetHandlePlayerCommandUseCase();
             playerTurnState = new PlayerTurnState(
-                GetHandlePlayerCommandUseCase(),
+                player.StartPlayerTurn,
+                player.AddMana,
+                player.TryStopTurnForClearResult,
                 new PlayerTurnBoard(plateBoardController),
-                () => turnStateMachine.TurnCount,
-                GetTurnSummonStateUpdater(),
-                attackStateMachineHost.GetAttackStateMachine());
+                GetUpdateTurnSummonStateUseCase(),
+                attackStateMachine);
         }
 
         return playerTurnState;
@@ -200,9 +278,19 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         if (handlePlayerCommandUseCase == null)
         {
             handlePlayerCommandUseCase = CreateHandlePlayerCommandUseCase();
-            player.Initialize(handlePlayerCommandUseCase, summonSelectionController);
+            player.ConnectPlayerCommand(
+                handlePlayerCommandUseCase,
+                summonSelectionController,
+                this,
+                battleResultController,
+                plateBoardController,
+                GetPlayerHudView(),
+                GetManaView(),
+                GetPlayerFeedbackView(),
+                plateBoardController.GetPlayerPlates(),
+                plateBoardController.GetEnemyPlates());
             ConnectSummonStatePanelView();
-            handlePlayerCommandUseCase.ResetPlayerSetting();
+            player.ResetPlayerSetting();
         }
 
         return handlePlayerCommandUseCase;
@@ -210,7 +298,6 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
 
     private HandlePlayerCommandUseCase CreateHandlePlayerCommandUseCase()
     {
-        AttackStateMachine attackStateMachine = attackStateMachineHost.GetAttackStateMachine();
         var playerActionStateMachine = new PlayerActionStateMachine();
         var startSummonSelectionUseCase = new StartSummonSelectionUseCase(
             plateBoardController.GetFirstEmptyPlayerPlateIndex,
@@ -219,29 +306,14 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         IReadOnlyList<BattleBoardInputController> playerPlates = plateBoardController.GetPlayerPlates();
         IReadOnlyList<BattleBoardInputController> enemyPlates = plateBoardController.GetEnemyPlates();
         var attackUseCase = new ExecutePlayerAttackUseCase(
-            player,
             attackStateMachine,
-            playerPlates,
-            enemyPlates,
-            new PlayerAttackOutput(
-                playerPlates,
-                enemyPlates,
-                summonSelectionController,
-                plateBoardController,
-                GetPlayerFeedbackView()));
+            plateBoardController.GetBattleBoardData());
 
         return new HandlePlayerCommandUseCase(
-            player.gameObject.name,
             playerActionStateMachine,
             this,
             startSummonSelectionUseCase,
-            attackUseCase,
-            new PlayerCommandOutput(
-                battleResultController,
-                plateBoardController,
-                GetPlayerHudView(),
-                GetManaView(),
-                GetPlayerFeedbackView()));
+            attackUseCase);
     }
 
     private PlayerHudView GetPlayerHudView()
@@ -307,7 +379,7 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         {
             enemyTurnState = new EnemyTurnState(
                 enemyTurnController.StartEnemyTurn,
-                GetTurnSummonStateUpdater());
+                GetUpdateTurnSummonStateUseCase());
         }
 
         return enemyTurnState;
@@ -336,39 +408,6 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
         }
     }
 
-    private void EnsureAttackStateMachineHost()
-    {
-        if (attackStateMachineHost != null)
-        {
-            return;
-        }
-
-        attackStateMachineHost = GetComponent<AttackStateMachineHost>();
-        if (attackStateMachineHost == null)
-        {
-            attackStateMachineHost = FindObjectOfType<AttackStateMachineHost>();
-        }
-
-        if (attackStateMachineHost == null)
-        {
-            Debug.LogError("BattleSceneRuntime에 AttackStateMachineHost가 필요합니다.");
-        }
-    }
-
-    private void EnsureBattleRuntimeData()
-    {
-        if (battleRuntimeData != null)
-        {
-            return;
-        }
-
-        battleRuntimeData = GetComponent<BattleRuntimeData>();
-        if (battleRuntimeData == null)
-        {
-            battleRuntimeData = FindObjectOfType<BattleRuntimeData>();
-        }
-    }
-
     private void EnsureStageResultData()
     {
         if (stageResultData != null)
@@ -383,12 +422,12 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
     {
         resolvedClearTurn = clearTurn;
 
-        if (battleRuntimeData == null || stageResultData == null)
+        if (battleStageData == null || stageResultData == null)
         {
             return;
         }
 
-        resolvedClearTurn = stageResultData.GetClearTurn(battleRuntimeData.CurrentStage, clearTurn);
+        resolvedClearTurn = stageResultData.GetClearTurn(battleStageData.CurrentStage, clearTurn);
     }
 
     private void EnsureTurnProgressText()
@@ -445,9 +484,9 @@ public class BattleSceneRuntime : MonoBehaviour, IPlayerTurnProgress
             return false;
         }
 
-        if (attackStateMachineHost == null)
+        if (attackStateMachine == null)
         {
-            Debug.LogError("AttackStateMachineHost 없이는 BattleSceneRuntime을 시작할 수 없습니다.");
+            Debug.LogError("AttackStateMachine 없이는 BattleSceneRuntime을 시작할 수 없습니다.");
             return false;
         }
 

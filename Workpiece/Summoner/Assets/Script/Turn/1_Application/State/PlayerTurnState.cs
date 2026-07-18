@@ -1,59 +1,60 @@
 using System;
-using UnityEngine;
 
 // 역할: PlayerTurnState의 책임을 정의한다.
 class PlayerTurnState
 {
-    private readonly HandlePlayerCommandUseCase handlePlayerCommandUseCase;
+    private readonly Action startPlayerTurn;
+    private readonly Action addMana;
+    private readonly Func<bool, bool> tryStopTurnForClearResult;
     private readonly IPlayerTurnBoard turnBoard;
-    private readonly Func<int> getTurnCount;
-    private readonly TurnSummonStateUpdater turnSummonStateUpdater;
+    private readonly UpdateTurnSummonStateUseCase updateTurnSummonStateUseCase;
     private readonly AttackStateMachine attackStateMachine;
 
     public PlayerTurnState(
-        HandlePlayerCommandUseCase handlePlayerCommandUseCase,
+        Action startPlayerTurn,
+        Action addMana,
+        Func<bool, bool> tryStopTurnForClearResult,
         IPlayerTurnBoard turnBoard,
-        Func<int> getTurnCount,
-        TurnSummonStateUpdater turnSummonStateUpdater,
+        UpdateTurnSummonStateUseCase updateTurnSummonStateUseCase,
         AttackStateMachine attackStateMachine)
     {
-        this.handlePlayerCommandUseCase = handlePlayerCommandUseCase;
+        this.startPlayerTurn = startPlayerTurn;
+        this.addMana = addMana;
+        this.tryStopTurnForClearResult = tryStopTurnForClearResult;
         this.turnBoard = turnBoard;
-        this.getTurnCount = getTurnCount;
-        this.turnSummonStateUpdater = turnSummonStateUpdater;
+        this.updateTurnSummonStateUseCase = updateTurnSummonStateUseCase;
         this.attackStateMachine = attackStateMachine;
     }
 
     public void Enter()
     {
-        turnSummonStateUpdater.ApplyEnemyTurnStartEffects();
+        updateTurnSummonStateUseCase.ApplyEnemyTurnStartEffects();
         turnBoard.CompactEnemyPlates();
         if (TryStopTurnForClearResult())
         {
             return;
         }
 
-        turnSummonStateUpdater.UpdatePlayerSpecialCooldowns();
-        handlePlayerCommandUseCase.StartPlayerTurn();
+        updateTurnSummonStateUseCase.UpdatePlayerSpecialCooldowns();
+        startPlayerTurn();
     }
 
     public void Exit()
     {
         attackStateMachine.Reset();
         turnBoard.ResetPlateHighlight();
-        turnSummonStateUpdater.UpdatePlayerUpgradeStatus();
+        updateTurnSummonStateUseCase.UpdatePlayerUpgradeStatus();
     }
 
     public void EnterNewRound()
     {
-        handlePlayerCommandUseCase.AddMana();
-        turnSummonStateUpdater.UpdateEnemyUpgradeStatus();
-        turnSummonStateUpdater.ResetPlayerAttackReady();
-        Debug.Log("현재 턴: " + getTurnCount());
+        addMana();
+        updateTurnSummonStateUseCase.UpdateEnemyUpgradeStatus();
+        updateTurnSummonStateUseCase.ResetPlayerAttackReady();
     }
 
     private bool TryStopTurnForClearResult()
     {
-        return handlePlayerCommandUseCase.TryStopTurnForClearResult(turnBoard.IsEnemyPlateClear());
+        return tryStopTurnForClearResult(turnBoard.IsEnemyPlateClear());
     }
 }

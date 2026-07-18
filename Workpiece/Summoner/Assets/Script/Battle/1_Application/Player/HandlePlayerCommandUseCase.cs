@@ -1,99 +1,87 @@
-// 역할: HandlePlayerCommandUseCase의 책임을 정의한다.
-public interface IPlayerCommandOutput
+public readonly struct PlayerCommandResult
 {
-    void ShowPlayerActionState(int mana, bool canSummon, bool canRedraw);
-    void PlayClick();
-    void PlayFail();
-    void Log(string message);
-    void StartFailResult(int clearTurn, int currentTurn);
-    bool TryStartClearResult(bool isEnemyBoardClear, int clearTurn, int currentTurn);
-    bool IsEnemyBoardClear();
-    void CompactEnemyBoard();
-    void HideSummonStatePanel();
+    private PlayerCommandResult(
+        bool didStart,
+        PlayerActionResult actionResult,
+        PlayerAttackResult attackResult)
+    {
+        DidStart = didStart;
+        ActionResult = actionResult;
+        AttackResult = attackResult;
+    }
+
+    public bool DidStart { get; }
+    public PlayerActionResult ActionResult { get; }
+    public PlayerAttackResult AttackResult { get; }
+
+    public static PlayerCommandResult Blocked()
+    {
+        return new PlayerCommandResult(false, PlayerActionResult.Failed, default);
+    }
+
+    public static PlayerCommandResult Started(PlayerActionResult actionResult)
+    {
+        return new PlayerCommandResult(true, actionResult, default);
+    }
+
+    public static PlayerCommandResult Started(PlayerAttackResult attackResult)
+    {
+        return new PlayerCommandResult(true, attackResult.ActionResult, attackResult);
+    }
 }
 
+// 역할: HandlePlayerCommandUseCase의 책임을 정의한다.
 public class HandlePlayerCommandUseCase
 {
-    private readonly string playerName;
     private readonly StartSummonSelectionUseCase startSummonSelectionUseCase;
     private readonly ExecutePlayerAttackUseCase attackUseCase;
     private readonly IPlayerTurnProgress turnProgress;
-    private readonly IPlayerCommandOutput output;
     private readonly PlayerActionStateMachine playerActionStateMachine;
 
     public HandlePlayerCommandUseCase(
-        string playerName,
         PlayerActionStateMachine playerActionStateMachine,
         IPlayerTurnProgress turnProgress,
         StartSummonSelectionUseCase startSummonSelectionUseCase,
-        ExecutePlayerAttackUseCase attackUseCase,
-        IPlayerCommandOutput output)
+        ExecutePlayerAttackUseCase attackUseCase)
     {
-        this.playerName = playerName;
         this.turnProgress = turnProgress;
         this.startSummonSelectionUseCase = startSummonSelectionUseCase;
         this.attackUseCase = attackUseCase;
-        this.output = output;
         this.playerActionStateMachine = playerActionStateMachine;
     }
 
     public void ResetPlayerSetting()
     {
         playerActionStateMachine.Reset();
-        UpdateManaUI();
     }
 
     public void StartPlayerTurn()
     {
-        output.Log("플레이어 턴을 시작했습니다.");
-        output.Log($"{playerName} current mana: {playerActionStateMachine.Mana}");
         playerActionStateMachine.StartTurn();
-        UpdateManaUI();
-        TryStartFailResult();
     }
 
     public SummonSelectionStartResult ExecuteSummon()
     {
-        SummonSelectionStartResult startResult = PrepareSummonSelection(
+        return PrepareSummonSelection(
             playerActionStateMachine.TryStartSummon,
             startSummonSelectionUseCase.PrepareSummon);
-        if (!startResult.DidStart)
-        {
-            output.Log("모든 플레이트에 소환수가 있거나 지금은 소환할 수 없습니다.");
-        }
-
-        return startResult;
     }
 
     public SummonSelectionStartResult ExecuteRedraw()
     {
-        SummonSelectionStartResult startResult = PrepareSummonSelection(
+        return PrepareSummonSelection(
             playerActionStateMachine.TryStartRedraw,
             startSummonSelectionUseCase.PrepareRedraw);
-        if (!startResult.DidStart)
-        {
-            output.Log("다시 뽑기할 소환수가 없거나 지금은 다시 뽑을 수 없습니다.");
-        }
-
-        return startResult;
     }
 
     public void ConfirmSummonSelectionStarted(SummonSelectionStartResult startResult)
     {
         startSummonSelectionUseCase.ConfirmSelectionStarted(startResult);
-        if (!startResult.IsRedraw)
-        {
-            output.Log(startResult.PlateIndex + "번째 플레이트에서 소환을 시작합니다.");
-        }
-
-        output.PlayClick();
-        UpdateManaUI();
     }
 
     public void CancelSummonSelectionStart()
     {
         playerActionStateMachine.CompleteAction();
-        output.PlayFail();
     }
 
     public void CompleteSummonSelection()
@@ -101,89 +89,96 @@ public class HandlePlayerCommandUseCase
         startSummonSelectionUseCase.CompleteSelection();
     }
 
-    public void ExecuteNormalAttack()
+    public PlayerCommandResult ExecuteNormalAttack()
     {
-        RunPlayerTurnAction(
+        return RunPlayerAttack(
             playerActionStateMachine.TryStartNormalAttack,
-            attackUseCase.ExecuteNormalAttack,
-            ProcessAfterPlayerAttack);
+            attackUseCase.ExecuteNormalAttack);
     }
 
-    public void ExecuteSpecialAttack()
+    public PlayerCommandResult ExecuteSpecialAttack()
     {
-        ExecuteSpecialAttack(0);
+        return ExecuteSpecialAttack(0);
     }
 
-    public void ExecuteSpecialAttack(int specialAttackIndex)
+    public PlayerCommandResult ExecuteSpecialAttack(int specialAttackIndex)
     {
-        RunPlayerTurnAction(
+        return RunPlayerAttack(
             playerActionStateMachine.TryStartSpecialAttack,
-            () => attackUseCase.ExecuteSpecialAttack(
-                specialAttackIndex,
-                playerActionStateMachine.WaitTargetSelection,
-                CompleteSelectedPlayerAttack,
-                playerActionStateMachine.CompleteAction),
-            ProcessAfterPlayerAttack);
+            () => attackUseCase.ExecuteSpecialAttack(specialAttackIndex));
     }
 
-    public void ExecuteEndTurn()
+    public PlayerCommandResult ExecuteEndTurn()
     {
         if (!playerActionStateMachine.TryStartEndTurn())
         {
-            output.PlayFail();
-            return;
+            return PlayerCommandResult.Blocked();
         }
 
         if (!TryEndPlayerTurnProgress())
         {
             playerActionStateMachine.CompleteAction();
-            output.PlayFail();
-            output.Log("플레이어 턴을 종료할 수 없습니다.");
-            return;
+            return PlayerCommandResult.Started(PlayerActionResult.Failed);
         }
 
-        output.Log("플레이어 턴을 종료했습니다.");
-        output.PlayClick();
+        return PlayerCommandResult.Started(PlayerActionResult.Completed);
     }
 
     public void AddMana()
     {
         playerActionStateMachine.AddMana(10);
-        UpdateManaUI();
     }
 
-    public bool TryStopTurnForClearResult(bool isEnemyPlateClear)
+    public int GetMana()
     {
-        return CheckPlayerClearResult(isEnemyPlateClear);
+        return playerActionStateMachine.Mana;
     }
 
-    private void UpdateManaUI()
+    public bool CanSummon()
     {
-        output.ShowPlayerActionState(
-            playerActionStateMachine.Mana,
-            playerActionStateMachine.CanShowSummonAvailable(),
-            playerActionStateMachine.CanRedraw());
+        return playerActionStateMachine.CanShowSummonAvailable();
     }
 
-    private void TryStartFailResult()
+    public bool CanRedraw()
     {
-        output.StartFailResult(
-            turnProgress.GetClearTurn(),
-            turnProgress.GetTurnCount());
+        return playerActionStateMachine.CanRedraw();
     }
 
-    private void RunPlayerTurnAction(
+    public PlayerCommandResult CompleteSelectedPlayerAttack(int selectedTargetPlateIndex)
+    {
+        PlayerAttackResult attackResult = attackUseCase.ExecuteSelectedSpecialAttack(selectedTargetPlateIndex);
+        playerActionStateMachine.CompleteAction();
+        return PlayerCommandResult.Started(attackResult);
+    }
+
+    public void CancelSelectedPlayerAttack()
+    {
+        attackUseCase.CancelTargetSelection();
+        playerActionStateMachine.CompleteAction();
+    }
+
+    public bool IsTargetSelectionActive()
+    {
+        return attackUseCase.IsTargetSelectionActive();
+    }
+
+    public int GetSelectedTargetPlateIndex()
+    {
+        return attackUseCase.GetSelectedTargetPlateIndex();
+    }
+
+    private PlayerCommandResult RunPlayerAttack(
         System.Func<bool> tryStartAction,
-        System.Func<PlayerActionResult> executeAction,
-        System.Action onCompleted = null)
+        System.Func<PlayerAttackResult> executeAttack)
     {
         if (!tryStartAction())
         {
-            output.PlayFail();
-            return;
+            return PlayerCommandResult.Blocked();
         }
 
-        CompletePlayerAction(executeAction(), onCompleted);
+        PlayerAttackResult attackResult = executeAttack();
+        CompletePlayerAction(attackResult.ActionResult);
+        return PlayerCommandResult.Started(attackResult);
     }
 
     private SummonSelectionStartResult PrepareSummonSelection(
@@ -192,7 +187,6 @@ public class HandlePlayerCommandUseCase
     {
         if (!tryStartAction())
         {
-            output.PlayFail();
             return SummonSelectionStartResult.Failed();
         }
 
@@ -203,38 +197,18 @@ public class HandlePlayerCommandUseCase
         }
 
         playerActionStateMachine.CompleteAction();
-        output.PlayFail();
         return SummonSelectionStartResult.Failed();
     }
 
-    private void CompletePlayerAction(PlayerActionResult actionResult, System.Action onCompleted = null)
+    private void CompletePlayerAction(PlayerActionResult actionResult)
     {
         if (actionResult == PlayerActionResult.WaitingForTarget)
         {
-            UpdateManaUI();
+            playerActionStateMachine.WaitTargetSelection();
             return;
         }
 
-        if (actionResult == PlayerActionResult.Completed)
-        {
-            onCompleted?.Invoke();
-            UpdateManaUI();
-        }
-
         playerActionStateMachine.CompleteAction();
-    }
-
-    private void CompleteSelectedPlayerAttack()
-    {
-        ProcessAfterPlayerAttack();
-        playerActionStateMachine.CompleteAction();
-    }
-
-    private void ProcessAfterPlayerAttack()
-    {
-        CheckPlayerClearResult(output.IsEnemyBoardClear());
-        output.CompactEnemyBoard();
-        output.HideSummonStatePanel();
     }
 
     private bool TryEndPlayerTurnProgress()
@@ -246,13 +220,5 @@ public class HandlePlayerCommandUseCase
 
         turnProgress.EndPlayerTurn();
         return true;
-    }
-
-    private bool CheckPlayerClearResult(bool isEnemyPlateClear)
-    {
-        return output.TryStartClearResult(
-            isEnemyPlateClear,
-            turnProgress.GetClearTurn(),
-            turnProgress.GetTurnCount());
     }
 }

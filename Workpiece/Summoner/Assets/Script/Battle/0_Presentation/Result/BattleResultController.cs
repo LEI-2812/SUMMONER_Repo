@@ -1,19 +1,23 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BattleResultAlertView))]
-[RequireComponent(typeof(BattleRuntimeData))]
 // 역할: BattleResultController의 책임을 정의한다.
 public class BattleResultController : MonoBehaviour
 {
     [SerializeField] private BattleResultAlertView alertView;
-    [SerializeField] private BattleRuntimeData battleRuntimeData;
 
     private readonly BattleResultStateMachine resultStateMachine = new BattleResultStateMachine();
     private readonly StageTransitionUseCase stageTransitionUseCase = new StageTransitionUseCase();
+    private BattleStageData battleStageData;
 
     private void Awake()
     {
-        Ensure참조();
+        EnsureAlertView();
+    }
+
+    public void ConnectBattleStage(BattleStageData battleStageData)
+    {
+        this.battleStageData = battleStageData;
     }
 
     public bool TryStartClearResult(bool isEnemyPlateClear, int clearTurn, int currentTurn)
@@ -56,11 +60,21 @@ public class BattleResultController : MonoBehaviour
     private CompleteBattleResultUseCase GetCompleteBattleResultUseCase()
     {
         return new CompleteBattleResultUseCase(
-            battleRuntimeData != null ? battleRuntimeData.StageData : null,
+            battleStageData,
             stageTransitionUseCase);
     }
 
     private void Ensure참조()
+    {
+        EnsureAlertView();
+
+        if (battleStageData == null)
+        {
+            Debug.LogError("BattleResultController에 BattleStageData가 필요합니다.");
+        }
+    }
+
+    private void EnsureAlertView()
     {
         if (alertView == null)
         {
@@ -71,16 +85,5 @@ public class BattleResultController : MonoBehaviour
         {
             Debug.LogError("BattleResultController에 BattleResultAlertView가 필요합니다.");
         }
-
-        if (battleRuntimeData == null)
-        {
-            battleRuntimeData = GetComponent<BattleRuntimeData>();
-        }
-
-        if (battleRuntimeData == null)
-        {
-            Debug.LogError("BattleResultController에 BattleRuntimeData가 필요합니다.");
-        }
-
     }
 }

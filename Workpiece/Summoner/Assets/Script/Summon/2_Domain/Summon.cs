@@ -84,20 +84,25 @@ public class Summon : MonoBehaviour, IStatusTarget
     }
 
 
-    public void NormalAttack(IReadOnlyList<BattleBoardInputController> targetPlates, int selectedPlateIndex)
+    public void NormalAttack(BattleBoardData board, int selectedPlateIndex, bool isPlayerAttack)
     {
         if (!AttackCanUse(entity.NormalAttack))
         {
             Debug.Log("일반 공격이 쿨타임 중이라 사용할 수 없습니다.");
             return;
         }
-        entity.NormalAttack.SelectTargets(this, targetPlates, selectedPlateIndex);
+        entity.NormalAttack.SelectTargets(
+            new AttackTargetInput(this, board, selectedPlateIndex, isPlayerAttack));
         AttackMotionPlay(true);
         AttackCooldownApply(entity.NormalAttack);
         entity.SetAttackAvailable(false);
     }
 
-    public virtual void SpecialAttack(IReadOnlyList<BattleBoardInputController> targetPlates, int selectedPlateIndex, int SpecialAttackArrayIndex)
+    public virtual void SpecialAttack(
+        BattleBoardData board,
+        int selectedPlateIndex,
+        int SpecialAttackArrayIndex,
+        bool isPlayerAttack)
     {
         if (!SpecialAttackIndexCheck(SpecialAttackArrayIndex))
         {
@@ -113,15 +118,17 @@ public class Summon : MonoBehaviour, IStatusTarget
             return;
         }
 
-        SpecialAttackExecute(specialAttack, targetPlates, selectedPlateIndex);
+        SpecialAttackExecute(specialAttack, board, selectedPlateIndex, isPlayerAttack);
     }
 
     protected void SpecialAttackExecute(
         AttackData specialAttack,
-        IReadOnlyList<BattleBoardInputController> targetPlates,
-        int selectedPlateIndex)
+        BattleBoardData board,
+        int selectedPlateIndex,
+        bool isPlayerAttack)
     {
-        specialAttack.SelectTargets(this, targetPlates, selectedPlateIndex);
+        specialAttack.SelectTargets(
+            new AttackTargetInput(this, board, selectedPlateIndex, isPlayerAttack));
         AttackMotionPlay(false);
         AttackCooldownApply(specialAttack);
         entity.SetAttackAvailable(false);

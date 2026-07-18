@@ -19,14 +19,10 @@ public class BattleBoardInputController : MonoBehaviour,
     private PlateVisualView visualView;
     private SelectBoardTargetUseCase selectBoardTargetUseCase;
     private AttackStateMachine attackStateMachine;
+    private PlateData plateData;
 
     [Header("전투 연결")]
-    [UnityEngine.Serialization.FormerlySerializedAs("summonController")]
     [SerializeField] private SummonSelectionController summonSelectionController;
-    [UnityEngine.Serialization.FormerlySerializedAs("battleController")]
-    [UnityEngine.Serialization.FormerlySerializedAs("attackStateMachineProvider")]
-    [SerializeField] private AttackStateMachineHost attackStateMachineHost;
-    [UnityEngine.Serialization.FormerlySerializedAs("plateController")]
     [SerializeField] private PlateBoardView plateBoardController;
 
     [Header("사운드")]
@@ -36,9 +32,17 @@ public class BattleBoardInputController : MonoBehaviour,
     {
         statePanel.SetActive(false);
         EnsurePlateBoardView();
-        EnsureAttackStateMachine();
         plateImage = GetComponent<Image>();
         visualView = new PlateVisualView(plateImage, summonImg);
+        if (selectBoardTargetUseCase == null)
+        {
+            selectBoardTargetUseCase = new SelectBoardTargetUseCase(attackStateMachine);
+        }
+    }
+
+    public void ConnectAttackState(AttackStateMachine attackStateMachine)
+    {
+        this.attackStateMachine = attackStateMachine;
         selectBoardTargetUseCase = new SelectBoardTargetUseCase(attackStateMachine);
     }
 
@@ -209,6 +213,12 @@ public class BattleBoardInputController : MonoBehaviour,
         SetSummonImageTransparency(transparency);
     }
 
+    public void ConnectPlateData(PlateData connectedPlateData)
+    {
+        plateData = connectedPlateData;
+        plateData?.SetCurrentSummon(currentSummon);
+    }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         BoardTargetInput input = CreateBoardTargetInput();
@@ -326,22 +336,6 @@ public class BattleBoardInputController : MonoBehaviour,
         }
     }
 
-    private void EnsureAttackStateMachine()
-    {
-        if (attackStateMachine != null)
-        {
-            return;
-        }
-
-        if (attackStateMachineHost == null)
-        {
-            return;
-        }
-
-        attackStateMachine = attackStateMachineHost.GetAttackStateMachine();
-    }
-
-
     public Summon GetCurrentSummon()
     {
         return currentSummon;
@@ -356,6 +350,7 @@ public class BattleBoardInputController : MonoBehaviour,
 
         this.currentSummon = currentSummon;
         isInSummon = currentSummon != null;
+        plateData?.SetCurrentSummon(currentSummon);
 
         if (this.currentSummon != null)
         {

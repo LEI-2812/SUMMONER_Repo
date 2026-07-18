@@ -1,10 +1,10 @@
-// 역할: AttackCooldownStore의 책임을 정의한다.
-public class AttackCooldownStore
+// 역할: 공격의 현재 쿨다운 상태를 관리한다.
+public class AttackCooldownState
 {
     private readonly int cooldownDuration;
     private int currentCooldown;
 
-    public AttackCooldownStore(int cooldownDuration)
+    public AttackCooldownState(int cooldownDuration)
     {
         this.cooldownDuration = cooldownDuration;
         currentCooldown = 0;

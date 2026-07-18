@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // 역할: SummonSelectionController의 책임을 정의한다.
 public class SummonSelectionController : MonoBehaviour
@@ -21,12 +20,9 @@ public class SummonSelectionController : MonoBehaviour
     [Header("참조")]
     [SerializeField] private List<Summon> summons;
     [Header("참조")]
-    [FormerlySerializedAs("reTakeSummonPanel")]
     [SerializeField] private GameObject redrawPanel;
-    [FormerlySerializedAs("ReselectSummonPanels")]
     [SerializeField] private List<DrawOptionPanelView> redrawOptionPanels;
     [Header("참조")]
-    [FormerlySerializedAs("plateController")]
     [SerializeField] private PlateBoardView plateBoardController;
 
     [Header("참조")]
@@ -145,16 +141,20 @@ public class SummonSelectionController : MonoBehaviour
 
         pickState.SetSelectedSummon(summon);
         Debug.Log($"{pickState.SelectedSummon.GetSummonName()}을 선택했습니다.");
-        bool didSelectSummon = selectSummonUseCase.Execute(
-            playerPlates,
+        SelectSummonResult selectResult = selectSummonUseCase.Execute(
+            playerPlates == null ? 0 : playerPlates.Count,
             pickState.SelectedPlateIndex,
             summon,
-            currentIsRedraw,
-            onSummonPlaced);
-        if (!didSelectSummon)
+            currentIsRedraw);
+        if (!selectResult.DidSelect)
         {
             return;
         }
+
+        BattleBoardInputController targetPlate = playerPlates[selectResult.PlateIndex];
+        targetPlate.SummonPlaceOnPlate(selectResult.SelectedSummon, selectResult.IsRedraw);
+        targetPlate.GetCurrentSummon()?.ApplyStageMultiplier(Summon.GetStatMultiplier());
+        onSummonPlaced?.Invoke();
 
         RestorePlayerPlateSelectionView();
         pickView.HideOptionPanels();

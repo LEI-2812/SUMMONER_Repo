@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 // 역할: WolfAttackPrediction의 책임을 정의한다.
-public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
+public class WolfAttackPrediction : IAttackPrediction
 {
 
     public bool CanPredict(Summon summon)
@@ -13,8 +12,11 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         return summon is Wolf;
     }
 
-    public AttackPredictionData GetAttackPrediction(Summon wolf, int wolfPlateIndex, IReadOnlyList<IPlateState> playerPlates, IReadOnlyList<IPlateState> enemyPlates)
+    public AttackPredictionData GetAttackPrediction(Summon wolf, PredictionBoardData board)
     {
+        int wolfPlateIndex = board.FindPlayerPlateIndex(wolf);
+        IReadOnlyList<IPlateState> playerPlates = board.PlayerPlates;
+        IReadOnlyList<IPlateState> enemyPlates = board.EnemyPlates;
         AttackProbabilityData AttackProbabilityData = new AttackProbabilityData(50f, 50f);
         int attackIndex = GetClosestEnemyIndex(enemyPlates);
 
@@ -42,20 +44,20 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
                 }
                 else if (lowestHealthDifferenceIndex != -1)
                 {
-                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "reason");
+                    AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, false, "늑대 가장 약한 적이 가장 가까운 대상이 아님");
                 }
             }
         }
         else if (IsEnemyCountOne(enemyPlates))
         {
-            AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+            AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "늑대 적이 1마리");
 
             int normalAttackKillIndex = GetIndexOfNormalAttackCanKill(wolf, enemyPlates);
 
             if (normalAttackKillIndex != -1)
             {
                 attackIndex = normalAttackKillIndex;
-                AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "reason");
+                AttackProbabilityData = AdjustAttackProbabilities(AttackProbabilityData, 10f, true, "늑대 일반 공격으로 적 처치 가능");
             }
             else
             {
@@ -310,14 +312,12 @@ public class WolfAttackPrediction : MonoBehaviour, IAttackPrediction
         {
             currentProbabilities.normalAttackProbability += AttackChange;
             currentProbabilities.specialAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
         else
         {
             currentProbabilities.specialAttackProbability += AttackChange;
             currentProbabilities.normalAttackProbability -= AttackChange;
-            Debug.Log($"일반 공격 확률을 {AttackChange}% 증가시켰습니다. 이유: {reason}. 현재 확률: 일반 {currentProbabilities.normalAttackProbability}%, 특수 {currentProbabilities.specialAttackProbability}%");
         }
-        return currentProbabilities;
+        return currentProbabilities.AddPredictionReason(reason);
     }
 }
